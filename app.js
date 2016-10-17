@@ -3,12 +3,16 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var format = require('.util').format;
+var format = require('util').format;
 var bodyParser = require('body-parser');
+//持久化session信息
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+//项目设置
+var settings = require('./settings');
 
-/* 建立路由 */
-var routes = require('./routes/index');
-var users = require('./routes/users');
+/* 引入路由 */
+var index = require('./routes/index');
 
 var app = express();
 
@@ -24,8 +28,24 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/users', users);
+//session持久化
+app.use(session({
+        secret: settings.cookieSecret,
+        key:settings.db,
+        cookie:{
+            maxAge:1000*60*60*24*3,
+            secure: false
+        },
+        store: new MongoStore(
+            {url:format("mongodb://%s:%s@%s:%s/%s",settings.user, settings.password, settings.host, settings.port, settings.db)}
+        ),
+        resave: false,
+        saveUninitialized: true
+    }
+));
+
+//建立路由规则
+index(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

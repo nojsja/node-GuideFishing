@@ -6,10 +6,50 @@
       <meta name="viewport" content="width=device-width,initial-scale=1.0">
       <meta name="description" content="问卷调查评测系统" />
       <meta name="keywords" content="questionnaire" />
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+      <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+      <link rel='stylesheet' href='/stylesheets/index.css' />
+
+      <script style="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+      <script type="text/javascript" src="/javascripts/index.js"></script>
+
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+
+  <header id="head" class="header">
+      <div class="header-label">选择评测类型 <span class="glyphicon glyphicon-chevron-down"></span></div>
+      <!--评测类型-->
+      <div class="type-item">人格测试</div>
+      <div class="type-item">性格测试</div>
+      <div class="type-item">心理测试</div>
+      <div class="type-item">交际测试</div>
+      <div class="type-item">潜能测试</div>
+
+  </header>
+
+  <div id="total" class="container">
+      <div class="content-item shadow-blue">
+          <p class="content-item-title">[人格]标题English</p>
+          <div class="content-item-abstract">这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述</div>
+          <p class="content-item-date">2016.10.l7 17:28</p>
+      </div>
+      <div class="content-item shadow-pink">
+          <p class="content-item-title">[性格]标题English</p>
+          <div class="content-item-abstract">这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述</div>
+          <p class="content-item-date">2016.10.l7 17:28</p>
+      </div>
+      <div class="content-item shadow-green">
+          <p class="content-item-title">[心理]标题English</p>
+          <div class="content-item-abstract">这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述</div>
+          <p class="content-item-date">2016.10.l7 17:28</p>
+      </div>
+      <div class="content-item shadow-grey">
+          <p class="content-item-title">[潜能]标题English</p>
+          <div class="content-item-abstract">这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述</div>
+          <p class="content-item-date">2016.10.l7 17:28</p>
+      </div>
+  </div>
+  <footer id="foot" class="footer"></footer>
+
   </body>
 </html>
