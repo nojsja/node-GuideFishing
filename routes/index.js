@@ -10,11 +10,14 @@ function index(app) {
         });
     });
 
-    /* 请求评测主页 */
-    app.post('/', function (req, res) {
-        res.render('index', {
-            title: '主页'
-        })
+    /* 读取评测列表 */
+    app.post('/readList', function (req, res) {
+
+    });
+
+    /* 读取热门内容列表 */
+    app.post('/readHot', function (req, res) {
+        
     });
 }
 
