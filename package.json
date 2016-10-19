@@ -16,7 +16,8 @@
     "serve-favicon": "~2.3.0",
     "express-session": "*",
     "connect-mongo": "*",
-    "node-schedule": "1.1.1"
+    "node-schedule": "1.1.1",
+    "mongoose": "3.8.*"
   },
   "devDependencies": {
     "gulp": "^3.9.1",

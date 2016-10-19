@@ -280,6 +280,12 @@ a {
     opacity: 0.7;
 }
 
+/* 数据加载loading信息 */
+.loading-info {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
 /*文字特效*/
 .box1 {
     text-shadow:

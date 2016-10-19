@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel='stylesheet' href='/stylesheets/testView.css' />
+
+    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/testView.js"></script>
+</head>
+<body>
+<header class="header">
+    <div class="header-label">
+        测试开始
+        <a href="/"><span class="glyphicon glyphicon-home return-home"></span></a>
+    </div>
+</header>
+
+<!--评测集合主体-->
+<div class="container total">
+
+</div>
+
+<!--提交按钮-->
+<div class="submitDiv">
+    <input type="button" id="submit">
+</div>
+
+<%- include footer.ejs%>
+</body>

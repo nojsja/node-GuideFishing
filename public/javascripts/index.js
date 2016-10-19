@@ -1,6 +1,10 @@
 /**
  * Created by yangw on 2016/10/12.
+ * index索引页面相关的脚本,
+ * 主要包括获取评测列表,
+ * 获取热门内容等操作.
  */
+
 /* 初始化函数 */
 $(function () {
 
@@ -13,8 +17,6 @@ $(function () {
             $('.header-label > span').prop('class', 'glyphicon glyphicon-chevron-down');
         }
     });
-    //分页导航事件绑定
-    indexAction.pageNavbarAction();
     //热门内容事件绑定
     $('.jump').click(indexAction.pageHotContentAction);
 
@@ -25,7 +27,9 @@ $(function () {
     /*windowHeightCheck();*/
     //滑动检测函数
     $(window).scroll(indexAction.scrollCheck);
+    $('.loding-info').click(function () {
 
+    });
 });
 
 /* 页面全局变量 */
@@ -36,6 +40,10 @@ var indexAction = {
     scrollOver: false,
     //检测上次页面滚动的状态
     lastScrollOver: false,
+    //页面加载起点
+    pageStart: 0,
+    //页面加载条数
+    pageLimit: 13,
     //测评详细信息
     test: {
         type: "popular"
@@ -69,16 +77,11 @@ indexAction.pageHotContentAction = function () {
 indexAction.updateHot = function (type) {
 
     return;
-    $.post('/readHot', {
-            hotType: type
-        }, function (JSONdata){
-
-        }, "JSON"
-    );
+    $.post('/readHot', {hotType: type}, function (JSONdata){}, "JSON");
 };
 
 /* 分页导航事件 */
-indexAction.pageNavbarAction = function() {
+/*indexAction.pageNavbarAction = function() {
 
     var pageStart = 0;
     var pageLimit = 10;
@@ -135,7 +138,7 @@ indexAction.pageNavbarAction = function() {
             }, "JSON"
         );
     }
-};
+};*/
 
 /* 页面底部和底部跳转 */
 indexAction.goTop = function goTop() {
@@ -156,13 +159,12 @@ indexAction.goBottom = function goBottom() {
 /* 滚动侦测 */
 indexAction.scrollCheck = function () {
 
-    var $this = $(this);
     //可见高度
-    var clientHeight = $this.height();
+    var clientHeight = $(window).height();
     //总高度,包括不可见高度
     var totalHeight = $(document).height();
     //可滚动高度,只有不可见高度
-    var scrollHeight = $this.scrollTop();
+    var scrollHeight = $(window).scrollTop();
 
     //文档总长度比较短
     if(clientHeight >= (totalHeight * 1) / 2){
