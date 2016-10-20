@@ -1,9 +1,24 @@
-var express = require('express');
-var router = express.Router();
+/**
+ * 主页路由*/
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+function index(app) {
 
-module.exports = router;
+    /* 获取评测主页 */
+    app.get('/', function (req, res) {
+        res.render('index', {
+            title: '评测系统主页'
+        });
+    });
+    
+    /* 读取评测列表 */
+    app.post('/readList', function (req, res) {
+
+    });
+
+    /* 读取热门内容列表 */
+    app.post('/readHot', function (req, res) {
+        
+    });
+}
+
+module.exports = index;

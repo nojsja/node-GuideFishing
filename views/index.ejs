@@ -6,10 +6,198 @@
       <meta name="viewport" content="width=device-width,initial-scale=1.0">
       <meta name="description" content="问卷调查评测系统" />
       <meta name="keywords" content="questionnaire" />
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+      <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+      <link rel='stylesheet' href='/stylesheets/index.css' />
+
+      <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+      <script type="text/javascript" src="/javascripts/index.js"></script>
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+
+  <header id="head" class="header">
+      <div class="header-label">选择评测类型 <span class="glyphicon glyphicon-chevron-down"></span></div>
+      <!--评测类型-->
+      <div class="type-item" id="personality">人格测试</div>
+      <div class="type-item" id="character">性格测试</div>
+      <div class="type-item" id="emotion">情感测试</div>
+      <div class="type-item" id="communication">交际测试</div>
+      <div class="type-item" id="potential">潜能测试</div>
+  </header>
+
+  <!--热门评测列表-->
+  <div class="container hot-container">
+      <div class="nav-tabs-border">
+          <ul class="nav nav-tabs">
+              <li >
+                  <a jumpTo="hotPersonality" class="jump"><span id="hotPersonalitySpan" class="glyphicon glyphicon-list">人格</span></a>
+              </li>
+              <li class="active">
+                  <a jumpTo="hotCharacter" class="jump"><span id="hotCharacterSpan" class="glyphicon glyphicon-list">性格</span></a>
+              </li>
+              <li>
+                  <a jumpTo="hotCommunication" class="jump"><span id="hotCommunicationSpan" class="glyphicon glyphicon-list">交际</span></a>
+              </li>
+              <li>
+                  <a jumpTo="hotEmotion" class="jump"><span id="hotEmotionSpan" class="glyphicon glyphicon-list">情感</span></a>
+              </li>
+              <li>
+                  <a jumpTo="hotPotential" class="jump"><span id="hotPotentialSpan" class="glyphicon glyphicon-list">潜能</span></a>
+              </li>
+          </ul>
+          <div class="tab-content hot-title">
+              <div class="hidden" id="hotPersonality">
+                  <div class="hot-title-item"><a>这是一条人格测试的热门内容</a></div>
+                  <div class="hot-title-item"><a>这是一条人格测试的热门内容</a></div>
+                  <div class="hot-title-item"><a>这是一条人格测试的热门内容</a></div>
+              </div>
+              <div class="active" id="hotCharacter">
+                  <div class="hot-title-item"><a>这是一条性格测试的热门内容</a></div>
+                  <div class="hot-title-item"><a>这是一条性格测试的热门内容</a></div>
+                  <div class="hot-title-item"><a>这是一条性格测试的热门内容</a></div>
+              </div>
+              <div class="hidden" id="hotCommunication">
+                  <div class="hot-title-item">这是一条交际测试的热门内容</div>
+                  <div class="hot-title-item">这是一条交际测试的热门内容</div>
+                  <div class="hot-title-item">这是一条交际测试的热门内容</div>
+              </div>
+              <div class="hidden" id="hotEmotion">
+                  <div class="hot-title-item">这是一条情感测试的热门内容</div>
+                  <div class="hot-title-item">这是一条情感测试的热门内容</div>
+                  <div class="hot-title-item">这是一条情感测试的热门内容</div>
+              </div>
+              <div class="hidden" id="hotPotential">
+                  <div class="hot-title-item">这是一条潜能测试的热门内容</div>
+                  <div class="hot-title-item">这是一条潜能测试的热门内容</div>
+                  <div class="hot-title-item">这是一条潜能测试的热门内容</div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div id="total" class="container">
+
+      <!--评测列表-->
+      <div class="content-item shadow-grey">
+          <span class="glyphicon glyphicon-pushpin push-pin"></span>
+          <div class="content-item-left">
+              <a class="content-item-title">标题English</a>
+              <div class="content-item-abstract">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                  这是简要描述这是简要描述这是简要描述这是简要描述这是简要描
+              </div>
+          </div>
+          <!--课程类型区块-->
+          <div class="content-item-right">
+              <div class="type-img"></div>
+              <p class="type-text">性格测试</p>
+          </div>
+          <!--显示日期-->
+          <p class="content-item-date"><span class="glyphicon glyphicon-time">2016.10.l7 17:28</span></p>
+      </div>
+
+      <div class="content-item shadow-grey">
+          <span class="glyphicon glyphicon-pushpin push-pin"></span>
+          <div class="content-item-left">
+              <a class="content-item-title">标题English</a>
+              <div class="content-item-abstract">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                  这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述
+              </div>
+          </div>
+          <!--课程类型区块-->
+          <div class="content-item-right">
+              <div class="type-img"></div>
+              <p class="type-text">人格测试</p>
+          </div>
+          <!--显示日期-->
+          <p class="content-item-date"><span class="glyphicon glyphicon-time">2016.10.l7 17:28</span></p>
+      </div>
+
+      <div class="content-item shadow-grey">
+          <span class="glyphicon glyphicon-pushpin push-pin"></span>
+          <div class="content-item-left">
+              <a class="content-item-title">标题English</a>
+              <div class="content-item-abstract">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                  这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述
+              </div>
+          </div>
+          <!--课程类型区块-->
+          <div class="content-item-right">
+              <div class="type-img"></div>
+              <p class="type-text">潜能测试</p>
+          </div>
+          <!--显示日期-->
+          <p class="content-item-date"><span class="glyphicon glyphicon-time">2016.10.l7 17:28</span></p>
+      </div>
+
+      <div class="content-item shadow-grey">
+          <span class="glyphicon glyphicon-pushpin push-pin"></span>
+          <div class="content-item-left">
+              <a class="content-item-title">标题English</a>
+              <div class="content-item-abstract">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                  这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述
+              </div>
+          </div>
+          <!--课程类型区块-->
+          <div class="content-item-right">
+              <div class="type-img"></div>
+              <p class="type-text">交际测试</p>
+          </div>
+          <!--显示日期-->
+          <p class="content-item-date"><span class="glyphicon glyphicon-time">2016.10.l7 17:28</span></p>
+      </div>
+
+      <div class="content-item shadow-grey">
+          <span class="glyphicon glyphicon-pushpin push-pin"></span>
+          <div class="content-item-left">
+              <a class="content-item-title">标题English</a>
+              <div class="content-item-abstract">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                  这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述
+              </div>
+          </div>
+          <!--课程类型区块-->
+          <div class="content-item-right">
+              <div class="type-img"></div>
+              <p class="type-text">情感测试</p>
+          </div>
+          <!--显示日期-->
+          <p class="content-item-date"><span class="glyphicon glyphicon-time">2016.10.l7 17:28</span></p>
+      </div>
+
+  </div>
+
+  <!--数据加载loading信息-->
+  <div class="loading-info">
+      <input type="button" class="btn btn-success" value="加载更多..."></input>
+  </div>
+
+  <!--分页导航-->
+  <!--<div class="container" >
+      <ul class="pagination" id="pageNav">
+          <li><a id="first">首页</a></li>
+          <li class="page-number"><a>1</a></li>
+          <li class="page-number"><a>2</a></li>
+          <li class="page-number"><a>3</a></li>
+          <li class="page-number"><a>4</a></li>
+          <li class="page-number"><a>5</a></li>
+          <li class="page-number"><a>6</a></li>
+          <li class="page-number"><a>7</a></li>
+          <li class="page-number"><a>8</a></li>
+          <li class="page-number"><a>9</a></li>
+          <li class="page-number"><a>10</a></li>
+          <li><a id="last">&laquo;</a></li>
+          <li><a id="next">&raquo;</a></li>
+      </ul>
+  </div>-->
+
+  <!--返回顶部按钮-->
+  <%- include pageAnchor.ejs%>
+  <!--底部导航-->
+  <%- include footer.ejs%>
+
   </body>
 </html>
