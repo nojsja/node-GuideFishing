@@ -57,7 +57,9 @@ AllTest.getDetail = function (docCondition, callback) {
     });
 };
 
-/* 读取文档列表 */
+/* 读取文档列表
+* 需要展示在列表的信息包括:
+* testTitle, testType, abstract, date*/
 AllTest.readTestList = function (docCondition, callback) {
 
     var db = mongoose.connect('mongodb://localhost/QN');
@@ -73,7 +75,7 @@ AllTest.readTestList = function (docCondition, callback) {
         /* 需要发送给客户端的对象数组 */
         var testArray = [];
 
-        /* 进行条件判断 */
+        /* 进行条件判断客户端的筛选需求 */
         for(var con in docCondition) {
             if(con == "limit") {
                 number = docCondition[con];
@@ -87,7 +89,15 @@ AllTest.readTestList = function (docCondition, callback) {
 
         var query = Tests.find().where(condition);
         query.limit(number);
+        //定制选择读取的类型
+        query.select({
+            testTitle: 1,
+            testType: 1,
+            abstract: 1,
+            date: 1
+        });
         query.skip(skipNum);
+        query.sort({date: -1});
         //执行查询
         query.exec(function (err, docs) {
             if(err){
@@ -97,6 +107,7 @@ AllTest.readTestList = function (docCondition, callback) {
             for(var i in docs) {
                 testArray.push(docs[i]);
             }
+            mongoose.disconnect();
             //返回对象数组
             callback(null, testArray);
         });

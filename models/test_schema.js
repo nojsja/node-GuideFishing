@@ -24,7 +24,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var testSchema = new Schema({
-    testType: {type: String, required: true, unique: true},
+    testType: {type: String, required: true},
     date: String,
     testGroup: [{
         itemTitle: String,
@@ -35,7 +35,7 @@ var testSchema = new Schema({
     scoreMode: String,
     scoreValue: Number,
     abstract: String,
-    testTitle: String,
+    testTitle: {type: String, required: true, unique: true},
     frequency: Number,
     scoreSection: [{
         scoreHead: Number,

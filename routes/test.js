@@ -6,14 +6,36 @@
 
 /* 引入工厂模式 */
 var scoreFactory = require('../models/ScoreFactory.js');
+var AllTest = require('../models/AllTest.js');
 
 function test(app) {
 
     /* 获取测试detail页面 */
     app.get('/testDetail/:testType/:testTitle', function (req, res) {
 
-        res.render('testDetail', {
-            title: '评测详情'
+        var condition = {
+            testTitle: req.params.testTitle,
+            testType: req.params.testType
+        };
+        AllTest.getDetail(condition, function (err, doc) {
+           if(err) {
+               return res.render('testDetail', {
+                  title: '评测详情',
+                   testTitle: 'error!!!',
+                   testType: 'error!!!',
+                   abstract: 'error!!!',
+                   date: 'error!!!',
+                   frequency: 'error!!!'
+               });
+           }
+            res.render('testDetail', {
+                title: '评测详情',
+                testTitle: doc.testTitle,
+                testType: doc.testType,
+                abstract: doc.abstract,
+                date: doc.date,
+                frequency: doc.frequency
+            });
         });
     });
 
