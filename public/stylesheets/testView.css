@@ -1,6 +1,7 @@
 body {
     font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-    background-color: #f8ffff;
+    /*background-color: #2c3555;*/
+    background-color: #061534;
 }
 
 a {
@@ -70,4 +71,92 @@ a {
     text-align: center;
     font-size: 1.5rem;
     color: #3b3d3b;
+}
+
+/* 答题框 */
+.total {
+    margin-top: 6rem;
+}
+
+/* 测评区域 */
+#totalItems {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border: solid 2px white;
+    width: 100%;
+    background-color: #c2c6c1;
+    min-height: 15rem;
+    height: auto;
+    border-radius: 10px;
+    padding: 10px;
+
+    -webkit-box-shadow:  0 0 10px white;
+    -moz-box-shadow:  0 0 10px white;
+    box-shadow:  0 0 10px white;
+}
+
+/* 标题和类型 */
+.test-title {
+    text-align: center;
+    color: #f3ffff;
+    font-size: 2rem;
+}
+
+.test-type {
+    text-align: center;
+    color: #e3ffff;
+    margin-top: 1rem;
+}
+
+/* 某一道题目 */
+.item-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* 题号 */
+.item-number {
+    text-align: center;
+    color: white;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px black;
+}
+
+/* 题目选项 */
+.item-choises {
+    margin-top: 0.5rem;
+}
+
+/* 各个选项 */
+.choise {
+    border: solid 1px #7f948c;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding: 5px;
+}
+
+/* 选题 */
+#nextDiv {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+#submitDiv {
+    text-align: center;
+    margin-bottom: 2rem;
+    display: none;
+}
+
+
+/*文字特效*/
+.box1 {
+    text-shadow:
+            0 0 0 rgb(188,178,188),1px 0 0 rgb(173,163,173),
+            2px 0 0 rgb(157,147,157),3px 0 0 rgb(142,132,142),
+            4px 0 0 rgb(126,116,126),5px 0 0 rgb(111,101,111),
+            6px 0 0 rgb(95,85,95), 7px 0 0 rgb(79,69,79),
+            8px 0 7px rgba(0,0,0,0.35),8px 0 1px rgba(0,0,0,0.5),
+            0 0 7px rgba(0,0,0,.2);
 }

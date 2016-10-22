@@ -36,7 +36,7 @@ AllTest.prototype.save = function (callback) {
     });
 };
 
-/* 读取一组题目的详细信息 */
+/* 读取一组题目的信息 */
 AllTest.getDetail = function (docCondition, callback) {
 
     var db = mongoose.connect('mongodb://localhost/QN');
@@ -51,8 +51,8 @@ AllTest.getDetail = function (docCondition, callback) {
                 return callback(err);
             }
             //成功返回
-            mongoose.disconnect();
             callback(null, doc);
+            mongoose.disconnect();
         });
     });
 };

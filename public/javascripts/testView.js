@@ -6,3 +6,183 @@
  * 和提交用户的测评结果,
  * 最后将服务器统计的结果展示给用户.
  */
+
+$(function () {
+
+    //初始化页面
+    viewAction.pageInit();
+
+    //下一道题目事件绑定
+    $('#next').click(viewAction.nextItem);
+    //上一道题目
+    $('#last').click(viewAction.lastItem);
+    //提交结果
+    $('#submitDiv').click(viewAction.submit);
+
+});
+
+/* 页面存储变量
+* 选项数组 -- choiseArray
+* currentNumber -- 当前题号
+* choiseTag -- 选项的标志ABC
+* itemMode -- 选项模式
+* testArray -- 本组题目信息
+* */
+
+var viewAction = {
+    currentNumber: 1,
+    //填写选项的对象数组
+    choiseArray: [],
+    //一组题里面的所有题目对象数组
+    testArray: []
+};
+
+/* 模态弹窗 */
+viewAction.modalWindow = function(text) {
+
+    $('.modal-body').text(text);
+    $('#modalWindow').modal("show", {
+        backdrop : true,
+        keyboard : true
+    });
+};
+
+/* 页面初始化 */
+viewAction.pageInit = function () {
+
+    //获取本套题的所有数据
+    var url = "/testView/" + $('.test-type').text().trim() + "/" + $('.test-title').text().trim();
+    $.post(url, {}, function (JSONdata) {
+        var JSONobject = JSON.parse(JSONdata);
+        //本组题目列表
+        viewAction.testGroup = JSONobject.testGroup;
+        if(viewAction.testGroup.length == 0){
+            return viewAction.modalWindow("抱歉没有任何数据!");
+        }
+        //更新页面
+        $('.item-title').text(viewAction.testGroup[viewAction.currentNumber - 1].itemTitle);
+        $('.item-number').text(viewAction.testGroup[viewAction.currentNumber - 1].itemNumber);
+        //遍历选项结果
+        var $itemChoises = $('.item-choises');
+        //移除前一道题的选择项
+        $itemChoises.children().remove();
+
+        for(var index in viewAction.testGroup[viewAction.currentNumber - 1].itemChoise){
+            //其中一个选项
+            var $choiseDiv = $('<div class="choise">');
+            //选项标签和选项内容
+            var choiseTag = viewAction.testGroup[viewAction.currentNumber - 1].itemChoise[index].choiseTag;
+            var choiseContent = viewAction.testGroup[viewAction.currentNumber - 1].itemChoise[index].choiseContent;
+            $choiseDiv.prop('id', choiseTag);
+            $choiseDiv.text(choiseTag + "." + choiseContent);
+            //添加到页面上
+            $itemChoises.append($choiseDiv);
+        }
+
+        //为点击选项绑定函数
+        $('.choise').click(function () {
+            $('.choise').css({
+                'color': '#7f948c',
+                'background-color': 'white'
+            });
+            $(this).css({
+                'background-color': '#7f948c',
+                'color': 'white'
+            });
+
+            viewAction.choiseArray[viewAction.currentNumber - 1] = {
+                choiseTag: $(this).prop('id'),
+                itemMode: viewAction.testGroup[viewAction.currentNumber - 1].itemMode
+            }
+
+        });
+    }, "JSON");
+};
+
+/* 切换到下一道题目 */
+viewAction.nextItem = function () {
+
+    if(viewAction.choiseArray[viewAction.currentNumber - 1]){
+        viewAction.currentNumber += 1;
+        //重新更新页面
+        //题目
+        $('.item-title').text(viewAction.testGroup[viewAction.currentNumber - 1].itemTitle);
+        $('.item-number').text(viewAction.testGroup[viewAction.currentNumber - 1].itemNumber);
+        //遍历选项结果
+        var $itemChoises = $('.item-choises');
+        //移除前一道题的选择项
+        $itemChoises.children().remove();
+
+        for(var index in viewAction.testGroup[viewAction.currentNumber - 1].itemChoise){
+            //其中一个选项
+            var $choiseDiv = $('<div class="choise">');
+            //选项标签和选项内容
+            var choiseTag = viewAction.testGroup[viewAction.currentNumber - 1].itemChoise[index].choiseTag;
+            var choiseContent = viewAction.testGroup[viewAction.currentNumber - 1].itemChoise[index].choiseContent;
+            $choiseDiv.prop('id', choiseTag);
+            $choiseDiv.text(choiseTag + "." + choiseContent);
+            //添加到页面上
+            $itemChoises.append($choiseDiv);
+        }
+
+        //为点击选项绑定函数
+        $('.choise').click(function () {
+            $('.choise').css({
+                'color': '#7f948c',
+                'background-color': 'white'
+            });
+            $(this).css({
+                'background-color': '#7f948c',
+                'color': 'white'
+            });
+
+            viewAction.choiseArray[viewAction.currentNumber - 1] = {
+                choiseTag: $(this).prop('id'),
+                itemMode: viewAction.testGroup[viewAction.currentNumber - 1].itemMode
+            }
+
+        });
+
+        //判断是否已经到最后一道题目
+        if(!viewAction.testGroup[viewAction.currentNumber - 1 + 1]){
+            $('#submitDiv').fadeIn();
+        }
+    }else {
+        viewAction.modalWindow('在选择本道题的答案后才能进入下一道题.');
+    }
+};
+
+/* 切换到上一道题目 */
+viewAction.lastItem = function () {
+
+    if(viewAction.choiseArray[viewAction.currentNumber - 1 - 1]){
+        viewAction.currentNumber -= 1;
+        //重新更新页面
+        //题目
+        $('.item-title').text(viewAction.testGroup[viewAction.currentNumber - 1].itemTitle);
+        $('.item-number').text(viewAction.testGroup[viewAction.currentNumber - 1].itemNumber);
+        //遍历选项结果
+        var $itemChoises = $('.item-choises');
+        //移除前一道题的选择项
+        $itemChoises.children().remove();
+
+        for(var index in viewAction.testGroup[viewAction.currentNumber - 1].itemChoise){
+            //其中一个选项
+            var $choiseDiv = $('<div class="choise">');
+            //选项标签和选项内容
+            var choiseTag = viewAction.testGroup[viewAction.currentNumber - 1].itemChoise[index].choiseTag;
+            var choiseContent = viewAction.testGroup[viewAction.currentNumber - 1].itemChoise[index].choiseContent;
+            $choiseDiv.prop('id', choiseTag);
+            $choiseDiv.text(choiseTag + "." + choiseContent);
+            //添加到页面上
+            $itemChoises.append($choiseDiv);
+        }
+    }else {
+        this.modalWindow("已经位于第一道题目!");
+    }
+};
+
+/* 提交结果 */
+viewAction.submit = function () {
+    alert(this.choiseArray);
+};

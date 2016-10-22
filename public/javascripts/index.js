@@ -92,7 +92,7 @@ indexAction.updatePage = function (JSONdata) {
     };
 
     if(parsedData.error){
-        return alert("服务器发生错误: " + parsedData.error);
+        return this.modalWindow("服务器发生错误: " + parsedData.error);
     }
     //清除缓存数据
     if(indexAction.isClear) {
@@ -102,7 +102,7 @@ indexAction.updatePage = function (JSONdata) {
     }
     //没有数据提示用户
     if(parsedData.testArray.length == 0){
-        alert('抱歉,没有更多数据!');
+        this.modalWindow('抱歉,没有更多数据!');
     }
     //遍历对象数组构造DOM对象
     for(var testIndex in parsedData.testArray) {
@@ -178,7 +178,7 @@ indexAction.testTypeDefine = function () {
         pageLimit: indexAction.pageLimit
     }, function (err, JSONdata) {
         if(err){
-            return alert("发生错误: " + err);
+            return this.modalWindow("发生错误: " + err);
         }
         indexAction.updatePage(JSONdata);
     });
@@ -268,6 +268,16 @@ indexAction.updateHot = function (type) {
         );
     }
 };*/
+
+/* 模态弹窗 */
+indexAction.modalWindow = function(text) {
+
+    $('.modal-body').text(text);
+    $('#modalWindow').modal("show", {
+        backdrop : true,
+        keyboard : true
+    });
+};
 
 /* 页面底部和底部跳转 */
 indexAction.goTop = function goTop() {

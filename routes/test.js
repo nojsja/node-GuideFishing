@@ -42,9 +42,37 @@ function test(app) {
     /* 获取测试视图主页*/
     app.get('/testView/:testType/:testTitle', function (req, res) {
 
-       res.render('testView', {
-           title: '评测页面'
+        //评测类型
+        var testType = req.params.testType;
+        var testTitle = req.params.testTitle;
+        //跳转到页面
+        res.render('testView', {
+            title: '评测页面',
+            testType: testType,
+            testTitle: testTitle
        });
+    });
+
+    /* 获取一组测试题目 */
+    app.post('/testView/:testType/:testTitle', function (req, res) {
+
+        //筛选条件
+        var condition = {
+            testType: req.params.testType,
+            testTitle: req.params.testTitle
+        };
+        //得到题目信息
+        AllTest.getDetail(condition, function (err, doc) {
+            if(err){
+                return res.json( JSON.stringify({
+                    error: true
+                }) );
+            }
+            //成功读取到后返回本组题目
+            return res.json( JSON.stringify({
+                testGroup: doc.testGroup
+            }) );
+        })
     });
 
     /* 提交评测结果 */
@@ -52,7 +80,7 @@ function test(app) {
 
         /* 评测结果伪数据 */
         var submitData = {};
-        submitData.choiseArray = [
+        /*submitData.choiseArray = [
             {
                 choiseTag: "A",
                 itemMode: "CA"
@@ -65,9 +93,10 @@ function test(app) {
                 choiseTag: "C",
                 itemMode: "CC"
             }
-        ];
-        submitData.testType = "character";
-        submitData.testTitle = "这是这组性格测试的标题";
+        ];*/
+        submitData.choiseArray = req.body.choiseArray;
+        submitData.testType = req.body.testType;
+        submitData.testTitle = req.body.testTitle;
 
         var testResult = new scoreFactory(submitData);
         console.log('评测结果: ' + testResult);
