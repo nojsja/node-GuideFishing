@@ -210,10 +210,7 @@ a {
 
 /* 类型信息 */
 .type-img {
-    background: url("/images/testType/character.jpg") no-repeat;
     display: block;
-    -webkit-background-size: cover;
-    background-size: cover;
     width: 5rem;
     height: 5rem;
     margin: 0 auto;

@@ -5,9 +5,13 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var format = require('util').format;
 var bodyParser = require('body-parser');
+//定时器
+var schedule = require('node-schedule');
 //持久化session信息
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
+//数据库定时器
+var MongoSchedule = require('./models/MongoSchedule.js');
 //项目设置
 var settings = require('./settings');
 
@@ -50,6 +54,13 @@ app.use(session({
 index(app);
 test(app);
 admin(app);
+
+//node-schedule定时执行任务,更新popolar表,每天的凌晨零点
+var rule = new schedule.RecurrenceRule()
+rule.dayOfWeek = new schedule.Range(0,6);
+rule.hour = 0;
+rule.minute = 0;
+var scheduleJob = schedule.scheduleJob(rule, MongoSchedule);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

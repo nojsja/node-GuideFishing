@@ -22,14 +22,14 @@
 <!--评测介绍首部-->
 <div class="container detail-head">
     <div class="detail-head-img"></div>
-    <p class="detail-head-type">类型: 性格测试</p>
+    <p class="detail-head-type"><%= testType %></p>
     <p class="detail-head-title box1">
-        这是一份评测的标题信息
+        <%= testTitle %>
     </p>
     <div class="detail-head-other">
-        <div class="other-date">2016 10.19 12:00</div>
+        <div class="other-date"><%= date %></div>
         <div class="other-read">
-            <span class="glyphicon glyphicon-eye-open">20</span>
+            <span class="glyphicon glyphicon-eye-open"><%= frequency %></span>
         </div>
     </div>
 
@@ -39,7 +39,7 @@
 <div class="container detail-body">
     <div class="detail-body-abstract">
         <p class="abstract">
-            这是描述信息这是描述信息这是描述信息这是描述信息这是描述信息这是描述信息这是描述信息
+            <%= abstract %>
         </p>
     </div>
 </div>

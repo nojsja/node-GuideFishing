@@ -6,7 +6,12 @@
  */
 
 $(function () {
-
+    //开始测试
+    $('#startDiv').click(function () {
+        var testType = $('.detail-head-type').text();
+        var testTitle = $('.detail-head-title').text();
+        window.location.href = "/testView/" + testType + "/" + testTitle;
+    });
 });
 
 /* 页面action对象 */

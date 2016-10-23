@@ -11,6 +11,7 @@
       <link rel='stylesheet' href='/stylesheets/index.css' />
 
       <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+      <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
       <script type="text/javascript" src="/javascripts/index.js"></script>
   </head>
   <body>
@@ -78,95 +79,22 @@
   <div id="total" class="container">
 
       <!--评测列表-->
-      <div class="content-item shadow-grey">
+      <!--<div class="content-item shadow-grey">
           <span class="glyphicon glyphicon-pushpin push-pin"></span>
           <div class="content-item-left">
               <a class="content-item-title">标题English</a>
               <div class="content-item-abstract">
-                  <span class="glyphicon glyphicon-pencil"></span>
-                  这是简要描述这是简要描述这是简要描述这是简要描述这是简要描
+                  <span class="glyphicon glyphicon-pencil">这是简要描述这是简要描述这是简要描述这是简要描述这是简要描</span>
               </div>
           </div>
-          <!--课程类型区块-->
+          &lt;!&ndash;课程类型区块&ndash;&gt;
           <div class="content-item-right">
               <div class="type-img"></div>
               <p class="type-text">性格测试</p>
           </div>
-          <!--显示日期-->
+          &lt;!&ndash;显示日期&ndash;&gt;
           <p class="content-item-date"><span class="glyphicon glyphicon-time">2016.10.l7 17:28</span></p>
-      </div>
-
-      <div class="content-item shadow-grey">
-          <span class="glyphicon glyphicon-pushpin push-pin"></span>
-          <div class="content-item-left">
-              <a class="content-item-title">标题English</a>
-              <div class="content-item-abstract">
-                  <span class="glyphicon glyphicon-pencil"></span>
-                  这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述
-              </div>
-          </div>
-          <!--课程类型区块-->
-          <div class="content-item-right">
-              <div class="type-img"></div>
-              <p class="type-text">人格测试</p>
-          </div>
-          <!--显示日期-->
-          <p class="content-item-date"><span class="glyphicon glyphicon-time">2016.10.l7 17:28</span></p>
-      </div>
-
-      <div class="content-item shadow-grey">
-          <span class="glyphicon glyphicon-pushpin push-pin"></span>
-          <div class="content-item-left">
-              <a class="content-item-title">标题English</a>
-              <div class="content-item-abstract">
-                  <span class="glyphicon glyphicon-pencil"></span>
-                  这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述
-              </div>
-          </div>
-          <!--课程类型区块-->
-          <div class="content-item-right">
-              <div class="type-img"></div>
-              <p class="type-text">潜能测试</p>
-          </div>
-          <!--显示日期-->
-          <p class="content-item-date"><span class="glyphicon glyphicon-time">2016.10.l7 17:28</span></p>
-      </div>
-
-      <div class="content-item shadow-grey">
-          <span class="glyphicon glyphicon-pushpin push-pin"></span>
-          <div class="content-item-left">
-              <a class="content-item-title">标题English</a>
-              <div class="content-item-abstract">
-                  <span class="glyphicon glyphicon-pencil"></span>
-                  这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述
-              </div>
-          </div>
-          <!--课程类型区块-->
-          <div class="content-item-right">
-              <div class="type-img"></div>
-              <p class="type-text">交际测试</p>
-          </div>
-          <!--显示日期-->
-          <p class="content-item-date"><span class="glyphicon glyphicon-time">2016.10.l7 17:28</span></p>
-      </div>
-
-      <div class="content-item shadow-grey">
-          <span class="glyphicon glyphicon-pushpin push-pin"></span>
-          <div class="content-item-left">
-              <a class="content-item-title">标题English</a>
-              <div class="content-item-abstract">
-                  <span class="glyphicon glyphicon-pencil"></span>
-                  这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述这是简要描述
-              </div>
-          </div>
-          <!--课程类型区块-->
-          <div class="content-item-right">
-              <div class="type-img"></div>
-              <p class="type-text">情感测试</p>
-          </div>
-          <!--显示日期-->
-          <p class="content-item-date"><span class="glyphicon glyphicon-time">2016.10.l7 17:28</span></p>
-      </div>
+      </div>-->
 
   </div>
 
@@ -175,29 +103,12 @@
       <input type="button" class="btn btn-success" value="加载更多..."></input>
   </div>
 
-  <!--分页导航-->
-  <!--<div class="container" >
-      <ul class="pagination" id="pageNav">
-          <li><a id="first">首页</a></li>
-          <li class="page-number"><a>1</a></li>
-          <li class="page-number"><a>2</a></li>
-          <li class="page-number"><a>3</a></li>
-          <li class="page-number"><a>4</a></li>
-          <li class="page-number"><a>5</a></li>
-          <li class="page-number"><a>6</a></li>
-          <li class="page-number"><a>7</a></li>
-          <li class="page-number"><a>8</a></li>
-          <li class="page-number"><a>9</a></li>
-          <li class="page-number"><a>10</a></li>
-          <li><a id="last">&laquo;</a></li>
-          <li><a id="next">&raquo;</a></li>
-      </ul>
-  </div>-->
-
   <!--返回顶部按钮-->
   <%- include pageAnchor.ejs%>
   <!--底部导航-->
   <%- include footer.ejs%>
+  <!--模态弹窗-->
+  <%- include modalWindow.ejs%>
 
   </body>
 </html>
