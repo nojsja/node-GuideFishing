@@ -15,7 +15,7 @@ var mongoose = require('mongoose');
 var testSchema = require('./test_schema.js').testSchema;
 
 /* 创建工厂方法 */
-var scoreFactory = function (submitData) {
+var scoreFactory = function (submitData, callback) {
     /* scoreModeInfo包含几个属性:scoreMode -- 得分模式,
     *  scoreSection -- 得分段信息
     *  scoreValue -- 得分基值 */
@@ -27,15 +27,26 @@ var scoreFactory = function (submitData) {
     };
     //提交的选项数据
     var choiseArray = submitData.choiseArray;
-    var scoreModeInfo = scoreFactory.getScoreModeInfo(condition);
-    //安全检测,防止用户创建错误,比如 var fac = scoreFactory(data); -- 缺少new关键字
-    if(this instanceof scoreFactory) {
-        //返回评测的结果信息
-        var result = this[scoreModeInfo.scoreMode](choiseArray, scoreModeInfo);
-        return result;
-    }else {
-        return new scoreFactory(submitData);
-    }
+    var that = this;
+    scoreFactory.getScoreModeInfo(condition, function (scoreModeInfo) {
+        console.log(scoreModeInfo.scoreSection);
+        //读取失败
+        if(!scoreModeInfo){
+            return callback({
+                error: true,
+                totalScore: 0,
+                result: "no info."
+            });
+        }
+        //安全检测,防止用户创建错误,比如 var fac = scoreFactory(data); -- 缺少new关键字
+        if(that instanceof scoreFactory) {
+            //返回评测的结果信息
+            var result = that[scoreModeInfo.scoreMode](choiseArray, scoreModeInfo);
+            callback(result);
+        }else {
+            new scoreFactory(submitData);
+        }
+    });
 };
 
 /* 创建各个工厂中的组件,具体化来说就是各种得分方法,
@@ -47,37 +58,41 @@ scoreFactory.prototype = {
     //两个参数分别表示用户提交选项的对象数组,
     //scoreModeInfo里面包含用于统计得分的信息
     Common: function (choiseArray, scoreModeInfo) {
+
         var scoreValue = scoreModeInfo.scoreValue;
         var scoreSection = scoreModeInfo.scoreSection;
         //总得分
         var totalScore = 0;
         //总的评测结果
         for(var choise in choiseArray) {
-            switch (choise.itemMode) {
+            switch (choiseArray[choise].itemMode) {
                 case "CA":
-                    if (choise.choiseTag == "A") {
+                    console.log('case1')
+                    if (choiseArray[choise].choiseTag == "A") {
                         totalScore += scoreValue;
-                    } else if (choise.choiseTag == "B") {
+                    } else if (choiseArray[choise].choiseTag == "B") {
                         totalScore += 0;
-                    } else if (choise.choiseTag == "C") {
+                    } else if (choiseArray[choise].choiseTag == "C") {
                         totalScore -= scoreValue;
                     }
                     break;
                 case "CB":
-                    if (choise.choiseTag == "A") {
+                    console.log('case2')
+                    if (choiseArray[choise].choiseTag == "A") {
                         totalScore -= scoreValue;
-                    } else if (choise.choiseTag == "B") {
+                    } else if (choiseArray[choise].choiseTag == "B") {
                         totalScore += scoreValue;
-                    } else if (choise.choiseTag == "C") {
+                    } else if (choiseArray[choise].choiseTag == "C") {
                         totalScore += 0;
                     }
                     break;
                 case "CC":
-                    if (choise.choiseTag == "A") {
+                    console.log('case3')
+                    if (choiseArray[choise].choiseTag == "A") {
                         totalScore += 0;
-                    } else if (choise.choiseTag == "B") {
+                    } else if (choiseArray[choise].choiseTag == "B") {
                         totalScore -= scoreValue;
-                    } else if (choise.choiseTag == "C") {
+                    } else if (choiseArray[choise].choiseTag == "C") {
                         totalScore += scoreValue;
                     }
                     break;
@@ -86,21 +101,26 @@ scoreFactory.prototype = {
             }
         }
         //根据分数段得出统计结果
-        for(var section in scoreSection){
-            if((totalScore >= section.scoreHead) && (totalScore <= section.scoreTail)){
-                /* 分布在此区间则返回相对的结果 */
-                return {
-                    totalScore: totalScore,
-                    result: section.result
-                }
-            }
-        }
-        //未分布于相应的分数段
-        return {
+        var testResult = {
+            error: false,
             totalScore: 0,
             result: "no info."
+        };
+        for(var section in scoreSection){
+            console.log(scoreSection[section].scoreHead + ' ' + scoreSection[section].scoreTail);
+            if((totalScore >= scoreSection[section].scoreHead) && (totalScore <= scoreSection[section].scoreTail)){
+                /* 分布在此区间则返回相对的结果 */
+                testResult.totalScore = totalScore;
+                testResult.result = scoreSection[section].result;
+                console.log(scoreSection[section].result);
+                break;
+            }
         }
-    },
+        console.log(2);
+        //未分布于相应的分数段
+        return testResult;
+    }
+    ,
     //YES or NO 统计方法, 只有两个选项
     NegaPositive: function (choiseArray, scoreModeInfo) {
 
@@ -108,7 +128,7 @@ scoreFactory.prototype = {
 };
 
 /* 得到某套题的得分方法和得分分段信息以及得分分值 */
-scoreFactory.getScoreModeInfo = function (condition) {
+scoreFactory.getScoreModeInfo = function (condition, callback) {
     //连接数据库准备
     var db = mongoose.connect('mongodb://localhost/QN');
     var Tests = mongoose.model('Tests', testSchema);
@@ -124,20 +144,22 @@ scoreFactory.getScoreModeInfo = function (condition) {
             scoreSection: 1
         });
         //执行查询
-        query.exec(function (err, docs) {
+        query.exec(function (err, doc) {
             if(err){
                 console.log("getScoreModeInfo error");
                 mongoose.disconnect();
                 //返回空值,表示服务器内部错误
-                return {};
+                return callback();
             }
             mongoose.disconnect();
             //返回需要的评测依赖信息
-            return {
-                scoreMode: docs.scoreMode,
-                scoreValue: docs.scoreValue,
-                scoreSection: docs.scoreSection
-            }
+            console.log(doc.scoreSection);
+            callback({
+                scoreMode: doc.scoreMode,
+                scoreValue: doc.scoreValue,
+                scoreSection: doc.scoreSection
+            });
+
         });
     });
 };

@@ -78,8 +78,9 @@ function test(app) {
     /* 提交评测结果 */
     app.post('/submit', function (req, res) {
 
-        /* 评测结果伪数据 */
-        var submitData = {};
+        /* 上传的选项结果 */
+        var submitData = req.body.submitData;
+        console.log(submitData);
         /*submitData.choiseArray = [
             {
                 choiseTag: "A",
@@ -94,14 +95,12 @@ function test(app) {
                 itemMode: "CC"
             }
         ];*/
-        submitData.choiseArray = req.body.choiseArray;
-        submitData.testType = req.body.testType;
-        submitData.testTitle = req.body.testTitle;
 
-        var testResult = new scoreFactory(submitData);
-        console.log('评测结果: ' + testResult);
-        //返回评测结果的json数据,包括评测得分和结果分析
-        res.json(JSON.stringify(testResult));
+        var testResult = new scoreFactory(submitData, function (resultData) {
+            console.log('评测结果: ' + resultData.result);
+            //返回评测结果的json数据,包括评测得分和结果分析
+            res.json(JSON.stringify(resultData));
+        });
     });
 }
 
