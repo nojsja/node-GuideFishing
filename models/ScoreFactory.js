@@ -29,7 +29,7 @@ var scoreFactory = function (submitData, callback) {
     var choiseArray = submitData.choiseArray;
     var that = this;
     scoreFactory.getScoreModeInfo(condition, function (scoreModeInfo) {
-        console.log(scoreModeInfo.scoreSection);
+
         //读取失败
         if(!scoreModeInfo){
             return callback({
@@ -67,7 +67,6 @@ scoreFactory.prototype = {
         for(var choise in choiseArray) {
             switch (choiseArray[choise].itemMode) {
                 case "CA":
-                    console.log('case1')
                     if (choiseArray[choise].choiseTag == "A") {
                         totalScore += scoreValue;
                     } else if (choiseArray[choise].choiseTag == "B") {
@@ -77,7 +76,6 @@ scoreFactory.prototype = {
                     }
                     break;
                 case "CB":
-                    console.log('case2')
                     if (choiseArray[choise].choiseTag == "A") {
                         totalScore -= scoreValue;
                     } else if (choiseArray[choise].choiseTag == "B") {
@@ -87,7 +85,6 @@ scoreFactory.prototype = {
                     }
                     break;
                 case "CC":
-                    console.log('case3')
                     if (choiseArray[choise].choiseTag == "A") {
                         totalScore += 0;
                     } else if (choiseArray[choise].choiseTag == "B") {
@@ -116,7 +113,6 @@ scoreFactory.prototype = {
                 break;
             }
         }
-        console.log(2);
         //未分布于相应的分数段
         return testResult;
     }
@@ -153,7 +149,6 @@ scoreFactory.getScoreModeInfo = function (condition, callback) {
             }
             mongoose.disconnect();
             //返回需要的评测依赖信息
-            console.log(doc.scoreSection);
             callback({
                 scoreMode: doc.scoreMode,
                 scoreValue: doc.scoreValue,

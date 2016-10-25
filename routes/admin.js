@@ -1,81 +1,112 @@
 /**
  * Created by yangw on 2016/10/19.
- * 管理员相关的路由.
- * !!测试通过
+ * 管理员操作相关的路由
  */
+
+/**
+ *  获取的题目伪数据
+ *  var test = {
+    testType: "potential",
+    date: getDate(),
+    scoreMode: "Common",
+    abstract: "这是一组性格测试的题目集合",
+    testTitle: "这是这组性格测试的标题4",
+    frequency: 2,
+    scoreValue: 40,
+    scoreSection:
+        [{scoreHead: 0, scoreTail: 40, result: "40分和40分以下的结果"},
+        {scoreHead: 41, scoreTail: 100, result: "41分到100分的结果"}],
+    testGroup:
+        [
+            {itemTitle: "请选择一个", itemNumber: 1, itemMode: "CA",
+            itemChoise: [{choiseTag: "A", choiseContent: "选项A"},{choiseTag: "B", choiseContent: "选项B"}]
+            },
+            {itemTitle: "请选择一个", itemNumber: 2, itemMode: "CB",
+            itemChoise: [{choiseTag: "A", choiseContent: "选项A"},{choiseTag: "B", choiseContent: "选项B"}]
+            }
+        ],
+};
+*/
 
 /* 引入数据库模式 */
 var AllTest = require('../models/AllTest.js');
+var color = require('colors-cli');
+
+/**
+ * console.log(color.cyan_bt('颜色测试'));
+ * console.log(color.red_bt('颜色测试'));
+ * console.log(color.green_bt('颜色测试'));
+*/
 
 function admin(app) {
 
-    /* 获取管理员页面 */
-    app.get('/admin', function (req, res) {
-        res.render('admin', {
-            title: '管理'
+    /* 获取管理员创建页面 */
+    app.get('/admin/create', function (req, res) {
+        res.render('adminEdit', {
+            title: '创建新的评测'
+        });
+    });
+
+    /* 获取管理员管理页面 */
+    app.get('/admin/manager', function (req, res) {
+        res.render('adminManager', {
+            title: '管理所有评测'
+        });
+    });
+
+    /* 获取管理员预览页面 */
+    app.get('/admin/preview/:testType/:testTitle', function (req, res) {
+        res.render('adminPreview', {
+            title: '快速预览',
+            testType: req.params.testType,
+            testTitle: req.params.testTitle
+        });
+    });
+
+    /* 手动预览之前需要输入预览文档的testType和testTitle */
+    app.get('/admin/preview', function (req, res) {
+
+        //筛选条件
+        var testType = req.body.testType;
+        var testTitle = req.body.testTitle;
+        res.render('adminPreview',  {
+            title: '快速预览',
+            testType: testType,
+            testTitle: testTitle
         });
     });
 
     /* 存储一个文档 */
-    app.get('/save', function (req, res) {
-        var testGroup = {
-            testType: "potential",
-            date: getDate(),
-            scoreMode: "Common",
-            abstract: "这是一组性格测试的题目集合",
-            testTitle: "这是这组性格测试的标题4",
-            frequency: 2,
-            scoreValue: 40,
-            scoreSection: [
-                {
-                    scoreHead: 0,
-                    scoreTail: 40,
-                    result: "40分和40分以下的结果"
-                },{
-                    scoreHead: 41,
-                    scoreTail: 100,
-                    result: "41分到100分的结果"
-                }
-            ],
-            testGroup: [
-                {
-                    itemTitle: "请选择一个",
-                    itemNumber: 1,
-                    itemMode: "CA",
-                    itemChoise: [
-                        {
-                            choiseTag: "A",
-                            choiseContent: "选项A"
-                        },{
-                            choiseTag: "B",
-                            choiseContent: "选项B"
-                        }
-                    ]
-                },{
-                    itemTitle: "请选择一个",
-                    itemNumber: 2,
-                    itemMode: "CB",
-                    itemChoise: [
-                        {
-                            choiseTag: "A",
-                            choiseContent: "选项A"
-                        },{
-                            choiseTag: "B",
-                            choiseContent: "选项B"
-                        },
-                    ]
-                }
-            ],
-        };
+    app.post('/save', function (req, res) {
+
+        //文档对象
+        var test = {};
+        test.testType = req.body.testType;
+        test.date = getDate();
+        test.scoreMode = req.body.scoreMode;
+        test.abstract = req.body.abstract;
+        test.testTitle = req.body.testTitle;
+        test.frequency = 0;
+        test.scoreValue = req.body.frequency;
+        test.scoreSection = req.body.scoreSection;
+        test.testGroup = req.body.testGroup;
+
         //创建数据库模式对象
-        var newTest = new AllTest(testGroup);
+        var newTest = new AllTest(test);
         newTest.save(function (err) {
             if(err){
                 console.log("it's error!");
-                res.send('error');
+                res.json(JSON.stringify({
+                    error: true
+                }));
             }else {
                 console.log('存储成功!');
-                res.send('ok');
+                /* 成功后返回跳转需要的数据 */
+                res.json(JSON.stringify({
+                    error: false,
+                    testType: test.testType,
+                    testTitle: test.testTitle
+                }));
             }
         });
 

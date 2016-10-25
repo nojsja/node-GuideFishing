@@ -4,10 +4,20 @@
  * 评测题目相关的路由
  */
 
+/**
+ * 评测结果数据格式:
+ * submitData.choiseArray = [
+    {choiseTag: "A", itemMode: "CA"},
+    {choiseTag: "B", itemMode: "CB"},
+    {choiseTag: "C", itemMode: "CC"}
+ ];
+ */
+
 /* 引入工厂模式 */
 var scoreFactory = require('../models/ScoreFactory.js');
 var AllTest = require('../models/AllTest.js');
 
+/* 测试题目路由 */
 function test(app) {
 
     /* 获取测试detail页面 */
@@ -18,9 +28,10 @@ function test(app) {
             testType: req.params.testType
         };
         AllTest.getDetail(condition, function (err, doc) {
-           if(err) {
+            // 数据监测
+           if(err || !doc.testTitle || !doc.testType) {
                return res.render('testDetail', {
-                  title: '评测详情',
+                   title: '评测详情',
                    testTitle: 'error!!!',
                    testType: 'error!!!',
                    abstract: 'error!!!',
@@ -78,26 +89,10 @@ function test(app) {
     /* 提交评测结果 */
     app.post('/submit', function (req, res) {
 
-        /* 上传的选项结果 */
+         // 上传的选项结果
         var submitData = req.body.submitData;
-        console.log(submitData);
-        /*submitData.choiseArray = [
-            {
-                choiseTag: "A",
-                itemMode: "CA"
-            },
-            {
-                choiseTag: "B",
-                itemMode: "CB"
-            },
-            {
-                choiseTag: "C",
-                itemMode: "CC"
-            }
-        ];*/
 
         var testResult = new scoreFactory(submitData, function (resultData) {
-            console.log('评测结果: ' + resultData.result);
             //返回评测结果的json数据,包括评测得分和结果分析
             res.json(JSON.stringify(resultData));
         });

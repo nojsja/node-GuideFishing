@@ -1,0 +1,92 @@
+<!--adminManager-->
+<!--管理员管理所有题目的页面,即增删查改-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel='stylesheet' href='/stylesheets/adminManager.css' />
+
+    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/adminManager.js"></script>
+</head>
+
+<body>
+
+<!--首部导航-->
+<header class="head">
+    <% include adminHeader.ejs%>
+</header>
+
+<!--主要内容管理部分-->
+<div class="container total">
+
+    <!--条件筛选-->
+    <div class="col-md-12 total-condition">
+        <fieldset>
+            <legend class="legend">指定筛选条件</legend>
+
+            <div class="col-md-2 title">测试类型</div>
+            <div class="col-md-12 condition-testType">
+                <label class="checkbox-inline"><input type="checkbox" value="character" class="">性格测试</label>
+                <label class="checkbox-inline"><input type="checkbox" value="potential" class="">潜能测试</label>
+                <label class="checkbox-inline"><input type="checkbox" value="communication" class="">交际测试</label>
+                <label class="checkbox-inline"><input type="checkbox" value="emotion" class="">情感测试</label>
+                <label class="checkbox-inline"><input type="checkbox" value="personality" class="">人格测试</label>
+            </div>
+
+            <div class="col-md-2 title">测试题目</div>
+            <div class="col-md-12 condition-testTitle">
+                <input type="text" class="" placeholder="可以指定某一个具体的题目...">
+            </div>
+
+            <div class="col-md-2 title">筛选条数(必选)</div>
+            <div class="col-md-12 condition-number">
+                <input type="number" placeholder="结果数" id="number">
+            </div>
+            <div class="col-md-12 submit-div">
+                <input type="button" id="allSubmit" class="btn btn-default" value="搜索所有">
+                <input type="button" id="partSubmit" class="btn btn-success" value="筛选结果">
+            </div>
+        </fieldset>
+    </div>
+
+    <!--所有评测数据的表格-->
+    <div class="col-md-12 table table-responsive total-tests">
+        <fieldset>
+            <legend>所有数据</legend>
+            <table class="table table-hover  table-striped">
+                <tr>
+                    <th>标题</th>
+                    <th>类型</th>
+                    <th>创建日期</th>
+                    <th>得分模式</th>
+                    <th>点击量</th>
+                    <th>编辑</th>
+                    <th>删除</th>
+                </tr>
+                <tr>
+                    <td>这是标题这是标题这是标题</td>
+                    <td>character</td>
+                    <td>2016 10.24 10:34</td>
+                    <td>Common</td>
+                    <td>122</td>
+                    <td><span class="glyphicon glyphicon-edit"></span></td>
+                    <td><span class="glyphicon glyphicon-trash"></span></td>
+                </tr>
+
+            </table>
+        </fieldset>
+    </div>
+</div>
+
+<!--页脚导航-->
+<footer>
+    <% include footer.ejs%>
+</footer>
+</body>
