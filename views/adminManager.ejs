@@ -33,25 +33,25 @@
 
             <div class="col-md-2 title">测试类型</div>
             <div class="col-md-12 condition-testType">
-                <label class="checkbox-inline"><input type="checkbox" value="character" class="">性格测试</label>
-                <label class="checkbox-inline"><input type="checkbox" value="potential" class="">潜能测试</label>
-                <label class="checkbox-inline"><input type="checkbox" value="communication" class="">交际测试</label>
-                <label class="checkbox-inline"><input type="checkbox" value="emotion" class="">情感测试</label>
-                <label class="checkbox-inline"><input type="checkbox" value="personality" class="">人格测试</label>
+                <label class="checkbox-inline"><input type="checkbox" value="character" class="condition-testType-item">性格测试</label>
+                <label class="checkbox-inline"><input type="checkbox" value="potential" class="condition-testType-item">潜能测试</label>
+                <label class="checkbox-inline"><input type="checkbox" value="communication" class="condition-testType-item">交际测试</label>
+                <label class="checkbox-inline"><input type="checkbox" value="emotion" class="condition-testType-item">情感测试</label>
+                <label class="checkbox-inline"><input type="checkbox" value="personality" class="condition-testType-item">人格测试</label>
             </div>
 
             <div class="col-md-2 title">测试题目</div>
             <div class="col-md-12 condition-testTitle">
-                <input type="text" class="" placeholder="可以指定某一个具体的题目...">
+                <input type="text" id="testTitle" placeholder="可以指定某一个具体的题目...">
             </div>
 
-            <div class="col-md-2 title">筛选条数(必选)</div>
+            <div class="col-md-2 title">筛选条数</div>
             <div class="col-md-12 condition-number">
                 <input type="number" placeholder="结果数" id="number">
             </div>
             <div class="col-md-12 submit-div">
                 <input type="button" id="allSubmit" class="btn btn-default" value="搜索所有">
-                <input type="button" id="partSubmit" class="btn btn-success" value="筛选结果">
+                <input type="button" id="conditionSubmit" class="btn btn-success" value="筛选结果">
             </div>
         </fieldset>
     </div>
@@ -60,8 +60,8 @@
     <div class="col-md-12 table table-responsive total-tests">
         <fieldset>
             <legend>所有数据</legend>
-            <table class="table table-hover  table-striped">
-                <tr>
+            <table class="table table-hover table-striped" id="testTable">
+                <tr id="tableHead">
                     <th>标题</th>
                     <th>类型</th>
                     <th>创建日期</th>
@@ -70,20 +70,41 @@
                     <th>编辑</th>
                     <th>删除</th>
                 </tr>
-                <tr>
-                    <td>这是标题这是标题这是标题</td>
+                <!--<tr class="removeable">
+                    <td class="test-title">这是标题这是标题这是标题</td>
                     <td>character</td>
                     <td>2016 10.24 10:34</td>
                     <td>Common</td>
                     <td>122</td>
-                    <td><span class="glyphicon glyphicon-edit"></span></td>
-                    <td><span class="glyphicon glyphicon-trash"></span></td>
-                </tr>
+                    <td><span class="glyphicon glyphicon-edit edit"></span></td>
+                    <td><span class="glyphicon glyphicon-trash delete"></span></td>
+                </tr>-->
 
             </table>
         </fieldset>
+
+        <!--分页导航-->
+        <ul class="pagination" id="pageNav">
+            <li><a id="first">首页</a></li>
+            <li class="page-number"><a>1</a></li>
+            <li class="page-number"><a>2</a></li>
+            <li class="page-number"><a>3</a></li>
+            <li class="page-number"><a>4</a></li>
+            <li class="page-number"><a>5</a></li>
+            <li class="page-number"><a>6</a></li>
+            <li class="page-number"><a>7</a></li>
+            <li class="page-number"><a>8</a></li>
+            <li class="page-number"><a>9</a></li>
+            <li class="page-number"><a>10</a></li>
+            <li><a id="last">&laquo;</a></li>
+            <li><a id="next">&raquo;</a></li>
+        </ul>
     </div>
+
 </div>
+
+<!--模态弹窗-->
+<% include modalWindow.ejs%>
 
 <!--页脚导航-->
 <footer>

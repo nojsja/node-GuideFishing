@@ -128,8 +128,8 @@ function admin(app) {
     app.post('/deleteOne', function (req, res) {
 
         //必须要获取的文档主键,数据模拟
-        var testType = "character";
-        var testTitle = "这是这组性格测试的标题";
+        var testType = req.body.testType;
+        var testTitle = req.body.testTitle;
 
         AllTest.deleteOneDoc({
             testType: testType,
@@ -137,12 +137,12 @@ function admin(app) {
         }, function (err) {
             if(err){
                 return res.json(JSON.stringify( {
-                    err: err
+                    error: err
                 } ));
             }
             //成功返回JSON字符串信息
             res.json(JSON.stringify( {
-                err: null
+                error: null
             } ));
         });
     });

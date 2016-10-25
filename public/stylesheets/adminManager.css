@@ -85,10 +85,20 @@ a {
 .total-tests {
     margin-top: 4rem;
     margin-bottom: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 
     -webkit-box-shadow: 0 0px 10px #626262;
     -moz-box-shadow: 0 0px 10px #626262;
     box-shadow: 0 0px 10px #626262;
+}
+
+/* 删除和编辑 */
+.delete {
+    color: #b40000;
+}
+.edit {
+    color: #3e4abb;
 }
 
 /* 测试类型 */

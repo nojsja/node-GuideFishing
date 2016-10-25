@@ -1,0 +1,57 @@
+body {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+/* 区域划分 */
+.total {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.total-info {
+    padding: 1rem;
+    border: solid 1px grey;
+    min-height: 20rem;
+    height: auto;
+}
+
+.total-list {
+    border: solid 1px green;
+    min-height: 20rem;
+    height: auto;
+}
+
+.total-edit {
+    border: solid 1px blue;
+    min-height: 20rem;
+    height: auto;
+}
+
+.info-title {
+    margin-top: 1rem;
+}
+
+/* 测试题目相关详细信息 */
+.type-item {
+    float: left;
+    padding: 5px;
+    background-color: #3541a2;
+    color: white;
+    border-radius: 5px;
+    margin: 0.5rem;
+}
+
+.type-item:hover {
+    background-color: #790000;
+    color: #d2d6d1;
+
+    -webkit-transition: background-color 0.3s;
+    -moz-transition: background-color 0.3s;
+    -ms-transition: background-color 0.3s;
+    -o-transition: background-color 0.3s;
+    transition: background-color 0.3s;
+}

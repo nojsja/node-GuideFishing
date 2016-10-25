@@ -69,33 +69,52 @@ AllTest.readTestList = function (docCondition, callback) {
         //需要读取的文档的查询条件
         var condition = {};
         /* 读取条目数量 */
-        var number = 15;
+        var number = 20;
         /* 跳过读取的条目数量 */
         var skipNum = 0;
-        /* 需要发送给客户端的对象数组 */
+        /*** 需要发送给客户端的对象数组 ***/
         var testArray = [];
+        /* 测试类型数组 */
+        var testTypeArray = [];
+        /* 默认选择的数据项 */
+        var select = {
+            testTitle: 1,
+            testType: 1,
+            abstract: 1,
+            date: 1
+        };
 
         /* 进行条件判断客户端的筛选需求 */
         for(var con in docCondition) {
+            console.log(con);
             if(con == "limit") {
                 number = docCondition[con];
             }else if(con == "skip") {
                 skipNum = docCondition[con];
-            }else {
+            }else if(con == "select"){
+                select = docCondition[con];
+            }else if(con == "testTypeArray"){
+                testTypeArray = docCondition[con];
+            }
+            else {
                 //复制属性
                 condition[con] = docCondition[con];
             }
         }
 
+        console.log('limit: ' + number);
+        console.log('skip: ' + skipNum);
+        console.log('select: ' + JSON.stringify(select));
+        console.log(JSON.stringify(condition));
+
         var query = Tests.find().where(condition);
+        if(testTypeArray.length > 0){
+            console.log(testArray.length);
+            query.in('testType', testTypeArray);
+        }
         query.limit(number);
         //定制选择读取的类型
-        query.select({
-            testTitle: 1,
-            testType: 1,
-            abstract: 1,
-            date: 1
-        });
+        query.select(select);
         query.skip(skipNum);
         query.sort({date: -1});
         //执行查询
@@ -118,36 +137,27 @@ AllTest.readTestList = function (docCondition, callback) {
 /* 删除一个文档 */
 AllTest.deleteOneDoc = function (docCondition, callback) {
 
-    //要删除文档的判断条件
+    //多个判断依据
     var condition = docCondition;
     var db = mongoose.connect('mongodb://localhost/QN');
     var Tests = mongoose.model('Tests', testSchema);
     mongoose.connection.once('open', function () {
-        //query是返回的Document对象,注意和Model对象相区别
-        var query = Tests.findOne().where({
-            testType: condition.testType,
-            testTitle: condition.testTitle
-        });
-        //提交操作
+        var query = Tests.findOne().where(condition);
         query.exec(function (err, doc) {
             if(err){
                 mongoose.disconnect();
                 return callback(err);
             }
-           console.log('Before delete.');
             doc.remove(function (err, deleteDoc) {
                 if(err){
                     mongoose.disconnect();
                     return callback(err);
                 }
-                //成功删除
-                console.log('delet one doc error!');
                 mongoose.disconnect();
-                callback(null);
-            })
+                return callback(null);
+            });
         });
     });
-
 };
 
 /* 删除多个文档 */
