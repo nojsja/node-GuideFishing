@@ -22,7 +22,7 @@ var searchCondition = {
 
 function MongoSchedule() {
     var db = mongoose.connect('mongodb://localhost/QN');
-    var Tests = new testSchema('Tests', testSchema);
+    var Tests = mongoose.model('Tests', testSchema);
     mongoose.connection.once('open', function () {
 
         getPopularArray(function (popularArray) {
@@ -31,7 +31,7 @@ function MongoSchedule() {
                 return;
             }
             //将读取到的数据存入另一个popular表中
-            var Popular = new popularSchema("Popular", popularSchema);
+            var Popular = mongoose.model("Popular", popularSchema);
             mongoose.connection.once('open', function () {
                 // 遍历所有数组的的pupular item存入popular表
                 Popular.create(popularArray, function (err) {

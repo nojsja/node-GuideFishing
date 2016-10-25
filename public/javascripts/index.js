@@ -209,66 +209,6 @@ indexAction.updateHot = function (type) {
     $.post('/readHot', {hotType: type}, function (JSONdata){}, "JSON");
 };
 
-/* 分页导航事件 */
-/*indexAction.pageNavbarAction = function() {
-
-    var pageStart = 0;
-    var pageLimit = 10;
-    var that = this;
-    //点击首页按钮
-    $('#first').click(function() {
-        if($('.page-number:eq(0)').prop('class') == "active page-number"){
-            return;
-        }
-        $('.page-number[class="active page-number"]').prop('class', 'page-number');
-        $('.page-number:eq(0)').prop('class', 'active page-number');
-        pageStart = 0;
-        //读取文章列表
-        getTestList();
-    });
-    //点击页数按钮
-    $('.page-number').click(function() {
-        if($(this).prop('class') == "active page-number"){
-            return;
-        }
-        $('.page-number[class="active page-number"]').prop('class', 'page-number');
-        $(this).prop('class', 'active page-number');
-        pageStart = ($(this).children(0).text() - 1) * pageLimit;
-        getTestList();
-    });
-
-    //点击翻页按钮
-    $('#next').click(function() {
-        $('.page-number[class="active page-number"]').prop('class', 'page-number');
-        var $pageNumber = $('.page-number');
-        $.each($pageNumber.children(0), function (index, item) {
-            $(item).text( parseInt($(item).text()) + 10 );
-        });
-    });
-
-    $('#last').click(function() {
-        $('.page-number[class="active page-number"]').prop('class', 'page-number');
-        var $pageNumber = $('.page-number');
-        $.each($pageNumber.children(0), function (index, item) {
-            var $num = parseInt($(item).text());
-            $(item).text( ($num-10) > 0 ? ($num-10) : $num );
-        });
-    });
-
-    //读取评测列表
-    function getTestList(){
-        $.post('/readList', {
-                action : "readList",
-                type : indexAction.test.type,
-                number : pageLimit,
-                start: pageStart
-            }, function(JSONdata) {
-                that.updatePage(JSONdata);
-            }, "JSON"
-        );
-    }
-};*/
-
 /* 模态弹窗 */
 indexAction.modalWindow = function(text) {
 

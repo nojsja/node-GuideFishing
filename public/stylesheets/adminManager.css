@@ -1,0 +1,115 @@
+body {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+/* 局部文件 */
+.head {
+
+}
+
+.foot {
+
+}
+
+/* footer */
+.footer {
+    margin-top: 1rem;
+    margin-bottom: 5px;
+    padding: 0.5rem;
+    text-align: center;
+    min-height: 2rem;
+    bottom: 0;
+    border-top: solid 1px #6095d8;
+    background-color: white;
+}
+
+.footer-img {
+    display: inline-block;
+    background: url("/images/icons/Ciitec.jpg") no-repeat;
+    background-size: cover;
+    width: 5rem;
+    height: 2rem;
+    margin: 0 auto;
+}
+
+.footer-text {
+    display: inline-block;
+    text-align: center;
+    font-size: 1.5rem;
+    color: #3b3d3b;
+}
+
+/* 主要内容部分 */
+.total {
+    min-height: 20rem;
+    height: auto;
+}
+
+/* 筛选域 */
+.total-condition {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+
+    -webkit-box-shadow:  0 0px 10px #60606a;
+    -moz-box-shadow:  0 0px 10px #60606a;
+    box-shadow:  0 0px 10px #60606a;
+}
+
+.condition-testType,
+.condition-testTitle,
+.condition-number {
+    marin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.condition-testTitle > input{
+    width: 50%;
+    font-size: 1.5rem;
+}
+
+.condition-testType {
+    font-size: 1.6rem;
+}
+
+.condition-number {
+    fon-size: 1.6rem;
+}
+
+/* 所有数据 */
+.total-tests {
+    margin-top: 4rem;
+    margin-bottom: 1rem;
+
+    -webkit-box-shadow: 0 0px 10px #626262;
+    -moz-box-shadow: 0 0px 10px #626262;
+    box-shadow: 0 0px 10px #626262;
+}
+
+/* 测试类型 */
+.title {
+    margin-bottom: 1em;
+    font-size: 2rem;
+    background-color: #c2c6c1;
+    color: #340c29;
+    text-align: center;
+    -moz-box-shadow: 2px 2px #60606a;
+    -webkit-box-shadow: 2px 2px #60606a;
+    box-shadow: 2px 2px #60606a;
+}
+
+.submit-div {
+    text-align: right;
+}
+
+.legend {
+
+}
+
+
+

@@ -1,0 +1,48 @@
+<!--adminPreview-->
+<!--管理员预览题目的页面-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel='stylesheet' href='/stylesheets/admin.css' />
+
+    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/admin.js"></script>
+</head>
+<body>
+<!--首部导航栏-->
+<header class="head">
+    <%- include adminHeader.ejs%>
+</header>
+
+<!--主体部分-->
+<div class="container total">
+
+    <!--题目编辑器-->
+    <div class="col-md-4 test-editor"></div>
+
+    <!--所有题目-->
+    <div class="col-md-8 test-viewer"></div>
+
+    <!--提交和预览-->
+    <div class="submit-div">
+        <input type="button" class="btn btn-success" value="预览效果">
+        <input type="button" class="btn btn-danger" value="完成编辑">
+    </div>
+
+</div>
+
+<!--页脚-->
+<footer class="foot">
+</footer>
+
+<!--modalWindow-->
+<%- include modalWindow.ejs%>
+</body>
+</html>
