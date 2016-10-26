@@ -66,26 +66,121 @@
         <!--分数段设置-->
         <div class="col-md-12">
             <label class="info-title">分数段设置</label>
-            <div>
-                <div id="scoreHeadDiv"></div>
-                <div id="scoreHeadDiv"></div>
+            <div class="info-input">
+                <!--分数段段首-->
+                <div id="scoreHeadDiv" class="input-group">
+                    <span class="input-group-addon glyphicon glyphicon-chevron-left"></span>
+                    <input type="number" class="form-control" placeholder="请输入该分段的起始值">
+                </div>
+                <!--分数段段尾-->
+                <div id="scoreTailDiv" class="input-group">
+                    <input type="number" class="form-control" placeholder="请输入该分段的结束值">
+                    <span class="input-group-addon glyphicon glyphicon-chevron-right"></span>
+                </div>
+                <!--该分段统计结论-->
+                <div id="scoreResultDiv" class="form-group">
+                    <textarea rows="3" class="form-control" placeholder="请输入该分段的统计结论"></textarea>
+                </div>
+
+                <div id="scoreConfirmDiv">
+                    <input type="button" id="scoreConfirm" class="btn btn-success" value="添加" title="添加一个分段"></input>
+                    <input type="button" id="scoreCancel" class="btn btn-danger" value="删除" title="删除一个分段"></input>
+                    <!--已经存在的分段列表-->
+                    <div class="info-list">
+                        <span class="glyphicon glyphicon-pushpin"></span>
+                        <!--<div class="info-list-item">
+                            <div class="item-label">分数段0-30: </div>
+                            <div class="item-text">这是分段在0-30分的统计结果</div>
+                        </div>-->
+                    </div>
+                </div>
             </div>
+
         </div>
 
         <div class="col-md-12 form-group">
             <label class="info-title">题目简介</label>
-            <textarea rows="7" class="form-control" id="abstract"></textarea>
+            <textarea rows="6" class="form-control" id="abstract" placeholder="请输入简要的描述信息"></textarea>
         </div>
-
-
     </div>
 
-    <!--左部列表界面-->
-    <div class="col-md-9 total-list"></div>
+    <!--下面的题目编辑区域-->
+    <div class="col-md-12 total-content">
+        <!--编辑区域-->
+        <div class="col-md-3 total-edit">
 
-    <!--右边编辑区域-->
-    <div class="col-md-3 total-edit"></div>
+            <!--编号-->
+            <div class="form-group">
+                <label>编号:</label>
+                <input type="text" class="form-control" id="editNumber">
+            </div>
+
+            <div class="form-group">
+                <label>输入题目:</label>
+                <textarea rows="4" class="form-control" id="editTitle"></textarea>
+            </div>
+
+            <div class="form-group nextPara">
+                <label>得分子类型</label>
+                <div>
+                    <div class="type-item" id="CA">CA</div>
+                    <div class="type-item" id="CB">CB</div>
+                    <div class="type-item" id="CC">CC</div>
+                </div>
+            </div>
+
+            <div class="form-group nextPara">
+                <label>选项个数</label>
+                <div>
+                    <div class="type-item item-number">2</div>
+                    <div class="type-item item-number">3</div>
+                    <div class="type-item item-number">4</div>
+                </div>
+                <!--编辑各个选项,通过设置选项个数来显示各个选项的输入框-->
+                <div class="choises nextPara">
+                    <!--<div class="input-group">
+                        <label class="input-group-addon">A</label>
+                        <input type="text" class="form-control" id="inputA">
+                    </div>-->
+                </div>
+
+                <!--确认修改-->
+                <div class="nextPara">
+                    <input class="btn btn-success" type="button" id="editConfirm" value="确认修改">
+                    <input class="btn btn-danger" type="button" id="editCancel" value="编辑取消">
+                </div>
+            </div>
+
+
+        </div>
+
+        <!--列表界面-->
+        <div class="col-md-9">
+            <!--添加一组题目-->
+            <div class="edit-add" title="添加一道题目">
+                <span class="glyphicon glyphicon-plus"></span>
+            </div>
+            <div class="total-list">
+                <!--其中的一组题目-->
+                <div class="edit-new">
+                    <!--标题-->
+                    <div class="new-title">1.这是题目这是题目这是题目这是题目这
+                        这是题目这是题目这是题目这是题目这是题目是题目这是题目
+                        这是题目这是题目这是题目这是题目这是题目这是题目</div>
+                    <!--题目选项-->
+                    <div class="new-choises">
+                        <div class="choise" id="choiseA">A选项</div>
+                        <div class="choise" id="choiseB">B选项</div>
+                        <div class="choise" id="choiseC">C选项</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
+
+<!-- 模态弹窗 -->
+<% include modalWindow.ejs%>
 
 </body>

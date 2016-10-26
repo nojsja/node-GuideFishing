@@ -14,20 +14,27 @@ a {
 
 .total-info {
     padding: 1rem;
-    border: solid 1px grey;
     min-height: 20rem;
     height: auto;
+
+    -webkit-box-shadow: 0 0 5px #626262;
+    -moz-box-shadow: 0 0 5px #626262;
+    box-shadow: 0 0 5px #626262;
 }
 
 .total-list {
-    border: solid 1px green;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
     min-height: 20rem;
     height: auto;
 }
 
 .total-edit {
-    border: solid 1px blue;
-    min-height: 20rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    background-color: #d1d1d1;
     height: auto;
 }
 
@@ -43,6 +50,7 @@ a {
     color: white;
     border-radius: 5px;
     margin: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .type-item:hover {
@@ -54,4 +62,155 @@ a {
     -ms-transition: background-color 0.3s;
     -o-transition: background-color 0.3s;
     transition: background-color 0.3s;
+}
+
+#scoreHeadDiv,#scoreTailDiv {
+    width: 50%;
+    float: left;
+}
+
+#scoreConfirmDiv {
+    text-align: center;
+}
+
+/* 分段显示区域 */
+.info-list {
+    position: relative;
+    margin-top: 1rem;
+    border-top: solid 1px #c0c0c0;
+    background-color: #d1d1d1;
+    padding: 5px;
+    min-height: 2rem;
+    height: auto;
+}
+
+.info-list > span.glyphicon {
+    position: absolute;
+    right: 1rem;
+    top: -0.8rem;
+    font-size: 2rem;
+}
+
+.info-list-item {
+    position: relative;
+    border-radius: 5px;
+    padding: 5px;
+    text-align: left;
+    border: solid 1px #ffffff;
+    background-color: #ffffff;
+    color: #9f0000;
+    width: 80%;
+    min-height: 2rem;
+    height:auto;
+    margin: 0.3rem auto;
+}
+
+.info-list-item:hover {
+    color: #ff6641;
+    background-color: rgba(0, 0, 0, 0.56);
+    -webkit-transition: background-color 0.3s;
+    -moz-transition: background-color 0.3s;
+    -ms-transition: background-color 0.3s;
+    -o-transition: background-color 0.3s;
+    transition: background-color 0.3s;
+}
+
+.item-label {
+    font-weight: bold;
+    background-color: #d2d6d1;
+    padding: 2px;
+}
+
+.item-text {
+    margin-top: 10px;
+}
+
+/* 下面的题目编辑区域 */
+.total-content {
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+
+    -webkit-box-shadow:  0 0 5px #626262;
+    -moz-box-shadow:  0 0 5px #626262;
+    box-shadow:  0 0 5px #626262;
+}
+
+/* 加一个题目 */
+.edit-add {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 3rem;
+    color: #ffffff;
+    border:solid 2px #ffffff;
+    text-align: center;
+    height: 4rem;
+    line-height: 4rem;
+    border-radius: 8px;
+    background-color: #b4b4b4;
+
+    -webkit-box-shadow:  5px 5px 10px #8483e6;
+    -moz-box-shadow:  5px 5px 10px #8483e6;
+    box-shadow:  0px 0px 15px #8483e6;
+}
+.edit-add:hover {
+    -webkit-box-shadow: inset 0 0 10px white;
+    -moz-box-shadow: inset 0 0 10px white;
+    box-shadow: inset 0 0 10px white;
+}
+
+/* 添加题目 */
+.edit-new {
+    padding: 10px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    min-height: 3rem;
+    height: auto;
+    background-color: #e5e5e5;
+    border-left: double 4px #8483e6;
+    -webkit-box-shadow:  0 0 7px #8483e6;
+    -moz-box-shadow:  0 0 7px #8483e6;
+    box-shadow:  0 0 7px #8483e6;
+
+    transition:All 0.3s ease-in-out;
+    -webkit-transition:All 0.3s ease-in-out;
+    -moz-transition:All 0.3s ease-in-out;
+    -o-transition:All 0.3s ease-in-out;
+}
+
+.edit-new:hover {
+    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+}
+
+.new-title {
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 0 6px #3e4abb;
+}
+
+.new-choises {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.choise {
+    color: white;
+    border: solid 1px white;
+    background-color: #b4b4b4;
+    margin: 2px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/* 切换到下一行 */
+.nextPara {
+    clear: both;
+}
+
+/* 确认修改 */
+#editConfirm, #editCancel {
+    margin-top: 2rem;
 }
