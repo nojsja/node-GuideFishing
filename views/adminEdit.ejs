@@ -2,7 +2,7 @@
 <!--管理员编辑和创建题目的页面-->
 
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <title><%= title %></title>
     <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
@@ -33,24 +33,24 @@
         <!--标题-->
         <div class="form-group col-md-12">
             <label class="info-title">测评标题</label>
-            <input type="text" class="form-control">
+            <input type="text" class="form-control" id="testTitle">
         </div>
 
         <!--单次得分分值-->
         <div class="form-group col-md-12">
             <label class="info-title">得分分值</label>
-            <input type="number" class="form-control">
+            <input type="number" id="scoreValue" class="form-control">
         </div>
 
         <!--类型-->
         <div class="col-md-12">
             <label class="info-title">测评类型</label>
             <div>
-                <div class="type-item" id="character">性格测试</div>
-                <div class="type-item" id="potential">潜能测试</div>
-                <div class="type-item" id="emotion">情感测试</div>
-                <div class="type-item" id="communication">交际测试</div>
-                <div class="type-item" id="personality">人格测试</div>
+                <div class="type-item test-type" id="character">性格测试</div>
+                <div class="type-item test-type" id="potential">潜能测试</div>
+                <div class="type-item test-type" id="emotion">情感测试</div>
+                <div class="type-item test-type" id="communication">交际测试</div>
+                <div class="type-item test-type" id="personality">人格测试</div>
             </div>
         </div>
 
@@ -58,8 +58,8 @@
         <div class="col-md-12">
             <label class="info-title">得分类型</label>
             <div>
-                <div class="type-item" id="Common">Common</div>
-                <div class="type-item" id="NegaPositive">NegaPositive</div>
+                <div class="type-item score-mode" id="Common">Common</div>
+                <div class="type-item score-mode" id="NegaPositive">NegaPositive</div>
             </div>
         </div>
 
@@ -84,7 +84,7 @@
 
                 <div id="scoreConfirmDiv">
                     <input type="button" id="scoreConfirm" class="btn btn-success" value="添加" title="添加一个分段"></input>
-                    <input type="button" id="scoreCancel" class="btn btn-danger" value="删除" title="删除一个分段"></input>
+                    <input type="button" id="scoreCancel" class="btn btn-default" value="删除" title="删除一个分段"></input>
                     <!--已经存在的分段列表-->
                     <div class="info-list">
                         <span class="glyphicon glyphicon-pushpin"></span>
@@ -122,16 +122,16 @@
 
             <div class="form-group nextPara">
                 <label>得分子类型</label>
-                <div>
-                    <div class="type-item" id="CA">CA</div>
-                    <div class="type-item" id="CB">CB</div>
-                    <div class="type-item" id="CC">CC</div>
+                <div class="score-child-div">
+                    <div class="type-item score-child" id="CA">CA</div>
+                    <div class="type-item score-child" id="CB">CB</div>
+                    <div class="type-item score-child" id="CC">CC</div>
                 </div>
             </div>
 
             <div class="form-group nextPara">
                 <label>选项个数</label>
-                <div>
+                <div class="item-number-div">
                     <div class="type-item item-number">2</div>
                     <div class="type-item item-number">3</div>
                     <div class="type-item item-number">4</div>
@@ -140,14 +140,14 @@
                 <div class="choises nextPara">
                     <!--<div class="input-group">
                         <label class="input-group-addon">A</label>
-                        <input type="text" class="form-control" id="inputA">
+                        <input type="text" class="form-control input-choise" choose="A">
                     </div>-->
                 </div>
 
                 <!--确认修改-->
                 <div class="nextPara">
                     <input class="btn btn-success" type="button" id="editConfirm" value="确认修改">
-                    <input class="btn btn-danger" type="button" id="editCancel" value="编辑取消">
+                    <input class="btn btn-default" type="button" id="editCancel" value="删除本题">
                 </div>
             </div>
 
@@ -160,6 +160,7 @@
             <div class="edit-add" title="添加一道题目">
                 <span class="glyphicon glyphicon-plus"></span>
             </div>
+
             <div class="total-list">
                 <!--其中的一组题目-->
                 <div class="edit-new">
@@ -169,18 +170,24 @@
                         这是题目这是题目这是题目这是题目这是题目这是题目</div>
                     <!--题目选项-->
                     <div class="new-choises">
-                        <div class="choise" id="choiseA">A选项</div>
-                        <div class="choise" id="choiseB">B选项</div>
-                        <div class="choise" id="choiseC">C选项</div>
+                        <div class="choise" choose="A">A选项</div>
+                        <div class="choise" choose="B">B选项</div>
+                        <div class="choise" choose="C">C选项</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!--创建完成-->
+    <div class="submit-div">
+        <input class="btn btn-danger" value="-创建完成-" id="submit">
+    </div>
 </div>
 
 <!-- 模态弹窗 -->
 <% include modalWindow.ejs%>
+
+<%include footer.ejs%>
 
 </body>

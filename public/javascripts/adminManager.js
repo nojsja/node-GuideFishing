@@ -11,6 +11,8 @@ $(function () {
 
     // 分页导航事件绑定
     managerAction.pageNavbarAction();
+    // 导航条
+    $('#manager').parent().prop('class', 'active');
     // 筛选提交按钮事件绑定
     $('#allSubmit').click(managerAction.getAllTests);
     $('#conditionSubmit').click(managerAction.getConditionTests);
