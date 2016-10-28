@@ -25,7 +25,7 @@ $(function () {
     // 绑定checkbox事件
     $('.condition-testType-item').change(managerAction.checkboxEvent);
 
-    // 得到列表
+    // 得到数据列表
     managerAction.getList();
 
 });
@@ -103,19 +103,72 @@ managerAction.getConditionTests = function () {
     managerAction.getList();
 };
 
-/* 编辑测评列表里面的某一项数据 */
-managerAction.editItem = function () {
-};
+/**
+ * 一套题目的预览
+ * 传入预览所需要的数据类型和标题
+ * 然后页面通过模态窗口的方式向用户显示预览数据
+ * */
 
-/* 删除列表里面的某一项数据 */
-managerAction.deleteItem = function () {
+/**
+ * DOM结构
+ * <div class="preview-list">
+ * <div class="preview-item">
+ * <div class="item-number">1</div>
+ * <div class="item-title">这是标题</div>
+ * <div class="item-choises">
+ * <div class="choise">选项A</div>
+ * <div class="choise">选项B</div>
+ * <div class="choise">选项C</div>
+ * </div>
+ * </div>
 
-};
+ </div>*/
+managerAction.previewWindow = function (testType, testTitle) {
 
-/* 预览列表里面的某一项数据 */
-managerAction.previewItem = function () {
+    // 访问地址
+    var urlArray = ['/testView', '/', testType, '/', testTitle];
+    $.post(urlArray.join(''), function (JSONdata) {
 
-};
+        var JSONobject = JSON.parse(JSONdata);
+        // 列表
+        var $previewList = $('.preview-list');
+        $previewList.children().remove();
+
+        // 遍历添加DOM
+        for(var index in JSONobject.testGroup){
+            (function (i) {
+                // 数据项
+                var $previewItem = $('<div class="preview-item">');
+                // 编号
+                var $itemNumber = $('<div class="item-number">');
+                $itemNumber.text(JSONobject.testGroup[i].itemNumber);
+                // 标题
+                var $itemTitle = $('<div class="item-title">');
+                $itemTitle.text(JSONobject.testGroup[i].itemTitle);
+                // 选项
+                var $itemChoises = $('<div class="item-choises">');
+                for(var j in JSONobject.testGroup[i].itemChoise){
+                    var $choise = $('<div class="choise">');
+                    $choise.text(JSONobject.testGroup[i].itemChoise[j].choiseContent);
+                    $itemChoises.append($choise);
+                }
+
+                //修改DOM
+                $previewItem.append($itemNumber)
+                    .append($itemTitle)
+                    .append($itemChoises);
+
+                $previewList.append($previewItem);
+            })(index);
+        }
+
+    }, "JSON");
+
+    $('#previewWindow').modal("show", {
+        backdrop : true,
+        keyboard : true
+    });
+}
 
 /* 更新页面数据表格 */
 managerAction.updateTable = function (JSONdata) {
@@ -147,8 +200,10 @@ managerAction.updateTable = function (JSONdata) {
                 var $frequencyTd = $('<td>');
                 $frequencyTd.text(test.frequency);
 
+                /* 删除 */
                 var $deleteTd = $('<td></td>');
                 var $deleteSpan = $('<span class="glyphicon glyphicon-trash delete"></span>');
+                /* 删除事件绑定 */
                 $deleteSpan.click(function () {
                     var that = this;
                     $.post('/deleteOne', {
@@ -163,17 +218,28 @@ managerAction.updateTable = function (JSONdata) {
                     }, "JSON");
                 }).appendTo($deleteTd);
 
+                /* 编辑 */
                 var $editTd = $('<td></td>');
                 var $editSpan = $('<span class="glyphicon glyphicon-edit edit"></span>');
+                /* 编辑事件绑定 */
                 $editSpan.click(function () {
                     var that = this;
                 }).appendTo($editTd);
 
+                /* 预览 */
+                var $previewTd = $('<td>');
+                var $previewSpan = $('<span class="glyphicon glyphicon-eye-open preview">')
+                /* 预览事件绑定 */
+                $previewSpan.click(function () {
+                    // 触发预览事件
+                    managerAction.previewWindow(test.testType, test.testTitle);
+                }).appendTo($previewTd);
+
                 // 添加到页面上去
                 $tr.append($titleTd).append($typeTd)
                     .append($dateTd).append($scoreModeTd)
-                    .append($frequencyTd).append($editTd)
-                    .append($deleteTd);
+                    .append($frequencyTd).append($previewTd)
+                    .append($editTd).append($deleteTd);
 
                 // 表格添加
                 $testTable.append($tr);

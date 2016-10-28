@@ -38,7 +38,7 @@
 
         <!--单次得分分值-->
         <div class="form-group col-md-12">
-            <label class="info-title">得分分值</label>
+            <label class="info-title" title="每次得分的绝对值">得分分值</label>
             <input type="number" id="scoreValue" class="form-control">
         </div>
 
@@ -65,7 +65,7 @@
 
         <!--分数段设置-->
         <div class="col-md-12">
-            <label class="info-title">分数段设置</label>
+            <label class="info-title">分段设置</label>
             <div class="info-input">
                 <!--分数段段首-->
                 <div id="scoreHeadDiv" class="input-group">
@@ -83,8 +83,8 @@
                 </div>
 
                 <div id="scoreConfirmDiv">
-                    <input type="button" id="scoreConfirm" class="btn btn-success" value="添加" title="添加一个分段"></input>
-                    <input type="button" id="scoreCancel" class="btn btn-default" value="删除" title="删除一个分段"></input>
+                    <input type="button" id="scoreConfirm" class="btn btn-success" value="分段 + " title="添加一个分段"></input>
+                    <input type="button" id="scoreCancel" class="btn btn-default" value="分段 - " title="删除一个分段"></input>
                     <!--已经存在的分段列表-->
                     <div class="info-list">
                         <span class="glyphicon glyphicon-pushpin"></span>
@@ -100,7 +100,7 @@
 
         <div class="col-md-12 form-group">
             <label class="info-title">题目简介</label>
-            <textarea rows="6" class="form-control" id="abstract" placeholder="请输入简要的描述信息"></textarea>
+            <textarea rows="5" class="form-control" id="abstract" placeholder="请输入简要的描述信息"></textarea>
         </div>
     </div>
 
@@ -111,17 +111,17 @@
 
             <!--编号-->
             <div class="form-group">
-                <label>编号:</label>
-                <input type="text" class="form-control" id="editNumber">
+                <label class="info-title">编号:</label>
+                <input type="text" class="form-control" title="不可编辑" id="editNumber">
             </div>
 
             <div class="form-group">
-                <label>输入题目:</label>
+                <label class="info-title">输入题目:</label>
                 <textarea rows="4" class="form-control" id="editTitle"></textarea>
             </div>
 
             <div class="form-group nextPara">
-                <label>得分子类型</label>
+                <label class="info-title">得分子类型</label>
                 <div class="score-child-div">
                     <div class="type-item score-child" id="CA">CA</div>
                     <div class="type-item score-child" id="CB">CB</div>
@@ -130,7 +130,7 @@
             </div>
 
             <div class="form-group nextPara">
-                <label>选项个数</label>
+                <label class="info-title">选项个数</label>
                 <div class="item-number-div">
                     <div class="type-item item-number">2</div>
                     <div class="type-item item-number">3</div>
@@ -163,25 +163,23 @@
 
             <div class="total-list">
                 <!--其中的一组题目-->
-                <div class="edit-new">
-                    <!--标题-->
-                    <div class="new-title">1.这是题目这是题目这是题目这是题目这
-                        这是题目这是题目这是题目这是题目这是题目是题目这是题目
-                        这是题目这是题目这是题目这是题目这是题目这是题目</div>
-                    <!--题目选项-->
+                <!--<div class="edit-new">
+                    &lt;!&ndash;标题&ndash;&gt;
+                    <div class="new-title">1.这是题目</div>
+                    &lt;!&ndash;题目选项&ndash;&gt;
                     <div class="new-choises">
                         <div class="choise" choose="A">A选项</div>
                         <div class="choise" choose="B">B选项</div>
                         <div class="choise" choose="C">C选项</div>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>
 
     <!--创建完成-->
     <div class="submit-div">
-        <input class="btn btn-danger" value="-创建完成-" id="submit">
+        <input class="btn btn-danger" value="创建完成" id="submit">
     </div>
 </div>
 

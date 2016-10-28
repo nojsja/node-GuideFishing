@@ -1,5 +1,6 @@
 body {
     font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font-weight: bold;
 }
 
 a {
@@ -12,6 +13,7 @@ a {
     padding-bottom: 1rem;
 }
 
+/* 题目详情的录入,例如标题,得分模式,分数段等等 */
 .total-info {
     padding: 1rem;
     min-height: 20rem;
@@ -22,6 +24,7 @@ a {
     box-shadow: 0 0 5px #626262;
 }
 
+/* 题目集合录入(一套题的所有子题目) */
 .total-list {
     margin-top: 2rem;
     margin-bottom: 2rem;
@@ -29,6 +32,7 @@ a {
     height: auto;
 }
 
+/* 单个题目编辑区域 */
 .total-edit {
     padding-top: 1rem;
     padding-bottom: 1rem;
@@ -38,24 +42,39 @@ a {
     height: auto;
 }
 
+/* 详细信息区域小标题 */
 .info-title {
     margin-top: 1rem;
+    color: #cb5730;
+    padding: 0.5rem;
+    background-color: #b4b4b4;
+
+    -webkit-box-shadow:  1px 1px  #cb5730;
+    -moz-box-shadow:  1px 1px  #cb5730;
+    box-shadow:  1px 1px  #cb5730;
 }
 
 /* 测试题目相关详细信息 */
 .type-item {
     float: left;
     padding: 5px;
-    background-color: #3541a2;
-    color: white;
+    font-size: 1rem;
+    word-spacing: 1px;
+    letter-spacing: 2px;
+    /*background-color: #3541a2;
+    color: white;*/
+    border: solid 1px #3541a2;
+    color: #3541a2;
     border-radius: 5px;
     margin: 0.5rem;
     margin-bottom: 1rem;
 }
 
 .type-item:hover {
-    background-color: #790000;
-    color: #d2d6d1;
+    /*background-color: #790000;
+    color: #d2d6d1;*/
+    background-color: #3541a2;
+    color: white;
 
     -webkit-transition: background-color 0.3s;
     -moz-transition: background-color 0.3s;
@@ -64,16 +83,24 @@ a {
     transition: background-color 0.3s;
 }
 
+/* 得分段区域 */
 #scoreHeadDiv,#scoreTailDiv {
     width: 50%;
     float: left;
+}
+
+/* 输入区域背景颜色 */
+#scoreHeadDiv > input,
+#scoreTailDiv > input,
+#scoreResultDiv > textarea {
+    background-color: #efefef;
 }
 
 #scoreConfirmDiv {
     text-align: center;
 }
 
-/* 分段显示区域 */
+/* 得分段编辑和显示区域 */
 .info-list {
     position: relative;
     margin-top: 1rem;
@@ -125,7 +152,7 @@ a {
     margin-top: 10px;
 }
 
-/* 下面的题目编辑区域 */
+/* 下面的题目添加和编辑区域 */
 .total-content {
     margin-top: 4rem;
     margin-bottom: 2rem;
@@ -159,7 +186,7 @@ a {
     box-shadow: inset 0 0 10px white;
 }
 
-/* 添加题目 */
+/* 新添加的题目border */
 .edit-new {
     padding: 10px;
     margin-top: 1rem;
@@ -178,6 +205,7 @@ a {
     -o-transition:All 0.3s ease-in-out;
 }
 
+/* 题项缩放 */
 .edit-new:hover {
     transform: scale(1.1);
     -webkit-transform: scale(1.1);
@@ -211,7 +239,7 @@ a {
     clear: both;
 }
 
-/* 确认修改 */
+/* 确认修改和删除当前题目 */
 #editConfirm, #editCancel {
     margin-top: 2rem;
 }
