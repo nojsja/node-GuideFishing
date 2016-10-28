@@ -17,6 +17,9 @@ function index(app) {
     app.post('/readTestList', function (req, res) {
 
         var condition = {};
+        if(req.body.testTitle) {
+            condition.testTitle = req.body.testTitle;
+        }
         //筛选的读取题目类型
         if(req.body.testType != "ALL"){
             condition.testType = req.body.testType;
@@ -27,6 +30,15 @@ function index(app) {
         if(req.body.limit){
             condition.limit = req.body.limit;
         }
+        if(req.body.select){
+            condition.select = req.body.select;
+        }
+        if(req.body.testTypeArray){
+            condition.testTypeArray = req.body.testTypeArray;
+        }
+
+        console.log("筛选条件: " + JSON.stringify(condition));
+
         AllTest.readTestList(condition, function (err, testArray) {
            if(err) {
                console.log('readTestList error.');
