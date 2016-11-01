@@ -8,7 +8,8 @@
  * (2)得分类型CB: B选项得正分,C选项不得分,A选项得负分
  * (3)得分类型CC: C选项得正分,A选项不得分,B选型得负分
  * 2.testType: NegaPositive -- 正负得分方式,一个选项得分,另一个选项不得分
- * 3.testType: .....后期逐步补充,所以要求程序可拓展
+ * 3.testType: Category -- 类别得分方式,不以总分为评判标准, 分数是多个维度的, 各个维度得分最高的各自
+ * 对应一种类型结果,可以自定义任意多种子类型,每个得分分值可以自己定义
  */
 
 var mongoose = require('mongoose');
@@ -58,68 +59,17 @@ scoreFactory.prototype = {
     //两个参数分别表示用户提交选项的对象数组,
     //scoreModeInfo里面包含用于统计得分的信息
     Common: function (choiseArray, scoreModeInfo) {
+        return Common(choiseArray, scoreModeInfo);
+    },
 
-        var scoreValue = scoreModeInfo.scoreValue;
-        var scoreSection = scoreModeInfo.scoreSection;
-        //总得分
-        var totalScore = 0;
-        //总的评测结果
-        for(var choise in choiseArray) {
-            switch (choiseArray[choise].itemMode) {
-                case "CA":
-                    if (choiseArray[choise].choiseTag == "A") {
-                        totalScore += scoreValue;
-                    } else if (choiseArray[choise].choiseTag == "B") {
-                        totalScore += 0;
-                    } else if (choiseArray[choise].choiseTag == "C") {
-                        totalScore -= scoreValue;
-                    }
-                    break;
-                case "CB":
-                    if (choiseArray[choise].choiseTag == "A") {
-                        totalScore -= scoreValue;
-                    } else if (choiseArray[choise].choiseTag == "B") {
-                        totalScore += scoreValue;
-                    } else if (choiseArray[choise].choiseTag == "C") {
-                        totalScore += 0;
-                    }
-                    break;
-                case "CC":
-                    if (choiseArray[choise].choiseTag == "A") {
-                        totalScore += 0;
-                    } else if (choiseArray[choise].choiseTag == "B") {
-                        totalScore -= scoreValue;
-                    } else if (choiseArray[choise].choiseTag == "C") {
-                        totalScore += scoreValue;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        //根据分数段得出统计结果
-        var testResult = {
-            error: false,
-            totalScore: 0,
-            result: "no info."
-        };
-        for(var section in scoreSection){
-            console.log(scoreSection[section].scoreHead + ' ' + scoreSection[section].scoreTail);
-            if((totalScore >= scoreSection[section].scoreHead) && (totalScore <= scoreSection[section].scoreTail)){
-                /* 分布在此区间则返回相对的结果 */
-                testResult.totalScore = totalScore;
-                testResult.result = scoreSection[section].result;
-                console.log(scoreSection[section].result);
-                break;
-            }
-        }
-        //未分布于相应的分数段
-        return testResult;
-    }
-    ,
     //YES or NO 统计方法, 只有两个选项
     NegaPositive: function (choiseArray, scoreModeInfo) {
-
+        return NegaPasitive(choiseArray, scoreModeInfo);
+    },
+    
+    // 分类别的计算方法, 存在多个维度
+    Category: function (choiseArray, scoreModeInfo) {
+        return Category(choiseArray, scoreModeInfo);
     }
 };
 
@@ -159,4 +109,222 @@ scoreFactory.getScoreModeInfo = function (condition, callback) {
     });
 };
 
+/* Common算法的得分计算方式 */
+var Common = function (choiseArray, scoreModeInfo) {
+    var scoreValue = scoreModeInfo.scoreValue;
+    var scoreSection = scoreModeInfo.scoreSection;
+    //总得分
+    var totalScore = 0;
+    //总的评测结果
+    for(var choise in choiseArray) {
+        switch (choiseArray[choise].itemMode) {
+            case "CA":
+                if (choiseArray[choise].choiseTag == "A") {
+                    totalScore += scoreValue;
+                } else if (choiseArray[choise].choiseTag == "B") {
+                    totalScore += 0;
+                } else if (choiseArray[choise].choiseTag == "C") {
+                    totalScore -= scoreValue;
+                }
+                break;
+            case "CB":
+                if (choiseArray[choise].choiseTag == "A") {
+                    totalScore -= scoreValue;
+                } else if (choiseArray[choise].choiseTag == "B") {
+                    totalScore += scoreValue;
+                } else if (choiseArray[choise].choiseTag == "C") {
+                    totalScore += 0;
+                }
+                break;
+            case "CC":
+                if (choiseArray[choise].choiseTag == "A") {
+                    totalScore += 0;
+                } else if (choiseArray[choise].choiseTag == "B") {
+                    totalScore -= scoreValue;
+                } else if (choiseArray[choise].choiseTag == "C") {
+                    totalScore += scoreValue;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    //根据分数段得出统计结果
+    var testResult = {
+        error: false,
+        totalScore: 0,
+        result: "no info."
+    };
+    for(var section in scoreSection){
+        console.log(scoreSection[section].scoreHead + ' ' + scoreSection[section].scoreTail);
+        if((totalScore >= scoreSection[section].scoreHead) && (totalScore <= scoreSection[section].scoreTail)){
+            /* 分布在此区间则返回相对的结果 */
+            testResult.totalScore = totalScore;
+            testResult.result = scoreSection[section].result;
+            console.log(scoreSection[section].result);
+            break;
+        }
+    }
+    //未分布于相应的分数段
+    return testResult;
+};
+
+
+/* NegaPositive算法的得分计算方式 */
+var NegaPasitive = function (choiseArray, scoreModeInfo) {
+    var scoreValue = scoreModeInfo.scoreValue;
+    console.log('scoreValue: ' + scoreValue);
+    var scoreSection = scoreModeInfo.scoreSection;
+    //总得分
+    var totalScore = 0;
+    //总的评测结果
+    for(var choise in choiseArray) {
+        switch (choiseArray[choise].itemMode) {
+            case "Negative":
+                if (choiseArray[choise].choiseTag == "A") {
+                    totalScore += scoreValue * 4;
+                } else if (choiseArray[choise].choiseTag == "B") {
+                    totalScore += scoreValue * 3;
+                } else if (choiseArray[choise].choiseTag == "C") {
+                    totalScore += scoreValue * 2;
+                }else if (choiseArray[choise].choiseTag == "D") {
+                    totalScore += scoreValue * 1;
+                }
+                break;
+            case "Positive":
+                if (choiseArray[choise].choiseTag == "A") {
+                    totalScore += scoreValue * 1;
+                } else if (choiseArray[choise].choiseTag == "B") {
+                    totalScore += scoreValue * 2;
+                } else if (choiseArray[choise].choiseTag == "C") {
+                    totalScore += scoreValue * 3;
+                } else if (choiseArray[choise].choiseTag == "D") {
+                    totalScore += scoreValue * 4;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    //根据分数段得出统计结果
+    var testResult = {
+        error: false,
+        totalScore: 0,
+        result: "no info."
+    };
+    for(var section in scoreSection){
+        console.log(scoreSection[section].scoreHead + ' ' + scoreSection[section].scoreTail);
+        if((totalScore >= scoreSection[section].scoreHead) && (totalScore <= scoreSection[section].scoreTail)){
+            /* 分布在此区间则返回相对的结果 */
+            testResult.totalScore = totalScore;
+            testResult.result = scoreSection[section].result;
+            console.log(scoreSection[section].result);
+            break;
+        }
+    }
+    //未分布于相应的分数段
+    return testResult;
+};
+
+/* 分类别的得分模式(自由度最高,最复杂) */
+var Category = function (choiseArray, scoreModeInfo) {
+    var scoreValue = scoreModeInfo.scoreValue;
+    console.log('scoreValue: ' + scoreValue);
+    var scoreSection = scoreModeInfo.scoreSection;
+    //总得分
+    var totalScore = 0;
+    //总的评测结果
+    for(var choise in choiseArray) {
+        switch (choiseArray[choise].itemMode) {
+            case "Negative":
+                if (choiseArray[choise].choiseTag == "A") {
+                    totalScore += scoreValue * 4;
+                } else if (choiseArray[choise].choiseTag == "B") {
+                    totalScore += scoreValue * 3;
+                } else if (choiseArray[choise].choiseTag == "C") {
+                    totalScore += scoreValue * 2;
+                }else if (choiseArray[choise].choiseTag == "D") {
+                    totalScore += scoreValue * 1;
+                }
+                break;
+            case "Positive":
+                if (choiseArray[choise].choiseTag == "A") {
+                    totalScore += scoreValue * 1;
+                } else if (choiseArray[choise].choiseTag == "B") {
+                    totalScore += scoreValue * 2;
+                } else if (choiseArray[choise].choiseTag == "C") {
+                    totalScore += scoreValue * 3;
+                } else if (choiseArray[choise].choiseTag == "D") {
+                    totalScore += scoreValue * 4;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    //根据分数段得出统计结果
+    var testResult = {
+        error: false,
+        totalScore: 0,
+        result: "no info."
+    };
+    for(var section in scoreSection){
+        console.log(scoreSection[section].scoreHead + ' ' + scoreSection[section].scoreTail);
+        if((totalScore >= scoreSection[section].scoreHead) && (totalScore <= scoreSection[section].scoreTail)){
+            /* 分布在此区间则返回相对的结果 */
+            testResult.totalScore = totalScore;
+            testResult.result = scoreSection[section].result;
+            console.log(scoreSection[section].result);
+            break;
+        }
+    }
+    //未分布于相应的分数段
+    return testResult;
+};
+
+
 module.exports = scoreFactory;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

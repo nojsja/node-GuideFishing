@@ -87,9 +87,16 @@ function admin(app) {
         test.abstract = req.body.abstract;
         test.testTitle = req.body.testTitle;
         test.frequency = 0;
-        test.scoreValue = req.body.frequency;
-        test.scoreSection = req.body.scoreSection;
+        test.scoreValue = req.body.scoreValue;
+        if(req.body.scoreSection){
+            test.scoreSection = req.body.scoreSection;
+        }
+        if(req.body.categorySection){
+            test.categorySection = req.body.categorySection;
+        }
         test.testGroup = req.body.testGroup;
+
+
 
         //创建数据库模式对象
         var newTest = new AllTest(test);
