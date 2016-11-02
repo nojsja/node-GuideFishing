@@ -10,7 +10,7 @@ $(function () {
     $('#startDiv').click(function () {
         var testType = $('.detail-head-type').text();
         var testTitle = $('.detail-head-title').text();
-        window.location.href = "/testView/" + testType + "/" + testTitle;
+        window.location.href = "/test/testView/" + testType + "/" + testTitle;
     });
 });
 

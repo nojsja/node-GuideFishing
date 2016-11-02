@@ -57,7 +57,7 @@ var indexAction = {
 /* 读取测试列表 */
 indexAction.readTestList = function (condition) {
 
-    var url = "/readTestList";
+    var url = "/test/readTestList";
     //请求服务器
     $.post(url, condition, function (JSONdata) {
         //更新页面
@@ -119,7 +119,7 @@ indexAction.updatePage = function (JSONdata) {
             //内容标题
             var $contentTitle = $('<a class="content-item-title">');
             //添加超链接
-            $contentTitle.prop('href','/testDetail/' + test.testType + '/' + test.testTitle);
+            $contentTitle.prop('href','/test/testDetail/' + test.testType + '/' + test.testTitle);
             $contentTitle.text(test.testTitle);
             //内容摘要和图标
             var $abstract = $('<div class="content-item-abstract">');
@@ -206,7 +206,7 @@ indexAction.pageHotContentAction = function () {
 indexAction.updateHot = function (type) {
 
     return;
-    $.post('/readHot', {hotType: type}, function (JSONdata){}, "JSON");
+    $.post('/test/readHot', {hotType: type}, function (JSONdata){}, "JSON");
 };
 
 /* 模态弹窗 */
@@ -232,7 +232,8 @@ indexAction.goDiv = function goDiv(div) {
 indexAction.goBottom = function goBottom() {
     //两个参数分别是左上角显示的文档的x坐标和y坐标
     //scrollHeight 和 clientHeight分别是文档能够滚动的总高度和文档在当前窗口的可见高度
-    window.scrollTo(0, document.documentElement.scrollHeight - document.documentElement.clientHeight);
+    window.scrollTo(0, document.documentElement.scrollHeight -
+        document.documentElement.clientHeight);
 };
 
 /* 滚动侦测 */

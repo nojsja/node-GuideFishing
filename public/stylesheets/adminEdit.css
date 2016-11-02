@@ -101,7 +101,8 @@ a {
 }
 
 /* 得分段编辑和显示区域 */
-.info-list {
+.info-list,
+.category-list{
     position: relative;
     margin-top: 1rem;
     border-top: solid 1px #c0c0c0;
@@ -111,14 +112,16 @@ a {
     height: auto;
 }
 
-.info-list > span.glyphicon {
+.info-list > span.glyphicon,
+.category-list > span.glyphicon{
     position: absolute;
     right: 1rem;
     top: -0.8rem;
     font-size: 2rem;
 }
 
-.info-list-item {
+.info-list-item,
+.category-list-item{
     position: relative;
     border-radius: 5px;
     padding: 5px;
@@ -132,7 +135,8 @@ a {
     margin: 0.3rem auto;
 }
 
-.info-list-item:hover {
+.info-list-item:hover,
+.category-list-item:hover{
     color: #ff6641;
     background-color: rgba(0, 0, 0, 0.56);
     -webkit-transition: background-color 0.3s;
@@ -249,6 +253,10 @@ a {
     text-align: center;
 }
 
+#scoreConfirmDiv {
+    margin-top: 1rem;
+}
+
 /* footer */
 .footer {
     margin-bottom: 5px;
@@ -275,3 +283,79 @@ a {
     font-size: 1.5rem;
     color: #3b3d3b;
 }
+
+/* 悬浮窗 */
+.hover-label {
+    background-color: rgba(28, 104, 151, 0.8);
+    z-index: 100;
+    padding: 5px;
+    color: white;
+    font-size: 1.6rem;
+    width: 10rem;
+    position: absolute;
+    height: 1.6rem;
+    line-height: 1.6rem;
+    height: auto;
+    border-radius: 5px;
+    -ms-word-wrap:break-word;
+    word-wrap:break-word;
+    -ms-word-break: break-all;
+    word-break: break-all;
+
+    -webkit-box-shadow:  5px 5px 0 #5e5e5e;
+    -moz-box-shadow:  5px 5px 0 #5e5e5e;
+    box-shadow:  5px 5px 0 #5e5e5e;
+}
+
+/* 得分模式设置 */
+#scoreSectionSet,
+#childModeAdd{
+    display: none;
+}
+
+/* 自定义得分,默认不显示 */
+#scoreDefineDiv {
+    margin: 5px;
+    font-size: 1.4rem;
+    color: #207fbb;
+}
+
+/* 正向积分和反向积分 */
+#negativeTypeDiv,
+#positiveTypeDiv {
+    margin: 5px;
+    font-size: 1.4rem;
+    color: #7d7d7d;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

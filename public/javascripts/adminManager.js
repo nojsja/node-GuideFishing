@@ -16,11 +16,6 @@ $(function () {
     // 筛选提交按钮事件绑定
     $('#allSubmit').click(managerAction.getAllTests);
     $('#conditionSubmit').click(managerAction.getConditionTests);
-    // 删除和编辑事件绑定
-    $('.delete').click(managerAction.deleteItem);
-    $('.edit').click(managerAction.editItem);
-    // 预览事件绑定
-    $('.test-title').click(managerAction.previewItem);
     // 添加筛选条件事件绑定
     // 绑定checkbox事件
     $('.condition-testType-item').change(managerAction.checkboxEvent);
@@ -126,7 +121,7 @@ managerAction.getConditionTests = function () {
 managerAction.previewWindow = function (testType, testTitle) {
 
     // 访问地址
-    var urlArray = ['/testView', '/', testType, '/', testTitle];
+    var urlArray = ['/test/testView', '/', testType, '/', testTitle];
     $.post(urlArray.join(''), function (JSONdata) {
 
         var JSONobject = JSON.parse(JSONdata);
@@ -331,7 +326,7 @@ managerAction.pageNavbarAction = function() {
         condition.select = that.select;
         condition.testType = that.testType;
 
-        var url = '/readTestList';
+        var url = '/test/readTestList';
 
         //设置筛选条数和起始条数
         if($('#number').val().trim() > 0){
@@ -354,5 +349,6 @@ managerAction.pageNavbarAction = function() {
         }, "JSON");
     }
 };
+
 
 

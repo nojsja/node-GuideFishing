@@ -53,7 +53,7 @@ viewAction.modalWindow = function(text) {
 viewAction.pageInit = function () {
 
     //获取本套题的所有数据
-    var url = "/testView/" + $('.test-type').text().trim() + "/" + $('.test-title').text().trim();
+    var url = "/test/testView/" + $('.test-type').text().trim() + "/" + $('.test-title').text().trim();
     $.post(url, {}, function (JSONdata) {
         var JSONobject = JSON.parse(JSONdata);
         //本组题目列表
@@ -88,11 +88,26 @@ viewAction.checkAndUpdate = function () {
     $itemChoises.children().remove();
 
     for(var index in viewAction.testGroup[viewAction.currentNumber - 1].itemChoise){
+
+        // 目前的选择项
+        var currentTestGroup = viewAction.testGroup[viewAction.currentNumber - 1];
         //其中一个选项
         var $choiseDiv = $('<div class="choise">');
         //选项标签和选项内容
-        var choiseTag = viewAction.testGroup[viewAction.currentNumber - 1].itemChoise[index].choiseTag;
-        var choiseContent = viewAction.testGroup[viewAction.currentNumber - 1].itemChoise[index].choiseContent;
+        var choiseTag = currentTestGroup.itemChoise[index].choiseTag;
+        var choiseContent = currentTestGroup.itemChoise[index].choiseContent;
+        // 判断当前题是否是自定义得分
+        if(currentTestGroup.scoreDefine){
+            var choiseValue = currentTestGroup.itemChoise[index].choiseValue;
+            $choiseDiv.attr('choiseValue', choiseValue);
+            $choiseDiv.attr('scoreDefine', currentTestGroup.scoreDefine);
+        }
+        // 判断当前题目的第二种计分模式
+        if(currentTestGroup.otherMode){
+            var otherMode = currentTestGroup.otherMode;
+            $choiseDiv.attr('otherMode', otherMode);
+        }
+        $choiseDiv.attr('itemMode', currentTestGroup.itemMode);
         $choiseDiv.prop('id', choiseTag);
         $choiseDiv.text(choiseTag + "." + choiseContent);
         //添加到页面上
@@ -121,7 +136,10 @@ viewAction.checkAndUpdate = function () {
 
         viewAction.choiseArray[viewAction.currentNumber - 1] = {
             choiseTag: $(this).prop('id'),
-            itemMode: viewAction.testGroup[viewAction.currentNumber - 1].itemMode
+            scoreDefine: $(this).attr('scoreDefine'),
+            itemMode: $(this).attr('itemMode'),
+            otherMode: $(this).attr('otherMode') || null,
+            choiseValue: $(this).attr('choiseValue') || null,
         }
     });
 }
@@ -176,7 +194,7 @@ viewAction.submit = function () {
         viewAction.modalWindow('请选择当前题目的答案...');
         return;
     }
-    $.post('/submit', {
+    $.post('/test/submit', {
         submitData: {
             testType: viewAction.testType,
             testTitle: viewAction.testTitle,

@@ -7,14 +7,14 @@ var AllTest = require('../models/AllTest.js');
 function index(app) {
 
     /* 获取评测主页 */
-    app.get('/', function (req, res) {
+    app.get('/test', function (req, res) {
         res.render('index', {
             title: '评测系统主页'
         });
     });
     
     /* 读取评测列表,以JSON对象对象数组传递 */
-    app.post('/readTestList', function (req, res) {
+    app.post('/test/readTestList', function (req, res) {
 
         var condition = {};
         if(req.body.testTitle) {
@@ -54,7 +54,7 @@ function index(app) {
     });
 
     /* 读取热门内容列表 */
-    app.post('/readHot', function (req, res) {
+    app.post('/test/readHot', function (req, res) {
         
     });
 }
