@@ -21,7 +21,7 @@ var AllTest = require('../models/AllTest.js');
 function test(app) {
 
     /* 获取测试detail页面 */
-    app.get('/testDetail/:testType/:testTitle', function (req, res) {
+    app.get('/test/testDetail/:testType/:testTitle', function (req, res) {
 
         var condition = {
             testTitle: req.params.testTitle,
@@ -51,7 +51,7 @@ function test(app) {
     });
 
     /* 获取测试视图主页*/
-    app.get('/testView/:testType/:testTitle', function (req, res) {
+    app.get('/test/testView/:testType/:testTitle', function (req, res) {
 
         //评测类型
         var testType = req.params.testType;
@@ -65,7 +65,7 @@ function test(app) {
     });
 
     /* 获取一组测试题目 */
-    app.post('/testView/:testType/:testTitle', function (req, res) {
+    app.post('/test/testView/:testType/:testTitle', function (req, res) {
 
         //筛选条件
         var condition = {
@@ -87,7 +87,7 @@ function test(app) {
     });
 
     /* 提交评测结果 */
-    app.post('/submit', function (req, res) {
+    app.post('/test/submit', function (req, res) {
 
          // 上传的选项结果
         var submitData = req.body.submitData;

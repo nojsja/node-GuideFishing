@@ -70,6 +70,10 @@ $(function () {
     $('.score-mode').mouseleave(function () {
         singleTon.hiddenHoverLabel();
     })
+    //刷新事件绑定
+    window.addEventListener("beforeunload", function(event) {
+        event.returnValue = "警告";
+    });
 });
 
 /*** 页面变量 ***/
@@ -159,7 +163,7 @@ editAction.activeWatcher = function () {
         // 类别模式做额外处理
         if(editAction.scoreMode.value == "Category"){
 
-            $('#scoreDefineDiv').css('display', 'block');
+            $('#scoreDefineDiv, #positiveTypeDiv, #negativeTypeDiv').css('display', 'block');
             // 移除类别模式设置
             $('#childModeAdd').css('display', 'block');
             $('#scoreSectionSet').css('display', 'none');
@@ -190,7 +194,7 @@ editAction.activeWatcher = function () {
 
         }else {
 
-            $('#scoreDefineDiv').css('display', 'none');
+            $('#scoreDefineDiv, #negativeTypeDiv, #positiveTypeDiv').css('display', 'none');
             // 移除分段设置
             $('#scoreSectionSet').css('display', 'block');
             $('#childModeAdd').css('display', 'none');
@@ -273,8 +277,7 @@ editAction.activeWatcher = function () {
                     // 当前的题号
                     // 注意题号和目前的编号不一样, 题号大一点
                     editAction.currentNumber = thisGroup.itemNumber - 1;
-                    console.log(thisGroup.itemNumber);
-                    console.log(thisGroup.itemTitle);
+                    $('#negativeType, #positiveType, #scoreDefine').prop('checked', false);
                     $('#editNumber').val(thisGroup.itemNumber);
                     $('#editTitle').val(thisGroup.itemTitle);
 
@@ -349,12 +352,11 @@ editAction.activeWatcher = function () {
                 // 本小题允许自定义得分
                 editAction.testGroup.group[editAction.currentNumber].scoreDefine = true;
                 editAction.testGroup.group[editAction.currentNumber].otherMode = null;
-                $('#negativeTypeDiv').css('display', 'none');
-                $('#positiveTypeDiv').css('display', 'none');
+                $('#negativeTypeDiv, #positiveTypeDiv').css('display', 'none');
+                $('#negativeType, #positiveType').prop('checked', false);
             }else {
                 editAction.testGroup.group[editAction.currentNumber].scoreDefine = false;
-                $('#negativeTypeDiv').css('display', 'block');
-                $('#positiveTypeDiv').css('display', 'block');
+                $('#negativeTypeDiv, #positiveTypeDiv').css('display', 'block');
             }
         });
 
@@ -673,10 +675,9 @@ editAction.submitCheck = function () {
     submitData.testGroup = editAction.testGroup.group;
 
     console.log(submitData);
-    return;
 
     /* 请求后台存储创建的题目对象数据 */
-    $.post('/save', submitData, function (JSONdata) {
+    $.post('/test/save', submitData, function (JSONdata) {
         var JSONobject = JSON.parse(JSONdata);
         if(JSONobject.error){
             return editAction.modalWindow("创建出错!请重试...");

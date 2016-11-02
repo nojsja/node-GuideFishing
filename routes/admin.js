@@ -41,21 +41,21 @@ var color = require('colors-cli');
 function admin(app) {
 
     /* 获取管理员创建页面 */
-    app.get('/admin/create', function (req, res) {
+    app.get('/test/admin/create', function (req, res) {
         res.render('adminEdit', {
             title: '创建新的评测'
         });
     });
 
     /* 获取管理员管理页面 */
-    app.get('/admin/manager', function (req, res) {
+    app.get('/test/admin/manager', function (req, res) {
         res.render('adminManager', {
             title: '管理所有评测'
         });
     });
 
     /* 获取管理员预览页面 */
-    app.get('/admin/preview/:testType/:testTitle', function (req, res) {
+    app.get('/test/admin/preview/:testType/:testTitle', function (req, res) {
         res.render('adminPreview', {
             title: '快速预览',
             testType: req.params.testType,
@@ -64,7 +64,7 @@ function admin(app) {
     });
 
     /* 手动预览之前需要输入预览文档的testType和testTitle */
-    app.get('/admin/preview', function (req, res) {
+    app.get('/test/admin/preview', function (req, res) {
 
         //筛选条件
         var testType = req.body.testType;
@@ -77,7 +77,7 @@ function admin(app) {
     });
 
     /* 存储一个文档 */
-    app.post('/save', function (req, res) {
+    app.post('/test/save', function (req, res) {
 
         //文档对象
         var test = {};
@@ -132,7 +132,7 @@ function admin(app) {
     });
 
     /* 删除一个文档 */
-    app.post('/deleteOne', function (req, res) {
+    app.post('/test/deleteOne', function (req, res) {
 
         //必须要获取的文档主键,数据模拟
         var testType = req.body.testType;
@@ -155,7 +155,7 @@ function admin(app) {
     });
 
     /* 删除多个文档 */
-    app.post('/deleteSome', function (req, res) {
+    app.post('/test/deleteSome', function (req, res) {
 
         //必须要获取的文档主键,数据模拟
         var testType = "character";

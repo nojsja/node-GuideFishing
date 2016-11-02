@@ -121,7 +121,7 @@ managerAction.getConditionTests = function () {
 managerAction.previewWindow = function (testType, testTitle) {
 
     // 访问地址
-    var urlArray = ['/testView', '/', testType, '/', testTitle];
+    var urlArray = ['/test/testView', '/', testType, '/', testTitle];
     $.post(urlArray.join(''), function (JSONdata) {
 
         var JSONobject = JSON.parse(JSONdata);
@@ -326,7 +326,7 @@ managerAction.pageNavbarAction = function() {
         condition.select = that.select;
         condition.testType = that.testType;
 
-        var url = '/readTestList';
+        var url = '/test/readTestList';
 
         //设置筛选条数和起始条数
         if($('#number').val().trim() > 0){
