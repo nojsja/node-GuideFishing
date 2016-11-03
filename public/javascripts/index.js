@@ -80,16 +80,19 @@ indexAction.readMore = function () {
 /* 更新主页事件 */
 indexAction.updatePage = function (JSONdata) {
 
+    // 测试类型对应中文
+    var testTypeChina = {
+        "character": "性格测试",
+        "personality": "人格测试",
+        "emotion": "情感测试",
+        "communication": "交际测试",
+        "potential": "潜能测试"
+    };
+
     //转换成JSON对象
     var parsedData = JSON.parse(JSONdata);
     //测评类型的图片url数组
-    var typeImgUrl = {
-        "character": 'url("/images/testType/character.jpg") no-repeat',
-        "personality": 'url("/images/testType/personality.jpg") no-repeat',
-        "emotion": 'url("/images/testType/emotion.jpg") no-repeat',
-        "communication": 'url("/images/testType/communication.jpg") no-repeat',
-        "potential": 'url("/images/testType/potential.jpg") no-repeat'
-    };
+    var typeImgUrl = parsedData.typeImgUrl;
 
     if(parsedData.error){
         return this.modalWindow("服务器发生错误: " + parsedData.error);
@@ -134,12 +137,12 @@ indexAction.updatePage = function (JSONdata) {
             var $typeImg = $('<div></div>');
             var imgUrl = typeImgUrl[test.testType];
             $typeImg.prop('class', 'type-img').css({
-                'background': imgUrl,
+                'background': ["url(", imgUrl, ")", " no-repeat"].join(''),
                 'background-size': 'cover'
             });
             //该测评所属的类型
             var $testType = $('<p class="type-text">');
-            $testType.text(test.testType);
+            $testType.text(testTypeChina[test.testType]);
             $contentRight.append($typeImg).append($testType);
 
             //显示的日期

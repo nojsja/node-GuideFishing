@@ -605,6 +605,7 @@ editAction.choiseNumberSet = function () {
                 // 绑定事件
                 // 为每个选项绑定得分值,适用于user-defined模式下
                 $scoreInput.on('input', function (e) {
+                    alert($(this).val());
                     $input.attr('scoreValue', $(this).val());
                 });
                 $scoreDiv.append($scoreLabel)
