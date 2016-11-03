@@ -3,6 +3,7 @@
 
 /* 引入数据库模式 */
 var AllTest = require('../models/AllTest.js');
+var ReadTestType = require('../models/ReadTestType');
 
 function index(app) {
 
@@ -17,6 +18,11 @@ function index(app) {
     app.post('/test/readTestList', function (req, res) {
 
         var condition = {};
+        // 图片地址
+        var typeImgUrl = {};
+        ReadTestType(function (data) {
+            typeImgUrl = data;
+        });
         if(req.body.testTitle) {
             condition.testTitle = req.body.testTitle;
         }
@@ -48,14 +54,15 @@ function index(app) {
            }
            console.log('readTestList success.');
             res.json(JSON.stringify({
-                testArray: testArray
+                testArray: testArray,
+                typeImgUrl: typeImgUrl
             }));
         });
     });
 
     /* 读取热门内容列表 */
     app.post('/test/readHot', function (req, res) {
-        
+
     });
 }
 

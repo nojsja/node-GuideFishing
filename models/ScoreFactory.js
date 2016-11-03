@@ -237,7 +237,8 @@ var NegaPasitive = function (choiseArray, scoreModeInfo) {
 var Category = function (choiseArray, scoreModeInfo) {
 
     // 得分权值
-    var scoreValue = scoreModeInfo.scoreValue;
+    var scoreValue = parseInt(scoreModeInfo.scoreValue);
+    console.log('scoreValue: ' + scoreValue);
 
     // 子模式分类信息,数组类型,里面存了每种类型的名字和描述
     var categorySection = scoreModeInfo.categorySection;
@@ -262,10 +263,14 @@ var Category = function (choiseArray, scoreModeInfo) {
             var itemMode = choiseArray[index].itemMode;
             if(!scoreResult[itemMode]){
                 scoreResult[itemMode] = {
-                    score: choiseArray[index].choiseValue
+                    score: parseInt(choiseArray[index].choiseValue)
                 };
+                console.log('The score: ' + scoreResult[itemMode].score);
             }else {
-                scoreResult[itemMode].score += choiseArray[index].choiseValue;
+                scoreResult[itemMode].score =
+                    parseInt(choiseArray[index].choiseValue) + parseInt(scoreResult[itemMode].score);
+                console.log('The score: ' + scoreResult[itemMode].score);
+
             }
 
         }else {
@@ -281,20 +286,30 @@ var Category = function (choiseArray, scoreModeInfo) {
                 case 'negativeType':
                     if(!scoreResult[itemMode]){
                         scoreResult[itemMode] = {
-                            score: negativeScoreArray[choiseTag] * scoreValue
+                            score: parseInt(negativeScoreArray[choiseTag]) * scoreValue
                         };
+                        console.log('The score: ' + scoreResult[itemMode].score);
+
                     }else {
-                        scoreResult[itemMode].score += negativeScoreArray[choiseTag] * scoreValue;
+                        scoreResult[itemMode].score =
+                            parseInt(negativeScoreArray[choiseTag]) * scoreValue + parseInt(scoreResult[itemMode].score);
+                        console.log('The score: ' + scoreResult[itemMode].score);
+
                     }
                     break;
                 // 正向计分
                 case 'positiveType':
                     if(!scoreResult[itemMode]){
                         scoreResult[itemMode] = {
-                            score: positiveScoreArray[choiseTag] * scoreValue
+                            score: parseInt(positiveScoreArray[choiseTag] * scoreValue)
                         };
+                        console.log('The score: ' + scoreResult[itemMode].score);
+
                     }else {
-                        scoreResult[itemMode].score += positiveScoreArray[choiseTag] * scoreValue;
+                        scoreResult[itemMode].score =
+                            parseInt(positiveScoreArray[choiseTag]) * scoreValue + parseInt(scoreResult[itemMode].score);
+                        console.log('The score: ' + scoreResult[itemMode].score);
+
                     }
                     break;
                 default:
@@ -319,6 +334,7 @@ var Category = function (choiseArray, scoreModeInfo) {
     for(var itemMode in scoreResult){
         (function (itemMode) {
             console.log(itemMode + " " + scoreResult[itemMode].score);
+            // 强制将对象类型转化陈数值类型
             if(parseInt(scoreResult[itemMode].score) > parseInt(maxScore)) {
                 maxScore = scoreResult[itemMode].score;
                 maxItemMode = itemMode;
