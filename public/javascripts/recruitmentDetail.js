@@ -5,6 +5,9 @@
 
 /* 初始化 */
 $(function () {
+
+    // 公司名称动画
+    $('#company').fadeIn();
     // 获取详细信息
     RecruitDetail.getDetail();
 });
@@ -48,11 +51,8 @@ RecruitDetail.updatePage = function (JSONdata) {
     $('.introduction-position').append($mapMarker);
     // 更新图片
     for(var index in imgArray){
-        var $imgDiv = $('<div class="environment-image">');
-        $imgDiv.css({
-            'background': 'url(' + imgArray[index] + ') no-repeat',
-            'background-size': 'cover'
-        });
+        var $imgDiv = $('<img class="environment-image">');
+        $imgDiv.prop('src', imgArray[index].image);
         // 添加图片到页面
         $('.introduction-environment').append($imgDiv);
     }

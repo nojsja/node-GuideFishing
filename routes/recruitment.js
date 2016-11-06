@@ -58,7 +58,7 @@ function recruitment(app) {
             position: '武侯区科华北路世外桃源广场B座2217，' +
             '55路 62路 92路 76路 6路 49路及地铁三号线都可以到。',
             imageUrls:[
-                { image: "/public/images/recruitment/company/recruitment1.png" }
+                { image: "/images/recruitment/company/recruitment1.jpg" }
             ]
             ,
             recruitments: [

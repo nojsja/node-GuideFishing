@@ -19,6 +19,8 @@ a {
 
 /* 公司简介 */
 #company {
+    display: none;
+    white-space: nowrap;
     text-align: center;
     font-size: 2rem;
     font-weight: bold;
@@ -59,8 +61,17 @@ a {
     font-weight: bold;
 }
 
+/* 环境介绍 */
 .introduction-environment {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
 
+/* 环境图片 */
+.environment-image {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
 }
 
 /* 职位介绍 */
@@ -79,6 +90,7 @@ a {
     font-size: 2rem;
     color: #971511;
 }
+
 
 /* 标题 */
 .item-title {

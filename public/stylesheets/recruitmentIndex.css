@@ -11,8 +11,10 @@ a:hover {
 }
 
 .total {
-    min-height: 40rem;
-    margin-top: 2rem;
+    min-height: 400px;
+    height: auto;
+    bottom: 1rem;
+    margin-top: 1rem;
     margin-bottom: 2rem;
     padding: 1rem;
     background-color: rgb(229, 229, 229);
@@ -39,8 +41,8 @@ a:hover {
 .company-item {
     position: relative;
     margin: 0.5rem auto;
-    width: 15rem;
-    height: 15rem;
+    width: 150px;
+    height: 150px;
     border: solid 1px gray;
     background: url("/images/testType/communication.jpg") no-repeat;
     background-size: cover;
@@ -82,6 +84,81 @@ a:hover {
     word-break: break-all;
 
 }
+
+/* 顶部标识 */
+/* 强制不换行 */
+.content-marker {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    width: 100px;
+    padding: 5px;
+    white-space: nowrap;
+    font-size: 1.5rem;
+    vertical-align: middle;
+    background-color: #e57a4a;
+    overflow: hidden;
+    color: #ffffff;
+    border-left: solid 2px #1c6897;
+}
+
+/* 页脚导航 */
+.nav-footer {
+    position: absolute;
+    bottom: 1rem;
+    width: 100%;
+    font-size: 2rem;
+}
+
+.nav-footer-border {
+    margin: 0 auto;
+    border: solid 1px green;
+}
+
+.nav-footer-item {
+    border-radius: 5px;
+    padding: 5px;
+    box-sizing: border-box;
+    float: left;
+    width:  30%;
+    min-height: 2rem;
+    height: auto;
+    line-height: 2rem;
+    text-align: center;
+    border: solid 1px #818181;
+    color: #5f5f5f;
+
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+
+    -webkit-box-shadow:  0 5px 10px #1ca09a;
+    -moz-box-shadow:  0 5px 0 #1ca09a;
+    box-shadow:  0 5px  #1ca09a;
+}
+
+.nav-footer-item:hover {
+
+    text-shadow:  0 0 10px #1c6897;
+    color: #ffffff;
+    border: 0;
+    background-color: #d1dbee;
+
+    -webkit-transform: translate(0, -8px);
+    -moz-transform: translate(0, -8px);
+    -ms-transform: translate(0, -8px);
+    -o-transform: translate(0, -8px);
+    transform: translate(0, -8px);
+}
+
+
+/* 中间部分 */
+.nav-footer-center {
+    width:  40%;
+}
+
+
 /**
 * css的px不等同于设备的px
 * 1080p的安卓手机width=360px
@@ -96,10 +173,21 @@ a:hover {
     }
 
     .company-item {
+        position: relative;
         margin: 0.5rem auto;
-        width: 18rem;
-        height: 18rem;
-        padding: 0.8rem;
+        width: 200px;
+        height: 200px;
         border: solid 1px gray;
+        background: url("/images/testType/communication.jpg") no-repeat;
+        background-size: cover;
+
+        -webkit-box-shadow:  0 0 10px #134b6e;
+        -moz-box-shadow:  0 0 10px #134b6e;
+        box-shadow:  0 0 10px #134b6e;
+
+        transition:All 0.3s ease-in-out;
+        -webkit-transition:All 0.3s ease-in-out;
+        -moz-transition:All 0.3s ease-in-out;
+        -o-transition:All 0.3s ease-in-out;
     }
 }
