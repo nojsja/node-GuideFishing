@@ -31,6 +31,7 @@
 /* 引入数据库模式 */
 var AllTest = require('../models/AllTest.js');
 var color = require('colors-cli');
+var getDate = require('../models/tools/GetDate.js');
 
 /**
  * console.log(color.cyan_bt('颜色测试'));
@@ -116,19 +117,6 @@ function admin(app) {
                 }));
             }
         });
-
-        //获取当前日期字符串函数
-        function getDate() {
-            var dateArray = [];
-            var date = new Date();
-            var getMonth = (date.getMonth() + 1 < 10) ? ("0" + (date.getMonth() + 1)) : ("" + (date.getMonth() + 1));
-            var getDate = (date.getDate() < 10) ? ("0" + date.getDate()) : ("" +date.getDate());
-
-            dateArray.push(date.getFullYear(), "-", getMonth, "-", getDate,
-                " ", date.getHours(), ":", date.getMinutes(), ":", date.getSeconds());
-
-            return (dateArray.join(""));
-        }
     });
 
     /* 删除一个文档 */

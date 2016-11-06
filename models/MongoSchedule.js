@@ -12,8 +12,8 @@
 
 /* 引入数据库模式 */
 var mongoose = require('mongoose');
-var popularSchema = require('./popular_schema.js').popularSchema;
-var testSchema = require('./test_schema.js').testSchema;
+var popularSchema = require('./db_schema/popular_schema.js').popularSchema;
+var testSchema = require('./db_schema/test_schema.js').testSchema;
 //所有筛选条件
 var searchCondition = {
     testTypeArray: ['character', 'personality', 'emotion', 'communication', 'potential'],
