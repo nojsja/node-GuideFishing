@@ -19,6 +19,7 @@ var settings = require('./settings');
 var index = require('./routes/index');
 var test = require('./routes/test');
 var admin = require('./routes/admin');
+var recruit = require('./routes/recruitment');
 
 var app = express();
 
@@ -54,6 +55,7 @@ app.use(session({
 index(app);
 test(app);
 admin(app);
+recruit(app);
 
 //node-schedule定时执行任务,更新popolar表,每天的凌晨零点
 var rule = new schedule.RecurrenceRule()

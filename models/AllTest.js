@@ -5,7 +5,7 @@
  */
 
 var mongoose = require('mongoose');
-var testSchema = require('./test_schema.js').testSchema;
+var testSchema = require('./db_schema/test_schema.js').testSchema;
 
 /* 构造函数 */
 function AllTest(testGroup) {
