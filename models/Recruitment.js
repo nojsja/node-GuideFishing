@@ -87,6 +87,30 @@ Recruitment.prototype.save = function (callback) {
     });
 };
 
+/* 得到所有在招职位 */
+Recruitment.getList = function ( condition, callback ) {
+
+    var db = mongoose.connect('mongodb://localhost/QN');
+    var Recruitments = mongoose.model('Recruitments', recruitmentSchema);
+    
+    mongoose.connection.once('open', function () {
+
+        var jobArray = [];
+        var query = Recruitments.findOne();
+        query.where(condition);
+        query.exec(function (err, doc) {
+            if(err){
+                console.log(err);
+                mongoose.disconnect();
+                return callback(err);
+            }
+            // 成功返回
+            mongoose.disconnect();
+            callback(null, doc.recruitments);
+        });
+    });
+};
+
 /* 得到一条招聘相关数据 */
 Recruitment.getOne = function ( condition, callback ) {
 
@@ -94,6 +118,7 @@ Recruitment.getOne = function ( condition, callback ) {
     var Recruitments = mongoose.model('Recruitments', recruitmentSchema);
 
     mongoose.connection.once('open', function () {
+
         var query = Recruitments.findOne();
         query.where(condition);
         query.exec(function (err, doc) {

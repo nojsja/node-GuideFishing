@@ -1,168 +1,145 @@
 /**
- * Created by yangw on 2016/11/4.
- * 企业招聘相关介绍页面
+ * Created by yangw on 2016/11/7.
+ * 公司职位招聘页面详情
  */
 
-/* 初始化 */
 $(function () {
 
-    // 公司名称动画
-    $('#company').fadeIn();
-    // 获取详细信息
-    RecruitDetail.getDetail();
+    $('.company').fadeIn();
+    // 获取职位列表
+    RecruitmentDetail.getJobList();
 });
 
-/* 页面全局存储变量 */
-var RecruitDetail = {};
+/* 页面全局变量 */
+// recruitments -- 所有在招职位
+var RecruitmentDetail = {
 
-/* 获取招聘信息 */
-RecruitDetail.getDetail = function () {
-
-    var company = $('#company').text();
-    var url = '/recruitment/detail';
-
-    // 请求服务器
-    $.post(url, { company: company }, function (JSONdata) {
-            // 更新页面
-            RecruitDetail.updatePage(JSONdata);
-        }, "JSON");
+    recruitments: null
 };
 
-/* 更新页面 */
-RecruitDetail.updatePage = function (JSONdata) {
+/* 获取所有职位列表 */
+RecruitmentDetail.getJobList = function () {
 
-    var JSONobject = JSON.parse(JSONdata);
-    // 招聘信息
-    var recruitment = JSONobject.recruitment;
-    // 公司介绍
-    var introduction = recruitment.introduction;
-    // 公司位置
-    var position = recruitment.position;
-    // 公司图片
-    var imgArray = recruitment.imageUrls;
-    // 所有招聘职位
-    var recruitments = recruitment.recruitments;
+    var url = '/recruitment/detail/all';
+    var company = $('.company').text().trim();
 
-    // 更新介绍
-    $('.introduction-main').text(introduction);
-    // 更新位置
-    var $mapMarker = $('<span class="glyphicon glyphicon-map-marker">');
-    $mapMarker.text(position);
-    $('.introduction-position').append($mapMarker);
-    // 更新图片
-    for(var index in imgArray){
-        var $imgDiv = $('<img class="environment-image">');
-        $imgDiv.prop('src', imgArray[index].image);
-        // 添加图片到页面
-        $('.introduction-environment').append($imgDiv);
-    }
+    $.post(url, { company: company }, function (JSONdata) {
 
-    /* DOM结构
-    * <div class="recruitment-item">
-    * <!--招聘职位-->
-    * <div class="item-job"></div>
-    * <!--岗位职责-->
-    * <div class="item-duty">
-    *   <div class="item-duty-item"></div>
-    * </div>
-    * <!--任职资格-->
-    * <div class="item-skill">
-    *    <div class="item-skill-item"></div>
-    * </div>
-    * <!--薪资福利-->
-    * <div class="item-treatment">
-    *    <div class="item-treatment-item"></div>
-    * </div>
-    * <!--其它信息-->
-    * <div class="item-other"></div>
-    * </div>
-    * */
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.error){
+            return alert('读取错误!');
+        }
+        // 更新数据依赖
+        RecruitmentDetail.recruitments = JSONobject.recruitments;
+        // 更新页面
+        RecruitmentDetail.updatePage();
+    }, "JSON");
+};
+
+/* 获取一个职位 */
+RecruitmentDetail.getOneJob = function () {
+
+
+};
+
+/* 更新一个职位的页面 */
+RecruitmentDetail.updatePage = function () {
 
     // 更新招聘职位
-    for(var index in recruitments){
-        var recruitment = recruitments[index];
-        // 构建dom
-        var $itemDiv = $('<div class="recruitment-item">');
+    for(var index in RecruitmentDetail.recruitments){
 
-        // pushpin
-        var $pin = $('<span class="glyphicon glyphicon-pushpin">');
-        $pin.appendTo($itemDiv);
+        // 闭包 -- 当有回调存在的时候使用
+        (function (index) {
+            var recruitment = RecruitmentDetail.recruitments[index];
+            // 构建dom
+            var $itemDiv = $('<div class="recruitment-item">');
 
-        // 职位名称
-        var $job = $('<div class="item-job translate">');
-        var $jobTitle = $('<div class="item-title">');
-        $jobTitle.text('职位名称').appendTo($itemDiv);
-        $job.text(recruitment.job).appendTo($itemDiv);
-        // 岗位职责
-        var $duty = $('<div class="item-duty translate">');
-        var $dutyTitle = $('<div class="item-title">');
-        $dutyTitle.text('岗位职责').appendTo($itemDiv);
-        for(var i in recruitment.dutys){
-            var $dutyItem = $('<div class="item-duty-item">');
-            $dutyItem.text(recruitment.dutys[i].duty);
+            // isHidden标记所有职位信息的状态 -- 是否隐藏
+            var $pin = $('<span isHidden="true" class="glyphicon glyphicon-resize-full">');
+            // 绑定事件
+            $pin.click(function () {
 
-            $duty.append($dutyItem);
-        }
-        $duty.appendTo($itemDiv);
+                // 隐藏
+                if($(this).attr('isHidden') == "true"){
+                    $(this).prop('class', 'glyphicon glyphicon-resize-small');
+                    $(this).attr('isHidden', 'false');
+                    $itemDiv.children('.hiddenable').fadeIn();
+                    // 显示
+                }else {
+                    $(this).prop('class', 'glyphicon glyphicon-resize-full');
+                    $(this).attr('isHidden', 'true');
+                    $itemDiv.children('.hiddenable').fadeOut('fast');
+                }
+            });
 
-        // 任职资格
-        var $skill = $('<div class="item-skill translate">');
-        var $skillTitle = $('<div class="item-title">');
-        $skillTitle.text('任职资格').appendTo($itemDiv);
-        for(var j in recruitment.skills){
-            var $skillItem = $('<div class="item-skill-item">');
-            $skillItem.text(recruitment.skills[j].skill);
+            $pin.appendTo($itemDiv);
 
-            $skill.append($skillItem);
-        }
-        $skill.appendTo($itemDiv);
+            // 职位名称
+            var $job = $('<div class="item-job translate">');
+            var $jobTitle = $('<div class="item-title">');
+            $jobTitle.text('职位名称').appendTo($itemDiv);
+            $job.text(recruitment.job).appendTo($itemDiv);
 
-        // 薪资福利
-        var $treatment = $('<div class="item-treatment translate">');
-        var $treatmentTitle = $('<div class="item-title">');
-        $treatmentTitle.text('薪资福利').appendTo($itemDiv);
-        for(var k in recruitment.treatments){
-            var $treatmentItem = $('<div class="item-treatment-item">');
-            $treatmentItem.text(recruitment.treatments[k].treatment);
+            // 岗位职责
+            var $duty = $('<div class="item-duty translate hiddenable">');
+            var $dutyTitle = $('<div class="item-title hiddenable">');
+            $dutyTitle.text('岗位职责')
+                .css('display', 'none')
+                .appendTo($itemDiv);
+            for(var i in recruitment.dutys){
+                var $dutyItem = $('<div class="item-duty-item">');
+                $dutyItem.text(recruitment.dutys[i].duty);
 
-            $treatment.append($treatmentItem);
-        }
-        $treatment.appendTo($itemDiv);
+                $duty.append($dutyItem);
+            }
+            $duty
+                .css('display', 'none')
+                .appendTo($itemDiv);
 
-        // 其它信息
-        var $other = $('<div class="item-other translate">');
-        var $otherTitle = $('<div class="item-title">');
-        $otherTitle.text('其它').appendTo($itemDiv);
-        $other.text(recruitment.other).appendTo($itemDiv);
+            // 任职资格
+            var $skill = $('<div class="item-skill translate hiddenable">');
+            var $skillTitle = $('<div class="item-title hiddenable">');
+            $skillTitle.text('任职资格')
+                .css('display', 'none')
+                .appendTo($itemDiv);
+            for(var j in recruitment.skills){
+                var $skillItem = $('<div class="item-skill-item">');
+                $skillItem.text(recruitment.skills[j].skill);
 
-        // 添加到列表里面
-        $('#recuitmentList').append($itemDiv);
+                $skill.append($skillItem);
+            }
+            $skill
+                .css('display', 'none')
+                .appendTo($itemDiv);
+
+            // 薪资福利
+            var $treatment = $('<div class="item-treatment translate hiddenable">');
+            var $treatmentTitle = $('<div class="item-title hiddenable">');
+            $treatmentTitle.text('薪资福利')
+                .css('display', 'none')
+                .appendTo($itemDiv);
+            for(var k in recruitment.treatments){
+                var $treatmentItem = $('<div class="item-treatment-item">');
+                $treatmentItem.text(recruitment.treatments[k].treatment);
+
+                $treatment.append($treatmentItem);
+            }
+            $treatment
+                .css('display', 'none')
+                .appendTo($itemDiv);
+
+            // 其它信息
+            var $other = $('<div class="item-other translate hiddenable">');
+            var $otherTitle = $('<div class="item-title hiddenable">');
+            $otherTitle.text('其它')
+                .css('display', 'none')
+                .appendTo($itemDiv);
+            $other.text(recruitment.other)
+                .css('display', 'none')
+                .appendTo($itemDiv);
+
+            // 添加到列表里面
+            $('#recruitmentList').append($itemDiv);
+        })(index)
     }
-
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

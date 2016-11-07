@@ -57,7 +57,7 @@ RecruitIndex.updateCompanyPage = function (JSONdata) {
         var $companyItem = $('<div class="company-item">');
         var $shadow = $('<div class="shadow">');
         var $a = $('<a class="company-title">');
-        $a.attr('href', '/recruitment/detail/' + company)
+        $a.attr('href', '/recruitment/' + company)
             .text(company);
 
         $companyItem.append($shadow)

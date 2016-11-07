@@ -135,16 +135,12 @@ function recruitment(app) {
 
         // 需要获取的公司的招聘信息
         var company = req.body.company;
+        console.log(company);
 
         /* 得到招聘公司的信息 */
-        Recruitment.getOne({
-            where: { company: company },
-            select: {
-                introduction: 1,
-                position: 1,
-                imageUrls: 1,
-                videoUrls: 1
-            }
+        Company.getOne({
+            company: company
+
         }, function (err, data) {
             if(err){
                 return res.json(JSON.stringify({
@@ -191,6 +187,38 @@ function recruitment(app) {
             }));
         });
 
+    });
+
+    /* 获取公司招聘职位的页面 */
+    app.get('/recruitment/:company/detail/', function (req, res) {
+
+        // 公司名字
+        var company = req.params.company;
+        res.render('recruit_detail', {
+            title: "招聘详情",
+            company: company
+        });
+
+    });
+
+    /* 获取招聘公司的所有职位 */
+    app.post('/recruitment/detail/all', function (req, res) {
+
+        var company = req.body.company;
+        
+        Recruitment.getList({ company: company }, function (err, data) {
+
+            if(err){
+                return res.json(JSON.stringify({
+                    error: err,
+                    recruitments: null
+                }));
+            }
+            res.json(JSON.stringify({
+                error: null,
+                recruitments: data
+            }));
+        });
     });
 
     /* 获取招聘公司的某个职位信息 */

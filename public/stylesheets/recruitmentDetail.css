@@ -18,7 +18,7 @@ a {
 }
 
 /* 公司简介 */
-#company {
+.company {
     display: none;
     white-space: nowrap;
     text-align: center;
@@ -31,6 +31,31 @@ a {
     border-left: solid 2px #e57a4a;
     border-right: solid 2px #e57a4a;
     color: #d9e6d9;
+}
+
+/* 获取所有在招职位 */
+.get-recruitments {
+    position: fixed;
+    left: 0;
+    bottom: 2rem;
+    background-color: rgba(28, 104, 151, 0.7);
+    border-left: solid 2px #e57a4a;
+    padding: 10px;
+}
+
+/* 返回大厅 */
+.return-home {
+    position: fixed;
+    right: 0;
+    bottom: 2rem;
+    background-color: rgba(28, 104, 151, 0.7);
+    border-right: solid 2px #e57a4a;
+    padding: 10px;
+}
+
+.get-recruitments > a,
+.return-home > a{
+    color: #ffffff;
 }
 
 .introduction {
@@ -74,6 +99,17 @@ a {
     margin: 0 auto;
 }
 
+/* 视频介绍 */
+.video {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+
+    -webkit-box-shadow:  0 0 10px #207fbb;
+    -moz-box-shadow:  0 0 10px #207fbb;
+    box-shadow:  0 0 10px #207fbb;
+}
+
 /* 职位介绍 */
 .recruitment-item {
     border: dotted 1px grey;
@@ -85,10 +121,10 @@ a {
 
 .recruitment-item > span.glyphicon {
     position: absolute;
-    top: -1rem;
-    right: 0.5rem;
+    top: 0.1rem;
+    right: 0.1rem;
     font-size: 2rem;
-    color: #971511;
+    color: #e57a4a;
 }
 
 
