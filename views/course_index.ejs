@@ -1,0 +1,88 @@
+<!--课程呈现主页-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="description" content="带渔课程教学系统" />
+    <meta name="keywords" content="course of GuideFishing" />
+
+    <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel='stylesheet' href='/stylesheets/course_index.css' />
+
+    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/course_index.js"></script>
+</head>
+<body>
+
+<header id="head" class="header">
+    <div class="header-label">选择课程类型 <span class="glyphicon glyphicon-chevron-down"></span></div>
+    <!--评测类型-->
+    <div class="type-item" id="jobFound">求职秘籍</div>
+    <div class="type-item" id="software">软件技巧</div>
+    <div class="type-item" id="jobSkill">职场技能</div>
+    <div class="type-item" id="english">英语进阶</div>
+    <div class="type-item" id="personal">个人提升</div>
+</header>
+
+<!--热门评测列表-->
+<div class="container hot-container">
+    <div class="nav-tabs-border">
+        <ul class="nav nav-tabs">
+            <li >
+                <a jumpTo="hotJobFound" class="jump"><span id="hotJobFoundSpan" class="glyphicon glyphicon-list">人格</span></a>
+            </li>
+            <li class="active">
+                <a jumpTo="hotSoftware" class="jump"><span id="hotSoftwareSpan" class="glyphicon glyphicon-list">性格</span></a>
+            </li>
+            <li>
+                <a jumpTo="hotEnglish" class="jump"><span id="hotEnglishSpan" class="glyphicon glyphicon-list">交际</span></a>
+            </li>
+            <li>
+                <a jumpTo="hotJobSkill" class="jump"><span id="hotJobSkillSpan" class="glyphicon glyphicon-list">情感</span></a>
+            </li>
+            <li>
+                <a jumpTo="hotPersonal" class="jump"><span id="hotPersonalSpan" class="glyphicon glyphicon-list">潜能</span></a>
+            </li>
+        </ul>
+        <div class="tab-content hot-title">
+            <div class="hidden" id="hotJobFound">
+                <div class="hot-title-item"><a>这是一条求职秘籍的热门内容</a></div>
+            </div>
+            <div class="active" id="hotSoftware">
+                <div class="hot-title-item"><a>这是一条软件技巧的热门内容</a></div>
+            </div>
+            <div class="hidden" id="hotEnglish">
+                <div class="hot-title-item">这是一条英语进阶的热门内容</div>
+            </div>
+            <div class="hidden" id="hotJobSkill">
+                <div class="hot-title-item">这是一条职场技能的热门内容</div>
+            </div>
+            <div class="hidden" id="hotPersonal">
+                <div class="hot-title-item">这是一条个人提升的热门内容</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="total" class="container">
+
+</div>
+
+<!--数据加载loading信息-->
+<div class="loading-info">
+    <input type="button" class="btn btn-success" value="加载更多..."></input>
+</div>
+
+<!--返回顶部按钮-->
+<%- include test_pageAnchor.ejs%>
+<!--底部导航-->
+<%- include footer.ejs%>
+<!--模态弹窗-->
+<%- include modalWindow.ejs%>
+
+</body>
+</html>

@@ -23,7 +23,7 @@ var scoreFactory = function (submitData, callback) {
 
     //查找文档条件
     var condition = {
-        testType: submitData.testType,
+        courseType: submitData.courseType,
         testTitle: submitData.testTitle
     };
     //提交的选项数据

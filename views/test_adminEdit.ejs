@@ -1,0 +1,222 @@
+<!--adminEdit-->
+<!--管理员编辑和创建题目的页面-->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel='stylesheet' href='/stylesheets/test_adminEdit.css' />
+
+    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/test_adminEdit.js"></script>
+
+</head>
+
+<body>
+
+<!--首部导航-->
+<header class="head">
+    <% include test_adminHeader.ejs%>
+</header>
+
+<!--添加和编辑主体部分-->
+<div class="container total">
+
+    <!--这套题的主要介绍信息,包括标题,分类,得分类型,单次得分值,内容简介-->
+    <div class="col-md-12 total-info">
+
+        <!--标题-->
+        <div class="form-group col-md-12">
+            <label class="info-title">测评标题</label>
+            <input type="text" class="form-control" id="testTitle">
+        </div>
+
+        <!--单次得分分值-->
+        <div class="form-group col-md-12">
+            <label class="info-title" title="每次得分的绝对值(user-defined 模式下忽略此项)">得分分值</label>
+            <input type="number" id="scoreValue" class="form-control">
+        </div>
+
+        <!--类型-->
+        <div class="col-md-12">
+            <label class="info-title">测评类型</label>
+            <div>
+                <div class="type-item test-type" id="character">性格测试</div>
+                <div class="type-item test-type" id="potential">潜能测试</div>
+                <div class="type-item test-type" id="emotion">情感测试</div>
+                <div class="type-item test-type" id="communication">交际测试</div>
+                <div class="type-item test-type" id="personality">人格测试</div>
+            </div>
+        </div>
+
+        <!--得分类型-->
+        <div class="col-md-12">
+            <label class="info-title">得分类型</label>
+            <div>
+                <div class="type-item score-mode" id="Common"
+                     describe="说明:包含CA,CB,CC子类型,CA表示A得正分,B不得分,C得负分,CB,CC以此类推.">Common</div>
+                <div class="type-item score-mode" id="NegaPositive"
+                     describe="说明:包含Negative和Positive子类型,Negative表示反向积分,Positive表示正向积分.">NegaPositive</div>
+                <div class="type-item score-mode" id="Category"
+                    describe="说明:这是分类别进行统计结果的类型,对应对个维度,各个维度中得分最高的即为统计结果对应的维度">Category</div>
+            </div>
+        </div>
+
+        <!--添加得分子类型 -->
+        <div class="col-md-12" id="childModeAdd">
+            <label class="info-title">添加子类别</label>
+            <div class="info-input">
+                <input class="form-control category-mode" type="text" placeholder="请输入子类别的名字...">
+                <textarea class="form-control category-describe" rows="2" placeholder="请输入子类型的描述..."></textarea>
+
+                <div id="scoreConfirmDiv">
+                    <input type="button" id="categoryConfirm" class="btn btn-success" value="子类 + " title="添加一个子类型"></input>
+                    <input type="button" id="categoryCancel" class="btn btn-default" value="子类 - " title="删除一个子类型"></input>
+                    <!--已经存在的分段列表-->
+                    <div class="category-list">
+                        <span class="glyphicon glyphicon-pushpin"></span>
+
+                    </div>
+                </div>
+            </div>
+            <!--描述信息-->
+        </div>
+
+        <!--分数段设置-->
+        <div class="col-md-12" id="scoreSectionSet">
+            <label class="info-title">分段设置</label>
+            <div class="info-input">
+                <!--分数段段首-->
+                <div id="scoreHeadDiv" class="input-group">
+                    <span class="input-group-addon glyphicon glyphicon-chevron-left"></span>
+                    <input type="number" class="form-control" placeholder="请输入该分段的起始值">
+                </div>
+                <!--分数段段尾-->
+                <div id="scoreTailDiv" class="input-group">
+                    <input type="number" class="form-control" placeholder="请输入该分段的结束值">
+                    <span class="input-group-addon glyphicon glyphicon-chevron-right"></span>
+                </div>
+                <!--该分段统计结论-->
+                <div id="scoreResultDiv" class="form-group">
+                    <textarea rows="3" class="form-control" placeholder="请输入该分段的统计结论"></textarea>
+                </div>
+
+                <div id="scoreConfirmDiv">
+                    <input type="button" id="scoreConfirm" class="btn btn-success" value="分段 + " title="添加一个分段"></input>
+                    <input type="button" id="scoreCancel" class="btn btn-default" value="分段 - " title="删除一个分段"></input>
+                    <!--已经存在的分段列表-->
+                    <div class="info-list">
+                        <span class="glyphicon glyphicon-pushpin"></span>
+                        <!--<div class="info-list-item">
+                            <div class="item-label">分数段0-30: </div>
+                            <div class="item-text">这是分段在0-30分的统计结果</div>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 form-group">
+            <label class="info-title">题目简介</label>
+            <textarea rows="5" class="form-control" id="abstract" placeholder="请输入简要的描述信息"></textarea>
+        </div>
+    </div>
+
+    <!--下面的题目编辑区域-->
+    <div class="col-md-12 total-content">
+        <!--编辑区域-->
+        <div class="col-md-3 total-edit">
+
+            <!--编号-->
+            <div class="form-group">
+                <label class="info-title">编号:</label>
+                <input type="text" class="form-control" title="不可编辑" id="editNumber">
+            </div>
+
+            <div class="form-group">
+                <label class="info-title">输入题目:</label>
+                <textarea rows="4" class="form-control" id="editTitle"></textarea>
+            </div>
+
+            <div class="form-group nextPara">
+                <label class="info-title">得分子类型</label>
+                <!--自定义选项的得分-->
+                <div id="scoreDefineDiv"><input type="checkbox" id="scoreDefine">自定义得分</div>
+                <!--除去自定义得分模式下的反向积分模式-->
+                <div id="negativeTypeDiv"><input type="checkbox" class="nega-posi" id="negativeType">反向得分</div>
+                <!--除去自定义得分模式下的反向积分模式-->
+                <div id="positiveTypeDiv"><input type="checkbox" class="nega-posi" id="positiveType">正向得分</div>
+                <!--CA型得分-->
+                <div class="score-child-div">
+                    <div class="type-item score-child" id="CA">CA</div>
+                    <div class="type-item score-child" id="CB">CB</div>
+                    <div class="type-item score-child" id="CC">CC</div>
+                </div>
+            </div>
+
+            <div class="form-group nextPara">
+                <label class="info-title">选项个数</label>
+                <div class="item-number-div">
+                    <div class="type-item item-number">2</div>
+                    <div class="type-item item-number">3</div>
+                    <div class="type-item item-number">4</div>
+                    <div class="type-item item-number">5</div>
+                </div>
+                <!--编辑各个选项,通过设置选项个数来显示各个选项的输入框-->
+                <div class="choises nextPara">
+                    <!--<div class="input-group">
+                        <label class="input-group-addon">A</label>
+                        <input type="text" class="form-control input-choise" choose="A">
+                    </div>-->
+                </div>
+
+                <!--确认修改-->
+                <div class="nextPara">
+                    <input class="btn btn-success" type="button" id="editConfirm" value="确认修改">
+                    <input class="btn btn-default" type="button" id="editCancel" value="删除本题">
+                </div>
+            </div>
+
+
+        </div>
+
+        <!--列表界面-->
+        <div class="col-md-9">
+            <!--添加一组题目-->
+            <div class="edit-add" title="添加一道题目">
+                <span class="glyphicon glyphicon-plus"></span>
+            </div>
+
+            <div class="total-list">
+                <!--其中的一组题目-->
+                <!--<div class="edit-new">
+                    &lt;!&ndash;标题&ndash;&gt;
+                    <div class="new-title">1.这是题目</div>
+                    &lt;!&ndash;题目选项&ndash;&gt;
+                    <div class="new-choises">
+                        <div class="choise" choose="A">A选项</div>
+                        <div class="choise" choose="B">B选项</div>
+                        <div class="choise" choose="C">C选项</div>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+    </div>
+
+    <!--创建完成-->
+    <div class="submit-div">
+        <input class="btn btn-danger" value="创建完成" id="submit">
+    </div>
+</div>
+
+<!-- 模态弹窗 -->
+<% include modalWindow.ejs%>
+
+<%include footer.ejs%>
+
+</body>

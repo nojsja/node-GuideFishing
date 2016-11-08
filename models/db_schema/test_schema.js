@@ -6,7 +6,7 @@
 /*
 * 注:
 * collection -- 存入的表名
-* testType -- 评测类型,例如人格测试,性格测试, 情感测试, 交际测试等等
+* courseType -- 评测类型,例如人格测试,性格测试, 情感测试, 交际测试等等
 * testGroup -- 存储一组题目的所有题目,每个题目包含题目描述itemTitle,
 * 题号itemNumber,和选项数据itemChoise,选项数据包含选号和选项两个字段
 * itemTitle -- 本道题的标题, itemNumber --本道题的编号,
@@ -32,7 +32,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var testSchema = new Schema({
-    testType: {type: String, required: true},
+    courseType: {type: String, required: true},
     date: String,
     testGroup: [{
         scoreDefine: Boolean,

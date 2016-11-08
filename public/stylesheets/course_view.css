@@ -1,0 +1,214 @@
+/* 课程编辑页面 */
+body {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    min-height:100%;
+    background-color: #FFFFFF;
+}
+html {
+    height:100%;
+    font-size: 16px;
+}
+
+.post-title {
+    text-align: center;
+    margin-top: .5em;
+    margin-bottom: 1em;
+    font-family: 黑体;
+    font-weight: bold;
+    font-size: 1.9rem;
+    text-shadow: 0 0 10px #395980;
+    color: #fdfbf6;
+}
+
+/*预览内容*/
+.content-preview {
+    border: dashed 2px #395980;
+    margin-bottom: 2em;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 12em;
+    padding: 0.5em;
+}
+.content-preview > p {
+    text-align: center;
+    color: rgba(0, 0, 0, 0.69);
+    margin-top: 2em;
+    letter-spacing: 0.5em;
+}
+
+/*预览图片*/
+.picture-preview-div {
+    display: inline-block;
+    padding: 3px;
+    margin: 0.2em;
+}
+.picture-preview {
+    height: 5em;
+    width:auto;
+    border: solid 1px white;
+    -moz-box-shadow: 0px 0px 8px #238eae;
+    box-shadow: 0px 0px 8px #238eae;
+    -o-box-shadow: 0px 0px 8px #238eae;
+    -webkit-box-shadow: 0px 0px 8px #238eae;
+}
+/*视频列表预览*/
+.video-preview-div {
+
+}
+.video-preview,
+.music-preview {
+    text-align: left;
+    font-size: 1.1em;
+    padding: 0.2em;
+    font-weight: bold;
+    color: rgb(57, 89, 128);
+    border-bottom: dotted 1px #a6a6a6;
+}
+
+/*音乐列表预览*/
+.music-preview-div {
+
+}
+
+.video-preview:hover,
+.music-preview:hover {
+    background-color: rgba(57, 89, 128, 0.5);
+    color: white;
+}
+
+.video-insert {
+    display: block;
+    width:100%;
+    height: 300px;
+}
+
+.type {
+    margin-bottom: 1em;
+    /*消除inline-box缝隙*/
+    font-size: 0;
+}
+
+.type-other{
+    font-size: 1rem;
+    width: 25%;
+    display: inline-block;
+}
+
+.total {
+    background-color: rgba(253,251,246,0.90);
+    border: double 3px #353846;
+    margin-bottom: 2em;
+    padding: 1.3em;
+}
+
+.title {
+    margin-bottom: 1em;
+    font-size: 1.5em;
+    font-weight: bold;
+    background-color: #395980;
+    color: #b5dccc;
+    text-align: center;
+    -moz-box-shadow: 5px 5px #353846;
+    -webkit-box-shadow: 5px 5px#353846;
+    box-shadow: 5px 5px #353846;
+}
+
+#articleTitle,
+#bilibiliAV {
+    margin-bottom: 1.5em;
+    width: 100%;
+}
+
+.shadow {
+    -webkit-box-shadow:0 0 10px #353846;
+    -moz-box-shadow:0 0 10px #353846;
+    box-shadow:0 0 10px #353846;
+}
+
+#editorContent {
+    margin-bottom: 1.5em;
+}
+
+.tags-row {
+    margin-bottom: 1em;
+}
+
+.type > div {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    border: solid 2px #e1ebfd;
+    box-shadow:0px 0px 10px #ffffff inset;
+    -moz-box-shadow:0px 0px 10px #ffffff inset;
+    -o-box-shadow:0px 0px 10px #ffffff inset;
+    -webkit-box-shadow: 0px 0px 10px #ffffff inset;
+
+    padding: 0.5em;
+    font-family: 华文中宋;
+    color: #767676;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/*消除inline-block的间隙*/
+.tag-father {
+    font-size: 0;
+}
+
+.tag-div{
+    font-size: 1rem;
+    display: inline-block;
+    width: 25%;
+    text-align: center;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: double 1px #238eae;
+    padding: 0.5em;
+    font-family: 微软雅黑;
+    color: #238eae;
+}
+
+.type > div:hover {
+    background-color: #e1ebfd;
+}
+
+#sendDiv {
+    text-align: center;
+}
+
+#sendArticle {
+    border: solid 1px;
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+
+.tips {
+    font-family: 微软雅黑;
+    font-size: 1.3em;
+    word-spacing: 8px;
+    letter-spacing: 1px;
+}
+.spacing {
+    word-spacing: 8px;
+    letter-spacing: 1px;
+}
+
+.footer-div {
+    background-color: rgb(42,42,42);
+    border-top: solid 2px #a20812;
+}
+
+/* 返回顶部按钮 */
+.page-anchor {
+    display: none;
+    position: fixed;
+    right: 1em;
+    bottom: 2em;
+    z-index: 100;
+    opacity: 0.7;
+}

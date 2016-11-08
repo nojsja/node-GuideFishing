@@ -1,0 +1,63 @@
+<!--testView-->
+<!--用户完成测试题目的界面-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel='stylesheet' href='/stylesheets/test_view.css' />
+
+    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/test_view.js"></script>
+</head>
+<body>
+<header class="header">
+    <div class="header-label">
+        测试开始
+        <a href="/test/index"><span class="glyphicon glyphicon-home return-home"></span></a>
+    </div>
+</header>
+
+<!--评测集合主体-->
+<div class="container total">
+    <div class="test-title box1"><%= testTitle %></div>
+    <div class="test-type"><%= testType %></div>
+    <!--测评题目操作区域-->
+    <div id="totalItems">
+        <div class="item-number"></div>
+        <div class="item-title"></div>
+        <div class="item-choises">
+            <!--<div class="choise" id="A">A.完全符合</div>
+            <div class="choise" id="B">B.基本符合</div>
+            <div class="choise" id="C">A.完全不符</div>-->
+        </div>
+    </div>
+</div>
+
+<!--提交按钮-->
+<div id="nextDiv">
+    <input type="button" class="btn btn-success" id="last" value="上一道">
+    <input type="button" class="btn btn-success" id="next" value="下一道">
+</div>
+<div id="submitDiv">
+    <input type="button" class="btn btn-danger" id="last" value="提交">
+</div>
+
+<!--测评结果-->
+<div class="container test-result-border">
+    <span class="glyphicon glyphicon-search test-result-title">结果分析</span>
+    <div class="test-result">
+
+    </div>
+</div>
+
+
+<!--引入模态弹窗-->
+<%- include modalWindow.ejs%>
+
+</body>

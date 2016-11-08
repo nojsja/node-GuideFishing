@@ -80,7 +80,7 @@ function recruitment(app) {
     app.get('/recruitment/index', function (req, res) {
 
         // 渲染页面
-        res.render('recruit_index', {
+        res.render('recruitment_index', {
             title: "所有招聘"
         });
     });
@@ -124,7 +124,7 @@ function recruitment(app) {
     app.get('/recruitment/:company', function (req, res) {
 
         // 返回客户端数据
-        res.render('recruit_companyDetail', {
+        res.render('recruitment_company', {
             title: "招聘详情",
             company: req.params.company
         });
@@ -194,7 +194,7 @@ function recruitment(app) {
 
         // 公司名字
         var company = req.params.company;
-        res.render('recruit_detail', {
+        res.render('recruitment_detail', {
             title: "招聘详情",
             company: company
         });

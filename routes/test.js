@@ -21,28 +21,28 @@ var AllTest = require('../models/AllTest.js');
 function test(app) {
 
     /* 获取测试detail页面 */
-    app.get('/test/testDetail/:testType/:testTitle', function (req, res) {
+    app.get('/test/testDetail/:courseType/:testTitle', function (req, res) {
 
         var condition = {
             testTitle: req.params.testTitle,
-            testType: req.params.testType
+            courseType: req.params.courseType
         };
         AllTest.getDetail(condition, function (err, doc) {
             // 数据监测
-           if(err || !doc.testTitle || !doc.testType) {
+           if(err || !doc.testTitle || !doc.courseType) {
                return res.render('testDetail', {
                    title: '评测详情',
                    testTitle: 'error!!!',
-                   testType: 'error!!!',
+                   courseType: 'error!!!',
                    abstract: 'error!!!',
                    date: 'error!!!',
                    frequency: 'error!!!'
                });
            }
-            res.render('testDetail', {
+            res.render('test_detail', {
                 title: '评测详情',
                 testTitle: doc.testTitle,
-                testType: doc.testType,
+                courseType: doc.courseType,
                 abstract: doc.abstract,
                 date: doc.date,
                 frequency: doc.frequency
@@ -51,25 +51,25 @@ function test(app) {
     });
 
     /* 获取测试视图主页*/
-    app.get('/test/testView/:testType/:testTitle', function (req, res) {
+    app.get('/test/testView/:courseType/:testTitle', function (req, res) {
 
         //评测类型
-        var testType = req.params.testType;
+        var testType = req.params.courseType;
         var testTitle = req.params.testTitle;
         //跳转到页面
-        res.render('testView', {
+        res.render('test_view', {
             title: '评测页面',
-            testType: testType,
+            courseType: testType,
             testTitle: testTitle
        });
     });
 
     /* 获取一组测试题目 */
-    app.post('/test/testView/:testType/:testTitle', function (req, res) {
+    app.post('/test/testView/:courseType/:testTitle', function (req, res) {
 
         //筛选条件
         var condition = {
-            testType: req.params.testType,
+            courseType: req.params.courseType,
             testTitle: req.params.testTitle
         };
         //得到题目信息

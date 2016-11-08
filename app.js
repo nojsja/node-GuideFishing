@@ -16,10 +16,12 @@ var MongoSchedule = require('./models/MongoSchedule.js');
 var settings = require('./settings');
 
 /* 引入路由 */
-var index = require('./routes/index');
+var test_index = require('./routes/test_index');
 var test = require('./routes/test');
-var admin = require('./routes/admin');
-var recruit = require('./routes/recruitment');
+var test_admin = require('./routes/test_admin');
+var recruitment = require('./routes/recruitment');
+var course = require('./routes/course');
+var course_admin = require('./routes/course_admin');
 
 var app = express();
 
@@ -52,10 +54,12 @@ app.use(session({
 ));
 
 //建立路由规则
-index(app);
+test_index(app);
 test(app);
-admin(app);
-recruit(app);
+test_admin(app);
+recruitment(app);
+course(app);
+course_admin(app);
 
 //node-schedule定时执行任务,更新popolar表,每天的凌晨零点
 var rule = new schedule.RecurrenceRule()

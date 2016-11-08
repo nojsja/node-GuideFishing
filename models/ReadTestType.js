@@ -8,7 +8,7 @@ var fs = require('fs');
 
 // 读取服务器磁盘
 function readTestType(callback) {
-    var url = './public/images/testType';
+    var url = './public/images/courseType';
     // 存储图片地址的对象
     var urlImgObj = {};
     fs.readdir(url, function (err, files) {
@@ -17,7 +17,7 @@ function readTestType(callback) {
         }
         for(var i in files){
             var fileName = files[i];
-            urlImgObj[fileName.split('.')[0]] = '/images/testType/' + fileName;
+            urlImgObj[fileName.split('.')[0]] = '/images/courseType/' + fileName;
         }
         // 回调返回数据
         callback(urlImgObj);
