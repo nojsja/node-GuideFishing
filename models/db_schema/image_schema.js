@@ -7,6 +7,7 @@
  * 注:
  * imageName -- 图片名字
  * imageUrl -- 图片地址
+ * courseName -- 所属课程名
  * */
 
 /* 引入mongoose */
@@ -17,6 +18,7 @@ var imageSchema = new Schema({
 
     name: { type: String, required: true },
     url: {type: String, required: true},
+    courseName: {type: String, required: true}
 
 }, { collection: "image" });
 

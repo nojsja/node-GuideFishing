@@ -5,8 +5,8 @@
 
 /*
 * 注:
-* name -- 音频名
-* url -- 地址
+* name -- 文件名
+* url -- 文件地址
 * courseName -- 所属课程名
 *
  * */
@@ -15,12 +15,12 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var audioSchema = new Schema({
+var fileSchema = new Schema({
 
     name: {type: String, required: true},
     url: {type: String , required: true},
     courseName: {type: String, required: true}
 
-}, { collection: "audio" });
+}, { collection: "file" });
 
-exports.audioSchema = audioSchema;
+exports.fileSchema = fileSchema;

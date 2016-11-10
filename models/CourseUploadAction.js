@@ -14,7 +14,7 @@ var fs = require('fs');
 //保存到数据库
 var uploadData = require('./CourseUploadData');
 
-function Upload(req, res) {
+function UploadAction(req, res) {
 
     console.log('Upload..');
     //存放表单域和文件
@@ -35,7 +35,7 @@ function Upload(req, res) {
         files.push([field, file]);
         docs.push(file);
 
-        var types = file.name.split('.')[1];
+        var types = file.name.split('.').pop();
 
         //正则匹配确定文件类型绑定的信息
         var typeInfo = typeRegTest(types);
@@ -49,10 +49,14 @@ function Upload(req, res) {
                 if(err){
                     console.log(err);
                 }else {
-                    /*存储信息*/
+                    /**
+                     * 存储信息
+                     * 对象名,对象地址, 所属课程名
+                     * */
                     var info = {
                         name : file.name,
-                        url : typeInfo.visitPath + "/" + file.name
+                        url : typeInfo.visitPath + "/" + file.name,
+                        courseName: req.params.courseName
                     };
                     console.log("type:" + typeInfo.type);
                     //将上传的文件信息存进数据库
@@ -90,7 +94,7 @@ function Upload(req, res) {
         }
 
         //正则匹配对象, 闭包封装
-        var typeRegTest = (function (types) {
+        function typeRegTest(types) {
 
             //前缀路径
             var prePath;
@@ -104,38 +108,38 @@ function Upload(req, res) {
             var regPicture = /(bmp|jpg|jpeg|svg|png|gif)/i;
 
             //判断文件类型
-            if(regVideo.test(types)){
+            if (regVideo.test(types)) {
 
                 return {
-                    storePath:  "./public/videos/users/" + req.session.userName,
-                    visitPath:  "/videos/users/" + req.session.userName,
+                    storePath: "./public/videos/courses/" + req.params.courseName,
+                    visitPath: "/videos/courses/" + req.params.courseName,
                     type: "video"
                 }
-            }else if(regAudio.test(types)){
+            } else if (regAudio.test(types)) {
 
                 return {
-                    storePath: "./public/music/users/" + req.session.userName,
-                    visitPath: "/music/users/" + req.session.userName,
-                    type: "music"
+                    storePath: "./public/audios/courses/" + req.params.courseName,
+                    visitPath: "/audios/courses/" + req.params.courseName,
+                    type: "audio"
                 }
-            }else if(regPicture.test(types)){
+            } else if (regPicture.test(types)) {
 
                 return {
-                    storePath: "./public/images/users/" + req.session.userName,
-                    visitPath: "/images/users/" + req.session.userName,
-                    type: "picture"
+                    storePath: "./public/images/courses/" + req.params.courseName,
+                    visitPath: "/images/courses/" + req.params.courseName,
+                    type: "image"
                 }
                 // 上传文件的情况
-            }else {
+            } else {
 
                 return {
-                    storePath: "./public/files/users/" + req.session.userName,
-                    visitPath: "/files/users/" + req.session.userName,
+                    storePath: "./public/files/courses/" + req.params.courseName,
+                    visitPath: "/files/courses/" + req.params.courseName,
                     type: "file"
                 }
             }
 
-        })(types);
+        };
 
     }).on('end', function() {
 
@@ -166,4 +170,4 @@ function Upload(req, res) {
     });
 }
 
-module.exports = Upload;
+module.exports = UploadAction;

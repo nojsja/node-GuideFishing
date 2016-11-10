@@ -18,6 +18,10 @@
     <script type="text/javascript" src="/Ueditor/lang/zh-cn/zh-cn.js"> </script>
     <!--加载bootstrap-->
     <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
+    <!--jQuery-file-upload-->
+    <script type="text/javascript" src="/javascripts/lib/vendor/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/jquery.fileupload.js"></script>
     <!--页面脚本-->
     <script type="text/javascript" src="/javascripts/course_adminEdit.js"></script>
 
@@ -33,9 +37,12 @@
 <div class="self-container self-container-upload">
     <!--上传图片-->
     <div class="upload-img">
-        <div class="">上传图片</div>
-        <div class="">
-            <input type="file" multiple=true id="fileUpload" size="5" value="选择" class="btn btn-default">
+        <div class="upload-title">上传图片</div>
+        <div child="imgUpload">
+            <input type="file" multiple=true id="imgUpload" size="5" value="选择" class="btn btn-default">
+        </div>
+        <!--文件列表-->
+        <div id="imgListDiv">
         </div>
         <!--上传进度条-->
         <div id="uploadImgProgress">
@@ -45,9 +52,13 @@
 
     <!--上传视频-->
     <div class="upload-video">
-        <div class="">上传视频</div>
-        <div class="">
-            <input type="file" multiple=true id="fileUpload" size="5" value="选择" class="btn btn-default">
+        <div class="upload-title">上传视频</div>
+        <div child="videoUpload">
+            <input type="file" multiple=true id="videoUpload" size="5" value="选择" class="btn btn-default">
+        </div>
+        <!--文件列表-->
+        <div id="videoListDiv">
+
         </div>
         <!--上传进度条-->
         <div id="uploadVideoProgress">
@@ -57,9 +68,12 @@
 
     <!--上传音频-->
     <div class="upload-audio">
-        <div class="">上传音频</div>
-        <div class="">
-            <input type="file" multiple=true id="fileUpload" size="5" value="选择" class="btn btn-default">
+        <div class="upload-title">上传音频</div>
+        <div child="audioUpload">
+            <input type="file" multiple=true id="audioUpload" size="5" value="选择" class="btn btn-default">
+        </div>
+        <!--文件列表-->
+        <div id="audioListDiv">
         </div>
         <!--上传进度条-->
         <div id="uploadAudioProgress">
@@ -68,6 +82,7 @@
     </div>
 </div>
 
+
 <!--预览窗口触发器-->
 <div class="self-trigger self-trigger-preview" triggerTarget="self-container-preview">
     <span class="glyphicon glyphicon-folder-open"></span>
@@ -75,6 +90,27 @@
 <!--视频预览,音频预览和图片预览-->
 <div class="self-container self-container-preview">
 
+    <!--可选预览类型-->
+    <div class="preview-type-div">
+        <div class="preview-type" preview="audio">音频</div>
+        <div class="preview-type" preview="video">视频</div>
+        <div class="preview-type" preview="image">图片</div>
+    </div>
+
+    <!--<div class="list-item-image">-->
+    <!--<img src="/temp/test.png" title="图片">-->
+    <!--</div>-->
+    <!--<div class="list-item-video">-->
+    <!--<video src="/temp/test.mp4" title="视频" controls="controls"></video>-->
+    <!--</div>-->
+    <!--<div class="list-item-audio">-->
+    <!--<div class="audio-text">我是audio-text</div>-->
+    <!--<audio src="/temp/test.mp3" title="音频2" controls="controls"></audio>-->
+    <!--</div>-->
+    <!--预览列表呈现数据列表-->
+    <div class="preview-list">
+
+    </div>
 </div>
 
 
@@ -107,15 +143,37 @@
         </div>
     </div>
 
+    <!--课程概述-->
     <div class="row">
         <div class="col-md-2 col-md-offset-1 border title">概述</div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1 input-group">
+            <script id="editorAbstract" type="text/plain" class="shadow"></script>
+        </div>
+    </div>
 
+    <!--课程讲师-->
+    <div class="row">
+        <div class="col-md-2 col-md-offset-1 border title">讲师</div>
     </div>
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            <input id="courseAbstract" class="form-control"  type="text" placeholder="请输入课程概述">
+            <input id="teacher" class="form-control"  type="text" placeholder="请输入课程讲师">
         </div>
     </div>
+
+    <!--课程价格-->
+    <div class="row">
+        <div class="col-md-2 col-md-offset-1 border title">价格</div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <input id="price" class="form-control"  type="text" placeholder="请输入课程价格">
+        </div>
+    </div>
+
+    <!--主要内容-->
     <div class="row">
         <div class="col-md-2 col-md-offset-1 border title">内容</div>
     </div>

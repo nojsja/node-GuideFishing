@@ -25,17 +25,44 @@ a {
     font-size: 0;
 }
 
-/* 自定义窗口 */
+/* 自定义上传和预览窗口 */
 .self-container {
+    padding: 1rem;
     display: none;
     position: fixed;
     width: 50%;
     min-height: 400px;
+    max-height: 800px;
+    overflow-y: scroll;
     height: auto;
+    color: #FFFFFF;
 
     -webkit-box-shadow:  0 0 10px #1c6897;
     -moz-box-shadow:  0 0 10px #1c6897;
     box-shadow:  0 0 10px #1c6897;
+}
+
+#uploadImgProgress,
+#uploadVideoProgress,
+#uploadAudioProgress{
+    margin-top: 1em;
+    height: 1.5em;
+    width: 20em;
+    border: solid 1px #ffffff;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #238eae;
+}
+
+/* 标题 */
+.upload-title {
+    margin: 1rem;
+    color: rgb(197, 238, 221);
+    font-weight: bold;
+
+    text-shadow: 3px 3px #1c6897;
 }
 
 /* 上传编辑区域 */
@@ -53,6 +80,112 @@ a {
     z-index: 1000;
     background-color: rgba(188, 188, 188, 0.9);
 }
+
+
+/* 预览选择 */
+.preview-type-div {
+    position: absolute;
+    bottom: 1rem;
+    left: 0;
+}
+
+/* 选项以及它的交互效果 */
+.preview-type {
+    text-align: center;
+    width: 5rem;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: solid 1px white;
+    padding: 5px;
+    background-color: rgba(63, 75, 129, 0.6);
+    z-index: 100;
+}
+
+.preview-type:hover {
+    background-color: rgba(255, 255, 255, 0.61);
+    color: rgb(63, 75, 129);
+
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+/* 点击后 */
+.preview-type_click {
+    background-color: rgba(255, 255, 255, 0.61);
+    color: rgb(63, 75, 129);
+}
+
+/* 预览数据列表 */
+/* 预览图片 */
+.list-item-image {
+    padding: 5px;
+    float: left;
+    width: 50%;
+    height: 300px;
+    overflow: scroll;
+    border: solid 1px white;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    -webkit-box-shadow: inset 0 0 10px #1c6897;
+    -moz-box-shadow: inset 0 0 10px  #1c6897;
+    box-shadow: inset 0 0 10px  #1c6897;
+}
+
+.list-item-image > img {
+    height: 100%;
+    width: auto;
+}
+
+/* 预览视频 */
+.list-item-video {
+    padding: 5px;
+    float: left;
+    width: 50%;
+    height: 300px;
+    overflow: scroll;
+    border: solid 1px white;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    -webkit-box-shadow: inset 0 0 10px #1c6897;
+    -moz-box-shadow: inset 0 0 10px  #1c6897;
+    box-shadow: inset 0 0 10px  #1c6897;
+}
+
+.list-item-video > video {
+    height: 100%;
+    width: auto;
+}
+
+/* 预览音频 */
+.list-item-audio{
+    margin-top: 1rem;
+    width: 100%;
+    height: 2rem;
+}
+
+.list-item-audio > audio {
+    width: 50%;
+    height: auto;
+    float: left;
+}
+
+.list-item-audio > .audio-text {
+    text-align: center;
+    font-weight: bold;
+    color: #192f7a;
+    width: 50%;
+    float: left;
+}
+
 
 /* 触发按钮 */
 .self-trigger {
@@ -182,6 +315,7 @@ color: #238eae;
     text-align: center;
 }
 
+/* 上传课程 */
 #sendCourse {
     border: solid 1px;
     margin-bottom: 1em;
