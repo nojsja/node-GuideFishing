@@ -137,9 +137,19 @@ a {
     box-shadow: inset 0 0 10px  #1c6897;
 }
 
+/* 点击效果 */
+.list-item-image_click {
+    background-color: #b87434;
+}
+
 .list-item-image > img {
     height: 100%;
     width: auto;
+}
+
+/* 图片点击效果 */
+.img_click {
+    opacity: 0.5;
 }
 
 /* 预览视频 */
@@ -160,9 +170,18 @@ a {
     box-shadow: inset 0 0 10px  #1c6897;
 }
 
+.list-item-video_click {
+    background-color: #b87434;
+}
+
 .list-item-video > video {
     height: 100%;
     width: auto;
+}
+
+/* 视频点击添加事件 */
+.video_click {
+    opacity: 0.5;
 }
 
 /* 预览音频 */
@@ -178,12 +197,18 @@ a {
     float: left;
 }
 
-.list-item-audio > .audio-text {
+.audio-text {
     text-align: center;
     font-weight: bold;
     color: #192f7a;
     width: 50%;
     float: left;
+}
+
+/* audio-text点击事件 */
+.audio-text_click {
+    background-color: #192f7a;
+    color: #FFFFFF;
 }
 
 
@@ -279,6 +304,11 @@ a {
     -moz-box-shadow:0px 0px 10px #ffffff inset;
     -o-box-shadow:0px 0px 10px #ffffff inset;
     -webkit-box-shadow: 0px 0px 10px #ffffff inset;
+}
+
+/* 点击效果 */
+.type-item_click {
+    background-color: #e1ebfd;
 }
 
 .type > div:hover {

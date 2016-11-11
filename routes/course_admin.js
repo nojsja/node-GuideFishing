@@ -7,6 +7,8 @@
 var UploadAction = require('../models/CourseUploadAction');
 // 文件存储
 var UploadData = require('../models/CourseUploadData');
+// 存储课程
+var Course = require('../models/Course');
 
 function course_admin(app) {
     
@@ -23,6 +25,44 @@ function course_admin(app) {
         res.render('course_adminEdit', {
             title: "课程编辑"
         });
+    });
+    
+    // 单个课程数据存储
+    app.post('/course/admin/save', function (req, res) {
+
+        // 字段数组
+        var elementArary = ['courseName', 'courseType', 'courseAbstract',
+        'courseContent', 'teacher', 'price'];
+        // 课程数据
+        var course = {};
+        // 加载条件数据
+        for(var part in req.body){
+            if(arrayContain(elementArary, part)){
+                course[part] = req.body[part];
+            }
+        }
+        console.log(course);
+        var newCourse = new Course(course);
+        newCourse.save(function (err) {
+            if(err){
+                return res.json( JSON.stringify({
+                    error: err
+                }) );
+            }
+            res.json( JSON.stringify({
+                error: null
+            }) );
+        });
+
+        function arrayContain(array, element) {
+
+            for(var i = 0; i < array.length; i++){
+                if(array[i] == element){
+                    return true;
+                }
+            }
+            return false;
+        };
     });
     
     // 课程数据文件上传

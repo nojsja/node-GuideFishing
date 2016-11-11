@@ -7,6 +7,33 @@
 /* 初始化函数 */
 $(function () {
 
+    // 页面事件绑定
+    courseAction.pageEventBind();
+    //加载指定数量的测试题目列表
+    courseAction.readCourseList({ courseType: "ALL" });
+});
+
+/*** 页面全局变量 ***/
+var courseAction = {
+    //heder是否降下
+    headerDown: false,
+    //检测页面滚动
+    scrollOver: false,
+    //检测上次页面滚动的状态
+    lastScrollOver: false,
+    //页面加载起点
+    pageStart: 0,
+    //页面加载条数
+    pageLimit: 20,
+    //加载的测试类型
+    courseType: "ALL",
+    //是否清除页面已存数据
+    isClear: false
+};
+
+/* 页面主要事件绑定 */
+courseAction.pageEventBind = function () {
+
     $('.header-label').click(function () {
         courseAction.headerDown = !courseAction.headerDown;
         $('.type-item').slideToggle();
@@ -28,30 +55,11 @@ $(function () {
     $(window).scroll(courseAction.scrollCheck);
     //加载更多数据
     $('.loading-info').click(courseAction.readMore);
-    //加载指定数量的测试题目列表
-    courseAction.readCourseList({ courseType: "ALL" });
+
     //指定类型的测试题目
     $('.type-item').click(function () {
         courseAction.courseTypeDefine.call(this, arguments);
     });
-});
-
-/*** 页面全局变量 ***/
-var courseAction = {
-    //heder是否降下
-    headerDown: false,
-    //检测页面滚动
-    scrollOver: false,
-    //检测上次页面滚动的状态
-    lastScrollOver: false,
-    //页面加载起点
-    pageStart: 0,
-    //页面加载条数
-    pageLimit: 15,
-    //加载的测试类型
-    courseType: "ALL",
-    //是否清除页面已存数据
-    isClear: false
 };
 
 /* 读取课程列表 */
@@ -165,7 +173,7 @@ courseAction.updatePage = function (JSONdata) {
     }
 };
 
-/* 自定义评测类型 */
+/* 自定义课程类型 */
 courseAction.courseTypeDefine = function () {
 
     //通过触发对象id获取函数执行环境下的courseType

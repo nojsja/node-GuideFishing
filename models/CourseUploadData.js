@@ -51,13 +51,11 @@ CourseUploadData.prototype.save = function (callback) {
         var newMode = new Model(data);
         newMode.save(function (err, doc) {
             if(err){
-                console.log('mongodb error.');
                 console.log(err);
                 mongoose.disconnect();
                 return callback(err);
             }
             console.log('mongodb success.');
-            console.log('doc:'+ doc);
             // 成功返回
             mongoose.disconnect();
             return callback(null);

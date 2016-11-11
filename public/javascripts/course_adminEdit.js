@@ -11,7 +11,10 @@ $(function () {
     editAction.ueditorInit();
     // 绑定页面事件
     editAction.pageEventBind();
-
+    // 声明观察者
+    editAction.watcherInit();
+    // 注入观察者
+    editAction.watcherActive();
 
     // 离开警告
     // window.addEventListener('beforeunload', function (event) {
@@ -45,11 +48,92 @@ var editAction = {
     },
     // 课程对象
     course: {
-        courseName: "",
-        courseType: "",
-        courseAbstract: "",
-
+        // 数据
+        info: {
+            courseName: "",
+            courseType: "",
+            courseAbstract: "",
+            courseContent: "",
+            teacher: "",
+            price: ""
+        },
+        // 观察者方法
+        // 观察者列表, 注入方法和触发方法
+        watch: {
+            watcherList: [],
+            listen: function () {},
+            trigger: function () {}
+        }
     }
+};
+
+/* 初始化观察者 */
+editAction.watcherInit = function () {
+
+    // 注册课程数据的观察者
+    this.course.watch.watcherList = [];
+    // 注入方法
+    this.course.watch.listen = function (fn) {
+        this.watcherList.push(fn);
+        // 返回调用者
+        return this;
+    };
+    // 触发方法
+    this.course.watch.trigger = function () {
+
+        // 绑定作用域并执行函数
+        for(var index in this.watcherList){
+            this.watcherList[index].apply(this);
+        }
+    };
+
+};
+
+/* 注册观察者 */
+editAction.watcherActive = function () {
+
+    // 课程观察者
+    this.course.watch.listen(function () {
+
+        // 课程概述
+        if(!editAction.ueAbstract.hasContents()){
+            return editAction.modalWindow('课程概述需要填写完整!');
+        }
+        editAction.course.info.courseAbstract = editAction.ueAbstract.getContent();
+
+    }).listen(function () {
+
+        // 课程讲师
+        var teacher = $('#teacher').val();
+
+        if( !teacher ){
+            return editAction.modalWindow('课程讲师需要填写完整!');
+        }
+        editAction.course.info.teacher = teacher;
+
+    }).listen(function () {
+
+        // 课程价格
+        var price = $('#price').val();
+
+        if( !price ){
+            return editAction.modalWindow('课程价格需要填写完整!');
+        }
+        editAction.course.info.price = price;
+
+    }).listen(function () {
+
+        // 课程内容
+        if(!editAction.ueContent.hasContents()){
+            return editAction.modalWindow('课程内容需要填写完整!');
+        }
+        editAction.course.info.courseContent = editAction.ueContent.getContent();
+    }).listen(function () {
+
+        if(!editAction.course.info.courseType){
+            return editAction.modalWindow('课程类型需要填写完整!');
+        }
+    });
 };
 
 /* 初始化UEeditor */
@@ -82,19 +166,55 @@ editAction.ueditorInit = function() {
 editAction.pageEventBind = function () {
 
     $('#uploadAudioProgress, #uploadImgProgress, #uploadVideoProgress').hide();
+    // 清除标题
+    $('#courseName').val('');
+
+    // 选择类型
+    $('.type-item').click(function () {
+        $('.type-item').prop('class', 'type-item');
+        $(this).prop('class', 'type-item type-item_click');
+        var type = $(this).attr('type');
+        editAction.course.info.courseType = type;
+    });
 
     // 获取课程名字
     $('#courseName').bind('input propertychange', function() {
 
-        editAction.course.courseName = $(this).val();
+        editAction.course.info.courseName = $(this).val();
         // 上传事件绑定
         editAction.uploadEventBind();
+    });
+
+    // 提交课程数据
+    $('#sendCourse').click(function () {
+        // 触发观察者回调函数
+        editAction.course.watch.trigger();
+
+        // 提交数据
+        $.post('/course/admin/save',
+            {
+                courseName: editAction.course.info.courseName,
+                courseType: editAction.course.info.courseType,
+                courseAbstract: editAction.course.info.courseAbstract,
+                courseContent: editAction.course.info.courseContent,
+                teacher: editAction.course.info.teacher,
+                price: editAction.course.info.price
+            },
+            function (JSONdata) {
+
+                var JSONobject = JSON.parse(JSONdata);
+                if(JSONobject.error){
+                    return editAction.modalWindow('Sorry,发生错误: ' + err);
+                }
+                editAction.modalWindow('发布成功!');
+
+            }, "JSON");
     });
 
     // 编辑和预览窗口的显示和隐藏
     $('.self-trigger').click(function () {
 
-        if(!editAction.course.courseName){
+        if(!editAction.course.info.courseName){
 
             return editAction.modalWindow('在填写课程标题信息后才能进行上传数据和预览数据操作');
         }
@@ -119,7 +239,7 @@ editAction.pageEventBind = function () {
         // 获取预览数据
         var previewType = $(this).attr('preview');
         editAction.currentPreviewType = previewType;
-        var url = 'course/data/preview/' + editAction.course.courseName;
+        var url = '/course/data/preview/' + editAction.course.info.courseName;
 
         $.post(url, { type: previewType }, function (JSONdata) {
 
@@ -144,8 +264,6 @@ editAction.updatePreview = function (JSONdata) {
     }
     // 更新页面
     editAction.updatePreview[editAction.currentPreviewType](JSONobject);
-
-    // 执行预览操作
 };
 
 // <div class="list-item-audio">
@@ -156,55 +274,118 @@ editAction.updatePreview['audio'] = function (JSONobject) {
 
     // 清除子节点数据
     var $previewList = $('.preview-list');
-    $previewList.remove();
+    $previewList.children().remove();
     // 获取数据列表
     var audioList = JSONobject.dataArray;
     // 遍历更新DOM
+    // 有回调函数的情况下要用闭包
     for(var index in audioList){
-        var audio = audioList[index],
-            name = audio.name,
-            url = audio.url;
+        (function () {
+            var audio = audioList[index],
+                name = audio.name,
+                url = audio.url;
 
-        var $listItemAudio = $('<div class="list-item-audio">');
-        var $audioText = $('<div class="audio-text">');
-        $audioText.text(name)
-            .appendTo($listItemAudio);
+            // 外层border
+            var $listItemAudio = $('<div class="list-item-audio">');
 
-        var $audio = $('<audio controls="controls">');
-        $audio.prop('title', name)
-            .prop('src', url)
-            .appendTo($listItemAudio);
+            // 播放控件
+            var $audio = $('<audio controls="controls">');
+            $audio.prop('title', name)
+                .prop('src', url);
 
-        // 添加到DOM
-        $listItemAudio.appendTo($previewList);
+            // 提示文字
+            var $audioText = $('<div class="audio-text">');
+            // 绑定点击事件
+            $audioText.text(name);
+            // 初始化状态
+            $audioText.isClicked = false;
+            $audioText.click(function () {
 
+                this.isClicked = !this.isClicked;
+                // 被点击
+                if(this.isClicked){
+                    $(this).prop('class', 'audio-text audio-text_click');
+                    // html字符串
+                    // 不能使用$audio对象, 这是引用类型, 会有耦合
+                    var $$content = $('<p></p>')
+                        .append(
+                            $('<audio controls="controls">')
+                                .prop('title', name)
+                                .prop('src', url)
+                        )
+                        .append($('<br/>'))
+                        .html();
+                    editAction.ueContent.setContent($$content, true);
+                }else {
+                    $(this).prop('class', 'audio-text');
+                }
+            });
+
+            // 添加DOM
+            $listItemAudio.append($audioText);
+            $listItemAudio.append($audio);
+
+            // 添加到DOM
+            $listItemAudio.appendTo($previewList);
+        })(index);
     }
 };
 
 // <div class="list-item-video">
-//     <video src="/temp/test.mp4" title="视频" controls="controls"></video>
+//     <video src="/temp/test.mp4" title="视频"></video>
 // </div>
 editAction.updatePreview['video'] = function (JSONobject) {
 
     // 清除子节点数据
     var $previewList = $('.preview-list');
-    $previewList.remove();
+    $previewList.children().remove();
     // 获取数据列表
     var videoList = JSONobject.dataArray;
     // 遍历更新DOM
+    // 闭包
     for(var index in videoList){
-        var video = videoList[index],
-            name = video.name,
-            url = video.url;
 
-        var $listItemVideo = $('<div class="list-item-video">');
+        (function (index) {
+            var video = videoList[index],
+                name = video.name,
+                url = video.url;
 
-        var $video = $('<video controls="controls">');
-        $video.prop('title', name)
-            .prop('src', url)
-            .appendTo($listItemVideo);
+            var $listItemVideo = $('<div class="list-item-video">');
 
-        $previewList.append($listItemVideo);
+            var $video = $('<video>');
+            $video.prop('title', name)
+                .prop('src', url);
+
+            // 绑定点击事件
+            $video.isClicked = false;
+            $video.click(function () {
+                this.isClicked = !this.isClicked;
+                // 被选中
+                if(this.isClicked){
+                    $(this).prop('class', 'video_click');
+                    $listItemVideo.prop('class', 'list-item-video list-item-video_click');
+
+                    // 添加内容到富文本编辑器
+                    var $$content = $('<p></p>')
+                        .append(
+                            $('<video controls="controls">')
+                                .prop('title', name)
+                                .prop('src', url)
+                        )
+                        .append($('<br/>'))
+                        .html();
+                    editAction.ueContent.setContent($$content, true);
+
+                }else {
+                    $(this).prop('class', '');
+                    $listItemVideo.prop('class', 'list-item-video');
+                }
+            });
+
+            $listItemVideo.append($video);
+
+            $previewList.append($listItemVideo);
+        })(index);
     }
 
 };
@@ -216,23 +397,52 @@ editAction.updatePreview['image'] = function (JSONobject) {
 
     // 清除子节点数据
     var $previewList = $('.preview-list');
-    $previewList.remove();
+    $previewList.children().remove();
     // 获取数据列表
     var imageList = JSONobject.dataArray;
     // 遍历更新DOM
     for(var index in imageList){
-        var image = imageList[index],
-            name = image.name,
-            url = image.url;
 
-        var $listItemImage = $('<div class="list-item-image">');
+        (function () {
+            var image = imageList[index],
+                name = image.name,
+                url = image.url;
 
-        var $image = $('<img>');
-        $image.prop('src', url)
-            .prop('title', name)
-            .appendTo($listItemImage);
+            var $listItemImage = $('<div class="list-item-image">');
 
-        $previewList.append($listItemImage);
+            var $image = $('<img>');
+            $image.prop('src', url)
+                .prop('title', name);
+
+            // 绑定点击事件
+            $image.isClicked = false;
+            $image.click(function () {
+                this.isClicked = !this.isClicked;
+                // 被选中
+                if(this.isClicked){
+                    $(this).prop('class', 'img_click');
+                    $listItemImage.prop('class', 'list-item-image list-item-image_click');
+
+                    // 添加到富文本编辑器
+                    var $$content = $('<p></p>')
+                        .append(
+                            $('<img>')
+                                .prop('title', name)
+                                .prop('src', url)
+                        )
+                        .append($('<br/>'))
+                        .html();
+                    editAction.ueContent.setContent($$content, true);
+                }else {
+                    $(this).prop('class', '');
+                    $listItemImage.prop('class', 'list-item-image list-item-image_click');
+                }
+            });
+
+            $listItemImage.append($image);
+
+            $previewList.append($listItemImage);
+        })();
     }
 };
 
@@ -262,7 +472,7 @@ editAction.uploadEventBind = function () {
     // 只能传入静态参数
     var $jqXHR = $('#imgUpload, #videoUpload, #audioUpload').fileupload({
 
-        url : '/course/data/upload/' + editAction.course.courseName,
+        url : '/course/data/upload/' + editAction.course.info.courseName,
         dataType : 'json',
         //autoUpload: false,
         //acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
