@@ -139,6 +139,18 @@ a {
     padding: 5px;
 }
 
+/* 选项被点击的效果 */
+.choise_click {
+    background-color: #7f948c;
+    color: white;
+}
+
+/* 选项原始的效果 */
+.choise_origin {
+    background-color: white;
+    color: #7f948c;
+}
+
 /* 选题 */
 #nextDiv {
     text-align: center;

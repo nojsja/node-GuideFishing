@@ -35,7 +35,7 @@ var viewAction = {
     choiseArray: [],
     //一组题里面的所有题目对象数组
     testArray: [],
-    courseType: null,
+    testType: null,
     testTitle: null
 };
 
@@ -58,7 +58,7 @@ viewAction.pageInit = function () {
         var JSONobject = JSON.parse(JSONdata);
         //本组题目列表
         viewAction.testGroup = JSONobject.testGroup
-        viewAction.courseType = $('.test-type').text().trim();
+        viewAction.testType = $('.test-type').text().trim();
         viewAction.testTitle = $('.test-title').text().trim();
         if(viewAction.testGroup.length == 0){
             return viewAction.modalWindow("抱歉没有任何数据!");
@@ -73,10 +73,8 @@ viewAction.checkAndUpdate = function () {
 
     // 判断编号增加后的当前题目是否已经被选择过了
     if(viewAction.choiseArray[viewAction.currentNumber - 1]){
-        $('#' + viewAction.choiseArray[viewAction.currentNumber   - 1].choiseTag).css({
-            'background-color': '#7f948c',
-            'color': 'white'
-        });
+        $('#' + viewAction.choiseArray[viewAction.currentNumber   - 1].choiseTag)
+            .prop('class', 'choise choise_click');
     }
     //重新更新页面
     //题目
@@ -117,22 +115,14 @@ viewAction.checkAndUpdate = function () {
     //判断是否已经被选择过
     if(viewAction.choiseArray[viewAction.currentNumber - 1]){
 
-        $('#' + viewAction.choiseArray[viewAction.currentNumber   - 1].choiseTag).css({
-            'background-color': '#7f948c',
-            'color': 'white'
-        });
+        $('#' + viewAction.choiseArray[viewAction.currentNumber   - 1].choiseTag)
+            .prop('class', 'choise choise_click');
     }
 
     //为点击选项绑定函数
     $('.choise').click(function () {
-        $('.choise').css({
-            'color': '#7f948c',
-            'background-color': 'white'
-        });
-        $(this).css({
-            'background-color': '#7f948c',
-            'color': 'white'
-        });
+        $('.choise').prop('class', 'choise choise_origin');
+        $(this).prop('class', 'choise choise_click');
 
         viewAction.choiseArray[viewAction.currentNumber - 1] = {
             choiseTag: $(this).prop('id'),
@@ -196,7 +186,7 @@ viewAction.submit = function () {
     }
     $.post('/test/submit', {
         submitData: {
-            courseType: viewAction.courseType,
+            testType: viewAction.testType,
             testTitle: viewAction.testTitle,
             choiseArray: viewAction.choiseArray
         }

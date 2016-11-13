@@ -3,7 +3,7 @@
 
 /* 引入数据库模式 */
 var AllTest = require('../models/AllTest.js');
-var ReadTestType = require('../models/ReadTestType');
+var ReadTestType = require('../models/ReadTypeImg');
 
 function index(app) {
 
@@ -15,20 +15,24 @@ function index(app) {
     });
     
     /* 读取评测列表,以JSON对象对象数组传递 */
-    app.post('/test/readCourseList', function (req, res) {
+    app.post('/test/readList', function (req, res) {
 
         var condition = {};
         // 图片地址
         var typeImgUrl = {};
-        ReadTestType(function (data) {
+        // 读取地址
+        var readUrl = './public/images/testType/';
+        // 返回的静态地址
+        var visitUrl = '/images/testType/';
+        ReadTestType(readUrl, visitUrl, function (data) {
             typeImgUrl = data;
         });
         if(req.body.testTitle) {
             condition.testTitle = req.body.testTitle;
         }
         //筛选的读取题目类型
-        if(req.body.courseType != "ALL"){
-            condition.courseType = req.body.courseType;
+        if(req.body.testType != "ALL"){
+            condition.testType = req.body.testType;
         }
         if(req.body.skip){
             condition.skip = req.body.skip;
@@ -45,14 +49,14 @@ function index(app) {
 
         console.log("筛选条件: " + JSON.stringify(condition));
 
-        AllTest.readCourseList(condition, function (err, testArray) {
+        AllTest.readList(condition, function (err, testArray) {
            if(err) {
-               console.log('readCourseList error.');
+               console.log('readList error.');
                return res.json(JSON.stringify({
                    error: err,
                }));
            }
-           console.log('readCourseList success.');
+           console.log('readList success.');
             res.json(JSON.stringify({
                 testArray: testArray,
                 typeImgUrl: typeImgUrl

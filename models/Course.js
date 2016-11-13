@@ -100,6 +100,8 @@ Course.readList = function (docCondition, callback) {
         var skipNum = 0;
         /*** 需要发送给客户端的对象数组 ***/
         var courseArray = [];
+        // 筛选区间
+        var courseTypeArray = [];
 
         /* 默认选择的数据项 */
         var select = {
@@ -119,6 +121,8 @@ Course.readList = function (docCondition, callback) {
                 skipNum = docCondition[con];
             }else if(con == "select"){
                 select = docCondition[con];
+            }else if(con == "testTypeArray"){
+                courseTypeArray = docCondition[con];
             } else {
                 //复制属性
                 condition[con] = docCondition[con];
@@ -129,6 +133,10 @@ Course.readList = function (docCondition, callback) {
 
         var query = Course.find().where(condition);
 
+        if(courseTypeArray.length > 0){
+            console.log(courseTypeArray.length);
+            query.in('courseType', courseTypeArray);
+        }
         query.limit(number);
         //定制选择读取的类型
         query.select(select);

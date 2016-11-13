@@ -29,10 +29,10 @@ $(function () {
     //加载更多数据
     $('.loading-info').click(indexAction.readMore);
     //加载指定数量的测试题目列表
-    indexAction.readCourseList({ courseType: "ALL" });
+    indexAction.readTestList({ testType: "ALL" });
     //指定类型的测试题目
     $('.type-item').click(function () {
-        indexAction.courseTypeDefine.call(this, arguments);
+        indexAction.testTypeDefine.call(this, arguments);
     });
 });
 
@@ -49,15 +49,15 @@ var indexAction = {
     //页面加载条数
     pageLimit: 15,
     //加载的测试类型
-    courseType: "ALL",
+    testType: "ALL",
     //是否清除页面已存数据
     isClear: false
 };
 
 /* 读取测试列表 */
-indexAction.readCourseList = function (condition) {
+indexAction.readTestList = function (condition) {
 
-    var url = "/test/readCourseList";
+    var url = "/test/readList";
     //请求服务器
     $.post(url, condition, function (JSONdata) {
         //更新页面
@@ -69,7 +69,7 @@ indexAction.readCourseList = function (condition) {
 indexAction.readMore = function () {
 
     indexAction.readCourseList({
-        courseType: indexAction.courseType,
+        testType: indexAction.testType,
         skip: indexAction.pageStart
     }, function (JSONdata) {
         //更新页面
@@ -122,7 +122,7 @@ indexAction.updatePage = function (JSONdata) {
             //内容标题
             var $contentTitle = $('<a class="content-item-title">');
             //添加超链接
-            $contentTitle.prop('href','/test/testDetail/' + test.courseType + '/' + test.testTitle);
+            $contentTitle.prop('href','/test/testDetail/' + test.testType + '/' + test.testTitle);
             $contentTitle.text(test.testTitle);
             //内容摘要和图标
             var $abstract = $('<div class="content-item-abstract">');
@@ -135,14 +135,14 @@ indexAction.updatePage = function (JSONdata) {
             var $contentRight = $('<div class="content-item-right">');
             //内容类型相关的图片
             var $typeImg = $('<div></div>');
-            var imgUrl = typeImgUrl[test.courseType];
+            var imgUrl = typeImgUrl[test.testType];
             $typeImg.prop('class', 'type-img').css({
                 'background': ["url(", imgUrl, ")", " no-repeat"].join(''),
                 'background-size': 'cover'
             });
             //该测评所属的类型
             var $testType = $('<p class="type-text">');
-            $testType.text(testTypeChina[test.courseType]);
+            $testType.text(testTypeChina[test.testType]);
             $contentRight.append($typeImg).append($testType);
 
             //显示的日期
@@ -164,19 +164,19 @@ indexAction.updatePage = function (JSONdata) {
 };
 
 /* 自定义评测类型 */
-indexAction.courseTypeDefine = function () {
+indexAction.testTypeDefine = function () {
 
     //通过触发对象id获取函数执行环境下的testType
     var testType = $(this).prop('id');
     //重置分页数据
     indexAction.pageStart = 0;
     indexAction.pageLimit = 15;
-    indexAction.courseType = testType;
+    indexAction.testType = testType;
     indexAction.isClear = true;
 
     //读取指定类型的列表
-    indexAction.readCourseList({
-        courseType: indexAction.courseType,
+    indexAction.readTestList({
+        testType: indexAction.testType,
         pageStart: indexAction.pageStart,
         pageLimit: indexAction.pageLimit
     }, function (err, JSONdata) {

@@ -5,6 +5,8 @@
 
 /* 课程模型 */
 var Course = require('../models/Course');
+/* 读取磁盘图片数据形成地址 */
+var ReadCourseImg = require('../models/ReadTypeImg');
 
 function course(app){
 
@@ -36,15 +38,17 @@ function course(app){
     app.post('/course/readCourseList', function (req, res) {
 
         var condition = {};
-        // 图片地址
+        // 课程图片地址
         var typeImgUrl = {};
-        ReadTestType(function (data) {
+        var readUrl = '../public/images/courseType/';
+        var visitUrl = '/images/courseType/';
+        ReadCourseImg(readUrl, visitUrl, function (data) {
             typeImgUrl = data;
         });
-        if(req.body.testTitle) {
-            condition.testTitle = req.body.testTitle;
+        if(req.body.courseName) {
+            condition.courseName = req.body.courseName;
         }
-        //筛选的读取题目类型
+        //筛选的读取课程类型
         if(req.body.courseType != "ALL"){
             condition.courseType = req.body.courseType;
         }
@@ -57,13 +61,13 @@ function course(app){
         if(req.body.select){
             condition.select = req.body.select;
         }
-        if(req.body.testTypeArray){
-            condition.testTypeArray = req.body.testTypeArray;
+        if(req.body.courseTypeArray){
+            condition.courseTypeArray = req.body.courseTypeArray;
         }
 
         console.log("筛选条件: " + JSON.stringify(condition));
 
-        AllTest.readCourseList(condition, function (err, testArray) {
+        Course.readList(condition, function (err, testArray) {
             if(err) {
                 console.log('readCourseList error.');
                 return res.json(JSON.stringify({
@@ -72,7 +76,7 @@ function course(app){
             }
             console.log('readCourseList success.');
             res.json(JSON.stringify({
-                testArray: testArray,
+                courseArray: testArray,
                 typeImgUrl: typeImgUrl
             }));
         });

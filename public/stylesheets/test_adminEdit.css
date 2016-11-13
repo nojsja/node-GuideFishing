@@ -55,6 +55,7 @@ a {
 }
 
 /* 测试题目相关详细信息 */
+/* 测试类型 */
 .type-item {
     float: left;
     padding: 5px;
@@ -68,6 +69,61 @@ a {
     border-radius: 5px;
     margin: 0.5rem;
     margin-bottom: 1rem;
+}
+
+.test-type,
+.score-mode,
+.score-child,
+.category-child,
+.item-number {
+    border: solid 1px #3541a2;
+    color: #3541a2;
+    background-color: transparent;
+}
+
+/* 设置为类别型的得分模式 */
+#category {
+
+}
+
+/* 类型得分模式下的相关子选项 */
+.child-of-category {
+
+}
+
+/* 隐藏 */
+.child-of-category_hidden {
+    display: none;
+}
+
+/* 显示 */
+.child-of-category_show {
+    display: block;
+}
+
+/* 设置得分的所有分段 */
+#scoreSectionSet {
+
+}
+
+/* 显示 */
+.score-section-set_show {
+    display: block;
+}
+
+/* 隐藏 */
+.score-section-set_hidden {
+    display: none;
+}
+
+/* 点击效果 */
+.test-type_click,
+.score-mode_click,
+.score-child_click,
+.category-child_click,
+.item-number_click {
+    background-color: #3541a2;
+    color: white;
 }
 
 .type-item:hover {
@@ -209,6 +265,17 @@ a {
     -o-transition:All 0.3s ease-in-out;
 }
 
+/* 左边框 */
+.border-left {
+    border-left: double 4px #8483e6;
+}
+
+/* 凸显左边框 */
+.border-left_red {
+    border-left: double 4px red;
+}
+
+
 /* 题项缩放 */
 .edit-new:hover {
     transform: scale(1.1);
@@ -313,6 +380,16 @@ a {
     display: none;
 }
 
+/* 子模式隐藏 */
+.child-mode-add_hidden {
+    display: none;
+}
+
+/* 子模式出现 */
+.child-mode-add_show {
+    display: block;
+}
+
 /* 自定义得分,默认不显示 */
 #scoreDefineDiv {
     margin: 5px;
@@ -328,6 +405,13 @@ a {
     color: #7d7d7d;
 }
 
+.hidden {
+    display: none;
+}
+
+.show {
+    display: block;
+}
 
 
 

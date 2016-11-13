@@ -59,8 +59,8 @@ AllTest.getDetail = function (docCondition, callback) {
 
 /* 读取文档列表
 * 需要展示在列表的信息包括:
-* testTitle, courseType, abstract, date*/
-AllTest.readCourseList = function (docCondition, callback) {
+* testTitle, tesetType, abstract, date*/
+AllTest.readList = function (docCondition, callback) {
 
     var db = mongoose.connect('mongodb://localhost/QN');
     var Tests = mongoose.model('Tests', testSchema);
@@ -79,7 +79,7 @@ AllTest.readCourseList = function (docCondition, callback) {
         /* 默认选择的数据项 */
         var select = {
             testTitle: 1,
-            courseType: 1,
+            testType: 1,
             abstract: 1,
             date: 1
         };
@@ -110,7 +110,7 @@ AllTest.readCourseList = function (docCondition, callback) {
         var query = Tests.find().where(condition);
         if(testTypeArray.length > 0){
             console.log(testArray.length);
-            query.in('courseType', testTypeArray);
+            query.in('testType', testTypeArray);
         }
         query.limit(number);
         //定制选择读取的类型
