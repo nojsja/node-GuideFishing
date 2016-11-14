@@ -40,15 +40,53 @@
 <!--评测介绍主体-->
 <div class="container detail-body">
     <div class="detail-body-abstract">
-        <p class="abstract">
-            <%= courseAbstract %>
-        </p>
+        <div class="abstract">
+
+        </div>
     </div>
 </div>
 
 <!--进入测试页面按钮-->
 <div id="startDiv">
-    <input type="button" class="btn btn-success" value="开始测试-->">
+    <input type="button" class="btn btn-success" value="开始学习-->">
 </div>
 
+<!--页内脚本-->
+<script type="text/javascript">
+
+    /* 注意ejs模板中可以用%-获取非转义字符 */
+
+    // 设置描述内容
+    detailAction.$$abstract = '<%- courseAbstract %>';
+    $('.abstract').append( $(detailAction.$$abstract).html() );
+
+</script>
 </body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

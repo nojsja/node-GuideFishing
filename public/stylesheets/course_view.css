@@ -1,0 +1,116 @@
+body {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: #f8ffff;
+}
+
+a {
+    color: #00B7FF;
+}
+
+/* 重要部分 */
+.total {
+    background-color : #ededed;
+    border-radius : 1px;
+    margin-top: 1rem;
+    margin-bottom : 2rem;
+    -webkit-box-shadow : 0 0 8px black;
+    -moz-box-shadow : 0 0 8px black;
+    box-shadow : 0 0 8px black;
+    min-height: 300px;
+}
+
+/* 课程名 */
+#courseName {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    background-color: #3f4b81;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 5px;
+    text-align: left;
+    font-size: 2rem;
+    border-bottom : solid 1px #c5cede;
+}
+
+/* 课程内容 */
+#courseContent {
+    width : 100%;
+    margin-top : 1rem;
+    margin-bottom : 1rem;
+    background-color : whitesmoke;
+    border-top : dashed 1px #395980;
+    border-bottom : dashed 1px #395980;
+    padding : .5em;
+    overflow-x: hidden;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+/* 自己设置图片格式 */
+#courseContent img,
+#courseContent video{
+    width: 100%;
+    height: auto;
+    margin: 0.5rem;
+
+    -webkit-box-shadow:  0 0 5px #3f4b81;
+    -moz-box-shadow:  0 0 5px #3f4b81;
+    box-shadow:  0 0 5px #3f4b81;
+}
+
+/* 音频 */
+#courseContent audio {
+
+    border: solid 1px #f58a4a;
+    width: 100%;
+    height: auto;
+    margin: 0.5rem;
+}
+
+.info-div{
+    margin-bottom: 1rem;
+}
+
+/* 课程类型 */
+/* 课程发布时间 */
+/* 课程讲师 */
+#courseType,
+#date,
+#teacher {
+    font-family: 华文隶书;
+    display: inline-block;
+    border: solid 1px #1c6897;
+    color: #1c6897;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 0.5rem;
+}
+
+
+/* footer */
+.footer {
+    margin-bottom: 5px;
+    padding: 0.5rem;
+    text-align: center;
+    min-height: 2rem;
+    bottom: 0;
+    border-top: solid 1px #6095d8;
+    background-color: white;
+}
+
+.footer-img {
+    display: inline-block;
+    background: url("/images/icons/Ciitec.jpg") no-repeat;
+    background-size: cover;
+    width: 5rem;
+    height: 2rem;
+    margin: 0 auto;
+}
+
+.footer-text {
+    display: inline-block;
+    text-align: center;
+    font-size: 1.5rem;
+    color: #3b3d3b;
+}

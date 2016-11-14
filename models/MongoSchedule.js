@@ -21,7 +21,7 @@ var searchCondition = {
 };
 
 function MongoSchedule() {
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Tests = mongoose.model('Tests', testSchema);
     mongoose.connection.once('open', function () {
 

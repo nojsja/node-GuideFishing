@@ -114,7 +114,7 @@ courseAction.updatePage = function (JSONdata) {
     }
     //没有数据提示用户
     if(parsedData.courseArray.length == 0){
-        this.modalWindow('抱歉,没有更多数据!');
+        return this.modalWindow('抱歉,没有更多数据!');
     }
     //遍历对象数组构造DOM对象
     for(var courseIndex in parsedData.courseArray) {
@@ -122,6 +122,7 @@ courseAction.updatePage = function (JSONdata) {
         courseAction.pageStart += 1;
         (function () {
             var course = parsedData.courseArray[courseIndex];
+            console.log('course' + course);
             //最外层container
             var $courseContainer = $('<div class="content-item shadow-grey">');
             //图钉图标
@@ -131,13 +132,13 @@ courseAction.updatePage = function (JSONdata) {
             //内容标题
             var $contentTitle = $('<a class="content-item-title">');
             //添加超链接
-            $contentTitle.prop('href','/course/courseDetail/' + course.courseType + '/' +
+            $contentTitle.prop('href','/course/detail/' + course.courseType + '/' +
                 course.courseName);
             $contentTitle.text(course.courseName);
             //内容摘要和图标
             var $abstract = $('<div class="content-item-abstract">');
             var $pencil = $('<span class="glyphicon glyphicon-pencil">');
-            $abstract.append($pencil.text(course.abstract));
+            $abstract.append($pencil.text(course.teacher));
             //DOM构造
             $contentLeft.append($contentTitle).append($abstract).append($pushPin);
 

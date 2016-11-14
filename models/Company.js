@@ -15,7 +15,7 @@ function Company(companyData) {
 Company.prototype.save = function (callback) {
 
     var company = this.companyData;
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Companys = mongoose.model('Companys', companySchema);
 
     //连接打开后
@@ -38,7 +38,7 @@ Company.prototype.save = function (callback) {
 /* 得到所有公司列表 */
 Company.getList = function (callback) {
 
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Companys = mongoose.model('Companys', companySchema);
 
     mongoose.connection.once('open', function () {
@@ -63,7 +63,7 @@ Company.getList = function (callback) {
 /* 得到一条公司信息 */
 Company.getOne = function (condition, callback) {
 
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Companys = mongoose.model('Companys', companySchema);
 
     mongoose.connection.once('open', function () {

@@ -30,7 +30,7 @@ Recruitment.prototype.save = function (callback) {
         console.log(doc);
 
         // 连接数据库
-        var db = mongoose.connect('mongodb://localhost/QN');
+        var db = mongoose.connect('mongodb://localhost/GuideFishing');
         var Recruitments = mongoose.model('Recruitments', recruitmentSchema);
 
         // 如果已经存在公司的招聘数据
@@ -90,7 +90,7 @@ Recruitment.prototype.save = function (callback) {
 /* 得到所有在招职位 */
 Recruitment.getList = function ( condition, callback ) {
 
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Recruitments = mongoose.model('Recruitments', recruitmentSchema);
     
     mongoose.connection.once('open', function () {
@@ -114,7 +114,7 @@ Recruitment.getList = function ( condition, callback ) {
 /* 得到一条招聘相关数据 */
 Recruitment.getOne = function ( condition, callback ) {
 
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Recruitments = mongoose.model('Recruitments', recruitmentSchema);
 
     mongoose.connection.once('open', function () {

@@ -4,8 +4,8 @@
 
 module.exports = {
 
-    cookieSecret: 'QN',
-    db: 'QN',
+    cookieSecret: 'GuideFishing',
+    db: 'GuideFishing',
     host: 'localhost',
     port: 27017,
     user: "zykc",

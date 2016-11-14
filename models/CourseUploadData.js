@@ -42,7 +42,7 @@ CourseUploadData.prototype.save = function (callback) {
     var schema = this.schema;
     var model = this.model;
 
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Model = mongoose.model(model, schema);
     
     mongoose.connection.once('open', function () {
@@ -104,7 +104,7 @@ CourseUploadData.previewData = function (condition, callback) {
 
     previewCondition.courseName = condition.courseName;
 
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var model = mongoose.model(modelName, schema);
 
     mongoose.connection.once('open', function () {

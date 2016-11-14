@@ -40,7 +40,7 @@ function Course(course){
 /* 存储一条课程数据 */
 Course.prototype.save = function (callback) {
 
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Course = mongoose.model('Course', courseSchema);
     var courseData = this.courseData;
 
@@ -62,7 +62,7 @@ Course.prototype.save = function (callback) {
 /* 读取一个课程数据 */
 Course.readOne = function (totalCondition, callback) {
 
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Course = mongoose.model('Course', courseSchema);
 
     mongoose.connection.once('open', function () {
@@ -74,12 +74,18 @@ Course.readOne = function (totalCondition, callback) {
         }
         query.exec(function (err, doc) {
             if(err){
-                mongoose.disconnect();
+                callback(err, null);
                 console.log(err);
-                return callback(err, null);
+                return mongoose.disconnect();
             }
-            mongoose.disconnect();
-            return callback(null, doc);
+            // 返回的数据
+            var data = {
+                courseContent: doc.courseContent,
+                teacher: doc.teacher,
+                date: doc.date
+            };
+            callback(null, data);
+            return mongoose.disconnect();
         });
     });
 };
@@ -87,7 +93,7 @@ Course.readOne = function (totalCondition, callback) {
 /* 读取课程列表 */
 Course.readList = function (docCondition, callback) {
 
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Course = mongoose.model('Course', courseSchema);
 
     mongoose.connection.once('open', function () {
