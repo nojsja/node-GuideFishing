@@ -1,0 +1,45 @@
+<!--previewWindow-->
+<!--Bootstrap模态弹窗组件-->
+
+<div class="modal fade" id="previewWindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    <b>题目预览</b>
+                </h4>
+            </div>
+            <!--可以自定义提示信息-->
+            <div class="modal-body tips">
+
+                <!--题目列表-->
+                <div class="preview-list">
+
+                    <!--其中一个题目项-->
+                    <div class="preview-item">
+                        <!--编号-->
+                        <div class="item-number">1</div>
+                        <!--标题-->
+                        <div class="item-title">这是标题</div>
+                        <!--选项组-->
+                        <div class="item-choises">
+                            <!--各个选项-->
+                            <div class="choise">选项A</div>
+                            <div class="choise">选项B</div>
+                            <div class="choise">选项C</div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

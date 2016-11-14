@@ -16,7 +16,7 @@ function AllTest(testGroup) {
 /* 存储一组题目数据 */
 AllTest.prototype.save = function (callback) {
     var testGroup = this.testGroup;
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Tests = mongoose.model('Tests', testSchema);
 
     console.log('before open.');
@@ -39,7 +39,7 @@ AllTest.prototype.save = function (callback) {
 /* 读取一组题目的信息 */
 AllTest.getDetail = function (docCondition, callback) {
 
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Tests = mongoose.model('Tests', testSchema);
     mongoose.connection.once('open', function () {
 
@@ -59,10 +59,10 @@ AllTest.getDetail = function (docCondition, callback) {
 
 /* 读取文档列表
 * 需要展示在列表的信息包括:
-* testTitle, testType, abstract, date*/
-AllTest.readTestList = function (docCondition, callback) {
+* testTitle, tesetType, abstract, date*/
+AllTest.readList = function (docCondition, callback) {
 
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Tests = mongoose.model('Tests', testSchema);
     mongoose.connection.once('open', function () {
 
@@ -139,7 +139,7 @@ AllTest.deleteOneDoc = function (docCondition, callback) {
 
     //多个判断依据
     var condition = docCondition;
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Tests = mongoose.model('Tests', testSchema);
     mongoose.connection.once('open', function () {
         var query = Tests.findOne().where(condition);
@@ -165,7 +165,7 @@ AllTest.deleteSomeDoc = function (docsCondition, callback) {
 
     //多个判断依据
     var condition = docsCondition;
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Tests = mongoose.model('Tests', testSchema);
     mongoose.connection.once('open', function () {
         var query = Tests.remove();

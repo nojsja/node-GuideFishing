@@ -9,7 +9,7 @@ conn = new Mongo({ "localhost" : 27017 });
 /* admin管理者数据库 */
 db = conn.getDB("admin");
 if(db.getUser("admin")) {
-    db.removeUser("admin");
+    db.dropUser("admin");
 }else {
     db.createUser({
         'user' : 'admin',
@@ -20,9 +20,9 @@ if(db.getUser("admin")) {
 db.logout();
 
 /* QN调查问卷数据库 */
-db = conn.getDB("QN");
+db = conn.getDB("GuideFishing");
 if(db.getUser("zykc")) {
-    db.removeUser("zykc");
+    db.dropUser("zykc");
 }else {
     db.createUser({
         'user' : 'zykc',

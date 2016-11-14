@@ -1,2 +1,3 @@
 # node-questionnaire
-a node.js project about questionnaire and test.
+GuideFishing(带渔)  -- a project powered by nodejs and mongodb.
+The system is made up of three child-system, including QuestionnaireTest system(心理问卷评测系统), Recruitment system(企业招聘系统), Course System(课程教学系统).

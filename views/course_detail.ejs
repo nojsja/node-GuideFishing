@@ -1,0 +1,92 @@
+<!--课程介绍详情页面-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel='stylesheet' href='/stylesheets/course_detail.css' />
+
+    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/course_detail.js"></script>
+</head>
+<body>
+<header class="header">
+    <div class="header-label">
+        课程介绍
+        <a href="/course/index"><span class="glyphicon glyphicon-home return-home"></span></a>
+    </div>
+</header>
+
+<!--评测介绍首部-->
+<div class="container detail-head">
+    <div class="detail-head-img"></div>
+    <p class="detail-head-type"><%= courseType %></p>
+    <p class="detail-head-title box1">
+        <%= courseName %>
+    </p>
+    <div class="detail-head-other">
+        <div class="other-date"><%= date %></div>
+        <div class="other-read">
+            <span class="glyphicon glyphicon-eye-open"><%= clickRate %></span>
+        </div>
+    </div>
+
+</div>
+
+<!--评测介绍主体-->
+<div class="container detail-body">
+    <div class="detail-body-abstract">
+        <div class="abstract">
+
+        </div>
+    </div>
+</div>
+
+<!--进入测试页面按钮-->
+<div id="startDiv">
+    <input type="button" class="btn btn-success" value="开始学习-->">
+</div>
+
+<!--页内脚本-->
+<script type="text/javascript">
+
+    /* 注意ejs模板中可以用%-获取非转义字符 */
+
+    // 设置描述内容
+    detailAction.$$abstract = '<%- courseAbstract %>';
+    $('.abstract').append( $(detailAction.$$abstract).html() );
+
+</script>
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

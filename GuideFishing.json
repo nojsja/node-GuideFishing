@@ -1,0 +1,12 @@
+/**
+ * Created by yangw on 2016/11/14.
+ * pm2启动脚本
+ */
+
+{
+    apps: [{
+        script: './bin/GuideFishing',
+        instances: '1',
+        exec_mode: 'cluster'
+    }]
+}

@@ -1,0 +1,52 @@
+<!--企业招聘详情页面-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="description" content="企业招聘信息" />
+    <meta name="keywords" content="recruitment" />
+
+    <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel='stylesheet' href='/stylesheets/recruitment_detail.css' />
+
+    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/recruitment_company.js"></script>
+</head>
+<body>
+
+<!--主要部分-->
+<div class="container total">
+    <!--公司名字-->
+    <div class="company">
+        <%= company %>
+    </div>
+    <!--公司简介 -->
+    <div class="introduction">
+        <!--主体部分-->
+        <div class="introduction-main"></div>
+        <!--公司位置 -->
+        <div class="introduction-position"></div>
+        <!--工作环境-->
+        <div class="introduction-environment">
+            <!--环境图片-->
+            <!--<div class="environment-image"></div>-->
+        </div>
+        <!--工作介绍视频-->
+        <div class="introduction-video">
+        </div>
+    </div>
+
+    <!--获取在招职位-->
+    <div class="get-recruitments">
+        <a href="/recruitment/<%= company %>/detail">在招职位</a>
+    </div>
+    <!--返回大厅-->
+    <div class="return-home">
+        <a href="/recruitment/index"><span class="glyphicon glyphicon-home">返回</span></a>
+    </div>
+</div>
+
+</body>

@@ -12,7 +12,7 @@
 
 /* 引入数据库模式 */
 var mongoose = require('mongoose');
-var popularSchema = require('./db_schema/popular_schema.js').popularSchema;
+var popularSchema = require('./db_schema/popularTest_schema.js').popularSchema;
 var testSchema = require('./db_schema/test_schema.js').testSchema;
 //所有筛选条件
 var searchCondition = {
@@ -21,7 +21,7 @@ var searchCondition = {
 };
 
 function MongoSchedule() {
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Tests = mongoose.model('Tests', testSchema);
     mongoose.connection.once('open', function () {
 
@@ -49,13 +49,13 @@ function MongoSchedule() {
             for(var index in searchCondition.testTypeArray){
                 //查询条件
                 var query = Tests.find({
-                    testType: searchCondition.testTypeArray[index]
+                    courseType: searchCondition.testTypeArray[index]
                 });
                 query.limit(searchCondition.limit);
                 query.sort({frequency: -1});
                 //筛选数据
                 query.select({
-                    testType: 1,
+                    courseType: 1,
                     testTitle: 1
                 });
                 query.exec(function (err, docs) {

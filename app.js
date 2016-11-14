@@ -1,3 +1,7 @@
+/**
+ * Created by yangw on 2016/11/11.
+ * app应用入口文件
+ */
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -16,10 +20,12 @@ var MongoSchedule = require('./models/MongoSchedule.js');
 var settings = require('./settings');
 
 /* 引入路由 */
-var index = require('./routes/index');
+var test_index = require('./routes/test_index');
 var test = require('./routes/test');
-var admin = require('./routes/admin');
-var recruit = require('./routes/recruitment');
+var test_admin = require('./routes/test_admin');
+var recruitment = require('./routes/recruitment');
+var course = require('./routes/course');
+var course_admin = require('./routes/course_admin');
 
 var app = express();
 
@@ -52,10 +58,12 @@ app.use(session({
 ));
 
 //建立路由规则
-index(app);
+test_index(app);
 test(app);
-admin(app);
-recruit(app);
+test_admin(app);
+recruitment(app);
+course(app);
+course_admin(app);
 
 //node-schedule定时执行任务,更新popolar表,每天的凌晨零点
 var rule = new schedule.RecurrenceRule()
@@ -66,9 +74,9 @@ var scheduleJob = schedule.scheduleJob(rule, MongoSchedule);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 // error handlers
@@ -76,23 +84,23 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: err
+        });
     });
-  });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {}
+    });
 });
 
 

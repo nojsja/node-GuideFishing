@@ -28,6 +28,7 @@ function test(app) {
             testType: req.params.testType
         };
         AllTest.getDetail(condition, function (err, doc) {
+            console.log(doc);
             // 数据监测
            if(err || !doc.testTitle || !doc.testType) {
                return res.render('testDetail', {
@@ -39,7 +40,7 @@ function test(app) {
                    frequency: 'error!!!'
                });
            }
-            res.render('testDetail', {
+            res.render('test_detail', {
                 title: '评测详情',
                 testTitle: doc.testTitle,
                 testType: doc.testType,
@@ -57,7 +58,7 @@ function test(app) {
         var testType = req.params.testType;
         var testTitle = req.params.testTitle;
         //跳转到页面
-        res.render('testView', {
+        res.render('test_view', {
             title: '评测页面',
             testType: testType,
             testTitle: testTitle

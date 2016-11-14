@@ -23,7 +23,7 @@ var scoreFactory = function (submitData, callback) {
 
     //查找文档条件
     var condition = {
-        testType: submitData.testType,
+        courseType: submitData.courseType,
         testTitle: submitData.testTitle
     };
     //提交的选项数据
@@ -77,7 +77,7 @@ scoreFactory.prototype = {
 scoreFactory.getScoreModeInfo = function (condition, callback) {
 
     //连接数据库准备
-    var db = mongoose.connect('mongodb://localhost/QN');
+    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var Tests = mongoose.model('Tests', testSchema);
     //打开数据库连接
     mongoose.connection.once('open', function () {

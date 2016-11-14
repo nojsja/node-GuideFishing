@@ -1,0 +1,161 @@
+body {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: #f8ffff;
+}
+
+a {
+    color: #00B7FF;
+}
+
+/*首部 header*/
+.header {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    padding: 0.5rem;
+    width: 100%;
+    min-height: 2rem;
+    height: auto;
+    background-color: #e3e6df;
+    font-size: 0;
+    -webkit-box-shadow: 0px 0px 10px #a2a5a2;
+    -moz-box-shadow:  0px 0px 10px #a2a5a2;
+    box-shadow:  0px 0px 10px #a2a5a2;
+}
+
+.header-label {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    font-size: 2rem;
+    color: white;
+    text-shadow: 0px 0px 10px #456d9c;
+    line-height: 2rem;
+    font-weight: bold;
+}
+
+.header-label span {
+    text-shadow: 0 0 0;
+}
+
+.return-home {
+    position: absolute;
+    right: 1rem;
+    color: #1aa646;
+    font-size: 2rem;
+}
+
+/* 评测介绍主体部分 */
+.detail-head {
+    min-height: 10rem;
+    height: auto;
+    margin-top: 5rem;
+    margin-bottom: 2rem;
+    background-color: #588ac6;
+
+    -webkit-box-shadow:  0 0 10px #3b3d3b;
+    -moz-box-shadow:  0 0 10px #3b3d3b;
+    box-shadow:  0 0 10px #3b3d3b;
+}
+
+.detail-head-img {
+    background: url("/images/testType/character.jpg") no-repeat;
+    background-size: cover;
+    border: solid 1px white;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    margin: 0 auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    -webkit-box-shadow: 0px 0px 10px white;
+    -moz-box-shadow: 0px 0px 10px white;
+    box-shadow:  0px 0px 10px white;
+}
+
+.detail-head-type {
+    text-align: center;
+    color: white;
+}
+
+.detail-head-title {
+    text-align: center;
+    color: #f3ffff;
+    font-size: 2rem;
+}
+
+.detail-head-other {
+    margin-top: 1rem;
+    text-align: center;
+    display: block;
+}
+
+/* 首部其它信息 */
+
+.other-date {
+    height: 2rem;
+    line-height: 2rem;
+    color: white;
+    background-color: #3b3d3b;
+    text-align: center;
+    width: 50%;
+    float: left;
+}
+
+.other-read {
+    height: 2rem;
+    line-height: 2rem;
+    color: white;
+    background-color: #3b3d3b;
+    width: 50%;
+    text-align: center;
+    float: right;
+    word-spacing: 2px;
+    letter-spacing: 2px;
+}
+
+.detail-body {
+    height: auto;
+    min-height: 10rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+
+    -webkit-box-shadow:  0 0 10px #3b3d3b;
+    -moz-box-shadow:  0 0 10px #3b3d3b;
+    box-shadow:  0 0 10px #3b3d3b;
+}
+
+.detail-body-abstract {
+    padding: 0.5rem;
+    background-color: #f4f7f4;
+
+}
+
+.abstract {
+    text-align: center;
+    font-size: 1.5rem;
+    word-spacing: 1px;
+    letter-spacing: 1px;
+    min-height: 8rem;
+    font-weight: bold;
+    color: #676e67;
+}
+
+/* 开始按钮 */
+#startDiv {
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+/*文字特效*/
+.box1 {
+    text-shadow:
+            0 0 0 rgb(188,178,188),1px 0 0 rgb(173,163,173),
+            2px 0 0 rgb(157,147,157),3px 0 0 rgb(142,132,142),
+            4px 0 0 rgb(126,116,126),5px 0 0 rgb(111,101,111),
+            6px 0 0 rgb(95,85,95), 7px 0 0 rgb(79,69,79),
+            8px 0 7px rgba(0,0,0,0.35),8px 0 1px rgba(0,0,0,0.5),
+            0 0 7px rgba(0,0,0,.2);
+}
