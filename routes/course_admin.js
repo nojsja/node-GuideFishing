@@ -41,7 +41,7 @@ function course_admin(app) {
                 course[part] = req.body[part];
             }
         }
-        console.log(course);
+
         var newCourse = new Course(course);
         newCourse.save(function (err) {
             if(err){
@@ -82,7 +82,9 @@ function course_admin(app) {
             type: type,
             courseName: courseName
         };
-        
+
+        console.log('condition: ' + condition);
+
         UploadData.previewData(condition, function (err, dataArray) {
             if(err){
                 return res.json( JSON.stringify({

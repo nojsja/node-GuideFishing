@@ -28,7 +28,7 @@ function test(app) {
             testType: req.params.testType
         };
         AllTest.getDetail(condition, function (err, doc) {
-            console.log(doc);
+
             // 数据监测
            if(err || !doc.testTitle || !doc.testType) {
                return res.render('testDetail', {

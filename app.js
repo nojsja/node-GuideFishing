@@ -17,7 +17,9 @@ var MongoStore = require('connect-mongo')(session);
 //数据库定时器
 var MongoSchedule = require('./models/MongoSchedule.js');
 //项目设置
-var settings = require('./settings');
+var settings = require('./MongoConfig');
+// Mongoose 初始化
+var Mongoose = require('./models/tools/Mongoose');
 
 /* 引入路由 */
 var test_index = require('./routes/test_index');

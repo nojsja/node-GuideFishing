@@ -120,7 +120,7 @@ Course.readList = function (docCondition, callback) {
 
         /* 进行条件判断客户端的筛选需求 */
         for(var con in docCondition) {
-            console.log(con);
+
             if(con == "limit") {
                 number = docCondition[con];
             }else if(con == "skip") {
@@ -135,12 +135,9 @@ Course.readList = function (docCondition, callback) {
             }
         }
 
-        console.log(JSON.stringify(condition));
-
         var query = Course.find().where(condition);
 
         if(courseTypeArray.length > 0){
-            console.log(courseTypeArray.length);
             query.in('courseType', courseTypeArray);
         }
         query.limit(number);
