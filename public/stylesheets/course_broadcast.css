@@ -1,0 +1,22 @@
+/* 课程直播 */
+
+body {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: #f8ffff;
+}
+
+a {
+    color: #00B7FF;
+}
+
+.total {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    height: auto;
+    min-height: 500px;
+
+    -webkit-box-shadow:  0 0 10px #123456;
+    -moz-box-shadow:  0 0 10px #123456;
+    box-shadow:  0 0 10px #123456;
+}

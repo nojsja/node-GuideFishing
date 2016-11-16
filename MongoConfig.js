@@ -3,6 +3,8 @@
  * mongodb启动的一些配置参数
  */
 
+var bluebird = require('bluebird');
+
 module.exports = {
 
     cookieSecret: 'GuideFishing',
@@ -14,8 +16,9 @@ module.exports = {
     options: {
         server: {
             auto_reconnect: true,
-            poolSize: 5
-        }
+            poolSize: 10
+        },
+        promiseLibrary: bluebird
     },
     connectionString: "mongodb://localhost:27017/GuideFishing"
 };

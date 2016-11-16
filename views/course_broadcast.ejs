@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="description" content="带渔课程直播系统" />
+    <meta name="keywords" content="course-broadcast" />
+
+    <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel='stylesheet' href='/stylesheets/course_broadcast.css' />
+
+    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/course_broadcast.js"></script>
+
+</head>
+
+<body>
+
+<!--直播间-->
+<div class="broadcast-room">
+    <%= broadcastRoom %>
+</div>
+
+<!--主体部分-->
+<div class="container total">
+
+</div>
+
+<!--页脚-->
+<%include footer.ejs%>
+
+</body>

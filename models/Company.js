@@ -4,7 +4,7 @@
  */
 
 var companySchema = require('./db_schema/company_schema.js').companySchema;
-var mongoose = require('mongoose');
+var mongoose = require('./tools/Mongoose');
 
 function Company(companyData) {
 
@@ -15,70 +15,57 @@ function Company(companyData) {
 Company.prototype.save = function (callback) {
 
     var company = this.companyData;
-    var db = mongoose.connect('mongodb://localhost/GuideFishing');
+    var db = mongoose.connection;
     var Companys = mongoose.model('Companys', companySchema);
 
-    //连接打开后
-    mongoose.connection.once('open', function () {
-
-        console.log('open');
-        var newCompanyMode = new Companys(company);
-        newCompanyMode.save(function (err, doc) {
-            if(err) {
-                console.log(err);
-                mongoose.disconnect();
-                return callback(true);
-            }
-            mongoose.disconnect();
-            callback(false);
-        });
+    var newCompanyMode = new Companys(company);
+    newCompanyMode.save(function (err, doc) {
+        if(err) {
+            console.log(err);
+            return callback(true);
+        }
+        callback(false);
     });
+
 };
 
 /* 得到所有公司列表 */
 Company.getList = function (callback) {
 
-    var db = mongoose.connect('mongodb://localhost/GuideFishing');
+    var db = mongoose.connection;
     var Companys = mongoose.model('Companys', companySchema);
 
-    mongoose.connection.once('open', function () {
-        var query = Companys.find();
-        query.where({});
-        query.select({
-            company: 1
-        });
-        query.exec(function (err, docs) {
-            if(err){
-                console.log(err);
-                mongoose.disconnect();
-                return callback(err);
-            }
-            // 成功后返回数据
-            mongoose.disconnect();
-            callback(null, docs);
-        })
+    var query = Companys.find();
+    query.where({});
+    query.select({
+        company: 1
     });
+    query.exec(function (err, docs) {
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+        // 成功后返回数据
+        callback(null, docs);
+    });
+
 };
 
 /* 得到一条公司信息 */
 Company.getOne = function (condition, callback) {
 
-    var db = mongoose.connect('mongodb://localhost/GuideFishing');
+    var db = mongoose.connection;
     var Companys = mongoose.model('Companys', companySchema);
 
-    mongoose.connection.once('open', function () {
-        var query = Companys.findOne();
-        query.where(condition);
-        query.exec(function (err, doc) {
-            if(err){
-                console.log(err);
-                mongoose.disconnect();
-                return callback(err);
-            }
-            // 成功后返回数据
-            mongoose.disconnect();
-            callback(null, doc);
-        })
+    var query = Companys.findOne();
+    query.where(condition);
+    query.exec(function (err, doc) {
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+        // 成功后返回数据
+        callback(null, doc);
     });
 };
 

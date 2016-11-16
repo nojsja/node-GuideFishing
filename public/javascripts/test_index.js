@@ -68,7 +68,7 @@ indexAction.readTestList = function (condition) {
 /* 加载更多数量的测评文章 */
 indexAction.readMore = function () {
 
-    indexAction.readCourseList({
+    indexAction.readTestList({
         testType: indexAction.testType,
         skip: indexAction.pageStart
     }, function (JSONdata) {

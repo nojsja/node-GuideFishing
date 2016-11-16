@@ -47,6 +47,8 @@ function index(app) {
             condition.testTypeArray = req.body.testTypeArray;
         }
 
+        console.log('read list condition' + JSON.stringify(condition));
+
         AllTest.readList(condition, function (err, testArray) {
            if(err) {
                console.log('readList error.');
