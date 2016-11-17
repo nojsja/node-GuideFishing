@@ -6,12 +6,13 @@
 function course_broadcast(app) {
 
     // 获取课程直播页面
-    app.get('/course/broadcast', function (req, res) {
+    // 路径中获取房间的id
+    app.get('/course/broadcast/room/:id', function (req, res) {
 
         // 标题和房间号
         res.render('course_broadcast', {
             title: "课程直播",
-            broadcastRoom: "1"
+            broadcastRoom: req.params.id
         });
     });
     

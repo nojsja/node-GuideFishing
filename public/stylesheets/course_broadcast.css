@@ -20,3 +20,96 @@ a {
     -moz-box-shadow:  0 0 10px #123456;
     box-shadow:  0 0 10px #123456;
 }
+
+.broadcast-room {
+    text-align: center;
+    font-weight: bold;
+    font-size: 2rem;
+    margin: 1rem;
+}
+
+/* 用户名 */
+#name {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 1rem;
+}
+
+/* 消息列表 */
+.message-list {
+    margin: 1rem;
+    border: solid 1px #7c7c7c;
+    padding: 1rem;
+    height: 400px;
+    overflow-y: scroll;
+}
+
+/* 单条消息 */
+.message-list-item {
+    margin: 0.5rem;
+    padding: 5px;
+    color: #ffffff;
+}
+
+/* 用户消息 */
+.message-list-item-system {
+    background-color: #1c6897;
+    font-weight: bold;
+}
+
+/* 系统消息 */
+.message-list-item-user {
+    background-color: #686c88;
+}
+
+/* 消息发送区域 */
+.send-div {
+    z-index: 100;
+    position: fixed;
+    padding: 1rem;
+    background-color: #f58a4a;
+    color: white;
+    position: fixed;
+    left:0;
+    bottom: 0;
+    padding: 0.5rem;
+    width: 100%;
+    height: auto;
+
+    -webkit-box-shadow: 0px 0px 10px #a2a5a2;
+    -moz-box-shadow:  0px 0px 10px #a2a5a2;
+    box-shadow:  0px 0px 10px #a2a5a2;
+}
+
+/* 发送消息 */
+#messageSend {
+    margin: 0.5rem;
+    float: right;
+}
+
+/* footer */
+.footer {
+    margin-bottom: 5px;
+    padding: 0.5rem;
+    text-align: center;
+    min-height: 2rem;
+    bottom: 0;
+    border-top: solid 1px #6095d8;
+    background-color: white;
+}
+
+.footer-img {
+    display: inline-block;
+    background: url("/images/icons/Ciitec.jpg") no-repeat;
+    background-size: cover;
+    width: 5rem;
+    height: 2rem;
+    margin: 0 auto;
+}
+
+.footer-text {
+    display: inline-block;
+    text-align: center;
+    font-size: 1.5rem;
+    color: #3b3d3b;
+}

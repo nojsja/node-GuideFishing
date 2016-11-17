@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
     <link rel='stylesheet' href='/stylesheets/course_broadcast.css' />
 
+    <!--引入socket.io, 路劲是自动映射的-->
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
     <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
     <script type="text/javascript" src="/javascripts/course_broadcast.js"></script>
@@ -23,12 +25,25 @@
     <%= broadcastRoom %>
 </div>
 
-<!--主体部分-->
+<!--消息主体部分-->
 <div class="container total">
+    <!--用户名-->
+    <div id="name"></div>
+    <!--消息列表-->
+    <div class="message-list" id="messageList">
 
+    </div>
+</div>
+
+<!--发送消息区域-->
+<div class="send-div">
+    <input type="text" class="form-control" id="messageInput">
+    <input type="button" class="btn btn-success" value="发送消息" id="messageSend">
 </div>
 
 <!--页脚-->
 <%include footer.ejs%>
+<!--模态弹窗-->
+<%include modalWindow.ejs%>
 
 </body>
