@@ -24,6 +24,7 @@ $(function () {
  * value -- 接收/发送的消息对象, watcherList -- 存储所有观察者
  * listen -- 注入新的观察者, trigger -- 触发所有观察者
  * socket -- 页面初始化时连接到服务器的socket对象
+ * file -- 文件对象, 包括图片,音频和视频对象
  *
  * */
 
@@ -44,6 +45,11 @@ var broadcastAction = {
             listen: function () {},
             trigger: function () {}
         }
+    },
+    file: {
+        video: {},
+        audio: {},
+        image: {}
     }
 };
 
@@ -108,6 +114,31 @@ broadcastAction.pageEventBind = function () {
         if(e.which == 13){
             broadcastAction.message.send.trigger('send');
         }
+    });
+
+    // 文件选中上传事件
+    $('#fileChoose').on('change', function () {
+
+
+        //判断浏览器是否支持FileReader接口
+        if(typeof FileReader == 'undefined'){
+            //使选择控件不可操作
+            $('#fileChoose').setAttribute("disabled","disabled");
+            return broadcastAction.modalWindow('你的浏览器不支持读取本地文件!');
+        }
+
+        // 获取文件
+        var file = document.getElementById('fileChoose').files[0];
+        broadcastAction.file.image = file;
+        if(file){
+
+        }
+    });
+    
+    // 选择并上传文件到服务器, 服务器再广播到房间
+    $('#fileSend').click(function () {
+
+        $('#fileChoose').click();
     });
     
 };

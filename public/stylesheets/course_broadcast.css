@@ -87,6 +87,12 @@ a {
     float: right;
 }
 
+/* 隐藏元素 */
+.none {
+    display: none;
+}
+
+
 /* footer */
 .footer {
     margin-bottom: 5px;
