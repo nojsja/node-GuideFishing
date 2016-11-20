@@ -39,9 +39,8 @@ a {
 .message-list {
     margin: 1rem;
     border: solid 1px #7c7c7c;
-    padding: 1rem;
-    height: 400px;
-    overflow-y: scroll;
+    padding: 10px;
+    min-height: 400px;
 }
 
 /* 单条消息 */
@@ -51,15 +50,48 @@ a {
     color: #ffffff;
 }
 
-/* 用户消息 */
+/* 系统文本消息 */
 .message-list-item-system {
     background-color: #1c6897;
     font-weight: bold;
 }
 
-/* 系统消息 */
+/* 用户文本消息 */
 .message-list-item-user {
     background-color: #686c88;
+}
+
+/* 图片消息 */
+.message-list-item-image {
+    margin: 1rem;
+    width: 100%;
+    height: auto;
+
+    -webkit-box-shadow:  0 0 10px #818181;
+    -moz-box-shadow:  0 0 10px #818181;
+    box-shadow:  0 0 10px #818181;
+}
+
+/* 多媒体消息中的文本消息 */
+.message-list-item-text {
+    background-color: #686c88;
+}
+
+/* 视频消息 */
+.message-list-item-video {
+    margin: 1rem;
+    width: 100%;
+    height: auto;
+
+    -webkit-box-shadow:  0 0 10px #818181;
+    -moz-box-shadow:  0 0 10px #818181;
+    box-shadow:  0 0 10px #818181;
+}
+
+/* 音频消息 */
+.message-list-item-audio {
+    width: 100%;
+    height: auto;
 }
 
 /* 消息发送区域 */
@@ -89,6 +121,16 @@ a {
 
 /* 隐藏元素 */
 .none {
+    display: none;
+}
+
+/* 选择文件 */
+#fileChoose {
+    display: none;
+}
+
+/* 上传进度条 */
+.progress {
     display: none;
 }
 

@@ -34,7 +34,6 @@
 
     </div>
 </div>
-
 <!--发送消息区域-->
 <div class="send-div">
 
@@ -42,13 +41,14 @@
     <input type="button" class="btn btn-success" value="发送消息" id="messageSend">
 
     <!--发送媒体类型文件-->
-    <input type="button" class="btn btn-default" value="选择文件" id="fileSend">
-    <input type="file" class="none" id="fileChoose">
+    <div class="file-send-div">
+        <span class="glyphicon glyphicon-folder-open" id="fileSend"></span>
+    </div>
+    <input type="file" id="fileChoose">
     <!--文件上传进度条-->
     <div class="progress">
         <div class="progress-bar" role="progressbar" aria-valuenow="60"
              aria-valuemin="0" aria-valuemax="100" style="width: 0;">
-            <span class="sr-only">0% 完成</span>
         </div>
     </div>
 </div>

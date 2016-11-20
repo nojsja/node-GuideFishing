@@ -26,6 +26,7 @@ $(function () {
  * listen -- 注入新的观察者, trigger -- 触发所有观察者
  * socket -- 页面初始化时连接到服务器的socket对象
  * file -- origin 未转换前的文件, data -- 转换后即将上传的文件, type -- 文件类型
+ * upload -- 文件上传相关
  * reader -- 文件读取对象fileReader
  * */
 
@@ -50,7 +51,12 @@ var broadcastAction = {
     file: {
         reader: {},
         origin: "",
-        type: ""
+        type: "",
+        upload: {
+            setProgress: function (value) {},
+            hidden: function () {},
+            show: function () {}
+        }
     }
 };
 
@@ -58,7 +64,7 @@ var broadcastAction = {
 broadcastAction.socketInit = function () {
 
     // 弹出窗口
-    var userName  = prompt('请输入昵称');
+    var userName  = "Johnson" || prompt('请输入昵称');
     $('#name').text(userName);
 
     // 连接到服务器,绑定观察者对象
@@ -67,33 +73,43 @@ broadcastAction.socketInit = function () {
     // 所有消息类型是可以自定义的
     broadcastAction.socket.on('connect', function () {
         var name = $('#name').text() || '匿名';
-        broadcastAction.socket.emit('join', name);
+        broadcastAction.socket.emit('join', {
+            name: name
+        });
     });
 
     // 系统消息
-    broadcastAction.socket.on('systemMessage', function (msg) {
+    broadcastAction.socket.on('systemMessage', function (data) {
 
         broadcastAction.message.received.value = {
-            message: msg,
-            from: 'system'
+            message: data.msg,
+            from: data.from,
+            type: data.type,
+            path: data.path || ""
         };
         broadcastAction.message.received.trigger('systemMessage', {
-            message: msg,
-            from: 'system'
+            message: data.msg,
+            from: data.from,
+            type: data.type,
+            path: data.path || ""
         });
 
     });
     
     // 用户聊天消息
-    broadcastAction.socket.on('newMessage', function (msg, user) {
+    broadcastAction.socket.on('newMessage', function (data) {
 
         broadcastAction.message.received.value = {
-            message: msg,
-            from: user
+            message: data.msg,
+            from: data.from,
+            type: data.type,
+            path: data.path || ""
         };
         broadcastAction.message.received.trigger('newMessage', {
-            message: msg,
-            from: user
+            message: data.msg,
+            from: data.from,
+            type: data.type,
+            path: data.path || ""
         });
 
     });
@@ -110,10 +126,10 @@ broadcastAction.socketInit = function () {
     });
 
     // 服务器文件上传完成
-    broadcastAction.socket.on('uploadDone', function (data) {
+    broadcastAction.socket.on('uploadDone', function () {
 
-        broadcastAction.file.reader = null;
-        broadcastAction.file.origin = null;
+        // 触发事件
+        broadcastAction.message.received.trigger('uploadDone');
     });
 
 };
@@ -123,6 +139,27 @@ broadcastAction.pageEventBind = function () {
 
     // 当前课程名(也是直播间的名字)
     broadcastAction.courseName = $('.broadcast-room').text().trim();
+
+    // 上传事件绑定
+    broadcastAction.upload = {
+        setProgress: function (value) {
+            // 更新页面进度条
+            $('.progress-bar').css('width', value);
+            return this;
+        },
+        hidden: function () {
+            if($('.progress').css('display') == 'block'){
+                $('.progress').fadeOut();
+            }
+            return this;
+        },
+        show: function () {
+            if($('.progress').css('display')  != 'block'){
+                $('.progress').fadeIn();
+            }
+            return this;
+        }
+    };
 
     // 用户发送消息
     $('#messageSend').click(function () {
@@ -154,23 +191,29 @@ broadcastAction.pageEventBind = function () {
 
         if(file){
             broadcastAction.file.origin = file;
+            console.log(file.size + " + " + file.name);
             broadcastAction.file.reader = new FileReader();
             // 注意这儿载入的是文件分片后的数据
             // 这个需要服务器返回第一次返回后客户端确认信息
             broadcastAction.file.reader.onload = function (event) {
+
+                // 为2是读取成功
+                console.log("readyState: " + this.readyState);
+
+                var data = this.result || event.target.result;
                 console.log('reader onload.');
                 /* 通过内部的result对象取到读取后的数据 */
                 broadcastAction.socket.emit('upload', {
                     "Name": broadcastAction.file.origin.name,
-                    "Segment": event.target.result
-                })
+                    "Segment": data
+                });
             };
-            console.log('start upload');
+            console.log('start');
             // 触发开始上传事件
             // 等待服务器发回允许上传的回调信息后开始载入文件流式传输到服务器
             broadcastAction.socket.emit('start', {
                "Name": broadcastAction.file.origin.name,
-                "Size": broadcastAction.file.size,
+                "Size": broadcastAction.file.origin.size,
                 "CourseName": broadcastAction.courseName
             });
         }
@@ -207,7 +250,8 @@ broadcastAction.watcherInit = function (obj) {
         if(!this.watcherList[type]){
             return;
         }
-        // 定义消息信息
+        // 包裹定义消息信息
+        // 观察者触发事件类型
         var events = {
             type: type,
             args: args || {}
@@ -252,7 +296,7 @@ broadcastAction.watcherActive = function () {
             return broadcastAction.modalWindow('请输入要发送的消息!');
         }
         // 置空消息
-        // $('#messageInput').val('');
+        $('#messageInput').val('');
         // 发送
         broadcastAction.socket.send(message);
     }
@@ -265,17 +309,30 @@ broadcastAction.watcherActive = function () {
     broadcastAction.message.received.listen('newMessage', receiveNewMsg);
     // 接收上传开始上传文件的信息
     broadcastAction.message.received.listen('moreData', startUpload);
+    // 文件上传完成
+    broadcastAction.message.received.listen('uploadDone', uploadDone);
+
+    // 上传完成
+    function uploadDone(info) {
+
+        // 更新页面进度条
+        broadcastAction.upload.setProgress('100%')
+            .hidden();
+        // 清除缓存
+        broadcastAction.file.reader = null;
+        broadcastAction.file.origin = null;
+    };
 
     // 开始上传数据
     function startUpload(info) {
 
         console.log('uploading...');
-        // 每次上传的长度512kb, 524288字节
-        var length = 524288;
+        // 每次上传的长度1024kb, 1048576字节
+        var length = 1048576;
         //上传的位置和进度
         // position相除减小过数字
-        var position = info.position * length;
-        var percent = info.percent;
+        var position = info.args.position * length;
+        var percent = info.args.percent;
 
         // 分割的文件对象
         var newFile = null;
@@ -283,8 +340,8 @@ broadcastAction.watcherActive = function () {
         var currentFile = broadcastAction.file.origin;
 
         // 更新页面进度条
-        $('.progress-bar').css('width', percent + '%');
-        $('.progress-bar > span').text(percent + '%完成');
+        broadcastAction.upload.show();
+        broadcastAction.upload.setProgress(percent);
 
         // 裁切文件并兼容浏览器
         if(currentFile.slice){
@@ -332,22 +389,137 @@ broadcastAction.watcherActive = function () {
     // 接收用户新消息
     function receiveNewMsg(info) {
 
-        // 消息发送者和消息内容和消息类型
-        var user = info.args.from;
-        var msg = info.args.message;
-        var type = info.type;
+        // 集成消息对象
+        var info = {
+            // 消息发送者和消息内容,媒体类型数据的url
+            from: info.args.from,
+            msg: info.args.message,
+            path: info.args.path || "",
+            // 消息的所属类型,对应的有text,video,audio
+            type: info.args.type
+        };
 
-        // 添加DOM
-        var $messageList = $('.message-list');
-        var $messageItem =
-            $('<div class="message-list-item message-list-item-user">');
-
-        $messageItem.text(user + '说: ' + msg);
-        $messageList.append($messageItem);
-        // 滚到页面底部
-        var div = document.getElementById('messageList');
-        div.scrollTop = div.scrollHeight;
+        // 执行DOM更新
+        broadcastAction.newMessageUpdate(info);
     }
+
+};
+
+/* 页面消息更新 */
+broadcastAction.newMessageUpdate = function (info) {
+
+    // 消息参数
+    var from = info.from,
+        msg = info.msg,
+        path = info.path,
+        type = info.type;
+
+    // 选择方法
+    var update = {
+
+        text: function () {
+
+            // 添加DOM
+            var $messageList = $('.message-list');
+            var $messageItem =
+                $('<div class="message-list-item message-list-item-user">');
+
+            $messageItem.text(from + '说: ' + msg);
+            $messageList.append($messageItem);
+            // 滚到页面底部
+            var div = document.getElementById('messageList');
+            div.scrollTop = div.scrollHeight;
+        },
+
+        videos: function () {
+
+            // 添加DOM
+            var $messageList = $('.message-list');
+            var $messageItem =
+                $('<div class="message-list-item">');
+
+            // 文本消息
+            var $messageItemText =
+                $('<div class="message-list-item-text">');
+            $messageItemText.text(from + ': ')
+                .appendTo($messageItem);
+
+            // 视频消息
+            var $messageItemVideo =
+                $('<video class="message-list-item-video">');
+            $messageItemVideo
+                .prop({
+                    src: path,
+                    controls: 'controls'
+                })
+                .appendTo($messageItem);
+
+            // 添加到页面
+            $messageList.append($messageItem);
+            // 滚到页面底部
+            var div = document.getElementById('messageList');
+            div.scrollTop = div.scrollHeight;
+        },
+
+        audios: function () {
+
+            // 添加DOM
+            var $messageList = $('.message-list');
+            var $messageItem =
+                $('<div class="message-list-item">');
+
+            // 文本消息
+            var $messageItemText =
+                $('<div class="message-list-item-text">');
+            $messageItemText.text(from + ': ')
+                .appendTo($messageItem);
+
+            // 视频消息
+            var $messageItemAudio =
+                $('<audio class="message-list-item-audio">');
+            $messageItemAudio
+                .prop({
+                    src: path,
+                    controls: 'controls'
+                })
+                .appendTo($messageItem);
+
+            // 添加到页面
+            $messageList.append($messageItem);
+            // 滚到页面底部
+            var div = document.getElementById('messageList');
+            div.scrollTop = div.scrollHeight;
+        },
+
+        images: function () {
+
+            // 添加DOM
+            var $messageList = $('.message-list');
+            var $messageItem =
+                $('<div class="message-list-item">');
+
+            // 文本消息
+            var $messageItemText =
+                $('<div class="message-list-item-text">');
+            $messageItemText.text(from + ': ')
+                .appendTo($messageItem);
+
+            // 视频消息
+            var $messageItemVideo =
+                $('<img class="message-list-item-image">');
+            $messageItemVideo
+                .prop( {src: path} )
+                .appendTo($messageItem);
+
+            // 添加到页面
+            $messageList.append($messageItem);
+            // 滚到页面底部
+            var div = document.getElementById('messageList');
+            div.scrollTop = div.scrollHeight;
+        }
+    };
+
+    update[type]();
 
 };
 
