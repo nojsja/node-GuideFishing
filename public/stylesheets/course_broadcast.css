@@ -9,67 +9,76 @@ a {
     color: #00B7FF;
 }
 
+.p-head {
+    padding: 3px;
+    color: #aaaaaa;
+}
+
+.p-head-system {
+    color: #77abae;
+}
+
 .total {
     margin-top: 1rem;
-    margin-bottom: 1rem;
-    padding: 1rem;
+    margin-bottom: 5rem;
     height: auto;
     min-height: 500px;
-
-    -webkit-box-shadow:  0 0 10px #123456;
-    -moz-box-shadow:  0 0 10px #123456;
-    box-shadow:  0 0 10px #123456;
 }
 
 .broadcast-room {
     text-align: center;
     font-weight: bold;
     font-size: 2rem;
-    margin: 1rem;
+    padding: 5px;
+    color: rgb(236, 236, 236);
+    background-color: rgba(130, 148, 205, 0.65);
+    border-bottom:solid 2px #8bcaed;
 }
 
 /* 用户名 */
 #name {
-    font-weight: bold;
-    font-size: 1.5rem;
-    margin: 1rem;
+    padding: 2px;
+    font-size: 1.8rem;
+    border-bottom: dotted 1px grey;
+
+    color: #ffffff;
+    text-shadow: 0 0 10px #16547a;
 }
 
 /* 消息列表 */
 .message-list {
-    margin: 1rem;
-    border: solid 1px #7c7c7c;
     padding: 10px;
     min-height: 400px;
 }
 
+/* 文件发送 */
+.file-send-div {
+    font-size: 2rem;
+    margin-left: 0.5rem;
+    margin-top: 0.5rem;
+}
+
 /* 单条消息 */
 .message-list-item {
-    margin: 0.5rem;
+    margin-top: 1rem;
     padding: 5px;
-    color: #ffffff;
+    color: #4a4a4a;
+    background-color: rgb(237, 237, 237);
 }
 
 /* 系统文本消息 */
 .message-list-item-system {
-    background-color: #1c6897;
-    font-weight: bold;
 }
 
 /* 用户文本消息 */
 .message-list-item-user {
-    background-color: #686c88;
+    border-radius: 8px;
 }
 
 /* 图片消息 */
 .message-list-item-image {
-    margin: 1rem;
     width: 100%;
     height: auto;
-
-    -webkit-box-shadow:  0 0 10px #818181;
-    -moz-box-shadow:  0 0 10px #818181;
-    box-shadow:  0 0 10px #818181;
 }
 
 /* 多媒体消息中的文本消息 */
@@ -79,19 +88,41 @@ a {
 
 /* 视频消息 */
 .message-list-item-video {
-    margin: 1rem;
     width: 100%;
     height: auto;
 
-    -webkit-box-shadow:  0 0 10px #818181;
-    -moz-box-shadow:  0 0 10px #818181;
-    box-shadow:  0 0 10px #818181;
 }
 
-/* 音频消息 */
+/* 音频消息,在页面上是隐藏的 */
 .message-list-item-audio {
     width: 100%;
     height: auto;
+}
+
+/* 音频自定义 */
+.audio-define {
+    position: relative;
+    border: solid 2px blue;
+    border-radius: 7px;
+    width: 50%;
+    padding: 5px;
+    margin: 0.5rem;
+    color: #1c6897;
+
+    -webkit-box-shadow: inset 0 0 5px white;
+    -moz-box-shadow: inset 0 0 5px white;
+    box-shadow: inset 0 0 5px white;
+}
+
+/* audio已读 */
+.audio-define-read {
+    border: solid 2px #878787;
+}
+
+.audio-duration {
+    display: inline-block;
+    margin-left: 1rem;
+    text-align: right;
 }
 
 /* 消息发送区域 */
@@ -99,7 +130,7 @@ a {
     z-index: 100;
     position: fixed;
     padding: 1rem;
-    background-color: #f58a4a;
+    background-color: rgba(130, 148, 205, 0.65);
     color: white;
     position: fixed;
     left:0;
@@ -111,12 +142,6 @@ a {
     -webkit-box-shadow: 0px 0px 10px #a2a5a2;
     -moz-box-shadow:  0px 0px 10px #a2a5a2;
     box-shadow:  0px 0px 10px #a2a5a2;
-}
-
-/* 发送消息 */
-#messageSend {
-    margin: 0.5rem;
-    float: right;
 }
 
 /* 隐藏元素 */
@@ -160,4 +185,15 @@ a {
     text-align: center;
     font-size: 1.5rem;
     color: #3b3d3b;
+}
+
+/*文字特效*/
+.box1 {
+    text-shadow:
+            0px 0px 0 rgb(188,178,188),1px 0px 0 rgb(173,163,173),
+            2px 0px 0 rgb(157,147,157),3px 0px 0 rgb(142,132,142),
+            4px 0px 0 rgb(126,116,126),5px 0px 0 rgb(111,101,111),
+            6px 0px 0 rgb(95,85,95), 7px 0px 0 rgb(79,69,79),
+            8px 0px 7px rgba(0,0,0,0.35),8px 0px 1px rgba(0,0,0,0.5),
+            0px 0px 7px rgba(0,0,0,.2);
 }

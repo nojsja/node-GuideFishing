@@ -296,7 +296,7 @@ broadcastAction.watcherActive = function () {
             return broadcastAction.modalWindow('请输入要发送的消息!');
         }
         // 置空消息
-        $('#messageInput').val('');
+        // $('#messageInput').val('');
         // 发送
         broadcastAction.socket.send(message);
     }
@@ -369,16 +369,22 @@ broadcastAction.watcherActive = function () {
     function receiveSystemMsg(info) {
 
         // 消息发送者和消息内容和消息类型
-        var system = "SYSTEM => ";
+        var system = "SYSTEM";
         var msg = info.args.message;
         var type = info.type;
+
+        var date = broadcastAction.getDate();
 
         // 添加DOM
         var $messageList = $('.message-list');
         var $messageItem =
             $('<div class="message-list-item message-list-item-system">');
 
-        $messageItem.text(system + msg);
+        var $PH = $('<p class="p-head p-head-system">').text(date + system);
+        var $PB = $('<p>').text(msg);
+        $messageItem
+            .append($PH)
+            .append($PB);
         $messageList.append($messageItem);
 
         // 滚到页面底部
@@ -414,9 +420,12 @@ broadcastAction.newMessageUpdate = function (info) {
         path = info.path,
         type = info.type;
 
+    var date = broadcastAction.getDate();
+
     // 选择方法
     var update = {
 
+        // 更新页面文本
         text: function () {
 
             // 添加DOM
@@ -424,24 +433,29 @@ broadcastAction.newMessageUpdate = function (info) {
             var $messageItem =
                 $('<div class="message-list-item message-list-item-user">');
 
-            $messageItem.text(from + '说: ' + msg);
+            var $PH = $('<p class="p-head">').text(date + from);
+            var $PB = $('<p>').text(msg);
+            $messageItem
+                .append($PH)
+                .append($PB);
+
             $messageList.append($messageItem);
             // 滚到页面底部
-            var div = document.getElementById('messageList');
-            div.scrollTop = div.scrollHeight;
+            window.scrollTo(0,document.body.scrollHeight);
         },
 
+        // 更新页面视频消息
         videos: function () {
 
             // 添加DOM
             var $messageList = $('.message-list');
             var $messageItem =
-                $('<div class="message-list-item">');
+                $('<div class="message-list-item message-list-item-user">');
 
             // 文本消息
             var $messageItemText =
-                $('<div class="message-list-item-text">');
-            $messageItemText.text(from + ': ')
+                $('<p class="p-head">');
+            $messageItemText.text(date + from)
                 .appendTo($messageItem);
 
             // 视频消息
@@ -457,54 +471,93 @@ broadcastAction.newMessageUpdate = function (info) {
             // 添加到页面
             $messageList.append($messageItem);
             // 滚到页面底部
-            var div = document.getElementById('messageList');
-            div.scrollTop = div.scrollHeight;
+            window.scrollTo(0,document.body.scrollHeight);
         },
 
+        // 更新页面音频消息
         audios: function () {
 
             // 添加DOM
             var $messageList = $('.message-list');
             var $messageItem =
-                $('<div class="message-list-item">');
+                $('<div class="message-list-item message-list-item-user">');
 
             // 文本消息
             var $messageItemText =
-                $('<div class="message-list-item-text">');
-            $messageItemText.text(from + ': ')
+                $('<div class="p-head">');
+            $messageItemText.text(date + from)
                 .appendTo($messageItem);
 
-            // 视频消息
-            var $messageItemAudio =
-                $('<audio class="message-list-item-audio">');
-            $messageItemAudio
+            // 音频消息, 默认是隐藏的, 是HTML5元素
+            var $audio =
+                $('<audio>');
+            // 媒体获取完毕后
+            $audio[0].addEventListener("loadedmetadata", function(){
+                var total = parseInt(this.duration);//获取总时长
+                $(this).attr('duration', total)
+                updateDuration();
+            });
+
+            $audio
                 .prop({
                     src: path,
-                    controls: 'controls'
+                    controls: 'controls',
+                    style: 'display: none'
                 })
+                .appendTo($messageItem);
+
+            // 音频DOM自定义元素
+            // 音频时长
+            // 获取节点对象而不是jQuery对象
+            var duration = $audio[0].duration;
+            var $audioDefine = $('<div class="audio-define">');
+            // 音频标志
+            var $audioSpan = $('<span class="glyphicon glyphicon-volume-up">');
+
+            // 把播放时间添加到DOM上去
+            function updateDuration() {
+                // 播放时长
+                var $duration = $('<div class="audio-duration">');
+                $duration.text($audio.attr('duration') + '\'\'');
+                $duration.appendTo($audioDefine);
+            }
+
+            // 绑定点击事件
+            $audioDefine.click(function () {
+                $(this).prop('class', 'audio-define audio-define-read');
+                if($audio[0].paused){
+                    $audio[0].play();
+                }else {
+                    $audio[0].pause();
+                }
+            });
+
+            // 添加音频消息
+            $audioDefine.append($audioSpan)
                 .appendTo($messageItem);
 
             // 添加到页面
             $messageList.append($messageItem);
+
             // 滚到页面底部
-            var div = document.getElementById('messageList');
-            div.scrollTop = div.scrollHeight;
+            window.scrollTo(0,document.body.scrollHeight);
         },
 
+        // 更新页面图片消息
         images: function () {
 
             // 添加DOM
             var $messageList = $('.message-list');
             var $messageItem =
-                $('<div class="message-list-item">');
+                $('<div class="message-list-item message-list-item-user">');
 
             // 文本消息
             var $messageItemText =
-                $('<div class="message-list-item-text">');
-            $messageItemText.text(from + ': ')
+                $('<p class="p-head">');
+            $messageItemText.text(date + from)
                 .appendTo($messageItem);
 
-            // 视频消息
+            // 图片消息
             var $messageItemVideo =
                 $('<img class="message-list-item-image">');
             $messageItemVideo
@@ -514,13 +567,21 @@ broadcastAction.newMessageUpdate = function (info) {
             // 添加到页面
             $messageList.append($messageItem);
             // 滚到页面底部
-            var div = document.getElementById('messageList');
-            div.scrollTop = div.scrollHeight;
+            window.scrollTo(0,document.body.scrollHeight);
         }
     };
 
     update[type]();
 
+};
+
+broadcastAction.getDate = function () {
+
+    var date = new Date();
+    var dateArray = [];
+    dateArray.push("[ ", date.getHours(), ":", date.getMinutes(), ":", date.getSeconds(), " ] ");
+
+    return dateArray.join('');
 };
 
 /* 模态弹窗 */
