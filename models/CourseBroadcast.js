@@ -48,6 +48,8 @@ function courseBroadcast(io){
         socket.on('join', join);
         // 监听来自客户端的消息
         socket.on('message', message);
+        // 存储上传的音频blob二进制
+        socket.on('record',record);
         // 文件开始上传信号
          socket.on('start', start);
         // 文件上传中
@@ -78,7 +80,7 @@ function courseBroadcast(io){
             socket.emit('systemMessage', {
                 msg: '欢迎加入房间!',
                 type: 'text',
-                from: 'system',
+                from: 'system'
             });
         };
 
@@ -103,6 +105,48 @@ function courseBroadcast(io){
                 type: 'text'
             });
         }
+
+        // 音频数据二进制存储
+        function record(info) {
+
+            console.log('record data recieving');
+
+            // 上传完成
+            if(info.action == 'uploadDone'){
+
+                var savePath = locateFromRoot('/temp/record/');
+                if(!fs.existsSync(savePath)){
+                    console.log('build dir.');
+                    fs.mkdirSync(savePath);
+                };
+
+                // 以追加方式打开磁盘文件用于上传准备工作
+                fs.open(savePath + 'record.mp3', 'a', 0755, function (err, fd) {
+
+                    if (err){
+                        console.log('[start] file open error: ' + err.toString());
+                    }else {
+                        Files['recorded'].handler = fd;
+                        fs.write(Files['recorded'].handler, Files['recorded'].data, null, 'binary',function (err, written) {
+
+                            delete Files['recorded'];
+                        });
+                    }
+
+                });
+
+                // 继续保存上传的录音数据
+            }else {
+
+                if(!Files['recorded']){
+                    Files['recorded'] = {};
+                    Files['recorded'].data = '';
+                }
+                Files['recorded'].data += info.data
+            }
+
+        }
+
         
         /* 文件开始上传信号 */
         function start(info) {
@@ -127,8 +171,8 @@ function courseBroadcast(io){
             console.log('name+size: ' + name + size);
 
             //正则匹配判断文件类型
-            var regVideo = /(mp4|flv|rmvb|wmv|mkv)/i,
-                regAudio = /(mp3|ape|wav|ogg|wma)/i,
+            var regVideo = /(mp4|flv|rmvb|wmv|mkv|avi)/i,
+                regAudio = /(mp3|ape|wav|ogg|wma|aac|flac)/i,
                 regImage = /(bmp|jpg|jpeg|svg|png|gif)/i;
 
             // 类型结尾

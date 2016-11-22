@@ -140,6 +140,9 @@ broadcastAction.pageEventBind = function () {
     // 当前课程名(也是直播间的名字)
     broadcastAction.courseName = $('.broadcast-room').text().trim();
 
+    // 检测getUserMedia
+    broadcastAction.getMediaData();
+
     // 上传事件绑定
     broadcastAction.upload = {
         setProgress: function (value) {
@@ -575,6 +578,80 @@ broadcastAction.newMessageUpdate = function (info) {
 
 };
 
+/* 获取浏览器媒体数据 */
+broadcastAction.getMediaData = function (type) {
+
+    // 检测浏览器是否支持相关的htmlAPI
+    // !!把undefined/NAN/null 转化成false
+    function hasGetUserMedia() {
+        return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia || navigator.msGetUserMedia);
+    }
+    // 获取失败
+    function noStream(err) {
+
+        if(err.PERMISSION_DENIED) {
+            broadcastAction.modalWindow('用户拒绝了浏览器请求媒体的权限');
+        } else if(err.NOT_SUPPORTED_ERROR) {
+            broadcastAction.modalWindow('constraint中指定的媒体类型不被支持');
+        } else if(err.MANDATORY_UNSATISFIED_ERROR) {
+            broadcastAction.modalWindow('指定的媒体类型未接收到媒体流');
+        }
+        console.log(err);
+    }
+
+    // 用户浏览器不支持
+    if(!hasGetUserMedia()){
+        return broadcastAction.modalWindow('你的浏览器不支持获取多媒体数据!');
+    }
+
+    window.URL = URL || window.URL || window.webkitURL;
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+    var audio = document.getElementById('audio');
+
+    // 获取的媒体数据限制
+    var mediaConstraints = { audio: true };
+
+    // 获取媒体数据
+    navigator.getUserMedia(mediaConstraints, function (stream) {
+
+        $('#stopRecord').click(function () {
+           mediaRecorder.stop();
+           broadcastAction.socket.emit('record', {
+               data: '',
+               action: 'uploadDone'
+           })
+        });
+        $('#pauseRecord').click(function () {
+           mediaRecorder.pause();
+        });
+        $('#resumeRecord').click(function () {
+           mediaRecorder.resume();
+        });
+
+        // 媒体录音对象 -- lib
+        var mediaRecorder = new MediaStreamRecorder(stream);
+        mediaRecorder.mimeType = 'audio/wav';
+        // 获取二进制大数据文件
+        // 这个方法极有可能是在操作之前缓存了的stream数据,
+        // 调用start后一直发送,间隔3秒,直到用户调用stop或是调用pause后继续录音resume
+        mediaRecorder.ondataavailable = function (blob) {
+
+            // socket传送到服务器
+            broadcastAction.socket.emit('record', {
+                data: blob,
+                action: 'uploading'
+            });
+        };
+        mediaRecorder.start(3000);
+
+    }, noStream);
+
+};
+
+/* 得到现在的日期 */
 broadcastAction.getDate = function () {
 
     var date = new Date();

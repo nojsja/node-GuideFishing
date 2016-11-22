@@ -10,10 +10,13 @@
     <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
     <link rel='stylesheet' href='/stylesheets/course_broadcast.css' />
 
-    <!--引入socket.io, 路劲是自动映射的-->
+    <!--引入socket.io, 路径是自动映射的-->
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
     <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
+    <!--引入msr用于处理获取到的音频流-->
+    <script type="text/javascript" src="/javascripts/lib/MediaStreamRecorder.js"></script>
+
     <script type="text/javascript" src="/javascripts/course_broadcast.js"></script>
 
 </head>
@@ -23,6 +26,13 @@
 <!--直播间-->
 <div class="broadcast-room box1">
     <%= broadcastRoom %>
+</div>
+
+<!--多媒体数据-->
+<div class="multi-media">
+    <button class="btn btn-danger" id="stopRecord">停止录音</button>
+    <button class="btn btn-success" id="pauseRecord">暂停录音</button>
+    <button class="btn btn-default" id="resumeRecord">继续录音</button>
 </div>
 
 <!--消息主体部分-->
