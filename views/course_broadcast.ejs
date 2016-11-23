@@ -14,8 +14,9 @@
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
     <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
-    <!--引入msr用于处理获取到的音频流-->
-    <script type="text/javascript" src="/javascripts/lib/MediaStreamRecorder.js"></script>
+    <!--处理音频流-->
+    <script type="text/javascript" src="/javascripts/lib/recorder.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/recorderWorker.js"></script>
 
     <script type="text/javascript" src="/javascripts/course_broadcast.js"></script>
 
@@ -28,12 +29,7 @@
     <%= broadcastRoom %>
 </div>
 
-<!--多媒体数据-->
-<div class="multi-media">
-    <button class="btn btn-danger" id="stopRecord">停止录音</button>
-    <button class="btn btn-success" id="pauseRecord">暂停录音</button>
-    <button class="btn btn-default" id="resumeRecord">继续录音</button>
-</div>
+<audio controls="controls" id="audio" src="/temp/record.wav"></audio>
 
 <!--消息主体部分-->
 <div class="container total" id="total">
@@ -46,7 +42,7 @@
 </div>
 
 <!--发送消息区域-->
-<div class="send-div">
+<div class="send-wrapper">
 
     <div class="message-div">
         <!--消息输入-->
@@ -58,9 +54,17 @@
 
     </div>
 
-    <!--发送媒体类型文件-->
-    <div class="file-send-div">
-        <span class="glyphicon glyphicon-folder-open" id="fileSend"></span>
+    <!--录音和文件上传-->
+    <div class="send-div">
+        <!--录音-->
+        <div class="record-div">
+            <!--录音/停止录音-->
+            <span class="glyphicon glyphicon-record" id="recordButton"></span>
+        </div>
+        <!--发送媒体类型文件-->
+        <div class="file-send-div">
+            <span class="glyphicon glyphicon-folder-open" id="fileSend"></span>
+        </div>
     </div>
 
     <!--文件上传进度条-->
@@ -71,6 +75,7 @@
     </div>
 
     <input type="file" id="fileChoose">
+
 </div>
 
 <!--页脚-->

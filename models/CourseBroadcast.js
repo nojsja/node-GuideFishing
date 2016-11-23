@@ -112,39 +112,41 @@ function courseBroadcast(io){
             console.log('record data recieving');
 
             // 上传完成
-            if(info.action == 'uploadDone'){
 
-                var savePath = locateFromRoot('/temp/record/');
-                if(!fs.existsSync(savePath)){
-                    console.log('build dir.');
-                    fs.mkdirSync(savePath);
+            if(!Files['recorded']){
+                Files['recorded'] = {
+                    data: ''
                 };
-
-                // 以追加方式打开磁盘文件用于上传准备工作
-                fs.open(savePath + 'record.mp3', 'a', 0755, function (err, fd) {
-
-                    if (err){
-                        console.log('[start] file open error: ' + err.toString());
-                    }else {
-                        Files['recorded'].handler = fd;
-                        fs.write(Files['recorded'].handler, Files['recorded'].data, null, 'binary',function (err, written) {
-
-                            delete Files['recorded'];
-                        });
-                    }
-
-                });
-
-                // 继续保存上传的录音数据
-            }else {
-
-                if(!Files['recorded']){
-                    Files['recorded'] = {};
-                    Files['recorded'].data = '';
-                }
-                Files['recorded'].data += info.data
             }
 
+            Files['recorded'].data += info.data;
+
+            console.log(info.data);
+            console.log((info.data).length);
+
+            var savePath = locateFromRoot('/public/temp/');
+            if(!fs.existsSync(savePath)){
+                console.log('build dir.');
+                fs.mkdirSync(savePath);
+            };
+
+            // 以追加方式打开磁盘文件用于上传准备工作
+            fs.open(savePath + 'record.wav', 'a', 0755, function (err, fd) {
+
+                if (err){
+                    console.log('[start] file open error: ' + err.toString());
+                }else {
+                    Files['recorded'].handler = fd;
+                    fs.write(Files['recorded'].handler, Files['recorded'].data, null, 'binary',function (err, written) {
+
+                        delete Files['recorded'];
+                        fs.close(fd, function () {
+                           console.log('done');
+                        });
+                    });
+                }
+
+            });
         }
 
         

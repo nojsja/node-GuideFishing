@@ -19,7 +19,15 @@ function course_broadcast(app) {
     // 获取课程直播数据
     app.post('/course/broadcast', function (req, res) {
 
+        
+    });
+    
+    // 获取测试页面
+    app.get('/recordTest', function (req, res) {
 
+        res.render('recordTest', {
+
+        });
     });
 }
 

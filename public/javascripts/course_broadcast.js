@@ -28,12 +28,15 @@ $(function () {
  * file -- origin 未转换前的文件, data -- 转换后即将上传的文件, type -- 文件类型
  * upload -- 文件上传相关
  * reader -- 文件读取对象fileReader
+ * record -- 录音对象,
+ * status -- 录音状态
  * */
 
 var broadcastAction = {
 
     socket: {},
     courseName: "",
+
     message: {
         send: {
             value: {},
@@ -48,6 +51,7 @@ var broadcastAction = {
             trigger: function () {}
         }
     },
+
     file: {
         reader: {},
         origin: "",
@@ -57,6 +61,10 @@ var broadcastAction = {
             hidden: function () {},
             show: function () {}
         }
+    },
+
+    record: {
+        status: ""
     }
 };
 
@@ -140,11 +148,11 @@ broadcastAction.pageEventBind = function () {
     // 当前课程名(也是直播间的名字)
     broadcastAction.courseName = $('.broadcast-room').text().trim();
 
-    // 检测getUserMedia
-    broadcastAction.getMediaData();
+    // 获取音频事件
+    broadcastAction.getMediaDataInit();
 
     // 上传事件绑定
-    broadcastAction.upload = {
+    broadcastAction.file.upload = {
         setProgress: function (value) {
             // 更新页面进度条
             $('.progress-bar').css('width', value);
@@ -319,7 +327,7 @@ broadcastAction.watcherActive = function () {
     function uploadDone(info) {
 
         // 更新页面进度条
-        broadcastAction.upload.setProgress('100%')
+        broadcastAction.file.upload.setProgress('100%')
             .hidden();
         // 清除缓存
         broadcastAction.file.reader = null;
@@ -343,8 +351,8 @@ broadcastAction.watcherActive = function () {
         var currentFile = broadcastAction.file.origin;
 
         // 更新页面进度条
-        broadcastAction.upload.show();
-        broadcastAction.upload.setProgress(percent);
+        broadcastAction.file.upload.show();
+        broadcastAction.file.upload.setProgress(percent);
 
         // 裁切文件并兼容浏览器
         if(currentFile.slice){
@@ -579,75 +587,104 @@ broadcastAction.newMessageUpdate = function (info) {
 };
 
 /* 获取浏览器媒体数据 */
-broadcastAction.getMediaData = function (type) {
+broadcastAction.getMediaDataInit = function (type) {
 
-    // 检测浏览器是否支持相关的htmlAPI
-    // !!把undefined/NAN/null 转化成false
-    function hasGetUserMedia() {
-        return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia || navigator.msGetUserMedia);
-    }
-    // 获取失败
-    function noStream(err) {
+    // 初始化录音按钮
+    var $recordButton = $('#recordButton');
+    // 绑定事件
+    $recordButton.click(function () {
 
-        if(err.PERMISSION_DENIED) {
-            broadcastAction.modalWindow('用户拒绝了浏览器请求媒体的权限');
-        } else if(err.NOT_SUPPORTED_ERROR) {
-            broadcastAction.modalWindow('constraint中指定的媒体类型不被支持');
-        } else if(err.MANDATORY_UNSATISFIED_ERROR) {
-            broadcastAction.modalWindow('指定的媒体类型未接收到媒体流');
+        if(broadcastAction.record.status == ""){
+            // 当前未录音
+            broadcastAction.record.status = "none";
         }
-        console.log(err);
+        // 如果正在录音
+        if(broadcastAction.record.status == "none"){
+            $(this).attr('class', 'glyphicon glyphicon-off recording');
+            broadcastAction.record.status = "recording";
+            startRecord();
+        }else {
+            $(this).attr('class', 'glyphicon glyphicon-record');
+            broadcastAction.record.status = "none";
+            stopRecord();
+        }
+    });
+
+    // 录音对象
+    var Record = {
+        blobData: "",
+        recorder: {},
+        getUserMedia: {},
+        audioContext: new AudioContext,
+        mediaConstraints: { audio: true }
+    };
+
+    // 初始化数据
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+
+    navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia ||
+    navigator.mozGetUserMedia || navigator.msGetUserMedia);
+
+    // 开始录音
+    function startRecord() {
+        // 用户浏览器不支持
+        if(!hasGetUserMedia()){
+            return broadcastAction.modalWindow('你的浏览器不支持获取多媒体数据!');
+        }
+
+        // 开始获取媒体数据
+        navigator.getUserMedia(Record.mediaConstraints, startUserMedia, noStream);
+
+        function startUserMedia(stream) {
+
+            var input = Record.audioContext.createMediaStreamSource(stream);
+
+            input.connect(Record.audioContext.destination);
+
+            Record.recorder = new Recorder(input);
+            // 录制
+            Record.recorder.record();
+        }
+
+        // 检测浏览器是否支持相关的htmlAPI, !!把undefined/NAN/null 转化成false
+        function hasGetUserMedia() {
+            return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia || navigator.msGetUserMedia);
+        }
+
+        // 获取失败
+        function noStream(err) {
+
+            if(err.PERMISSION_DENIED) {
+                broadcastAction.modalWindow('用户拒绝了浏览器请求媒体的权限');
+            } else if(err.NOT_SUPPORTED_ERROR) {
+                broadcastAction.modalWindow('constraint中指定的媒体类型不被支持');
+            } else if(err.MANDATORY_UNSATISFIED_ERROR) {
+                broadcastAction.modalWindow('指定的媒体类型未接收到媒体流');
+            }
+            console.log(err);
+        }
     }
+    
+    // 停止录音再上传
+    function stopRecord() {
 
-    // 用户浏览器不支持
-    if(!hasGetUserMedia()){
-        return broadcastAction.modalWindow('你的浏览器不支持获取多媒体数据!');
-    }
+        Record.recorder.stop();
+        // 导出成二进制数据文件
+        Record.recorder.exportWAV(function(blob) {
 
-    window.URL = URL || window.URL || window.webkitURL;
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia || navigator.msGetUserMedia;
-
-    var audio = document.getElementById('audio');
-
-    // 获取的媒体数据限制
-    var mediaConstraints = { audio: true };
-
-    // 获取媒体数据
-    navigator.getUserMedia(mediaConstraints, function (stream) {
-
-        $('#stopRecord').click(function () {
-           mediaRecorder.stop();
-           broadcastAction.socket.emit('record', {
-               data: '',
-               action: 'uploadDone'
-           })
-        });
-        $('#pauseRecord').click(function () {
-           mediaRecorder.pause();
-        });
-        $('#resumeRecord').click(function () {
-           mediaRecorder.resume();
-        });
-
-        // 媒体录音对象 -- lib
-        var mediaRecorder = new MediaStreamRecorder(stream);
-        mediaRecorder.mimeType = 'audio/wav';
-        // 获取二进制大数据文件
-        // 这个方法极有可能是在操作之前缓存了的stream数据,
-        // 调用start后一直发送,间隔3秒,直到用户调用stop或是调用pause后继续录音resume
-        mediaRecorder.ondataavailable = function (blob) {
-
-            // socket传送到服务器
+            window.URL = window.URL || window.webkitURL;
+            var audioSrc = (window.URL).createObjectURL(blob);
+            console.log(audioSrc);
+            $('#audio').prop('src', audioSrc);
+            Record.blobData = blob;
             broadcastAction.socket.emit('record', {
-                data: blob,
-                action: 'uploading'
+                action: "upload",
+                data: Record.blobData
             });
-        };
-        mediaRecorder.start(3000);
-
-    }, noStream);
+            Record.recorder.clear();
+        });
+    }
 
 };
 
