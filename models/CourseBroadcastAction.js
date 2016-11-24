@@ -12,17 +12,19 @@ var locateFromRoot = require('./tools/LocateFromRoot');
 var fs = require('fs');
 
 // 课程直播模块
-function courseBroadcast(io){
+function courseBroadcastAction(io){
 
-    // 保存所有聊天室房间的数组
+    // 保存所有聊天室房间的组数
     var roomUser = [];
 
     // 客户端新建连接
     io.on('connection', function (socket) {
+        // 客户端的socket对象在断开后会自动重连,
+        // 也就是说只需要保存服务器端的socket连接信息
 
+        console.log('new socket connection coming...');
         // 该客户端上传的文件
         var Files = {};
-        console.log('new socket connection coming...');
         try {
             // 获取当前用户连接的url进一步获取url房间号
             var url = socket.request.headers.referer;
@@ -39,7 +41,6 @@ function courseBroadcast(io){
             console.log(e);
         }
 
-
         // 用户姓名
         var user = '匿名';
 
@@ -48,7 +49,7 @@ function courseBroadcast(io){
         socket.on('join', join);
         // 监听来自客户端的消息
         socket.on('message', message);
-        // 存储上传的音频blob二进制
+        // 客户端录音上传
         socket.on('record',record);
         // 文件开始上传信号
          socket.on('start', start);
@@ -111,19 +112,39 @@ function courseBroadcast(io){
 
             console.log('record data recieving');
 
-            // 上传完成
+            // 创建录音数据
+            var recordData = {
+                base64Data: info.base64Data,
+                index: info.index,
+                courseName: info.courseName,
+                action: info.action
+            };
 
-            if(!Files['recorded']){
-                Files['recorded'] = {
+            if(Files[recordData.courseName]){
+                Files[recordData.courseName].record = {
                     data: ''
                 };
+            }else {
+                console.log('[record init]: roomId/courseName not found -- ' + recordData.courseName);
             }
 
-            Files['recorded'].data += info.data;
+            // 组合替换字符串 [data:audio/wav;base64,]base64编码前缀
+            var base64String = '' + recordData.base64Data;
+            base64String = base64String.replace('data:audio/wav;base64,', '');
 
-            console.log(info.data);
-            console.log((info.data).length);
+            // base64编码的字符串
+            Files['recorded'].data = base64String;
 
+            // 将字符串转化成buffer
+            var buffer = new Buffer(base64String, 'base64'),
+            // buffer的写入长度
+            bufferLength = buffer.length,
+            // 文件的写入位置
+            filePosition = null,
+            // buffer的起始位置
+            bufferPosition = 0;
+
+            // 存储路径
             var savePath = locateFromRoot('/public/temp/');
             if(!fs.existsSync(savePath)){
                 console.log('build dir.');
@@ -136,13 +157,23 @@ function courseBroadcast(io){
                 if (err){
                     console.log('[start] file open error: ' + err.toString());
                 }else {
+                    // 拿到文件描述符
                     Files['recorded'].handler = fd;
-                    fs.write(Files['recorded'].handler, Files['recorded'].data, null, 'binary',function (err, written) {
+                    fs.write(Files['recorded'].handler,
+                        buffer,
+                        bufferPosition,
+                        bufferLength,
+                        filePosition,
 
-                        delete Files['recorded'];
-                        fs.close(fd, function () {
-                           console.log('done');
-                        });
+                        function (err, written) {
+
+                            if(err){
+                                console.log('[file write]: ' + err);
+                            }
+                            delete Files['recorded'];
+                            fs.close(fd, function () {
+                               console.log('done');
+                            });
                     });
                 }
 
@@ -323,4 +354,4 @@ function courseBroadcast(io){
     });
 }
 
-module.exports = courseBroadcast;
+module.exports = courseBroadcastAction;

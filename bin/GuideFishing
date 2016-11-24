@@ -7,7 +7,7 @@
 // 基于node.js封装好的websocket库
 var socketIo = require('socket.io');
 // 引入courseBroadcast模式
-var courseBroadcast = require('../models/CourseBroadcast');
+var courseBroadcastAction = require('../models/CourseBroadcastAction');
 
 var app = require('../app');
 var debug = require('debug')('node-GuideFishing:server');
@@ -29,7 +29,7 @@ var server = http.createServer(app);
 // 开启websocket端口监听
 var io = socketIo(server);
 // 导入模式
-courseBroadcast(io);
+courseBroadcastAction(io);
 
 /**
  * Listen on provided port, on all network interfaces.

@@ -324,7 +324,7 @@ broadcastAction.watcherActive = function () {
     broadcastAction.message.received.listen('uploadDone', uploadDone);
 
     // 上传完成
-    function uploadDone(info) {
+    function uploadDone() {
 
         // 更新页面进度条
         broadcastAction.file.upload.setProgress('100%')
@@ -610,18 +610,26 @@ broadcastAction.getMediaDataInit = function (type) {
         }
     });
 
-    // 录音对象
+    /** 录音对象
+     * index -- 目前录音文件的索引
+     * blobData -- 获取到的二进制大对象
+     * recorder -- 处理录音的对象
+     * audioContext -- 管理和播放声音的对象
+     * mediaConstraints -- 获取媒体的类型限制
+     * fileReader -- 文件读取api
+     * courseName -- 录音所属的课程
+     **/
     var Record = {
+        courseName: broadcastAction.courseName,
+        index: 1,
         blobData: "",
         recorder: {},
-        getUserMedia: {},
-        audioContext: new AudioContext,
-        mediaConstraints: { audio: true }
+        audioContext: new AudioContext || new webkitAudioContext(),
+        mediaConstraints: { audio: true },
+        fileReader: new FileReader()
     };
 
-    // 初始化数据
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-
+    // 获取媒体数据接口
     navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia ||
     navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
@@ -637,9 +645,11 @@ broadcastAction.getMediaDataInit = function (type) {
 
         function startUserMedia(stream) {
 
+            // 创建一个媒体声音源
             var input = Record.audioContext.createMediaStreamSource(stream);
 
-            input.connect(Record.audioContext.destination);
+            // 回送环,将该音源和硬件相连
+            // input.connect(Record.audioContext.destination);
 
             Record.recorder = new Recorder(input);
             // 录制
@@ -666,23 +676,43 @@ broadcastAction.getMediaDataInit = function (type) {
         }
     }
     
-    // 停止录音再上传
+    // 停止录音并且上传base64编码的字符串
     function stopRecord() {
 
         Record.recorder.stop();
         // 导出成二进制数据文件
         Record.recorder.exportWAV(function(blob) {
 
-            window.URL = window.URL || window.webkitURL;
-            var audioSrc = (window.URL).createObjectURL(blob);
-            console.log(audioSrc);
-            $('#audio').prop('src', audioSrc);
-            Record.blobData = blob;
-            broadcastAction.socket.emit('record', {
-                action: "upload",
-                data: Record.blobData
-            });
-            Record.recorder.clear();
+            // 使用浏览器进行base64编码, 默认是audio/wav
+            Record.fileReader.readAsDataURL(blob);
+            // 读取成功
+            Record.fileReader.onload = function (event) {
+
+                console.log('base64 read success.');
+                // 取得编号后的数据
+                Record.base64Data = this.result || event.target.result;
+
+                // 向服务器发送数据
+                broadcastAction.socket.emit('record', {
+
+                    action: "upload",
+                    base64Data: Record.base64Data,
+                    index: Record.index,
+                    courseName: Record.courseName
+                });
+                // 音频编号+1
+                Record.index += 1;
+                // 释放recorder
+                Record.recorder.clear();
+            };
+
+            //读取失败
+            Record.fileReader.onerror = function (e) {
+
+                broadcastAction.modalWindow('[audio read error]: ' + e);
+                Record.recorder.clear();
+            };
+
         });
     }
 
