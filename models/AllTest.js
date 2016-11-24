@@ -4,8 +4,11 @@
  * 比如评测题目的录入,查找,删除,更新等等
  */
 
-var mongoose = require('mongoose');
+var mongoose = require('./tools/Mongoose');
 var testSchema = require('./db_schema/test_schema.js').testSchema;
+
+/* promise 控制流程 */
+var Q = require('q');
 
 /* 构造函数 */
 function AllTest(testGroup) {
@@ -15,45 +18,35 @@ function AllTest(testGroup) {
 
 /* 存储一组题目数据 */
 AllTest.prototype.save = function (callback) {
+
     var testGroup = this.testGroup;
-    var db = mongoose.connect('mongodb://localhost/GuideFishing');
+    var db = mongoose.connection;
     var Tests = mongoose.model('Tests', testSchema);
 
-    console.log('before open.');
-    //连接打开后
-    mongoose.connection.once('open', function () {
-        console.log('open');
-        var newTestMode = new Tests(testGroup);
-        newTestMode.save(function (err, doc) {
-            if(err) {
-                console.log(err);
-                mongoose.disconnect();
-                return callback(true);
-            }
-            mongoose.disconnect();
-            callback(false);
-        });
+    var newTestMode = new Tests(testGroup);
+    newTestMode.save(function (err, doc) {
+        if(err) {
+            console.log(err);
+            return callback(true);
+        }
+        callback(false);
     });
 };
 
 /* 读取一组题目的信息 */
 AllTest.getDetail = function (docCondition, callback) {
 
-    var db = mongoose.connect('mongodb://localhost/GuideFishing');
+    var db = mongoose.connection;
     var Tests = mongoose.model('Tests', testSchema);
-    mongoose.connection.once('open', function () {
 
-        var query = Tests.findOne();
-        query.where(docCondition);
-        query.exec(function (err, doc) {
-            if(err) {
-                mongoose.disconnect();
-                return callback(err);
-            }
-            //成功返回
-            callback(null, doc);
-            mongoose.disconnect();
-        });
+    var query = Tests.findOne();
+    query.where(docCondition);
+    query.exec(function (err, doc) {
+        if(err) {
+            return callback(err);
+        }
+        //成功返回
+        callback(null, doc);
     });
 };
 
@@ -62,9 +55,10 @@ AllTest.getDetail = function (docCondition, callback) {
 * testTitle, tesetType, abstract, date*/
 AllTest.readList = function (docCondition, callback) {
 
-    var db = mongoose.connect('mongodb://localhost/GuideFishing');
+    // defer 要放在局部范围内, 不然会变成全局变量
+    var defer = Q.defer();
+    var db = mongoose.connection;
     var Tests = mongoose.model('Tests', testSchema);
-    mongoose.connection.once('open', function () {
 
         //需要读取的文档的查询条件
         var condition = {};
@@ -102,36 +96,71 @@ AllTest.readList = function (docCondition, callback) {
             }
         }
 
-        console.log('limit: ' + number);
-        console.log('skip: ' + skipNum);
-        console.log('select: ' + JSON.stringify(select));
-        console.log(JSON.stringify(condition));
+        // 控制流程
+        defer.promise
 
-        var query = Tests.find().where(condition);
-        if(testTypeArray.length > 0){
-            console.log(testArray.length);
-            query.in('testType', testTypeArray);
-        }
-        query.limit(number);
-        //定制选择读取的类型
-        query.select(select);
-        query.skip(skipNum);
-        query.sort({date: -1});
-        //执行查询
-        query.exec(function (err, docs) {
-            if(err){
-                mongoose.disconnect();
-                return callback(err);
-            }
-            for(var i in docs) {
-                testArray.push(docs[i]);
-            }
-            mongoose.disconnect();
-            //返回对象数组
-            callback(null, testArray);
+            .then(function (info) {
+
+                return info;
+
+            })
+            .then(function (info) {
+
+                Tests.count({}, function (err, count) {
+                    if(err){
+                        console.log(err);
+                        return callback(err);
+                    }
+                    console.log('defer 1 count:　' + count);
+                    // 大于等于则直接返回
+                    if(info.skipNum >= count){
+                        return callback(null, info.testArray);
+                    }
+
+                    console.log('limit: ' + info.number);
+                    console.log('skip: ' + info.skipNum);
+                    console.log('select: ' + JSON.stringify(info.select));
+                    console.log('query condition: ' + JSON.stringify(info.condition));
+
+                    var query = Tests.find().where(info.condition);
+                    if(info.testTypeArray.length > 0){
+                        console.log(info.testArray.length);
+                        query.in('testType', info.testTypeArray);
+                    }
+                    query.limit(info.number);
+                    //定制选择读取的类型
+                    query.select(info.select);
+                    // 跳过数量不能超出,否则会报错
+                    query.skip(info.skipNum);
+                    query.sort({date: -1});
+                    //执行查询
+                    query.exec(function (err, docs) {
+
+                        if(err){
+                            return callback(err);
+                        }
+                        for(var i in docs) {
+                            info.testArray.push(docs[i]);
+                        }
+                        console.log('length: ' + info.testArray.length);
+                        //返回对象数组
+                        callback(null, info.testArray);
+                    });
+
+                });
+
+            }).done();
+
+        // 开始有序化处理
+        defer.resolve({
+            number: number,
+            skipNum: skipNum,
+            select: select,
+            condition: condition,
+            testArray: testArray,
+            testTypeArray: testTypeArray
         });
 
-    });
 };
 
 /* 删除一个文档 */
@@ -139,25 +168,22 @@ AllTest.deleteOneDoc = function (docCondition, callback) {
 
     //多个判断依据
     var condition = docCondition;
-    var db = mongoose.connect('mongodb://localhost/GuideFishing');
+    var db = mongoose.connection;
     var Tests = mongoose.model('Tests', testSchema);
-    mongoose.connection.once('open', function () {
-        var query = Tests.findOne().where(condition);
-        query.exec(function (err, doc) {
+
+    var query = Tests.findOne().where(condition);
+    query.exec(function (err, doc) {
+        if(err){
+            return callback(err);
+        }
+        doc.remove(function (err, deleteDoc) {
             if(err){
-                mongoose.disconnect();
                 return callback(err);
             }
-            doc.remove(function (err, deleteDoc) {
-                if(err){
-                    mongoose.disconnect();
-                    return callback(err);
-                }
-                mongoose.disconnect();
-                return callback(null);
-            });
+            return callback(null);
         });
     });
+
 };
 
 /* 删除多个文档 */
@@ -165,23 +191,21 @@ AllTest.deleteSomeDoc = function (docsCondition, callback) {
 
     //多个判断依据
     var condition = docsCondition;
-    var db = mongoose.connect('mongodb://localhost/GuideFishing');
+    var db = mongoose.connection;
     var Tests = mongoose.model('Tests', testSchema);
-    mongoose.connection.once('open', function () {
-        var query = Tests.remove();
-        //删除条件
-        query.where(condition);
-        query.exec(function (err, results) {
-            if(err){
-                mongoose.disconnect();
-                return callback(err);
-            }
-            //成功删除
-            console.log('%d Documents deleted.', results);
-            mongoose.disconnect();
-            callback(null);
-        })
+
+    var query = Tests.remove();
+    //删除条件
+    query.where(condition);
+    query.exec(function (err, results) {
+        if(err){
+            return callback(err);
+        }
+        //成功删除
+        console.log('%d Documents deleted.', results);
+        callback(null);
     });
+
 }
 
 module.exports = AllTest;

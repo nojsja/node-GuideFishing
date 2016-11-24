@@ -7,17 +7,19 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var format = require('util').format;
 var bodyParser = require('body-parser');
-//定时器
+
+// 定时器
 var schedule = require('node-schedule');
-//持久化session信息
-var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
-//数据库定时器
+
+//数据库定时任务
 var MongoSchedule = require('./models/MongoSchedule.js');
-//项目设置
-var settings = require('./settings');
+
+// 初始化数据库
+// 引入的时候模块就已经被初始化了
+var Mongoose = require('./models/tools/Mongoose');
+// 引入MongoSession
+var MongoSession = require('./models/tools/MongoSession');
 
 /* 引入路由 */
 var test_index = require('./routes/test_index');
@@ -26,6 +28,7 @@ var test_admin = require('./routes/test_admin');
 var recruitment = require('./routes/recruitment');
 var course = require('./routes/course');
 var course_admin = require('./routes/course_admin');
+var course_broadcast = require('./routes/course_broadcast');
 
 var app = express();
 
@@ -41,21 +44,8 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//session持久化
-app.use(session({
-        secret: settings.cookieSecret,
-        key:settings.db,
-        cookie:{
-            maxAge:1000*60*60*24*3,
-            secure: false
-        },
-        store: new MongoStore(
-            {url:format("mongodb://%s:%s@%s:%s/%s",settings.user, settings.password, settings.host, settings.port, settings.db)}
-        ),
-        resave: false,
-        saveUninitialized: true
-    }
-));
+// session 持久化
+MongoSession(app);
 
 //建立路由规则
 test_index(app);
@@ -64,6 +54,7 @@ test_admin(app);
 recruitment(app);
 course(app);
 course_admin(app);
+course_broadcast(app);
 
 //node-schedule定时执行任务,更新popolar表,每天的凌晨零点
 var rule = new schedule.RecurrenceRule()

@@ -4,7 +4,13 @@
  * 包括图片, 音频和视频数据
  */
 
-var mongoose = require('mongoose');
+// mongodb config
+var MongoConfig = require('../MongoConfig');
+// 使用promise/defer控制异步流程
+var Q = require('q');
+// 包装Mongoose对象
+var Mongoose = require('./tools/Mongoose');
+
 // 图片模式
 var imageSchema = require('./db_schema/image_schema').imageSchema;
 // 音频模式
@@ -29,7 +35,7 @@ function CourseUploadData(type, data) {
             this.typeStorage['file'].schema;
         // 模型名字
         this.model = this.typeStorage[this.mediaType].model ||
-                this.typeStorage['file'].model;
+            this.typeStorage['file'].model;
     }else {
         return new CourseUploadData(type, data);
     }
@@ -38,29 +44,52 @@ function CourseUploadData(type, data) {
 /* 将多媒体数据存储到数据库 */
 CourseUploadData.prototype.save = function (callback) {
 
+    // 注意程序异步控制
+    var defer = Q.defer();
+
+    // 数据模式
     var data = this.data;
     var schema = this.schema;
     var model = this.model;
 
-    var db = mongoose.connect('mongodb://localhost/GuideFishing');
-    var Model = mongoose.model(model, schema);
-    
-    mongoose.connection.once('open', function () {
+    /* 流程控制 */
+    defer.promise
+        .then(function (dbData) {
 
-        console.log('mongodb open.');
-        var newMode = new Model(data);
-        newMode.save(function (err, doc) {
-            if(err){
-                console.log(err);
-                mongoose.disconnect();
-                return callback(err);
-            }
-            console.log('mongodb success.');
-            // 成功返回
-            mongoose.disconnect();
-            return callback(null);
-        });
+            dbData.mongoose = Mongoose;
+            return dbData;
+        })
+        .then(function (dbData) {
+
+            dbData.db = Mongoose.connection;
+            return dbData;
+        })
+        .then(function (dbInfo) {
+
+            var db = dbInfo.db;
+            var mongoose = dbInfo.mongoose;
+
+            var Model = mongoose.model(dbInfo.model, dbInfo.schema);
+
+            var newMode = new Model(dbInfo.data);
+            newMode.save(function (err, doc) {
+                if(err){
+                    console.log(err);
+                    return callback(err);
+                }
+                console.log('mongodb success.');
+                callback(null);
+            });
+
+        }).done();
+
+    // 触发链式回调
+    defer.resolve({
+        data: data,
+        schema: schema,
+        model: model
     });
+
 };
 
 /* 存储对象信息映射 */
@@ -98,94 +127,42 @@ CourseUploadData.previewData = function (condition, callback) {
     var type = condition.type;
     var dataArray = [];
 
-    // 数据库信息
+    // 引入已经建立连接的mongoose
+    var db = Mongoose.connection;
+    var mongoose = Mongoose;
+
+    // 数据库连接信息
     var modelName = CourseUploadData.prototype.typeStorage[type].model;
     var schema = CourseUploadData.prototype.typeStorage[type].schema;
 
     previewCondition.courseName = condition.courseName;
 
-    var db = mongoose.connect('mongodb://localhost/GuideFishing');
     var model = mongoose.model(modelName, schema);
 
-    mongoose.connection.once('open', function () {
-
-        var query = model.find();
-        query.where(previewCondition);
-        /* 选择对象的名字和地址 */
-        query.select({
-            name: 1,
-            url: 1
-        });
-        query.exec(function (err, docs) {
-            if(err){
-                console.log(err);
-                mongoose.disconnect();
-                return callback(err, null);
-            }
-            console.log("数据长度:" + docs.length);
-            // 遍历筛选数据
-            for(var index in docs){
-                var doc = docs[index];
-                dataArray.push({
-                    name: doc.name,
-                    url: doc.url
-                });
-            }
-            mongoose.disconnect();
-            callback(null, dataArray);
-        });
+    var query = model.find();
+    query.where(previewCondition);
+    /* 选择对象的名字和地址 */
+    query.select({
+        name: 1,
+        url: 1
     });
+    query.exec(function (err, docs) {
+        if(err){
+            console.log(err);
+            return callback(err, null);
+        }
+        console.log("数据长度:" + docs.length);
+        // 遍历筛选数据
+        for(var index in docs){
+            var doc = docs[index];
+            dataArray.push({
+                name: doc.name,
+                url: doc.url
+            });
+        }
+        callback(null, dataArray);
+    });
+
 };
 
 module.exports = CourseUploadData;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

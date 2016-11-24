@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="description" content="带渔课程直播系统" />
+    <meta name="keywords" content="course-broadcast" />
+
+    <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel='stylesheet' href='/stylesheets/course_broadcast.css' />
+
+    <!--引入socket.io, 路径是自动映射的-->
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
+    <!--处理音频流-->
+    <script type="text/javascript" src="/javascripts/lib/recorder.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/recorderWorker.js"></script>
+
+    <script type="text/javascript" src="/javascripts/course_broadcast.js"></script>
+
+</head>
+
+<body>
+
+<!--直播间-->
+<div class="broadcast-room box1">
+    <%= broadcastRoom %>
+</div>
+
+<!--消息主体部分-->
+<div class="container total" id="total">
+    <!--用户名-->
+    <div id="name"></div>
+    <!--消息列表-->
+    <div class="message-list" id="messageList">
+
+    </div>
+</div>
+
+<!--发送消息区域-->
+<div class="send-wrapper">
+
+    <div class="message-div">
+        <!--消息输入-->
+        <div class="message-input-div input-group">
+            <input type="text" class="form-control" id="messageInput">
+            <span type="button" class="btn btn-success input-group-addon" id="messageSend">发送</span>
+        </div>
+
+
+    </div>
+
+    <!--录音和文件上传-->
+    <div class="send-div">
+        <!--录音-->
+        <div class="record-div">
+            <!--录音/停止录音-->
+            <span class="glyphicon glyphicon-record" id="recordButton"></span>
+        </div>
+        <!--发送媒体类型文件-->
+        <div class="file-send-div">
+            <span class="glyphicon glyphicon-folder-open" id="fileSend"></span>
+        </div>
+    </div>
+
+    <!--文件上传进度条-->
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="60"
+             aria-valuemin="0" aria-valuemax="100" style="width: 0;">
+        </div>
+    </div>
+
+    <input type="file" id="fileChoose">
+
+</div>
+
+<!--页脚-->
+<%include footer.ejs%>
+<!--模态弹窗-->
+<%include modalWindow.ejs%>
+
+</body>

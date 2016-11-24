@@ -12,7 +12,7 @@
  * 对应一种类型结果,可以自定义任意多种子类型,每个得分分值可以自己定义
  */
 
-var mongoose = require('mongoose');
+var mongoose = require('./tools/Mongoose');
 var testSchema = require('./db_schema/test_schema.js').testSchema;
 
 /* 创建工厂方法 */
@@ -77,10 +77,9 @@ scoreFactory.prototype = {
 scoreFactory.getScoreModeInfo = function (condition, callback) {
 
     //连接数据库准备
-    var db = mongoose.connect('mongodb://localhost/GuideFishing');
+    var db = mongoose.connection;
     var Tests = mongoose.model('Tests', testSchema);
-    //打开数据库连接
-    mongoose.connection.once('open', function () {
+
         var query = Tests.findOne();
         //筛选条件
         query.where(condition);
@@ -95,11 +94,9 @@ scoreFactory.getScoreModeInfo = function (condition, callback) {
         query.exec(function (err, doc) {
             if(err){
                 console.log("getScoreModeInfo error");
-                mongoose.disconnect();
                 //返回空值,表示服务器内部错误
                 return callback();
             }
-            mongoose.disconnect();
             //返回需要的评测依赖信息
             callback({
                 scoreMode: doc.scoreMode,
@@ -109,7 +106,6 @@ scoreFactory.getScoreModeInfo = function (condition, callback) {
             });
 
         });
-    });
 };
 
 /* Common算法的得分计算方式 */

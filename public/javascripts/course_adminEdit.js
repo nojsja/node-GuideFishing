@@ -52,6 +52,13 @@ var editAction = {
         info: {
             courseName: "",
             courseType: "",
+            isReady: false,
+            courseOrigin:{
+                videos: [],
+                images: [],
+                audios: [],
+                texts: []
+            },
             courseAbstract: "",
             courseContent: "",
             teacher: "",
@@ -195,6 +202,8 @@ editAction.pageEventBind = function () {
             {
                 courseName: editAction.course.info.courseName,
                 courseType: editAction.course.info.courseType,
+                isReady: editAction.course.info.isReady,
+                courseOrigin: editAction.course.info.courseOrigin,
                 courseAbstract: editAction.course.info.courseAbstract,
                 courseContent: editAction.course.info.courseContent,
                 teacher: editAction.course.info.teacher,

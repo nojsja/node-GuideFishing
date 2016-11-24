@@ -1,0 +1,42 @@
+<!-- 课程管理员登录页面-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel='stylesheet' href='/stylesheets/course_broadcastAdmin.css' />
+
+    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/course_broadcastAdmin.js"></script>
+</head>
+<body>
+
+<!--主要部分-->
+<div class="container total">
+
+    <!--登录表单-->
+    <form>
+        <fieldset>
+            <legend>管理员登录</legend>
+            <!--账户名-->
+            <div class="form-group">
+                <label class="form-control">账户</label>
+                <input type="text" class="form-control" id="account"
+                       placeholder="请输入用户名">
+            </div>
+            <!--密码-->
+            <div class="form-group">
+                <label class="form-control">密码</label>
+                <input type="text" class="form-control" id="password"
+                       placeholder="请输入密码">
+            </div>
+            <!--登录-->
+            <input type="button" class="btn btn-default" value="登录">
+        </fieldset>
+    </form>
+</div>
+
+</body>
