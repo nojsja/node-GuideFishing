@@ -19,13 +19,13 @@ var courseBroadcast_schema = new Schema({
         required: true
     },
     date: String,
-    learner: [{
+    learners: [{
         name: String
     }],
-    teacher: [{
+    teachers: [{
         name: String
     }],
-    admin: [{
+    admins: [{
         name: String,
         password: String
     }]

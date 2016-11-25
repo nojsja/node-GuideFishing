@@ -27,6 +27,7 @@ $(function () {
  * socket -- 页面初始化时连接到服务器的socket对象
  * file -- origin 未转换前的文件, data -- 转换后即将上传的文件, type -- 文件类型
  * upload -- 文件上传相关
+ * isAdmin -- 是否具有管理员权限
  * reader -- 文件读取对象fileReader
  * record -- 录音对象,
  * status -- 录音状态
@@ -36,6 +37,7 @@ var broadcastAction = {
 
     socket: {},
     courseName: "",
+    isAdmin: false,
 
     message: {
         send: {
@@ -82,7 +84,8 @@ broadcastAction.socketInit = function () {
     broadcastAction.socket.on('connect', function () {
         var name = $('#name').text() || '匿名';
         broadcastAction.socket.emit('join', {
-            name: name
+            name: name,
+            isAdmin: broadcastAction.isAdmin
         });
     });
 
