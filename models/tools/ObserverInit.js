@@ -9,7 +9,7 @@ function ObserverInit(obj) {
     obj.watcherList = {};
 
     // 添加观察者, 各个观察者对应相应的类型
-    obj.listen = function (type, fn) {
+    obj.watcherListen = function (type, fn) {
         // 本观察类型不存在
         if(!this.watcherList[type]){
             this.watcherList[type] = [fn];
@@ -21,7 +21,7 @@ function ObserverInit(obj) {
     };
 
     // 触发观察者
-    obj.trigger = function (type, args) {
+    obj.watcherTrigger = function (type, args) {
 
         // 如果没有此观察类型,则返回
         if(!this.watcherList[type]){
@@ -29,18 +29,18 @@ function ObserverInit(obj) {
         }
         // 包裹定义消息信息
         // 观察者触发事件类型
-        var events = {
-            type: type,
-            args: args || {}
-        };
+        // var events = {
+        //     type: type,
+        //     args: args || {}
+        // };
         for(var index in this.watcherList[type]){
             // 绑定作用域,遍历触发函数
-            this.watcherList[type][index].call(this, events);
+            this.watcherList[type][index].call(this, args);
         }
     };
 
     // 移除观察者
-    obj.remove = function (type, fn) {
+    obj.watcherRemove = function (type, fn) {
 
         // 判断是否是数组
         if(this.watcherList[type] instanceof Array){

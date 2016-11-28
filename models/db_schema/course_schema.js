@@ -40,27 +40,13 @@ var courseSchema = new Schema({
         required: true
     },
 
-    courseOrigin: {
-        videos: [{
-            date: String,
-            name: String,
-            url: String
-        }],
-        images: [{
-            date: String,
-            name: String,
-            url: String
-        }],
-        texts: [{
-            date: String,
-            text: String,
-        }],
-        audios: [{
-            name: String,
-            url: String,
-            date: String
-        }]
-    },
+    courseOrigin: [{
+        type: String,
+        date: String,
+        from: String,
+        msg: String,
+        url: String
+    }],
 
     courseContent: String,
     teacher: String,

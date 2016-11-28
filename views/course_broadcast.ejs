@@ -33,6 +33,13 @@
     <%= broadcastRoom %>
 </div>
 
+<% if(admin) {%>
+<!--结束直播按钮-->
+<div class="finish-broadcast-div">
+    <span class="glyphicon glyphicon-remove-sign"></span>
+</div>
+<% } %>
+
 <!--消息主体部分-->
 <div class="container total" id="total">
     <!--用户名-->

@@ -6,6 +6,8 @@
  * 课程数据模型
  * courseName -- 课程名字
  * courseAbstract -- 课程概述
+ * courseOrigin -- 未处理的原始数据
+ * isReady -- 是否时正式课程
  * courseType -- 课程类型
  * courseContent -- 课程内容
  * teacher -- 课程讲师
@@ -27,6 +29,13 @@ function Course(course){
 
         courseName : course.courseName || "null",
         courseAbstract : course.courseAbstract,
+        courseOrigin: course.courseOrigin || {
+            videos: [],
+            images: [],
+            texts: [],
+            audios: []
+        },
+        isReady: course.isReady || false,
         courseType : course.courseType,
         courseContent : course.courseContent,
         teacher : course.teacher,
@@ -52,6 +61,102 @@ Course.prototype.save = function (callback) {
             return callback(err);
         }
         callback(null);
+    });
+
+};
+
+/* 导入课程直播数据 */
+Course.importFromBroadcast = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Course', courseSchema);
+    // 课程直播元数据
+    var courseOrigin = condition.medias;
+    // 课程名字
+    var courseName = condition.courseName;
+
+    var query = Course.findOne().where({
+        courseName: courseName
+    });
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+        doc.set('courseOrigin', courseOrigin);
+        doc.save(function (err) {
+            if(err){
+                console.log(err);
+                return callback(err);
+            }
+            callback(null);
+        });
+    });
+
+};
+
+/* 正式发布课程 */
+Course.publish = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Course', courseSchema);
+    // 需要正式发布的课程
+    var courseName = condition.courseName;
+    var query = Course.findOne().where({
+       courseName: courseName 
+    });
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+        doc.set('isReady', true);
+        doc.save(function (err) {
+            if(err){
+                console.log(err);
+                return callback(err);
+            }
+            callback(null);
+        });
+    });
+};
+
+/* 更新课程数据 */
+Course.update = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Course', courseSchema);
+
+    // 筛选的课程名
+    var courseName = condition.courseName;
+    // 所有可以更新的字段
+    var allSegment = ['courseName', 'courseType', 'courseAbstract', 'isReady',
+        'courseContent', 'teacher', 'price', 'clickRate'];
+
+    var query = Course.findOne().where({
+        courseName: courseName
+    });
+    // 执行查找更新
+    query.exec(function (err, doc) {
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+        // 更新所有字段
+        for(let segment in condition){
+            if(allSegment.indexOf(segment) != -1){
+                doc.set(segment, condition[segment]);
+            }
+        }
+        query.save(function (err) {
+           if(err){
+               console.log(err);
+               return callback(err);
+           }
+           callback(null);
+        });
     });
 
 };

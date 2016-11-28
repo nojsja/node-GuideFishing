@@ -143,6 +143,18 @@ broadcastAction.socketInit = function () {
         broadcastAction.message.received.trigger('uploadDone');
     });
 
+    // 结束直播操作失败
+    broadcastAction.socket.on('finish_error', function () {
+
+        broadcastAction.message.received.trigger('finish_error');
+    });
+
+    // 直播结束
+    broadcastAction.socket.on('finish_done', function () {
+
+        broadcastAction.message.received.trigger('finish_done');
+    });
+
 };
 
 /* 页面事件绑定 */
@@ -150,6 +162,11 @@ broadcastAction.pageEventBind = function () {
 
     // 当前课程名(也是直播间的名字)
     broadcastAction.courseName = $('.broadcast-room').text().trim();
+
+    // 绑定结束直播事件
+    if(broadcastAction.isAdmin){
+        $('.finish-broadcast-div > span').click(broadcastAction.finishBroadcast);
+    }
 
     // 获取音频事件
     broadcastAction.getMediaDataInit();
@@ -239,6 +256,15 @@ broadcastAction.pageEventBind = function () {
         $('#fileChoose').click();
     });
     
+};
+
+/* 结束课程直播 */
+broadcastAction.finishBroadcast = function () {
+
+    if(confirm('确定结束当前直播?')){
+        broadcastAction.socket.emit('finish');
+        // 返回直播
+    }
 };
 
 /* 观察者模式声明 */
@@ -431,7 +457,7 @@ broadcastAction.newMessageUpdate = function (info) {
     // 消息参数
     var from = info.from,
         msg = info.msg,
-        path = info.path,
+        path = info.url,
         type = info.type;
 
     var date = broadcastAction.getDate();
@@ -440,7 +466,7 @@ broadcastAction.newMessageUpdate = function (info) {
     var update = {
 
         // 更新页面文本
-        text: function () {
+        texts: function () {
 
             // 添加DOM
             var $messageList = $('.message-list');
@@ -505,6 +531,7 @@ broadcastAction.newMessageUpdate = function (info) {
             // 音频消息, 默认是隐藏的, 是HTML5元素
             var $audio =
                 $('<audio>');
+
             // 媒体获取完毕后
             $audio[0].addEventListener("loadedmetadata", function(){
                 var total = parseInt(this.duration);//获取总时长
@@ -512,11 +539,13 @@ broadcastAction.newMessageUpdate = function (info) {
                 updateDuration();
             });
 
+            // 设置属性
             $audio
                 .prop({
                     src: path,
                     controls: 'controls',
-                    style: 'display: none'
+                    style: 'display: none',
+                    preload: 'metadata'
                 })
                 .appendTo($messageItem);
 
@@ -546,13 +575,12 @@ broadcastAction.newMessageUpdate = function (info) {
                 }
             });
 
+
             // 添加音频消息
             $audioDefine.append($audioSpan)
                 .appendTo($messageItem);
-
             // 添加到页面
             $messageList.append($messageItem);
-
             // 滚到页面底部
             window.scrollTo(0,document.body.scrollHeight);
         },

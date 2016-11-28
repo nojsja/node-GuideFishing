@@ -65,6 +65,14 @@ a {
     padding-right: 10px;
 }
 
+/* 结束直播div */
+.finish-broadcast-div {
+    font-size: 2.5rem;
+    position: fixed;
+    right: 1rem;
+    top: 1rem;
+    color: #ce1e23;
+}
 
 /* 录音 */
 .record-div {

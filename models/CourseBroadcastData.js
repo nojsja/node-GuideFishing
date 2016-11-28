@@ -80,8 +80,14 @@ CourseBroadcastData.deleteOne = function (condition, callback) {
        if(err){
            return callback(err);
        }
-       console.log('删除了一个直播: ', doc);
-       callback(null);
+       doc.remove(function (err, doc) {
+           if(err){
+               console.log('[broadcast remove error]:' + err);
+               callback(err);
+           }
+           console.log('直播课程删除成功!');
+           callback(null);
+       });
     });
 }
 
