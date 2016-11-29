@@ -6,7 +6,6 @@
 
 $(function () {
 
-
     // 初始化编辑器
     editAction.ueditorInit();
     // 绑定页面事件
@@ -238,6 +237,21 @@ editAction.pageEventBind = function () {
         }
     });
 
+    // 点击导入课程按钮
+    $('#load').click(function () {
+
+        // 需要导入的课程名字
+        var courseNameLoad = $('#courseNameLoad').val().trim();
+        if(!courseNameLoad){
+            return editAction.modalWindow('请输入需要导入的课程名字!');
+        }
+        var url = '/course/admin/load/' + courseNameLoad;
+        $.post(url, { courseName: courseNameLoad }, function (JSONdata) {
+
+            editAction.loadCourseData(JSONdata);
+        }, "JSON");
+    });
+
     // 预览类型选中
     $('.preview-type').click(function () {
 
@@ -257,6 +271,24 @@ editAction.pageEventBind = function () {
 
     });
 
+};
+
+/* 导入课程数据 */
+editAction.loadCourseData = function (JSONdata) {
+
+    var JSONobject = JSON.parse(JSONdata);
+    // 即将被导入的对象
+    var loadObject = {
+
+        courseName: JSONobject.courseName,
+        courseType: JSONobject.courseType,
+        courseAbstract: JSONobject.courseAbstract,
+        teacher: JSONobject.teacher,
+        price: JSONobject.price,
+        courseContent: JSONobject.courseContent,
+        courseOrigin: JSONobject.courseOrigin,
+        isReady: JSONobject.isReady
+    };
 };
 
 /* 更新页面的预览窗口 */

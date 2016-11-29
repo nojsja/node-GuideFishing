@@ -43,12 +43,16 @@ function courseBroadcastAction(io){
             var split_arr = url.split('/');
 
             var roomId = split_arr[split_arr.length - 1];
+            var courseName;
             // 解码中文字符
+            // 确定当前直播间和直播课程名(相同)
             roomId = decodeURIComponent(roomId);
+            courseName = roomId;
             console.log('roomId: ' + roomId);
 
         }catch (e){
             roomId = '测试';
+            courseName = '测试';
             console.log(e);
         }
 
@@ -110,9 +114,13 @@ function courseBroadcastAction(io){
         // 客户端录音上传
         socket.on('record',record);
         // 文件开始上传信号
-         socket.on('start', start);
+        socket.on('start', start);
         // 文件上传中
         socket.on('upload', upload);
+        // 检查当前课程的直播状态
+        socket.on('broadcastCheck', broadcastCheck);
+        // 载入之前的直播数据历史记录
+        socket.on('loadHistory', loadHistory);
         // 结束当前直播
         socket.on('finish', finish);
         // 关闭连接
@@ -440,6 +448,7 @@ function courseBroadcastAction(io){
 
                 console.log('file splice.');
                 fs.write(Files.upload.handler, Files.upload.data, null, 'binary',function (err, written) {
+
                     Files.upload.data = '';
                     socket.emit('moreData', {
                         'position': Files.upload.getPosition(),
@@ -459,12 +468,116 @@ function courseBroadcastAction(io){
             }
         }
 
+        /** 检查课程的直播状态
+         * 课程直播状态码:
+         * broadcastIng -- 正在直播
+         * broadcastDone -- 直播完成
+         * broadcastNone -- 当前直播不存在
+         * */
+        function broadcastCheck() {
+
+            console.log('broadcastCheck...');
+            // 需要检查的直播课程的名字
+            var condition = {
+                courseName: courseName
+            }
+            // 检查直播是否存在
+            CourseBroadcastData.checkBroadcastStatus(condition, function (err, isExit) {
+
+                if(err){
+                     console.log('检查课程直播状态出错!');
+                     // 向客户端返回错误状态码
+                     return socket.emit('check', {
+                         isError: true,
+                         error: err
+                     });
+                }
+                // 当前正在直播
+                if(isExit){
+                    socket.emit('check', {
+                        isError: false,
+                        status: 'broadcastIng'
+                    })
+                    // 非直播状态检查是否已经直播完成或是不存在直播
+                }else {
+                    Course.checkStatus(condition, function (err, status) {
+
+                        if(err){
+                            console.log('非直播状态检查出错!');
+                            return socket.emit('check', {
+                                isError: true,
+                                error: err
+                            });
+                        }
+                        var checkedStatus = '';
+                        // 查询到的课程已经正式发布或无法查询到结果
+                        if(status == "isReady" || status == 'none'){
+                            checkedStatus = 'broadcastNone';
+
+                            // 课程已经载入数据待发布
+                        }else if(status == 'noReady'){
+                            checkedStatus = 'broadcastDone'
+                        }
+
+                        // 向客户端发送消息
+                        socket.emit('check', {
+                            isError: false,
+                            status: checkedStatus
+                        })
+                    });
+                }
+            });
+        }
+
+        /**载入直播的历史记录数据
+         * 如果直播状态是broadcastIng,从内存区域中读取即可
+         * 如果直播状态时broadcastDone, 数据需要从数据库中读取
+         * */
+        function loadHistory(info) {
+
+            console.log('loadHistory...');
+            var status = info.status;
+            // 正在直播中
+            if(status == "broadcastIng"){
+
+                // 向客户端发回数据
+                socket.emit('load', {
+                    isError: false,
+                    courseOrigin: courseOrigin[roomId].medias
+                })
+                // 直播完成
+            }else if(status == "broadcastDone"){
+
+                // 筛选条件
+                var condition = {
+                    courseName: courseName
+                }
+                Course.getBroadcastOrigin(condition, function (err, courseOrigin) {
+
+                    if(err){
+                        console.log('获取历史记录数据出错!');
+                        return socket.emit('load', {
+                            isError: true,
+                            error: err
+                        });
+                    }
+                    // 向客户端返回数据
+                    socket.emit('load', {
+                        isError: false,
+                        courseOrigin: courseOrigin
+                    });
+                });
+            }
+        }
+
+
         /**
          * 结束直播,将直播数据导入到课程数据
          * 课程进入待发布状态
          * */
         function finish() {
 
+            console.log('finish...');
             // 存储直播数据
             var courseOrigin = {
                 courseName: roomId,
@@ -477,20 +590,30 @@ function courseBroadcastAction(io){
                 if(err) {
                     console.log('导入直播数据失败,结束直播操作失败!');
                     // 将错误发回给管理员
-                    return socket.emit('finish_error', err);
+                    return socket.emit('finish', {
+                        isError: true,
+                        error: err
+                    });
                 }
 
-                // 将当前课程从直播中列表删除
+                // 将当前课程从直播列表中删除
                 CourseBroadcastData.deleteOne({
                     courseName: roomId
 
                 }, function (err) {
                     if(err){
                         console.log('课程从直播列表删除失败, 结束直播操作失败!');
-                        return socket.emit('finish_error', err);
+                        return socket.emit('finish_error', {
+                            isError: true,
+                            error: err
+                        });
                     }
                     console.log('直播结束了!');
-                    socket.emit('finish_done');
+                    // 删除当前直播房间
+                    delete roomUser[roomId];
+                    socket.emit('finish', {
+                        isError: false
+                    });
                 });
             });
         }
@@ -506,13 +629,13 @@ function courseBroadcastAction(io){
                 }else {
                     var index = (roomUser[roomId] || []).indexOf( JSON.stringify(user) );
                     if(index !== -1){
-                        // 数组删除
+                        // 将当前用户从房间中删除
                         roomUser[roomId].splice(index, 1);
                         // 在房间内发布离开的消息
-                        socket.to(roomId).emit('systemMessage', {
-                            from: 'system',
-                            msg : user.name + '离开了房间!'
-                        });
+                        // socket.to(roomId).emit('systemMessage', {
+                        //     from: 'system',
+                        //     msg : user.name + '离开了房间!'
+                        // });
                     }
                 }
             });

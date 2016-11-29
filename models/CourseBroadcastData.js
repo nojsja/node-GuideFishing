@@ -89,7 +89,34 @@ CourseBroadcastData.deleteOne = function (condition, callback) {
            callback(null);
        });
     });
-}
+};
+
+/* 检查直播是否存在 */
+CourseBroadcastData.checkBroadcastStatus = function (condition, callback) {
+
+    var db = Mongoose.connection;
+    var mongoose = Mongoose;
+    var Model = mongoose.model('Broadcast', courseBroadcast_schema);
+
+    var query = Model.findOne().where({
+        courseName: condition.courseName
+    });
+
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log('[getOne error]: ' + err);
+            return callback(err);
+        }
+        // 获取到直播数据
+        if(doc){
+            callback(null, true);
+            // 获取不到直播数据
+        }else {
+            callback(null, false);
+        }
+    });
+};
 
 /* 删除多个直播数据 */
 CourseBroadcastData.deleteSome = function (condition, callback) {
@@ -107,8 +134,7 @@ CourseBroadcastData.deleteSome = function (condition, callback) {
         console.log('删除直播数目: ', results);
         callback(null);
     });
-}
-
+};
 
 
 module.exports = CourseBroadcastData;

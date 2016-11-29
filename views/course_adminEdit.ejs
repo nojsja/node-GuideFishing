@@ -85,7 +85,7 @@
 
 <!--预览窗口触发器-->
 <div class="self-trigger self-trigger-preview" triggerTarget="self-container-preview">
-    <span class="glyphicon glyphicon-folder-open"></span>
+    <span class="glyphicon glyphicon-eye-open"></span>
 </div>
 <!--视频预览,音频预览和图片预览-->
 <div class="self-container self-container-preview">
@@ -110,6 +110,18 @@
     <!--预览列表呈现数据列表-->
     <div class="preview-list">
 
+    </div>
+</div>
+
+<!--导入课程触发器-->
+<div class="self-trigger self-trigger-load" triggerTarget="self-container-load">
+    <span class="glyphicon glyphicon-cloud-download" title="导入课程数据"></span>
+</div>
+<!--导入课程窗口-->
+<div class="self-container self-container-load">
+    <div class="form-group">
+        <input type="text" class="form-control" id="courseNameLoad" placeholder="请输入要导入的课程名字">
+        <input type="button" class="btn btn-default" id="load" value="导入">
     </div>
 </div>
 
@@ -186,7 +198,15 @@
     <!--发表课程-->
     <div class="row">
         <div class="col-md-12" id="sendDiv">
-            <button type="button" class="btn btn-default" id="sendCourse">发布 <span class="glyphicon glyphicon-send"></span></button>
+
+            <button type="button" class="btn btn-default" id="sendBroadcast">
+                <span class="glyphicon glyphicon-export"></span> 发布直播
+            </button>
+
+            <button type="button" class="btn btn-success" id="sendCourse">
+                发布课程 <span class="glyphicon glyphicon-send"></span>
+            </button>
+
         </div>
     </div>
 </div>

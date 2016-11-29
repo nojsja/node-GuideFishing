@@ -65,6 +65,30 @@ function course_admin(app) {
         };
     });
     
+    // 获取需要导入的课程数据
+    app.post('/course/admin/load/:courseName', function (req, res) {
+
+        // 筛选条件
+        var condition = {
+            courseName: req.params.courseName
+        };
+        Course.getLoadData(condition, function (err, courseData) {
+
+            if(err){
+                console.log('获取导入课程的数据出错!');
+                return res.json(JSON.stringify({
+                    isError: true,
+                    error: err
+                }));
+            }
+            // 向客户端发回数据
+            res.json(JSON.stringify({
+                isError: false,
+                loadData: courseData
+            }));
+        });
+    });
+    
     // 课程数据文件上传
     app.post('/course/data/upload/:courseName', function (req, res) {
 

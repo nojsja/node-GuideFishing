@@ -96,6 +96,103 @@ Course.importFromBroadcast = function (condition, callback) {
 
 };
 
+/* 获取所有需要导入的课程数据 */
+Course.getLoadData = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Course', courseSchema);
+
+    var query = Course.fineOne().where({
+       courseName: condition.courseName
+    });
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log('[getLoadData error]: ' + err);
+            return callback(err);
+        }
+        // 返回一个课程的所有数据
+        callback(null, doc);
+    });
+}
+
+/* 获取当前直播课程的原始数据 */
+Course.getBroadcastOrigin = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Course', courseSchema);
+
+    var query = Course.findOne().where({
+       courseName: condition.courseName
+    });
+    // 选择区间
+    query.select({
+       courseOrigin: 1 
+    });
+    // 执行查询
+    query.exec(function (err, doc) {
+       if(err){
+           console.log('[getBroadcastOrigin error]: ' + err);
+           return callback(err);
+       }
+       // 回调返回获取的原始数据
+       if(doc){
+
+           callback(null, {
+               courseOrigin: doc.courseOrigin
+           });
+       }else {
+
+           callback(null, null);
+       }
+    });
+};
+
+/** 检查一个课程的直播状态
+ * 状态码:
+ * isReady -- 正式发布的课程(课程已经不能编辑)
+ * noReady -- 待发布的直播课程(课程数据已经存入,课程可以编辑)
+ * none -- 没有获取到相应的课程数据(查询不到数据记录)
+ * */
+Course.checkStatus = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Course', courseSchema);
+
+    // 课程状态
+    var status = {
+        ing: 'noReady',
+        done: 'isReady',
+        none: 'none'
+    }
+    var query = Course.findOne().where({
+        courseName: condition.courseName
+    });
+    query.select({
+       isReady: 1
+    });
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log('[checkStatus error]:' + err);
+            callback(err);
+        }
+        // 查询到相应的文档
+        if(doc){
+            // 正式发布的课程
+            if(doc.isReady){
+                callback(null, status.done);
+            }else {
+                // 待发布课程
+                callback(null, status.ing);
+            }
+        }else {
+            // 不存在直播课程和正式课程
+            callback(null, status.none);
+        }
+    });
+};
+
 /* 正式发布课程 */
 Course.publish = function (condition, callback) {
 
