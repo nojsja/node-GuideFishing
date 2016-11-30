@@ -22,7 +22,18 @@ $(function () {
 
 });
 
-/* 页面全局变量 */
+/** 页面全局变量
+ * course对象的属性说明
+ * courseName -- 课程名字
+ * courseType -- 课程类型
+ * isReady -- 是否是正式发布的课程
+ * courseOrigin -- 用于存储直播数据,包含视频,音频,文本和图片
+ * courseAbstract -- 课程摘要
+ * courseContent -- 课程内容富文本
+ * teacher -- 讲师
+ * password -- 讲师登录密码
+ * price -- 课程价格
+ * */
 var editAction = {
 
     // 目前上传的组件
@@ -52,6 +63,7 @@ var editAction = {
             courseName: "",
             courseType: "",
             isReady: false,
+            isBroadcast: false,
             courseOrigin:{
                 videos: [],
                 images: [],
@@ -61,6 +73,7 @@ var editAction = {
             courseAbstract: "",
             courseContent: "",
             teacher: "",
+            password: "",
             price: ""
         },
         // 观察者方法
@@ -110,7 +123,7 @@ editAction.watcherActive = function () {
     }).listen(function () {
 
         // 课程讲师
-        var teacher = $('#teacher').val();
+        var teacher = $('#teacher').val().trim();
 
         if( !teacher ){
             return editAction.modalWindow('课程讲师需要填写完整!');
@@ -120,7 +133,7 @@ editAction.watcherActive = function () {
     }).listen(function () {
 
         // 课程价格
-        var price = $('#price').val();
+        var price = $('#price').val().trim();
 
         if( !price ){
             return editAction.modalWindow('课程价格需要填写完整!');
@@ -139,6 +152,15 @@ editAction.watcherActive = function () {
         if(!editAction.course.info.courseType){
             return editAction.modalWindow('课程类型需要填写完整!');
         }
+    }).listen(function () {
+
+        // 讲师登录密码
+        var password = $('#password').val().trim();
+
+        if(!password){
+            return editAction.modalWindow('讲师登录密码需要填写完整!');
+        }
+        editAction.course.info.password = password;
     });
 };
 
@@ -192,9 +214,19 @@ editAction.pageEventBind = function () {
     });
 
     // 提交课程数据
-    $('#sendCourse').click(function () {
+    $('#sendCourse, #sendBroadcast').click(function () {
         // 触发观察者回调函数
         editAction.course.watch.trigger();
+        // 检测发布直播课程还是
+        editAction.course.info.isReady = $(this).attr('isReady');
+        // 如果不是发布正式课程
+        if(!editAction.course.info.isReady){
+            // 当前课程是作为直播课程发布的
+            editAction.course.info.isBroadcast = true;
+        }else {
+            // 当前课程作为正式课程发布的
+            editAction.course.info.isBroadcast = false;
+        }
 
         // 提交数据
         $.post('/course/admin/save',
@@ -202,10 +234,12 @@ editAction.pageEventBind = function () {
                 courseName: editAction.course.info.courseName,
                 courseType: editAction.course.info.courseType,
                 isReady: editAction.course.info.isReady,
+                isBroadcast: editAction.course.info.isBroadcast,
                 courseOrigin: editAction.course.info.courseOrigin,
                 courseAbstract: editAction.course.info.courseAbstract,
                 courseContent: editAction.course.info.courseContent,
                 teacher: editAction.course.info.teacher,
+                password: editAction.course.info.password,
                 price: editAction.course.info.price
             },
             function (JSONdata) {
@@ -216,7 +250,8 @@ editAction.pageEventBind = function () {
                 }
                 editAction.modalWindow('发布成功!');
 
-            }, "JSON");
+            }, "JSON"
+        );
     });
 
     // 编辑和预览窗口的显示和隐藏
@@ -268,7 +303,6 @@ editAction.pageEventBind = function () {
 
             editAction.updatePreview(JSONdata);
         }, "JSON");
-
     });
 
 };
@@ -285,10 +319,39 @@ editAction.loadCourseData = function (JSONdata) {
         courseAbstract: JSONobject.courseAbstract,
         teacher: JSONobject.teacher,
         price: JSONobject.price,
+        password: JSONobject.password,
         courseContent: JSONobject.courseContent,
         courseOrigin: JSONobject.courseOrigin,
         isReady: JSONobject.isReady
     };
+
+    // 设置标题
+    $('#courseName').val(loadObject.courseName);
+    // 设置分类
+    var $typeItems = $('.type > .type-item');
+    $typeItems.each(function () {
+        if($(this).attr('type') == loadObject.courseType){
+            // 触发点击事件
+            $(this).click();
+        }
+    });
+    // 设置课程概述
+    $('#editorAbstract').setContent('');
+    $('#editorAbstract').setContent( $(loadObject.courseAbstract).html(), true );
+    //设置课程讲师
+    $('#teacher').val(loadObject.teacher);
+    // 设置讲师密码
+    $('#password').val(loadObject.password);
+    // 设置课程价格
+    $('#price').val(loadObject.price);
+
+    // 对于已经发布的课程直接导入编辑后的内容
+    // 对于未发布的课程导入课程的原始数据进行编辑
+    if(loadObject.isReady){
+        // 设置课程内容
+        $('#editorContent').setContent('');
+        $('#editorContent').setContent( $(loadObject.courseContent).html(), true );
+    }
 };
 
 /* 更新页面的预览窗口 */
@@ -307,10 +370,6 @@ editAction.updatePreview = function (JSONdata) {
     editAction.updatePreview[editAction.currentPreviewType](JSONobject);
 };
 
-// <div class="list-item-audio">
-//     <div class="audio-text">我是audio-text</div>
-//     <audio src="/temp/test.mp3" title="音频2" controls="controls"></audio>
-// </div>
 editAction.updatePreview['audio'] = function (JSONobject) {
 
     // 清除子节点数据

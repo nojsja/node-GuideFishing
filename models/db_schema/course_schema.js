@@ -15,8 +15,10 @@
  *  地址和发布日期, 普通文本对象包含两个属性: 文本内容和发布时间
  * isReady -- 课程是否可见,课程分为三个状态:直播状态,
  *  可编辑状态(用户不可见,非正式课程)和完成状态(用户可见, 正式发布的课程)
+ * isBroadcast -- 普通的课程和直播课程(呈现形式不一样)
  * courseContent -- 课程内容(富文本格式)
  * teacher -- 课程讲师
+ * passworsd -- 讲师登录密码
  * date -- 发布日期
  * price -- 课程价格
  * clickRate -- 课程点击量
@@ -39,7 +41,10 @@ var courseSchema = new Schema({
         type: Boolean,
         required: true
     },
-
+    isBroadcast: {
+        type: Boolean,
+        required: true
+    },
     courseOrigin: [{
         type: String,
         date: String,
@@ -50,6 +55,7 @@ var courseSchema = new Schema({
 
     courseContent: String,
     teacher: String,
+    password: String,
     date: String,
     price: String,
     clickRate: String

@@ -18,6 +18,8 @@ var Course = require('./Course');
 var CourseBroadcastData = require('./CourseBroadcastData');
 // 初始化观察者方法
 var ObserverInit = require('./tools/ObserverInit');
+// 流程控制
+var Q = require('q');
 
 // 课程直播模块
 function courseBroadcastAction(io){
@@ -578,44 +580,102 @@ function courseBroadcastAction(io){
         function finish() {
 
             console.log('finish...');
+            // 流程控制
+            var defer = Q.defer();
+            
             // 存储直播数据
             var courseOrigin = {
                 courseName: roomId,
                 medias: courseOrigin[roomId].medias
             };
 
-            // 导入直播数据
-            Course.importFromBroadcast(courseOrigin, function (err) {
+            // 流程控制, reject -- fail, resolve -- success
+            defer.promise
+                /* 导入直播数据 */
+                .then(function success(info) {
 
-                if(err) {
-                    console.log('导入直播数据失败,结束直播操作失败!');
-                    // 将错误发回给管理员
-                    return socket.emit('finish', {
-                        isError: true,
-                        error: err
+                    var _defer = Q.defer();
+                    Course.importFromBroadcast(info.courseOrigin, function (err) {
+
+                        if(err) {
+                            info.isError = true;
+                            info.error = err;
+                            return _defer.reject(info);
+                        }
+                        _defer.resolve(info);
                     });
-                }
 
-                // 将当前课程从直播列表中删除
-                CourseBroadcastData.deleteOne({
-                    courseName: roomId
+                    return _defer.promise;
+                })
+                /* 删除直播记录 */
+                .then(
+                    // 上一步成功后执行
+                    function success(info) {
 
-                }, function (err) {
-                    if(err){
-                        console.log('课程从直播列表删除失败, 结束直播操作失败!');
-                        return socket.emit('finish_error', {
+                        var _defer = Q.defer();
+                        CourseBroadcastData.deleteOne({ courseName: info.courseOrigin.courseName },
+                            function (err) {
+                               if(err){
+                                   info.isError = true;
+                                   info.error = err;
+                                   return _defer.reject(info);
+                               }
+                               _defer.resolve(info);
+                            }
+                        );
+                    },
+                    // 上一步失败后执行
+                    function fail(info) {
+
+                        console.log('导入直播数据失败,结束直播操作失败!');
+                        // 将错误发回给管理员
+                        socket.emit('finish', {
                             isError: true,
-                            error: err
+                            error: info.error
                         });
                     }
-                    console.log('直播结束了!');
-                    // 删除当前直播房间
-                    delete roomUser[roomId];
-                    socket.emit('finish', {
-                        isError: false
-                    });
-                });
+                )
+                /* 正式发布课程 */
+                .then(
+                    // 上一步成功后执行
+                    function success(info) {
+
+                        Course.publish({ courseName: info.courseOrigin.courseName },
+
+                            function (err) {
+                                 if(err){
+                                     console.log('课程发布失败, 结束直播操作失败!');
+                                     return socket.emit('finish', {
+                                         isError: true,
+                                         error: err
+                                     });
+                                 }
+                                 // 所有数据库操作都成功后
+                                socket.emit('finish', {
+                                    isError: false
+                                });
+                           }
+                        )
+                    },
+                    // 上一步失败后执行
+                    function fail(info) {
+
+                        console.log('课程从直播列表删除失败, 结束直播操作失败!');
+                        socket.emit('finish', {
+                            isError: true,
+                            error: info.error
+                        });
+                    }
+                )
+                .done();
+
+            // 传递数据触发函数开始执行
+            defer.resolve({
+                isError: false,
+                error: null,
+                courseOrigin: courseOrigin
             });
+
         }
         
         /* 客户端连接关闭 */

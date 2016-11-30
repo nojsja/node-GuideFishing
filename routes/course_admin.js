@@ -9,6 +9,10 @@ var UploadAction = require('../models/CourseUploadAction');
 var UploadData = require('../models/CourseUploadData');
 // 存储课程
 var Course = require('../models/Course');
+// 获取当前时间
+var getDate = require('../models/tools/GetDate');
+// 发布直播课程数据
+var CourseBroadcastData = require('../models/CourseBroadcastData');
 
 function course_admin(app) {
     
@@ -30,9 +34,10 @@ function course_admin(app) {
     // 单个课程数据存储
     app.post('/course/admin/save', function (req, res) {
 
-        // 字段数组
+        // 规定字段数组
         var elementArary = ['courseName', 'courseType', 'courseAbstract',
-        'courseContent', 'teacher', 'price'];
+            'courseContent', 'courseOrigin', 'password', 'isReady', 'isBroadcast',
+            'teacher', 'price'];
         // 课程数据
         var course = {};
         // 加载条件数据
@@ -42,16 +47,50 @@ function course_admin(app) {
             }
         }
 
+        // 存储课程数据 //
         var newCourse = new Course(course);
         newCourse.save(function (err) {
             if(err){
-                return res.json( JSON.stringify({
+                res.json( JSON.stringify({
                     error: err
                 }) );
+            }else {
+
+                // 如果是直播课程的话发布直播课程的相关数据 //
+                if(course.isBroadcast){
+
+                    var broadcast = {
+                        courseName: course.courseName,
+                        courseType: course.courseType,
+                        date: getDate(),
+                        learners: [],
+                        teachers: [{
+                            name: course.teacher,
+                            password: course.password
+                        }]
+                    };
+                    var courseBroadcast = new CourseBroadcastData(broadcast);
+                    courseBroadcast.save(function (err) {
+
+                        if(err){
+                            return res.json( JSON.stringify({
+                                error: err
+                            }) );
+                        }
+                        // 成功后返回数据
+                        res.json( JSON.stringify({
+                            error: null
+                        }) );
+                    });
+                }else {
+
+                    // 成功后返回数据
+                    res.json( JSON.stringify({
+                        error: null
+                    }) );
+                }
             }
-            res.json( JSON.stringify({
-                error: null
-            }) );
+
         });
 
         function arrayContain(array, element) {

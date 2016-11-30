@@ -44,6 +44,16 @@ function course_broadcast(app) {
         }
     });
 
+    // 用户进入所有课程聊天室索引页面
+    app.get('/course/broadcast/index', function (req, res) {
+
+        // 渲染页面到客户端
+        res.render('course_broadcastIndex', {
+            title: "所有直播"
+        });
+    });
+
+    
     // 管理员进入聊天室前的登录验证页面
     app.get('/course/broadcast/room/adminCheck/:id', function (req, res) {
 
