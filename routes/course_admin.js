@@ -38,14 +38,19 @@ function course_admin(app) {
         var elementArary = ['courseName', 'courseType', 'courseAbstract',
             'courseContent', 'courseOrigin', 'password', 'isReady', 'isBroadcast',
             'teacher', 'price'];
+        // 含有非字符串类型的数据最好先转化为JSON字符串然后再转化成JSON对象
+        // 否则服务器会把Boolean类型会被处理成String类型
+        var courseData = JSON.parse(req.body.courseData);
         // 课程数据
         var course = {};
         // 加载条件数据
-        for(var part in req.body){
+        for(var part in courseData){
             if(arrayContain(elementArary, part)){
-                course[part] = req.body[part];
+                course[part] = courseData[part];
             }
         }
+
+        console.log(course);
 
         // 存储课程数据 //
         var newCourse = new Course(course);

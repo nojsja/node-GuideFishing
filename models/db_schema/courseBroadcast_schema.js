@@ -30,7 +30,7 @@ var courseBroadcast_schema = new Schema({
         password: String
     }]
 
-}, { collection: "courseBroadcast" });
+}, { collection: "broadcast" });
 
 exports.courseBroadcast_schema = courseBroadcast_schema;
 

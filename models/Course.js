@@ -29,12 +29,7 @@ function Course(course){
 
         courseName : course.courseName || "null",
         courseAbstract : course.courseAbstract,
-        courseOrigin: course.courseOrigin || {
-            videos: [],
-            images: [],
-            texts: [],
-            audios: []
-        },
+        courseOrigin: course.courseOrigin || [],
         isReady: course.isReady || false,
         isBroadcast: course.isBroadcast || false,
         courseType : course.courseType,
@@ -90,14 +85,19 @@ Course.deleteIfExit = function (condition, callback) {
             console.log('[deleteIfExit error]: ' + err);
             return callback(err);
         }
-        // 删除本条数据
-        doc.remove(function (err, deletedDoc) {
-            if(err){
-                console.log('[deleteIfExit error]: ' + err);
-                return callback(err);
-            }
+        // 文档存在
+        if(doc){
+            // 删除本条数据
+            doc.remove(function (err, deletedDoc) {
+                if(err){
+                    console.log('[deleteIfExit error]: ' + err);
+                    return callback(err);
+                }
+                callback(null);
+            });
+        }else {
             callback(null);
-        });
+        }
     });
 
 };

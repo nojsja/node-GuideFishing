@@ -9,9 +9,28 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
     <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
-    <link rel='stylesheet' href='/stylesheets/course_detail.css' />
+    <link rel='stylesheet' href='/stylesheets/course_broadcastIndex.css' />
 
     <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
-    <script type="text/javascript" src="/javascripts/course_detail.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/bootstrap.js"></script>
+    <script type="text/javascript" src="/javascripts/course_broadcastIndex.js"></script>
 </head>
 <body>
+
+<!--内容展示主要区域-->
+<div class="container" id="total">
+
+</div>
+
+<!--数据加载loading信息-->
+<div class="loading-info">
+    <input type="button" id="readMore" class="btn btn-success" value="加载更多..."></input>
+</div>
+
+<!--返回顶部按钮-->
+<%- include test_pageAnchor.ejs%>
+<!--底部导航-->
+<%- include footer.ejs%>
+<!--模态弹窗-->
+<%- include modalWindow.ejs%>
+</body>

@@ -64,12 +64,7 @@ var editAction = {
             courseType: "",
             isReady: false,
             isBroadcast: false,
-            courseOrigin:{
-                videos: [],
-                images: [],
-                audios: [],
-                texts: []
-            },
+            courseOrigin: [],
             courseAbstract: "",
             courseContent: "",
             teacher: "",
@@ -213,45 +208,50 @@ editAction.pageEventBind = function () {
         editAction.uploadEventBind();
     });
 
-    // 提交课程数据
+    // 提交课程数据或是直播数据
     $('#sendCourse, #sendBroadcast').click(function () {
         // 触发观察者回调函数
         editAction.course.watch.trigger();
         // 检测发布直播课程还是
-        editAction.course.info.isReady = $(this).attr('isReady');
-        // 如果不是发布正式课程
-        if(!editAction.course.info.isReady){
-            // 当前课程是作为直播课程发布的
-            editAction.course.info.isBroadcast = true;
-        }else {
-            // 当前课程作为正式课程发布的
+        if($(this).attr('isReady') == 'true'){
+            editAction.course.info.isReady = true;
+            // 当前课程是作为正式课程发布的
             editAction.course.info.isBroadcast = false;
+        }else {
+            editAction.course.info.isReady = false;
+            editAction.course.info.isBroadcast = true;
         }
 
+        // 课程数据
+        // 含有除字符串类型的数据外还有其它类型的话需要JSON转化,
+        // nodejs默认传递的req.body数据是字符串
+        var courseData = {
+            courseName: editAction.course.info.courseName,
+            courseType: editAction.course.info.courseType,
+            isReady: editAction.course.info.isReady,
+            isBroadcast: editAction.course.info.isBroadcast,
+            courseOrigin: editAction.course.info.courseOrigin,
+            courseAbstract: editAction.course.info.courseAbstract,
+            courseContent: editAction.course.info.courseContent,
+            teacher: editAction.course.info.teacher,
+            password: editAction.course.info.password,
+            price: editAction.course.info.price
+        };
+
+        var url = '/course/admin/save';
+        var postData = {
+            courseData: JSON.stringify(courseData)
+        };
         // 提交数据
-        $.post('/course/admin/save',
-            {
-                courseName: editAction.course.info.courseName,
-                courseType: editAction.course.info.courseType,
-                isReady: editAction.course.info.isReady,
-                isBroadcast: editAction.course.info.isBroadcast,
-                courseOrigin: editAction.course.info.courseOrigin,
-                courseAbstract: editAction.course.info.courseAbstract,
-                courseContent: editAction.course.info.courseContent,
-                teacher: editAction.course.info.teacher,
-                password: editAction.course.info.password,
-                price: editAction.course.info.price
-            },
-            function (JSONdata) {
+        $.post(url, postData, function (JSONdata) {
 
-                var JSONobject = JSON.parse(JSONdata);
-                if(JSONobject.error){
-                    return editAction.modalWindow('Sorry,发生错误: ' + err);
-                }
-                editAction.modalWindow('发布成功!');
+            var JSONobject = JSON.parse(JSONdata);
+            if(JSONobject.error){
+                return editAction.modalWindow('Sorry,发生错误: ' + err);
+            }
+            editAction.modalWindow('发布成功!');
+        }, "JSON");
 
-            }, "JSON"
-        );
     });
 
     // 编辑和预览窗口的显示和隐藏

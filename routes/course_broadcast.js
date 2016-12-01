@@ -3,6 +3,14 @@
  * 课程直播路由
  */
 
+// 从根目录定位
+var locateFromRoot = require('../models/tools/LocateFromRoot');
+// 读取返回图片目录地址
+var ReadBroadcastImg = require('../models/ReadTypeImg');
+// 直播课程模型
+var broadcastData = require('../models/CourseBroadcastData');
+
+
 function course_broadcast(app) {
 
     // 普通用户进入课程直播页面
@@ -44,7 +52,7 @@ function course_broadcast(app) {
         }
     });
 
-    // 用户进入所有课程聊天室索引页面
+    // 用户进入所有课程直播聊天室索引页面
     app.get('/course/broadcast/index', function (req, res) {
 
         // 渲染页面到客户端
@@ -53,6 +61,45 @@ function course_broadcast(app) {
         });
     });
 
+    // 获取所有直播内容聊天室
+    app.post('/course/broadcast/readList', function (req, res) {
+
+        var condition = {
+            skip: req.body.skip || 0
+        };
+        // 课程图片地址
+        var typeImgUrl = {};
+        // 阅读地址和客户端访问地址
+        // locateFromRoot 是当前执行文件的所在地址
+        var readUrl = locateFromRoot('/public/images/courseType/');
+        var visitUrl = '/images/courseType/';
+        ReadBroadcastImg(readUrl, visitUrl, function (data) {
+            typeImgUrl = data;
+        });
+
+        if(req.body.skip){
+            condition.skip = req.body.skip;
+        }
+        if(req.body.limit){
+            condition.limit = req.body.limit;
+        }
+
+        console.log("筛选条件: " + JSON.stringify(condition));
+
+        broadcastData.readList(condition, function (err, broadcastArray) {
+            if(err) {
+                console.log('readBroadcastList error.');
+                return res.json(JSON.stringify({
+                    error: err,
+                }));
+            }
+            console.log('readBroadList success.');
+            res.json(JSON.stringify({
+                broadcastArray: broadcastArray,
+                typeImgUrl: typeImgUrl
+            }));
+        });
+    });
     
     // 管理员进入聊天室前的登录验证页面
     app.get('/course/broadcast/room/adminCheck/:id', function (req, res) {

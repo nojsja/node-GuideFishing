@@ -5,7 +5,8 @@
 
 /* 导入模块 */
 var Mongoose = require('./tools/Mongoose');
-var courseBroadcast_schema = require('./db_schema/courseBroadcast_schema');
+var courseBroadcast_schema = require('./db_schema/courseBroadcast_schema')
+    .courseBroadcast_schema;
 
 /* 构造函数 */
 function CourseBroadcastData(broadcast){
@@ -19,24 +20,129 @@ CourseBroadcastData.prototype.save = function (callback) {
     // 引入已经建立连接的mongoose
     var db = Mongoose.connection;
     var mongoose = Mongoose;
-    var Model = mongoose.model;
+    var broadcast = this.broadcast;
+    var Broadcasts = mongoose.model("Broadcast", courseBroadcast_schema);
 
-    var model = new Model("Broadcast", courseBroadcast_schema);
-    model.save(function (err, doc) {
+    CourseBroadcastData.deleteIfExit({ courseName: broadcast.courseName }, function (err) {
+
         if(err){
             return callback(err);
         }
-        console.log('新建了一个直播课程:　' + doc);
-        callback(null);
+        // 新建数据
+        var newBroadcast = new Broadcasts(broadcast);
+        newBroadcast.save(function (err, doc) {
+            if(err){
+                return callback(err);
+            }
+            console.log('新建了一个直播课程:　' + doc);
+            callback(null);
+        });
     });
 };
+
+/* 如果存在就删除 */
+CourseBroadcastData.deleteIfExit = function (condition, callback) {
+
+    var mongoose = Mongoose;
+    var Broadcast = mongoose.model('Broadcast', courseBroadcast_schema);
+
+    var query = Broadcast.findOne();
+    query.where(condition);
+
+    // 执行搜索删除
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log('[deleteIfExit error]: ' + err);
+            return callback(err);
+        }
+        // 文档存在
+        if(doc){
+            // 删除本条数据
+            doc.remove(function (err, deletedDoc) {
+                if(err){
+                    console.log('[deleteIfExit error]: ' + err);
+                    return callback(err);
+                }
+                callback(null);
+            });
+        }else {
+            callback(null);
+        }
+    });
+
+};
+
+/* 读取直播课程列表 */
+CourseBroadcastData.readList = function (docCondition, callback) {
+
+    var db = Mongoose.connection;
+    var mongoose = Mongoose;
+    var Broadcast = mongoose.model('Broadcast', courseBroadcast_schema);
+
+    // 需要读取的文档的查询条件
+    // 获取正式发布的课程
+    var condition = {};
+    /* 读取条目数量 */
+    var number = 20;
+    /* 跳过读取的条目数量 */
+    var skipNum = 0;
+    /*** 需要发送给客户端的对象数组 ***/
+    var broacastArray = [];
+
+    /* 进行条件判断客户端的筛选需求 */
+    for(var con in docCondition) {
+
+        if(con == "limit") {
+            number = docCondition[con];
+        }else if(con == "skip") {
+            skipNum = docCondition[con];
+        }else {
+            //复制属性
+            condition[con] = docCondition[con];
+        }
+    }
+
+    // 统计文档数量
+    Broadcast.count({}, function (err, count) {
+
+        console.log('count: ' + count);
+
+        if(err){
+            return callback(err);
+        }
+        // 判断数量
+        // 如果跳过数量超过就显示没有数据
+        if(skipNum >= count){
+            return callback(null, broacastArray);
+        }
+
+        var query = Broadcast.find().where(condition);
+
+        query.limit(number);
+        query.skip(skipNum);
+        query.sort({date: -1});
+        //执行查询
+        query.exec(function (err, docs) {
+            if(err){
+                return callback(err);
+            }
+            for(var i in docs) {
+                broacastArray.push(docs[i]);
+            }
+            //返回对象数组
+            callback(null, broacastArray);
+        });
+
+    });
+}
 
 /* 保存听课的一个用户的信息 */
 CourseBroadcastData.addLearner = function (condition, callback) {
 
     var db = Mongoose.connection;
     var mongoose = Mongoose;
-    var Model = mongoose.model;
+    var Model = mongoose.model('Broadcast', courseBroadcast_schema);
 
     // 筛选数据
     var condition = {
