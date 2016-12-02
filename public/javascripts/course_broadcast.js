@@ -27,6 +27,7 @@ $(function () {
  * socket -- 页面初始化时连接到服务器的socket对象
  * file -- origin 未转换前的文件, data -- 转换后即将上传的文件, type -- 文件类型
  * upload -- 文件上传相关
+ * isAdmin -- 是否具有管理员权限
  * reader -- 文件读取对象fileReader
  * record -- 录音对象,
  * status -- 录音状态
@@ -36,6 +37,7 @@ var broadcastAction = {
 
     socket: {},
     courseName: "",
+    isAdmin: false,
 
     message: {
         send: {
@@ -68,7 +70,7 @@ var broadcastAction = {
     }
 };
 
-/* 初始化函数 */
+/* 初始化socket连接 */
 broadcastAction.socketInit = function () {
 
     // 弹出窗口
@@ -80,46 +82,41 @@ broadcastAction.socketInit = function () {
     // 监听事件
     // 所有消息类型是可以自定义的
     broadcastAction.socket.on('connect', function () {
+
         var name = $('#name').text() || '匿名';
         broadcastAction.socket.emit('join', {
-            name: name
+            name: name,
+            isAdmin: broadcastAction.isAdmin
         });
     });
 
     // 系统消息
     broadcastAction.socket.on('systemMessage', function (data) {
 
-        broadcastAction.message.received.value = {
+        // 格式化接收到的数据
+        var info = {
             message: data.msg,
             from: data.from,
-            type: data.type,
+            messageType: data.messageType,
             path: data.path || ""
         };
-        broadcastAction.message.received.trigger('systemMessage', {
-            message: data.msg,
-            from: data.from,
-            type: data.type,
-            path: data.path || ""
-        });
 
+        broadcastAction.message.received.value = info;
+        broadcastAction.message.received.trigger('systemMessage', info);
     });
     
     // 用户聊天消息
     broadcastAction.socket.on('newMessage', function (data) {
 
-        broadcastAction.message.received.value = {
+        // 格式化接收的数据
+        var info = {
             message: data.msg,
             from: data.from,
-            type: data.type,
+            messageType: data.messageType,
             path: data.path || ""
-        };
-        broadcastAction.message.received.trigger('newMessage', {
-            message: data.msg,
-            from: data.from,
-            type: data.type,
-            path: data.path || ""
-        });
-
+        }
+        broadcastAction.message.received.value = info;
+        broadcastAction.message.received.trigger('newMessage', info);
     });
 
     // 服务器请求上传更多数据
@@ -140,6 +137,24 @@ broadcastAction.socketInit = function () {
         broadcastAction.message.received.trigger('uploadDone');
     });
 
+    // 直播状态检查
+    broadcastAction.socket.on('check', function (info) {
+
+        broadcastAction.message.received.trigger('check', info);
+    });
+    
+    // 载入直播的历史数据
+    broadcastAction.socket.on('load', function (info) {
+
+        broadcastAction.message.received.trigger('load', info);
+    });
+
+    // 结束直播操作
+    broadcastAction.socket.on('finish', function (info) {
+
+        broadcastAction.message.received.trigger('finish', info);
+    });
+
 };
 
 /* 页面事件绑定 */
@@ -148,11 +163,20 @@ broadcastAction.pageEventBind = function () {
     // 当前课程名(也是直播间的名字)
     broadcastAction.courseName = $('.broadcast-room').text().trim();
 
-    // 获取音频事件
+    // 检查当前课程的直播状态
+    broadcastAction.broadcastStatusCheck();
+
+    // 绑定结束直播事件
+    if(broadcastAction.isAdmin){
+        $('.finish-broadcast-div > span').click(broadcastAction.finishBroadcast);
+    }
+
+    // 获取音频事件初始化
     broadcastAction.getMediaDataInit();
 
     // 上传事件绑定
     broadcastAction.file.upload = {
+
         setProgress: function (value) {
             // 更新页面进度条
             $('.progress-bar').css('width', value);
@@ -236,6 +260,14 @@ broadcastAction.pageEventBind = function () {
         $('#fileChoose').click();
     });
     
+};
+
+/* 结束课程直播 */
+broadcastAction.finishBroadcast = function () {
+
+    if(confirm('确定结束当前直播?')){
+        broadcastAction.socket.emit('finish');
+    }
 };
 
 /* 观察者模式声明 */
@@ -322,6 +354,15 @@ broadcastAction.watcherActive = function () {
     broadcastAction.message.received.listen('moreData', startUpload);
     // 文件上传完成
     broadcastAction.message.received.listen('uploadDone', uploadDone);
+    // 直播状态检查
+    broadcastAction.message.received.listen('check', broadcastCheck);
+    // 更新直播的历史记录
+    broadcastAction.message.received.listen('load', updateHistoryPage);
+    // 直播结束事件
+    broadcastAction.message.received.listen('finish', finish);
+
+    //--- 接收消息 ---//
+
 
     // 上传完成
     function uploadDone() {
@@ -382,7 +423,7 @@ broadcastAction.watcherActive = function () {
         // 消息发送者和消息内容和消息类型
         var system = "SYSTEM";
         var msg = info.args.message;
-        var type = info.type;
+        var messageType = info.messageType;
 
         var date = broadcastAction.getDate();
 
@@ -391,7 +432,7 @@ broadcastAction.watcherActive = function () {
         var $messageItem =
             $('<div class="message-list-item message-list-item-system">');
 
-        var $PH = $('<p class="p-head p-head-system">').text(date + system);
+        var $PH = $('<p class="p-head p-head-system">').text(date + " " + system);
         var $PB = $('<p>').text(msg);
         $messageItem
             .append($PH)
@@ -411,15 +452,97 @@ broadcastAction.watcherActive = function () {
             // 消息发送者和消息内容,媒体类型数据的url
             from: info.args.from,
             msg: info.args.message,
-            path: info.args.path || "",
+            url: info.args.url || "",
             // 消息的所属类型,对应的有text,video,audio
-            type: info.args.type
+            messageType: info.args.messageType
         };
 
         // 执行DOM更新
         broadcastAction.newMessageUpdate(info);
     }
+    
+    /** 直播状态检查
+     * broadcastIng -- 正在直播
+     * broadcastDone -- 直播完成等待发布
+     * broadcastNone -- 无法查询到当前直播
+     * */
+    function broadcastCheck(info) {
 
+        if(info.args.isError){
+
+            return broadcastAction.modalWindow('检查状态时发生错误!请刷新页面,错误码: ' + info.args.error);
+        }
+
+        // 判断返回的直播状态
+        var broadcastStatus = info.args.status;
+        // 正在直播
+        if(broadcastStatus == "broadcastIng"){
+
+            broadcastAction.loadBroadcastHistory(broadcastStatus);
+        }else if(broadcastStatus == "broadcastDone"){
+
+            broadcastAction.loadBroadcastHistory(broadcastStatus);
+            // 断开连接,冻结发送区域
+            finish();
+        } else if(broadcastStatus == "broadcastNone"){
+
+            broadcastAction.modalWindow('未查询到相关的课程直播数据,请退出');
+            // 断开连接, 冻结发送区域
+            finish();
+        }
+    }
+
+    /** 更新直播历史记录数据页面
+     * 数据格式
+     * messageType -- 数据类型(texts, audios, images, videos)
+     * date -- 日期字符串
+     * msg -- 文字信息或是媒体数据名
+     * from -- 发送者
+     * url -- 多媒体对象的访问路径
+     * */
+    function updateHistoryPage(info) {
+
+        // 获取数据出错
+        if(info.args.isError){
+            return broadcastAction.modalWindow('直播历史记录载入出错!请重试');
+        }
+        // 所有直播的数据
+        var courseOriginArray = info.args.courseOrigin;
+        // 遍历数据更新页面
+        for (var index in courseOriginArray){
+
+            broadcastAction.newMessageUpdate(courseOriginArray[index]);
+        }
+    };
+
+    // 结束直播事件
+    function finish(info) {
+
+        if(info.args.isError){
+
+            return broadcastAction.modalWindow('结束当前直播失败,请重试,错误代码: ' + info.args.error);
+        }
+
+        // 断开服务器端的连接
+        broadcastAction.socket.disconnect();
+        // 禁用客户端的消息发送
+        $('.send-wrapper').prop('class', 'send-wrapper send-wrapper-hidden');
+    }
+
+};
+
+/* 发送检查当前直播状态的命令 */
+broadcastAction.broadcastStatusCheck = function () {
+
+    broadcastAction.socket.emit('broadcastCheck');
+};
+
+/* 发送载入直播的历史记录数据请求 */
+broadcastAction.loadBroadcastHistory = function (status) {
+
+    broadcastAction.socket.emit('loadHistory', {
+        status: status
+    });
 };
 
 /* 页面消息更新 */
@@ -428,23 +551,23 @@ broadcastAction.newMessageUpdate = function (info) {
     // 消息参数
     var from = info.from,
         msg = info.msg,
-        path = info.path,
-        type = info.type;
+        path = info.url,
+        messageType = info.messageType;
 
-    var date = broadcastAction.getDate();
+    var date = info.date || broadcastAction.getDate();
 
     // 选择方法
     var update = {
 
-        // 更新页面文本
-        text: function () {
+        // 更新页面文本 //
+        texts: function () {
 
             // 添加DOM
             var $messageList = $('.message-list');
             var $messageItem =
                 $('<div class="message-list-item message-list-item-user">');
 
-            var $PH = $('<p class="p-head">').text(date + from);
+            var $PH = $('<p class="p-head">').text(date + " " + from);
             var $PB = $('<p>').text(msg);
             $messageItem
                 .append($PH)
@@ -455,7 +578,7 @@ broadcastAction.newMessageUpdate = function (info) {
             window.scrollTo(0,document.body.scrollHeight);
         },
 
-        // 更新页面视频消息
+        // 更新页面视频消息 //
         videos: function () {
 
             // 添加DOM
@@ -466,7 +589,7 @@ broadcastAction.newMessageUpdate = function (info) {
             // 文本消息
             var $messageItemText =
                 $('<p class="p-head">');
-            $messageItemText.text(date + from)
+            $messageItemText.text(date + " " + from)
                 .appendTo($messageItem);
 
             // 视频消息
@@ -485,7 +608,7 @@ broadcastAction.newMessageUpdate = function (info) {
             window.scrollTo(0,document.body.scrollHeight);
         },
 
-        // 更新页面音频消息
+        // 更新页面音频消息 //
         audios: function () {
 
             // 添加DOM
@@ -496,12 +619,13 @@ broadcastAction.newMessageUpdate = function (info) {
             // 文本消息
             var $messageItemText =
                 $('<div class="p-head">');
-            $messageItemText.text(date + from)
+            $messageItemText.text(date + " " + from)
                 .appendTo($messageItem);
 
             // 音频消息, 默认是隐藏的, 是HTML5元素
             var $audio =
                 $('<audio>');
+
             // 媒体获取完毕后
             $audio[0].addEventListener("loadedmetadata", function(){
                 var total = parseInt(this.duration);//获取总时长
@@ -509,11 +633,13 @@ broadcastAction.newMessageUpdate = function (info) {
                 updateDuration();
             });
 
+            // 设置属性
             $audio
                 .prop({
                     src: path,
                     controls: 'controls',
-                    style: 'display: none'
+                    style: 'display: none',
+                    preload: 'metadata'
                 })
                 .appendTo($messageItem);
 
@@ -543,18 +669,17 @@ broadcastAction.newMessageUpdate = function (info) {
                 }
             });
 
+
             // 添加音频消息
             $audioDefine.append($audioSpan)
                 .appendTo($messageItem);
-
             // 添加到页面
             $messageList.append($messageItem);
-
             // 滚到页面底部
             window.scrollTo(0,document.body.scrollHeight);
         },
 
-        // 更新页面图片消息
+        // 更新页面图片消息 //
         images: function () {
 
             // 添加DOM
@@ -565,7 +690,7 @@ broadcastAction.newMessageUpdate = function (info) {
             // 文本消息
             var $messageItemText =
                 $('<p class="p-head">');
-            $messageItemText.text(date + from)
+            $messageItemText.text(date + " " + from)
                 .appendTo($messageItem);
 
             // 图片消息
@@ -582,7 +707,7 @@ broadcastAction.newMessageUpdate = function (info) {
         }
     };
 
-    update[type]();
+    update[messageType]();
 
 };
 
@@ -723,7 +848,7 @@ broadcastAction.getDate = function () {
 
     var date = new Date();
     var dateArray = [];
-    dateArray.push("[ ", date.getHours(), ":", date.getMinutes(), ":", date.getSeconds(), " ] ");
+    dateArray.push(date.getHours(), ":", date.getMinutes(), ":", date.getSeconds());
 
     return dateArray.join('');
 };

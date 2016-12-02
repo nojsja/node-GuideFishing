@@ -47,13 +47,12 @@ Recruitment.prototype.save = function (callback) {
                     var query = doc.update({
                         $push: {recruitments: recruitment}
                     });
-                    query.exec(function (err, results) {
+                    query.exec(function (err, doc) {
 
                         if(err){
                             console.log(err);
                             return callback(err);
                         }
-                        console.log('%d Documents update.', results);
                         return callback(null);
                     });
                 });

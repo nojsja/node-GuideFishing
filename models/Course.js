@@ -6,6 +6,8 @@
  * 课程数据模型
  * courseName -- 课程名字
  * courseAbstract -- 课程概述
+ * courseOrigin -- 未处理的原始数据
+ * isReady -- 是否时正式课程
  * courseType -- 课程类型
  * courseContent -- 课程内容
  * teacher -- 课程讲师
@@ -27,9 +29,13 @@ function Course(course){
 
         courseName : course.courseName || "null",
         courseAbstract : course.courseAbstract,
+        courseOrigin: course.courseOrigin || [],
+        isReady: course.isReady || false,
+        isBroadcast: course.isBroadcast || false,
         courseType : course.courseType,
         courseContent : course.courseContent,
         teacher : course.teacher,
+        password: course.password,
         date : getDate(),
         price : course.price,
         clickRate : 0
@@ -41,17 +47,272 @@ function Course(course){
 Course.prototype.save = function (callback) {
 
     var db = mongoose.connection;
-    var Course = mongoose.model('Course', courseSchema);
+    var Model = mongoose.model('Course', courseSchema);
     var courseData = this.courseData;
 
-    var newCourse = new Course(courseData);
-    newCourse.save(function (err, doc) {
+    // 先进行检查是否已经存在数据
+    Course.deleteIfExit({ courseName: courseData.courseName }, function (err) {
+
+        if(err){
+            return callback(err);
+        }
+        // 创建课程
+        var newCourse = new Model(courseData);
+        newCourse.save(function (err, doc) {
+
+            if(err){
+                console.log(err);
+                return callback(err);
+            }
+            callback(null);
+        });
+    });
+};
+
+/* 检查数据是否存在,如果存在的话先删除数据 */
+Course.deleteIfExit = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Course', courseSchema);
+
+    var query = Course.findOne();
+    query.where(condition);
+
+    // 执行搜索删除
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log('[deleteIfExit error]: ' + err);
+            return callback(err);
+        }
+        // 文档存在
+        if(doc){
+            // 删除本条数据
+            doc.remove(function (err, deletedDoc) {
+                if(err){
+                    console.log('[deleteIfExit error]: ' + err);
+                    return callback(err);
+                }
+                callback(null);
+            });
+        }else {
+            callback(null);
+        }
+    });
+
+};
+
+/* 导入课程直播数据 */
+Course.importFromBroadcast = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Course', courseSchema);
+    // 课程直播元数据
+    var courseOrigin = condition.medias;
+    // 课程名字
+    var courseName = condition.courseName;
+
+    var query = Course.findOne().where({
+        courseName: courseName
+    });
+    query.exec(function (err, doc) {
 
         if(err){
             console.log(err);
             return callback(err);
         }
-        callback(null);
+        if(doc){
+            // push数据
+            for (let index in courseOrigin){
+                // 更新单个文档
+                doc.courseOrigin.set(index, courseOrigin[index]);
+            }
+            // 保存更新
+            doc.save(function (err) {
+                if(err){
+                    return callback(err);
+                }
+                callback(null);
+            });
+        }else {
+            var err = new Error('未找到直播数据');
+            callback(err);
+        }
+    });
+
+};
+
+/* 获取所有需要导入的课程数据 */
+Course.getLoadData = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Course', courseSchema);
+
+    var query = Course.fineOne().where({
+       courseName: condition.courseName
+    });
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log('[getLoadData error]: ' + err);
+            return callback(err);
+        }
+        // 返回一个课程的所有数据
+        callback(null, doc);
+    });
+}
+
+/* 获取当前直播课程的数据 */
+Course.getData = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Course', courseSchema);
+
+    var query = Course.findOne().where({
+       courseName: condition.courseName
+    });
+    // 筛选条件映射对象
+    var conditionObject = {
+        
+        select: function (selectArray) {
+            // 确定筛选条件
+            var _select = {};
+            for(let sel in selectArray){
+                _select[sel] = 1;
+            }
+            query.select(_select);
+        },
+        limit: function (lim) {
+            query.limit(lim);
+        },
+        sort: function (sor) {
+            query.sort(sor);
+        },
+        skip: function (num) {
+            query.skip(num);
+        }
+    };
+
+    // 确定查询对象
+    for(var attr in condition){
+
+        if(conditionObject[attr]){
+            // 执行筛选方法
+            conditionObject[attr]( condition[attr] );
+        }
+    }
+
+    // 执行筛选查询
+    query.exec(function (err, doc) {
+       if(err){
+           console.log('[getData error]: ' + err);
+           return callback(err);
+       }
+       // 回调返回获取的原始数据
+       if(doc){
+
+           callback(null, doc);
+       }else {
+
+           callback(null, null);
+       }
+    });
+};
+
+/** 检查一个课程的直播状态
+ * 状态码:
+ * isReady -- 正式发布的课程(课程已经不能编辑)
+ * noReady -- 待发布的直播课程(课程数据已经存入,课程可以编辑)
+ * none -- 没有获取到相应的课程数据(查询不到数据记录)
+ * */
+Course.checkStatus = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Course', courseSchema);
+
+    // 课程状态
+    var status = {
+        ing: 'noReady',
+        done: 'isReady',
+        none: 'none'
+    }
+    var query = Course.findOne().where({
+        courseName: condition.courseName
+    });
+    query.select({
+       isReady: 1
+    });
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log('[checkStatus error]:' + err);
+            callback(err);
+        }
+        // 查询到相应的文档
+        if(doc){
+            // 正式发布的课程
+            if(doc.isReady){
+                callback(null, status.done);
+            }else {
+                // 待发布课程
+                callback(null, status.ing);
+            }
+        }else {
+            // 不存在直播课程和正式课程
+            callback(null, status.none);
+        }
+    });
+};
+
+/* 正式发布课程 */
+Course.publish = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Course', courseSchema);
+    // 需要正式发布的课程
+    var courseName = condition.courseName;
+
+    // 更新操作
+    Course.update({
+        courseName: courseName,
+        isReady: true
+    }, callback);
+};
+
+/* 更新课程数据 */
+Course.update = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Course', courseSchema);
+
+    // 筛选的课程名
+    var courseName = condition.courseName;
+    // 所有可以更新的字段
+    var allSegment = ['courseName', 'courseType', 'courseAbstract', 'isReady',
+        'isBroadcast', 'courseContent', 'teacher', 'price', 'clickRate'];
+
+    var query = Course.findOne().where({
+        courseName: courseName
+    });
+    // 执行查找更新
+    query.exec(function (err, doc) {
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+        // 更新所有字段
+        for(let segment in condition){
+            if(allSegment.indexOf(segment) != -1){
+                doc.set(segment, condition[segment]);
+            }
+        }
+        query.save(function (err) {
+           if(err){
+               console.log(err);
+               return callback(err);
+           }
+           callback(null);
+        });
     });
 
 };
@@ -78,7 +339,7 @@ Course.readOne = function (totalCondition, callback) {
             teacher: doc.teacher,
             date: doc.date
         };
-        callback(null, data);
+        callback(null, doc);
     });
 };
 
@@ -88,8 +349,11 @@ Course.readList = function (docCondition, callback) {
     var db = mongoose.connection;
     var Course = mongoose.model('Course', courseSchema);
 
-    //需要读取的文档的查询条件
-    var condition = {};
+    // 需要读取的文档的查询条件
+    // 获取正式发布的课程
+    var condition = {
+        isReady: true
+    };
     /* 读取条目数量 */
     var number = 20;
     /* 跳过读取的条目数量 */
@@ -161,12 +425,6 @@ Course.readList = function (docCondition, callback) {
         });
 
     });
-};
-
-/* 更新一个课程数据 */
-Course.update = function (condition, callback) {
-
-
 };
 
 

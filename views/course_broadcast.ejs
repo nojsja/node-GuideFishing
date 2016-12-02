@@ -19,6 +19,10 @@
     <script type="text/javascript" src="/javascripts/lib/recorderWorker.js"></script>
 
     <script type="text/javascript" src="/javascripts/course_broadcast.js"></script>
+    <script type="text/javascript">
+        // 用户身份认证
+        broadcastAction.isAdmin = '<%= admin %>';
+    </script>
 
 </head>
 
@@ -28,6 +32,13 @@
 <div class="broadcast-room box1">
     <%= broadcastRoom %>
 </div>
+
+<% if(admin) {%>
+<!--结束直播按钮-->
+<div class="finish-broadcast-div">
+    <span class="glyphicon glyphicon-remove-sign"></span>
+</div>
+<% } %>
 
 <!--消息主体部分-->
 <div class="container total" id="total">

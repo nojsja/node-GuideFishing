@@ -5,7 +5,6 @@
  * date -- 创建日期
  * learner -- 参与学习者
  * teacher -- 教师的名字
- * admin -- 课程管理员
  */
 
 var mongoose = require('mongoose');
@@ -18,19 +17,20 @@ var courseBroadcast_schema = new Schema({
         unique: true,
         required: true
     },
+    courseType: {
+        type: String,
+        required: true
+    },
     date: String,
-    learner: [{
+    learners: [{
         name: String
     }],
-    teacher: [{
-        name: String
-    }],
-    admin: [{
+    teacher: {
         name: String,
         password: String
-    }]
+    }
 
-}, { collection: "courseBroadcast" });
+}, { collection: "broadcast" });
 
 exports.courseBroadcast_schema = courseBroadcast_schema;
 

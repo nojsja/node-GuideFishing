@@ -9,6 +9,10 @@ var UploadAction = require('../models/CourseUploadAction');
 var UploadData = require('../models/CourseUploadData');
 // 存储课程
 var Course = require('../models/Course');
+// 获取当前时间
+var getDate = require('../models/tools/GetDate');
+// 发布直播课程数据
+var CourseBroadcastData = require('../models/CourseBroadcastData');
 
 function course_admin(app) {
     
@@ -20,6 +24,7 @@ function course_admin(app) {
         });
     });
 
+    // 进入课程编辑后台
     app.get('/course/admin/edit', function (req, res) {
 
         res.render('course_adminEdit', {
@@ -30,28 +35,68 @@ function course_admin(app) {
     // 单个课程数据存储
     app.post('/course/admin/save', function (req, res) {
 
-        // 字段数组
+        // 规定字段数组
         var elementArary = ['courseName', 'courseType', 'courseAbstract',
-        'courseContent', 'teacher', 'price'];
+            'courseContent', 'courseOrigin', 'password', 'isReady', 'isBroadcast',
+            'teacher', 'price'];
+        // 含有非字符串类型的数据最好先转化为JSON字符串然后再转化成JSON对象
+        // 否则服务器会把Boolean类型会被处理成String类型
+        var courseData = JSON.parse(req.body.courseData);
         // 课程数据
         var course = {};
         // 加载条件数据
-        for(var part in req.body){
+        for(var part in courseData){
             if(arrayContain(elementArary, part)){
-                course[part] = req.body[part];
+                course[part] = courseData[part];
             }
         }
 
+        console.log(course);
+
+        // 存储课程数据 //
         var newCourse = new Course(course);
         newCourse.save(function (err) {
             if(err){
-                return res.json( JSON.stringify({
+                res.json( JSON.stringify({
                     error: err
                 }) );
+            }else {
+
+                // 如果是直播课程的话发布直播课程的相关数据 //
+                if(course.isBroadcast){
+
+                    var broadcast = {
+                        courseName: course.courseName,
+                        courseType: course.courseType,
+                        date: getDate(),
+                        learners: [],
+                        teacher: {
+                            name: course.teacher,
+                            password: course.password
+                        }
+                    };
+                    var courseBroadcast = new CourseBroadcastData(broadcast);
+                    courseBroadcast.save(function (err) {
+
+                        if(err){
+                            return res.json( JSON.stringify({
+                                error: err
+                            }) );
+                        }
+                        // 成功后返回数据
+                        res.json( JSON.stringify({
+                            error: null
+                        }) );
+                    });
+                }else {
+
+                    // 成功后返回数据
+                    res.json( JSON.stringify({
+                        error: null
+                    }) );
+                }
             }
-            res.json( JSON.stringify({
-                error: null
-            }) );
+
         });
 
         function arrayContain(array, element) {
@@ -63,6 +108,30 @@ function course_admin(app) {
             }
             return false;
         };
+    });
+    
+    // 获取需要导入的课程数据
+    app.post('/course/admin/load/:courseName', function (req, res) {
+
+        // 筛选条件
+        var condition = {
+            courseName: req.params.courseName
+        };
+        Course.getLoadData(condition, function (err, courseData) {
+
+            if(err){
+                console.log('获取导入课程的数据出错!');
+                return res.json(JSON.stringify({
+                    isError: true,
+                    error: err
+                }));
+            }
+            // 向客户端发回数据
+            res.json(JSON.stringify({
+                isError: false,
+                loadData: courseData
+            }));
+        });
     });
     
     // 课程数据文件上传
