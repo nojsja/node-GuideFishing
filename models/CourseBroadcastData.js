@@ -21,7 +21,7 @@ CourseBroadcastData.prototype.save = function (callback) {
     var db = Mongoose.connection;
     var mongoose = Mongoose;
     var broadcast = this.broadcast;
-    var Broadcasts = mongoose.model("Broadcast", courseBroadcast_schema);
+    var Broadcast = mongoose.model("Broadcast", courseBroadcast_schema);
 
     CourseBroadcastData.deleteIfExit({ courseName: broadcast.courseName }, function (err) {
 
@@ -29,7 +29,7 @@ CourseBroadcastData.prototype.save = function (callback) {
             return callback(err);
         }
         // 新建数据
-        var newBroadcast = new Broadcasts(broadcast);
+        var newBroadcast = new Broadcast(broadcast);
         newBroadcast.save(function (err, doc) {
             if(err){
                 return callback(err);
@@ -71,6 +71,42 @@ CourseBroadcastData.deleteIfExit = function (condition, callback) {
         }
     });
 
+};
+
+/* 讲师登录 */
+CourseBroadcastData.teacherLogin = function (condition, callback) {
+
+    var db = Mongoose.connection;
+    var mongoose = Mongoose;
+    var Broadcast = mongoose.model('broadcast', courseBroadcast_schema);
+    
+    var query = Broadcast.findOne().where({
+        courseName: condition.courseName
+    });
+
+    console.log(condition);
+    // 执行查询
+    query.exec(function (err, doc) {
+
+        console.log(doc);
+        if(err){
+            console.log('[teacherLogin error]: ' + err);
+            return callback(err);
+        }
+        // 数据存在
+        if(doc){
+            if(doc.teacher.name == condition.teacher &&
+                doc.teacher.password == condition.password){
+                // 登录成功
+                return callback(null, true);
+            }
+            // 登录失败
+            return callback(null, false);
+        }else {
+            console.log('[teacherLogin none]: 用户不存在');
+            callback(null, false);
+        }
+    });
 };
 
 /* 读取直播课程列表 */
@@ -186,14 +222,20 @@ CourseBroadcastData.deleteOne = function (condition, callback) {
        if(err){
            return callback(err);
        }
-       doc.remove(function (err, doc) {
-           if(err){
-               console.log('[broadcast remove error]:' + err);
-               callback(err);
-           }
-           console.log('直播课程删除成功!');
-           callback(null);
-       });
+       if(doc){
+           doc.remove(function (err, doc) {
+               if(err){
+                   console.log('[broadcast remove error]:' + err);
+                   callback(err);
+               }
+               console.log('直播课程删除成功!');
+               callback(null);
+           });
+       }
+       else {
+           var err = new Error('未找到直播数据');
+           callback(err);
+       }
     });
 };
 

@@ -117,24 +117,35 @@ function course_broadcast(app) {
         // 账户
         var account = req.body.account;
         var password = req.body.password;
-        console.log(account + password);
         // 聊天室
         var room = req.params.id;
 
-        // 登录验证
-        if( account == 'admin' && password == 'admin_password'){
+        broadcastData.teacherLogin({
+            courseName: room,
+            teacher: account,
+            password: password
+        }, function (err, isPass) {
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err
+                }) );
+            }
+            if(isPass){
+                res.json( JSON.stringify({
+                    isError: false,
+                    isPass: true,
+                    url: '/course/broadcast/room/admin/' + room
+                }) );
+            }else {
+                // 未通过验证
+                res.json( JSON.stringify({
+                    isError: false,
+                    isPass: false
+                }) );
+            }
+        });
 
-            res.json(JSON.stringify({
-                pass: true,
-                url: '/course/broadcast/room/admin/' + room
-            }));
-        }else {
-
-            // 未通过验证
-            res.json(JSON.stringify({
-                pass: false
-            }));
-        }
     });
 
     

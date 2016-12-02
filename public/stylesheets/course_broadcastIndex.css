@@ -2,7 +2,6 @@
 
 body {
     font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-    background-color: #f8ffff;
 }
 
 a {
@@ -137,9 +136,6 @@ a {
     text-overflow: ellipsis;
     width: 70%;
     overflow: hidden;
-    -webkit-box-shadow: inset 0px 0px 5px #e1e5e2;
-    -moz-box-shadow: inset 0px 0px 5px #e1e5e2;
-    box-shadow: inset 0px 0px 5px #e1e5e2;;
 }
 
 .content-item-right {
@@ -224,6 +220,22 @@ a {
 .loading-info {
     text-align: center;
     margin-bottom: 1rem;
+}
+
+.milky {
+    font-family: "Arial Rounded MT Bold", "Helvetica Rounded", Arial, sans-serif;;
+    text-transform: uppercase;
+    display: block;
+    font-size: 2.5rem;
+    color: #fcf6f0;
+    text-shadow: 0 8px 9px #c4b59d, 0px -2px 1px #fff;
+    font-weight: bold;
+    letter-spacing: 3px;
+    word-spacing: 2px;
+    text-align: center;
+    background: linear-gradient(to bottom, #ece4d9 0%,#e9dfd1 100%);
+    padding: 5px 10px;
+    border-radius: 10px;
 }
 
 /*文字特效*/

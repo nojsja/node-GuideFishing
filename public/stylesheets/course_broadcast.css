@@ -2,7 +2,6 @@
 
 body {
     font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-    background-color: #f8ffff;
 }
 
 a {
@@ -31,7 +30,7 @@ a {
     font-size: 2rem;
     padding: 5px;
     color: rgb(236, 236, 236);
-    background-color: rgba(130, 148, 205, 0.65);
+    background-color: #8BCAED;
     border-bottom:solid 2px #8bcaed;
 }
 
@@ -94,7 +93,7 @@ a {
     margin-top: 1rem;
     padding: 5px;
     color: #4a4a4a;
-    background-color: rgb(237, 237, 237);
+    background-color: #F3F3F3;
 }
 
 /* 系统文本消息 */
@@ -161,7 +160,7 @@ a {
     z-index: 100;
     position: fixed;
     padding: 1rem;
-    background-color: rgba(130, 148, 205, 0.65);
+    background-color: rgb(139, 202, 237);
     color: white;
     position: fixed;
     left:0;

@@ -46,7 +46,7 @@ var courseSchema = new Schema({
         required: true
     },
     courseOrigin: [{
-        type: String,
+        messageType: String,
         date: String,
         from: String,
         msg: String,

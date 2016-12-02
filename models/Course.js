@@ -121,14 +121,23 @@ Course.importFromBroadcast = function (condition, callback) {
             console.log(err);
             return callback(err);
         }
-        doc.set('courseOrigin', courseOrigin);
-        doc.save(function (err) {
-            if(err){
-                console.log(err);
-                return callback(err);
+        if(doc){
+            // push数据
+            for (let index in courseOrigin){
+                // 更新单个文档
+                doc.courseOrigin.set(index, courseOrigin[index]);
             }
-            callback(null);
-        });
+            // 保存更新
+            doc.save(function (err) {
+                if(err){
+                    return callback(err);
+                }
+                callback(null);
+            });
+        }else {
+            var err = new Error('未找到直播数据');
+            callback(err);
+        }
     });
 
 };

@@ -25,9 +25,9 @@ var Q = require('q');
 function courseBroadcastAction(io){
 
     // 保存所有聊天室房间的组数 -- 在全局范围下
-    var roomUser = [];
+    var RoomUser = [];
     // 所有聊天室的原始消息记录,以便数据库保存数据 -- 在全局范围下
-    var courseOrigin = [];
+    var CourseOrigin = {};
 
     // 客户端新建连接
     io.on('connection', function (socket) {
@@ -55,7 +55,7 @@ function courseBroadcastAction(io){
         }catch (e){
             roomId = '测试';
             courseName = '测试';
-            console.log(e);
+            console.log('客户端连接发生错误: ' + e);
         }
 
         // 用户姓名
@@ -65,9 +65,9 @@ function courseBroadcastAction(io){
         };
 
         // 初始化当前课程数据,包括观察者和媒体数据以及数据索引编号
-        if(!courseOrigin[roomId]){
+        if(!CourseOrigin[roomId]){
 
-            courseOrigin[roomId] = {
+            CourseOrigin[roomId] = {
                 index: 1,
                 // 将观察者和数据放在同一个this作用域下便于读取数据
                 medias: [],
@@ -76,8 +76,9 @@ function courseBroadcastAction(io){
                 watcherTrigger: function (type, args) { },
                 watcherRemove: function (type, fn) { }
             };
+
             // 初始化观察者并开启监听
-            ObserverInit(courseOrigin[roomId]);
+            ObserverInit(CourseOrigin[roomId]);
 
             // 在全局变量中保存当前直播课程的信息
             // let -- ECMAScript6关键字,制造块级作用域
@@ -102,10 +103,10 @@ function courseBroadcastAction(io){
                 this.index += 1;
             }
 
-            courseOrigin[roomId].watcherListen("videos", videosListen);
-            courseOrigin[roomId].watcherListen("images", imagesListen);
-            courseOrigin[roomId].watcherListen("audios", audiosListen);
-            courseOrigin[roomId].watcherListen("texts", textsListen);
+            CourseOrigin[roomId].watcherListen("videos", videosListen);
+            CourseOrigin[roomId].watcherListen("images", imagesListen);
+            CourseOrigin[roomId].watcherListen("audios", audiosListen);
+            CourseOrigin[roomId].watcherListen("texts", textsListen);
         }
 
         // 监听连接的其它信息
@@ -140,23 +141,23 @@ function courseBroadcastAction(io){
             socket.isAdmin = data.isAdmin;
 
             // 将用户归类到房间
-            if(!roomUser[roomId]) {
-                roomUser[roomId] = [];
+            if(!RoomUser[roomId]) {
+                RoomUser[roomId] = [];
             }
 
             // 将用户加入房间
-            roomUser[roomId].push( JSON.stringify(user) );
+            RoomUser[roomId].push( JSON.stringify(user) );
             // 创建socket房间
             socket.join(roomId);
             // 触发系统消息
             socket.to(roomId).emit('systemMessage', {
                 msg: user.name + '加入了房间!',
-                type: 'text',
+                messageType: 'texts',
                 from: 'system'
             });
             socket.emit('systemMessage', {
                 msg: '欢迎加入房间!',
-                type: 'text',
+                messageType: 'texts',
                 from: 'system'
             });
 
@@ -169,13 +170,13 @@ function courseBroadcastAction(io){
             console.log('message');
             console.log('isAdmin: ' + socket.isAdmin);
             // 验证如果用户不在房间则不发消息
-            if(roomUser[roomId].indexOf( JSON.stringify(user) ) < 0){
+            if(RoomUser[roomId].indexOf( JSON.stringify(user) ) < 0){
                 return false;
             }
             // 验证是否是管理员发送的消息
             if(socket.isAdmin){
-                courseOrigin[roomId].watcherTrigger('texts', {
-                    type: 'texts',
+                CourseOrigin[roomId].watcherTrigger('texts', {
+                    messageType: 'texts',
                     from: user.name,
                     msg: msg,
                     url: '',
@@ -187,13 +188,13 @@ function courseBroadcastAction(io){
             socket.to(roomId).emit('newMessage', {
                 from: user.name,
                 msg: msg,
-                type: 'texts'
+                messageType: 'texts'
             });
             // 给自己发送相同的消息
             socket.emit('newMessage', {
                 from: "我",
                 msg: msg,
-                type: 'texts'
+                messageType: 'texts'
             });
         }
 
@@ -276,8 +277,8 @@ function courseBroadcastAction(io){
                                 // 内存中存储数据,全局变量
                                 if(socket.isAdmin){
 
-                                    courseOrigin[roomId].watcherTrigger('audios', {
-                                        type: 'audios',
+                                    CourseOrigin[roomId].watcherTrigger('audios', {
+                                        messageType: 'audios',
                                         date: getDate(),
                                         msg: info.index,
                                         from: user.name,
@@ -288,7 +289,7 @@ function courseBroadcastAction(io){
                                 // 向客户端发送消息
                                 var msgInfo = {
                                     from: user.name,
-                                    type: "audios",
+                                    messageType: "audios",
                                     path: Files.record.visitPath
                                 };
                                 console.log(Files.record.visitPath);
@@ -419,7 +420,7 @@ function courseBroadcastAction(io){
                     var msgInfo = {
                         from: user.name,
                         msg: fileName,
-                        type: Files.upload.type,
+                        messageType: Files.upload.type,
                         url: Files.upload.visitPath
                     };
                     // 向客户端发送上传结束消息
@@ -432,11 +433,11 @@ function courseBroadcastAction(io){
                     if(socket.isAdmin){
 
                         // 触发观察者
-                        courseOrigin[roomId].watcherTrigger(msgInfo.type, {
+                        CourseOrigin[roomId].watcherTrigger(msgInfo.messageType, {
                             from: user.name,
                             msg: fileName,
                             date: getDate(),
-                            type: Files.upload.type,
+                            messageType: Files.upload.type,
                             url: Files.upload.visitPath
                         });
                     }
@@ -545,16 +546,16 @@ function courseBroadcastAction(io){
                 // 向客户端发回数据
                 socket.emit('load', {
                     isError: false,
-                    courseOrigin: courseOrigin[roomId].medias
-                })
+                    courseOrigin: CourseOrigin[roomId].medias
+                });
                 // 直播完成
             }else if(status == "broadcastDone"){
 
                 // 筛选条件
                 var condition = {
                     courseName: courseName
-                }
-                Course.getBroadcastOrigin(condition, function (err, courseOrigin) {
+                };
+                Course.getLoadData(condition, function (err, courseOrigin) {
 
                     if(err){
                         console.log('获取历史记录数据出错!');
@@ -582,21 +583,25 @@ function courseBroadcastAction(io){
             console.log('finish...');
             // 流程控制
             var defer = Q.defer();
-            
+
             // 存储直播数据
-            var courseOrigin = {
+            var courseOriginData = {
                 courseName: roomId,
-                medias: courseOrigin[roomId].medias
+                medias: CourseOrigin[roomId].medias
             };
 
-            // 流程控制, reject -- fail, resolve -- success
+            // 同步流程控制, reject -- fail, resolve -- success
             defer.promise
                 /* 导入直播数据 */
                 .then(function success(info) {
 
                     var _defer = Q.defer();
-                    Course.importFromBroadcast(info.courseOrigin, function (err) {
 
+                    Course.importFromBroadcast({
+                            medias: info.courseOrigin.medias,
+                            courseName: info.courseOrigin.courseName
+
+                        }, function (err) {
                         if(err) {
                             info.isError = true;
                             info.error = err;
@@ -604,9 +609,9 @@ function courseBroadcastAction(io){
                         }
                         _defer.resolve(info);
                     });
-
                     return _defer.promise;
                 })
+
                 /* 删除直播记录 */
                 .then(
                     // 上一步成功后执行
@@ -623,6 +628,7 @@ function courseBroadcastAction(io){
                                _defer.resolve(info);
                             }
                         );
+                        return _defer.promise;
                     },
                     // 上一步失败后执行
                     function fail(info) {
@@ -631,10 +637,11 @@ function courseBroadcastAction(io){
                         // 将错误发回给管理员
                         socket.emit('finish', {
                             isError: true,
-                            error: info.error
+                            error: info.error.toString()
                         });
                     }
                 )
+
                 /* 正式发布课程 */
                 .then(
                     // 上一步成功后执行
@@ -673,7 +680,7 @@ function courseBroadcastAction(io){
             defer.resolve({
                 isError: false,
                 error: null,
-                courseOrigin: courseOrigin
+                courseOrigin: courseOriginData
             });
 
         }
@@ -687,10 +694,10 @@ function courseBroadcastAction(io){
                 if(err){
                     console.log('leave room error!');
                 }else {
-                    var index = (roomUser[roomId] || []).indexOf( JSON.stringify(user) );
+                    var index = (RoomUser[roomId] || []).indexOf( JSON.stringify(user) );
                     if(index !== -1){
                         // 将当前用户从房间中删除
-                        roomUser[roomId].splice(index, 1);
+                        RoomUser[roomId].splice(index, 1);
                         // 在房间内发布离开的消息
                         // socket.to(roomId).emit('systemMessage', {
                         //     from: 'system',

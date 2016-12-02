@@ -115,12 +115,19 @@ bcIndexAction.updatePage = function (JSONdata) {
             $contentTitle.text(broadcast.courseName);
             //内容摘要和图标
             var $abstract = $('<div class="content-item-abstract">');
-            var $pencil = $('<span class="glyphicon glyphicon-user">');
-            $abstract.append($pencil.text(broadcast.teachers[0].name));
+            var $teacher = $('<span class="glyphicon glyphicon-user">');
+            var $intoRoom = $('<input type="button" class="btn btn-default btn-sm" value="管理员登入">');
+            $intoRoom.click(function () {
+                window.location = '/course/broadcast/room/adminCheck/' + broadcast.courseName;
+            });
+            $abstract
+                .append($teacher.text(broadcast.teacher.name))
+                .append($('<br>'))
+                .append($intoRoom);
             //DOM构造
             $contentLeft.append($contentTitle).append($abstract).append($pushPin);
 
-            //内容右边分区
+            // 内容右边分区 //
             var $contentRight = $('<div class="content-item-right">');
             //内容类型相关的图片
             var $typeImg = $('<div></div>');

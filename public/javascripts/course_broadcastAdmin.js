@@ -62,12 +62,18 @@ bcAdminAction.loginCheck = function () {
     function loginCallback(JSONdata) {
 
         var JSONobject = JSON.parse(JSONdata);
+
+        var isError = JSONobject.isError;
+        if(isError){
+            return bcAdminAction.modalWindow('服务器发生错误,错误码: ' + JSONobject.error);
+        }
+
         // 登录验证标志和跳转地址
-        var passport = JSONobject.pass;
-        var url = JSONobject.url;
+        var isPass = JSONobject.isPass;
+        var url = JSONobject.url || '';
 
         // 验证通过
-        if(passport){
+        if(isPass){
             window.location.href = url;
         }else {
             bcAdminAction.modalWindow('用户验证信息有误, 请重试...');

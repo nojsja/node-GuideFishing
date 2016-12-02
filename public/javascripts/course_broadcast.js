@@ -97,7 +97,7 @@ broadcastAction.socketInit = function () {
         var info = {
             message: data.msg,
             from: data.from,
-            type: data.type,
+            messageType: data.messageType,
             path: data.path || ""
         };
 
@@ -112,7 +112,7 @@ broadcastAction.socketInit = function () {
         var info = {
             message: data.msg,
             from: data.from,
-            type: data.type,
+            messageType: data.messageType,
             path: data.path || ""
         }
         broadcastAction.message.received.value = info;
@@ -162,6 +162,9 @@ broadcastAction.pageEventBind = function () {
 
     // 当前课程名(也是直播间的名字)
     broadcastAction.courseName = $('.broadcast-room').text().trim();
+
+    // 检查当前课程的直播状态
+    broadcastAction.broadcastStatusCheck();
 
     // 绑定结束直播事件
     if(broadcastAction.isAdmin){
@@ -420,7 +423,7 @@ broadcastAction.watcherActive = function () {
         // 消息发送者和消息内容和消息类型
         var system = "SYSTEM";
         var msg = info.args.message;
-        var type = info.type;
+        var messageType = info.messageType;
 
         var date = broadcastAction.getDate();
 
@@ -429,7 +432,7 @@ broadcastAction.watcherActive = function () {
         var $messageItem =
             $('<div class="message-list-item message-list-item-system">');
 
-        var $PH = $('<p class="p-head p-head-system">').text(date + system);
+        var $PH = $('<p class="p-head p-head-system">').text(date + " " + system);
         var $PB = $('<p>').text(msg);
         $messageItem
             .append($PH)
@@ -449,9 +452,9 @@ broadcastAction.watcherActive = function () {
             // 消息发送者和消息内容,媒体类型数据的url
             from: info.args.from,
             msg: info.args.message,
-            path: info.args.path || "",
+            url: info.args.url || "",
             // 消息的所属类型,对应的有text,video,audio
-            type: info.args.type
+            messageType: info.args.messageType
         };
 
         // 执行DOM更新
@@ -491,7 +494,7 @@ broadcastAction.watcherActive = function () {
 
     /** 更新直播历史记录数据页面
      * 数据格式
-     * type -- 数据类型(texts, audios, images, videos)
+     * messageType -- 数据类型(texts, audios, images, videos)
      * date -- 日期字符串
      * msg -- 文字信息或是媒体数据名
      * from -- 发送者
@@ -505,7 +508,6 @@ broadcastAction.watcherActive = function () {
         }
         // 所有直播的数据
         var courseOriginArray = info.args.courseOrigin;
-        console.log(courseOriginArray);
         // 遍历数据更新页面
         for (var index in courseOriginArray){
 
@@ -550,7 +552,7 @@ broadcastAction.newMessageUpdate = function (info) {
     var from = info.from,
         msg = info.msg,
         path = info.url,
-        type = info.type;
+        messageType = info.messageType;
 
     var date = info.date || broadcastAction.getDate();
 
@@ -565,7 +567,7 @@ broadcastAction.newMessageUpdate = function (info) {
             var $messageItem =
                 $('<div class="message-list-item message-list-item-user">');
 
-            var $PH = $('<p class="p-head">').text(date + from);
+            var $PH = $('<p class="p-head">').text(date + " " + from);
             var $PB = $('<p>').text(msg);
             $messageItem
                 .append($PH)
@@ -587,7 +589,7 @@ broadcastAction.newMessageUpdate = function (info) {
             // 文本消息
             var $messageItemText =
                 $('<p class="p-head">');
-            $messageItemText.text(date + from)
+            $messageItemText.text(date + " " + from)
                 .appendTo($messageItem);
 
             // 视频消息
@@ -617,7 +619,7 @@ broadcastAction.newMessageUpdate = function (info) {
             // 文本消息
             var $messageItemText =
                 $('<div class="p-head">');
-            $messageItemText.text(date + from)
+            $messageItemText.text(date + " " + from)
                 .appendTo($messageItem);
 
             // 音频消息, 默认是隐藏的, 是HTML5元素
@@ -688,7 +690,7 @@ broadcastAction.newMessageUpdate = function (info) {
             // 文本消息
             var $messageItemText =
                 $('<p class="p-head">');
-            $messageItemText.text(date + from)
+            $messageItemText.text(date + " " + from)
                 .appendTo($messageItem);
 
             // 图片消息
@@ -705,7 +707,7 @@ broadcastAction.newMessageUpdate = function (info) {
         }
     };
 
-    update[type]();
+    update[messageType]();
 
 };
 
@@ -846,7 +848,7 @@ broadcastAction.getDate = function () {
 
     var date = new Date();
     var dateArray = [];
-    dateArray.push("[ ", date.getHours(), ":", date.getMinutes(), ":", date.getSeconds(), " ] ");
+    dateArray.push(date.getHours(), ":", date.getMinutes(), ":", date.getSeconds());
 
     return dateArray.join('');
 };

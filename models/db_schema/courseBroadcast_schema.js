@@ -25,10 +25,10 @@ var courseBroadcast_schema = new Schema({
     learners: [{
         name: String
     }],
-    teachers: [{
+    teacher: {
         name: String,
         password: String
-    }]
+    }
 
 }, { collection: "broadcast" });
 

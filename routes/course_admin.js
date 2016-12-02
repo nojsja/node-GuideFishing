@@ -24,6 +24,7 @@ function course_admin(app) {
         });
     });
 
+    // 进入课程编辑后台
     app.get('/course/admin/edit', function (req, res) {
 
         res.render('course_adminEdit', {
@@ -69,10 +70,10 @@ function course_admin(app) {
                         courseType: course.courseType,
                         date: getDate(),
                         learners: [],
-                        teachers: [{
+                        teacher: {
                             name: course.teacher,
                             password: course.password
-                        }]
+                        }
                     };
                     var courseBroadcast = new CourseBroadcastData(broadcast);
                     courseBroadcast.save(function (err) {

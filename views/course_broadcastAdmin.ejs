@@ -28,18 +28,28 @@
             <legend><%= title %></legend>
             <!--账户名-->
             <div class="form-group">
-                <label class="control-label">账户</label>
-                <input type="text" class="form-control" id="account"
-                       placeholder="请输入用户名">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-user"></span>
+                    </span>
+                    <input type="text" class="form-control" id="account"
+                           placeholder="请输入用户名">
+                </div>
+
             </div>
             <!--密码-->
             <div class="form-group">
-                <label class="control-label">密码</label>
-                <input type="text" class="form-control" id="password"
-                       placeholder="请输入密码">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-lock"></span>
+                    </span>
+                    <input type="text" class="form-control" id="password"
+                           placeholder="请输入密码">
+                </div>
+
             </div>
             <!--登录-->
-            <input type="button" class="btn btn-default" id="login" value="登录">
+            <input type="button" class="btn btn-success" id="login" value="登录">
         </fieldset>
     </form>
 </div>
