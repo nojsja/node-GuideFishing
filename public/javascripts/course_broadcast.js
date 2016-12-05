@@ -110,11 +110,12 @@ broadcastAction.socketInit = function () {
 
         // 格式化接收的数据
         var info = {
-            message: data.msg,
+            message: data.msg || "",
             from: data.from,
             messageType: data.messageType,
-            path: data.path || ""
+            url: data.url || ""
         }
+        console.log('newMessage: '+ info.path + info.messageType + info.message + info.from);
         broadcastAction.message.received.value = info;
         broadcastAction.message.received.trigger('newMessage', info);
     });
@@ -629,7 +630,7 @@ broadcastAction.newMessageUpdate = function (info) {
             // 媒体获取完毕后
             $audio[0].addEventListener("loadedmetadata", function(){
                 var total = parseInt(this.duration);//获取总时长
-                $(this).attr('duration', total)
+                $(this).attr('duration', total);
                 updateDuration();
             });
 
@@ -646,7 +647,6 @@ broadcastAction.newMessageUpdate = function (info) {
             // 音频DOM自定义元素
             // 音频时长
             // 获取节点对象而不是jQuery对象
-            var duration = $audio[0].duration;
             var $audioDefine = $('<div class="audio-define">');
             // 音频标志
             var $audioSpan = $('<span class="glyphicon glyphicon-volume-up">');

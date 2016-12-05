@@ -272,7 +272,7 @@ editAction.pageEventBind = function () {
         }
     });
 
-    // 点击导入课程按钮
+    // 载入相关的课程数据
     $('#load').click(function () {
 
         // 需要导入的课程名字
@@ -280,6 +280,7 @@ editAction.pageEventBind = function () {
         if(!courseNameLoad){
             return editAction.modalWindow('请输入需要导入的课程名字!');
         }
+
         var url = '/course/admin/load/' + courseNameLoad;
         $.post(url, { courseName: courseNameLoad }, function (JSONdata) {
 
@@ -311,22 +312,25 @@ editAction.pageEventBind = function () {
 editAction.loadCourseData = function (JSONdata) {
 
     var JSONobject = JSON.parse(JSONdata);
+    // 错误
+    if(JSONobject.isError){
+        return editAction.modalWindow('服务器发生错误,错误码: ' + JSONobject.error);
+    }
+
     // 即将被导入的对象
     var loadObject = {
 
-        courseName: JSONobject.courseName,
-        courseType: JSONobject.courseType,
-        courseAbstract: JSONobject.courseAbstract,
-        teacher: JSONobject.teacher,
-        price: JSONobject.price,
-        password: JSONobject.password,
-        courseContent: JSONobject.courseContent,
-        courseOrigin: JSONobject.courseOrigin,
-        isReady: JSONobject.isReady
+        courseName: JSONobject.loadData.courseName,
+        courseType: JSONobject.loadData.courseType || "",
+        courseAbstract: JSONobject.loadData.courseAbstract || "",
+        teacher: JSONobject.loadData.teacher || "",
+        price: JSONobject.loadData.price || "",
+        password: JSONobject.loadData.password || "",
+        courseContent: JSONobject.loadData.courseContent || "",
+        courseOrigin: JSONobject.loadData.courseOrigin || [],
+        isReady: JSONobject.loadData.isReady || "false"
     };
 
-    // 设置标题
-    $('#courseName').val(loadObject.courseName);
     // 设置分类
     var $typeItems = $('.type > .type-item');
     $typeItems.each(function () {
@@ -336,22 +340,17 @@ editAction.loadCourseData = function (JSONdata) {
         }
     });
     // 设置课程概述
-    $('#editorAbstract').setContent('');
-    $('#editorAbstract').setContent( $(loadObject.courseAbstract).html(), true );
+    editAction.ueAbstract.setContent('');
+    editAction.ueAbstract.setContent( $(loadObject.courseAbstract).html(), true );
     //设置课程讲师
     $('#teacher').val(loadObject.teacher);
     // 设置讲师密码
     $('#password').val(loadObject.password);
     // 设置课程价格
     $('#price').val(loadObject.price);
-
-    // 对于已经发布的课程直接导入编辑后的内容
-    // 对于未发布的课程导入课程的原始数据进行编辑
-    if(loadObject.isReady){
-        // 设置课程内容
-        $('#editorContent').setContent('');
-        $('#editorContent').setContent( $(loadObject.courseContent).html(), true );
-    }
+    // 设置课程内容
+    editAction.ueContent.setContent('');
+    editAction.ueContent.setContent( $(loadObject.courseContent).html(), true );
 };
 
 /* 更新页面的预览窗口 */

@@ -1,10 +1,10 @@
 body {
     font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-    background-color: #f8ffff;
+    background-color: #F3F3F3;
 }
 
 a {
-  color: #00B7FF;
+    color: #00B7FF;
 }
 
 .header {
@@ -15,11 +15,9 @@ a {
     width: 100%;
     min-height: 2rem;
     height: auto;
-    background-color: #e3e6df;
     font-size: 0;
-    -webkit-box-shadow: 0px 0px 10px #a2a5a2;
-    -moz-box-shadow:  0px 0px 10px #a2a5a2;
-    box-shadow:  0px 0px 10px #a2a5a2;
+    background-color: #588ac6;
+    border-bottom: solid 1px #74c2b9;
 }
 
 #upAndDown {
@@ -31,7 +29,7 @@ a {
     font-size: 2rem;
     margin-bottom: 0.5rem;
     color: white;
-    text-shadow: 0px 0px 10px #000000;
+    text-shadow: 0px 0px 10px #f0f0f0;
     line-height: 2rem;
     font-weight: bold;
 }
@@ -78,9 +76,10 @@ a {
 
 .hot-container {
     margin-top: 6rem;
-    -webkit-box-shadow:  0px 0px 10px #588ac6;
-    -moz-box-shadow:  0px 0px 10px #588ac6;
-    box-shadow:  0px 0px 10px #588ac6;
+    background-color: #ffffff;
+    -webkit-box-shadow:  0px 0px 5px #588ac6;
+    -moz-box-shadow:  0px 0px 5px #588ac6;
+    box-shadow:  0px 0px 5px #588ac6;
 }
 
 .hot-content {
@@ -94,13 +93,6 @@ a {
     width: 100%;
     height: auto;
     background-color: rgba(225,235,253,0.75);
-}
-
-.jump > span {
-    color: #7a181d;
-}
-.jump:active {
-    color: blue;
 }
 
 /* 具体的一个热门题目 */
@@ -124,7 +116,8 @@ a {
     padding: 5px;
     width: 25%;
     box-sizing: border-box;
-    background-color: #588ac6;
+    background-color: #8bcaed;
+;
 }
 
 .type-item:hover {
@@ -142,38 +135,16 @@ a {
     margin-top: 2rem;
 }
 
-/* 不同颜色的shadow */
-.shadow-blue {
-    -webkit-box-shadow:  0px 0px 5px #081263;
-    -moz-box-shadow:  0px 0px 5px #081263;
-    box-shadow:  0px 0px 5px #081263;
-}
-.shadow-pink {
-    -webkit-box-shadow:  0px 0px 5px pink;
-    -moz-box-shadow:  0px 0px 5px pink;
-    box-shadow:  0px 0px 5px pink;
-}
-.shadow-grey {
-    -webkit-box-shadow:  0px 0px 5px grey;
-    -moz-box-shadow:  0px 0px 5px grey;
-    box-shadow:  0px 0px 5px grey;
-}
-
-.shadow-green {
-    -webkit-box-shadow:  0px 0px 5px #148036;
-    -moz-box-shadow:  0px 0px 5px #148036;
-    box-shadow:  0px 0px 5px #148036;
-}
-
 /* 评测条目 */
 .content-item {
     position: relative;
-    background-color: #ffffff;
     padding: 1rem;
     margin-top: 1.5rem;
-    border: solid 2px #ffffff;
+    border-top: solid 1px #e4e4e4;
+    background-color: #ffffff;
     margin-bottom: 1.5rem;
     font-size: 0;
+
 }
 
 /* 图钉 */

@@ -11,6 +11,8 @@ $(function () {
     courseAction.pageEventBind();
     //加载指定数量的测试题目列表
     courseAction.readCourseList({ courseType: "ALL" });
+    // 更新热门内容
+    courseAction.updateHot();
 });
 
 /*** 页面全局变量 ***/
@@ -124,7 +126,7 @@ courseAction.updatePage = function (JSONdata) {
             var course = parsedData.courseArray[courseIndex];
             console.log('course' + course);
             //最外层container
-            var $courseContainer = $('<div class="content-item shadow-grey">');
+            var $courseContainer = $('<div class="content-item">');
             //图钉图标
             var $pushPin = $('<span class="glyphicon glyphicon-pushpin push-pin"></span>');
             //内容左部分区
@@ -199,29 +201,33 @@ courseAction.courseTypeDefine = function () {
     });
 };
 
-/* 热门内容事件绑定 */
-courseAction.pageHotContentAction = function () {
-
-    //将要获取的热门内容
-    var jumpTo = $(this).attr('jumpTo');
-    //更新的测评类型
-    var hotType = $(this).children(':eq(0)').text();
-
-    $('.jump').parent().prop('class', '');
-    $(this).parent().prop('class', 'active');
-    $.each($('.hot-title > div'), function (index, hotObj) {
-        $(hotObj).prop('class', 'hidden');
-    });
-    $('#' + jumpTo).prop('class', 'active');
-    //更新热门内容
-    courseAction.updateHot();
-};
-
 /* 更新热门内容 */
-courseAction.updateHot = function (type) {
+courseAction.updateHot = function () {
 
-    return;
-    $.post('/course/readHot', {hotType: type}, function (JSONdata){}, "JSON");
+    var url = '/course/readHot';
+    $.post(url, {}, function (JSONdata){
+
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return courseAction.modalWindow('服务器发生错误,错误码: ' + JSONobject.error);
+        }
+
+        // 更新父组件
+        var $popularFather = $('.hot-title-item');
+        // 清除缓存
+        $popularFather.children().remove();
+        // 更新页面
+        for (var index in JSONobject.popularArray){
+            var popular  = JSONobject.popularArray[index];
+            var $a = $('<a>');
+            $a.text(popular.courseName)
+                .prop({
+                    href: ['/course/detail/', popular.courseType, '/', popular.courseName].join('')
+                });
+
+            $popularFather.append($a);
+        }
+    }, "JSON");
 };
 
 /* 模态弹窗 */
