@@ -157,7 +157,7 @@ AllTest.readList = function (docCondition, callback) {
         // 开始有序化处理
         defer.resolve({
             number: number,
-            skipNum: skipNum,
+            skipNum: skipNum, 
             select: select,
             condition: condition,
             testArray: testArray,

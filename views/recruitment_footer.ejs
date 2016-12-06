@@ -1,15 +1,89 @@
+<!DOCTYPE html>
+<head>
+    <!--内联样式表-->
+    <style type="text/css">
+
+        /* 页脚导航 */
+        .nav-footer {
+            position: absolute;
+            bottom: 1rem;
+            width: 100%;
+            font-size: 2rem;
+        }
+
+        .nav-footer-border {
+            margin: 0 auto;
+            border: solid 1px green;
+        }
+
+        .nav-footer-item {
+            border-radius: 5px;
+            padding: 5px;
+            box-sizing: border-box;
+            float: left;
+            width:  30%;
+            min-height: 2rem;
+            height: auto;
+            line-height: 2rem;
+            text-align: center;
+            border: solid 1px #818181;
+            color: #5f5f5f;
+
+            -webkit-transition: all 0.3s;
+            -moz-transition: all 0.3s;
+            -ms-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            transition: all 0.3s;
+
+            -webkit-box-shadow:  0 5px 10px #4f6774;
+            -moz-box-shadow:  0 5px 0 #4f6774;
+            box-shadow:  0 5px  #4f6774;
+        }
+
+        .nav-footer-item > a{
+            color: #5f5f5f;
+        }
+
+        .nav-footer-item > a:hover{
+            color: #ffffff;
+        }
+
+        .nav-footer-item:hover {
+
+            text-shadow:  0 0 10px #1c6897;
+            color: #ffffff;
+            border: 0;
+            background-color: #d1dbee;
+
+            -webkit-transform: translate(0, -8px);
+            -moz-transform: translate(0, -8px);
+            -ms-transform: translate(0, -8px);
+            -o-transform: translate(0, -8px);
+            transform: translate(0, -8px);
+        }
+
+
+        /* 中间部分 */
+        .nav-footer-center {
+            width:  40%;
+        }
+    </style>
+</head>
+
+<body>
 <!--页脚导航部分-->
 <div class="nav-footer">
 
-    <div class="nav-footer-item">
-        课程
+    <div class="nav-footer-item" target="course">
+        <label>课程</label>
     </div>
-    <div class="nav-footer-item nav-footer-center">
-        企业
+    <div class="nav-footer-item nav-footer-center" target="company">
+        <label>企业</label>
     </div>
 
-    <div class="nav-footer-item">
-        <a href="/test/index">测评</a>
+    <div class="nav-footer-item" target="test">
+        <label>测评</label>
     </div>
 
 </div>
+</body>

@@ -1,0 +1,64 @@
+/* 页面几种查询和测试 */
+
+body {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: #c2c2c2;
+}
+
+a {
+    color: #00B7FF;
+}
+
+/* 每个域 */
+.route-fieldset {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: white;
+}
+
+/* 路由legend */
+.legend {
+    text-shadow: 5px 5px 3px #395980;
+    color: #ffffff;
+}
+
+/* 各个路由 */
+.route-div{
+    margin: 0.5rem;
+    font-weight: bold;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-all;
+}
+
+/* 路由文字 */
+.route-div-text{
+    border-radius: 5px;
+    display: inline-block;
+    background-color: #577280;
+    color: white;
+    font-weight: bold;
+    padding: 0.5rem;
+}
+
+/* 路由地址 */
+.route-div-url{
+    font-size: 2rem;
+    margin-left: 2rem;
+    display: inline-block;
+    color: #e5691d;
+    text-shadow: 0 0 5px #74c2b9;
+}
+
+.route-div-tips {
+    display: inline-block;
+}
+
+.route-div-input {
+    display:  inline-block;
+}
+
+.route-div-redirect {
+    display: inline-block;
+}

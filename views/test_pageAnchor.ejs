@@ -1,6 +1,20 @@
-<!--pageAnchor-->
-<!--返回顶部按钮组件-->
 
+<!DOCTYPE html>
+<head>
+    <style type="text/css">
+        /*回到顶部或底部锚点*/
+        .page-anchor {
+            display: none;
+            position: fixed;
+            right: 1em;
+            bottom: 2em;
+            z-index: 100;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+<!--返回顶部按钮组件-->
 <div class="page-anchor btn-toolbar">
     <div class="btn-group">
         <a id="top" class="btn btn-default"><span class="glyphicon glyphicon-menu-up"></span></a>
@@ -9,3 +23,4 @@
         <a id="bottom" class="btn btn-default"><span class="glyphicon glyphicon-menu-down"></span></a>
     </div>
 </div>
+</body>

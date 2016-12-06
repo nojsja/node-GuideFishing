@@ -57,7 +57,8 @@ function course_broadcast(app) {
 
         // 渲染页面到客户端
         res.render('course_broadcastIndex', {
-            title: "所有直播"
+            title: "所有直播",
+            slogan: "带渔直播"
         });
     });
 

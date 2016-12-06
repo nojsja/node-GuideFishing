@@ -432,7 +432,7 @@ Course.updatePopular = function (callback) {
             courseName: 1,
             courseType: 1
         },
-        limit: 5,
+        limit: 10,
         sort: {
             clickRate: -1
         }

@@ -38,33 +38,6 @@ a {
     font-size: 1.5rem;
 }
 
-/* footer */
-.footer {
-    margin-bottom: 5px;
-    padding: 0.5rem;
-    text-align: center;
-    min-height: 2rem;
-    bottom: 0;
-    border-top: solid 1px #6095d8;
-    background-color: white;
-}
-
-.footer-img {
-    display: inline-block;
-    background: url("/images/icons/Ciitec.jpg") no-repeat;
-    background-size: cover;
-    width: 5rem;
-    height: 2rem;
-    margin: 0 auto;
-}
-
-.footer-text {
-    display: inline-block;
-    text-align: center;
-    font-size: 1.5rem;
-    color: #3b3d3b;
-}
-
 /* 热门区块 */
 .hot-title {
     width: 100%;
@@ -117,7 +90,6 @@ a {
     width: 25%;
     box-sizing: border-box;
     background-color: #8bcaed;
-;
 }
 
 .type-item:hover {
@@ -200,8 +172,7 @@ a {
     -webkit-box-shadow:  0px 0px 0px #ffffff;
     -moz-box-shadow:  0px 0px 0px #ffffff;
     box-shadow:  0px 0px 0px #ffffff;
-    border: solid 2px #c8cbc8;
-    border-left: solid 2px #ff586f;
+    border-left: solid 1px #ff586f;
     box-sizing: border-box;
     -webkit-transition: border 0.4s;
     -moz-transition: border 0.4s;
@@ -236,16 +207,6 @@ a {
 
 .content-item-date > span {
     font-size: 1.5rem;
-}
-
-/*回到顶部或底部锚点*/
-.page-anchor {
-    display: none;
-    position: fixed;
-    right: 1em;
-    bottom: 2em;
-    z-index: 100;
-    opacity: 0.7;
 }
 
 /* 数据加载loading信息 */
