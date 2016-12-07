@@ -66,7 +66,7 @@ RecruitIndex.redirect = function (action) {
 /* 获取所有公司列表 */
 RecruitIndex.getAllCompany = function () {
 
-    var url = '/recruitment/index'
+    var url = '/recruitment/index';
     $.post(url, { action: 'getCompanyList'}, function (JSONdata) {
 
         // 更新页面

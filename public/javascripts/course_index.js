@@ -85,7 +85,7 @@ courseAction.readMore = function () {
         //更新页面
         courseAction.updatePage(JSONdata);
     });
-}
+};
 
 /* 更新主页事件 */
 courseAction.updatePage = function (JSONdata) {
@@ -115,7 +115,7 @@ courseAction.updatePage = function (JSONdata) {
         courseAction.isClear = false;
     }
     //没有数据提示用户
-    if(parsedData.courseArray.length == 0){
+    if(parsedData.courseArray.length === 0){
         return this.modalWindow('抱歉,没有更多数据!');
     }
     //遍历对象数组构造DOM对象

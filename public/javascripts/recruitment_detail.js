@@ -140,6 +140,6 @@ RecruitmentDetail.updatePage = function () {
 
             // 添加到列表里面
             $('#recruitmentList').append($itemDiv);
-        })(index)
+        })(index);
     }
 };

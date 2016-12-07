@@ -83,11 +83,13 @@ function UploadAction(req, res) {
             fs.readdir(tempPath, function (err,files) {
                 for(var i = 0; files[i];i++){
                     if(files[i] == specialFile.name){
-                        fs.unlink(tempPath + files[i], function (err) {
-                            if(err){
-                                console.log(err);
-                            }
-                        });
+                        fs.unlink(tempPath + files[i], callback);
+                    }
+                }
+                // 回调函数
+                function callback(err) {
+                    if(err){
+                        console.log(err);
                     }
                 }
             });
@@ -114,21 +116,21 @@ function UploadAction(req, res) {
                     storePath: "./public/videos/courses/" + req.params.courseName,
                     visitPath: "/videos/courses/" + req.params.courseName,
                     type: "video"
-                }
+                };
             } else if (regAudio.test(types)) {
 
                 return {
                     storePath: "./public/audios/courses/" + req.params.courseName,
                     visitPath: "/audios/courses/" + req.params.courseName,
                     type: "audio"
-                }
+                };
             } else if (regPicture.test(types)) {
 
                 return {
                     storePath: "./public/images/courses/" + req.params.courseName,
                     visitPath: "/images/courses/" + req.params.courseName,
                     type: "image"
-                }
+                };
                 // 上传文件的情况
             } else {
 
@@ -136,10 +138,10 @@ function UploadAction(req, res) {
                     storePath: "./public/files/courses/" + req.params.courseName,
                     visitPath: "/files/courses/" + req.params.courseName,
                     type: "file"
-                }
+                };
             }
 
-        };
+        }
 
     }).on('end', function() {
 
@@ -164,8 +166,9 @@ function UploadAction(req, res) {
     // 解析包含多媒体数据的表单
     form.parse(req, function(err, fields, files) {
 
-        err && console.log('formidabel error : ' + err);
-
+        if(err){
+            console.log('formidabel error : ' + err);
+        }
         console.log('parsing done');
     });
 }

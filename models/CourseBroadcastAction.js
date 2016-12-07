@@ -37,15 +37,17 @@ function courseBroadcastAction(io){
 
         console.log('new socket connection coming...');
         // 该客户端上传的文件
-        var Files = {};
+        var Files = {},
+            roomId,
+            courseName;
+
         try {
             // 获取当前用户连接的url进一步获取url房间号
             var url = socket.request.headers.referer;
             // 分割地址字符串,数组的最后一个设置成房间号
             var split_arr = url.split('/');
 
-            var roomId = split_arr[split_arr.length - 1];
-            var courseName;
+            roomId = split_arr[split_arr.length - 1];
             // 解码中文字符
             // 确定当前直播间和直播课程名(相同)
             roomId = decodeURIComponent(roomId);
@@ -86,22 +88,22 @@ function courseBroadcastAction(io){
 
                 this.medias.push(videoInfo);
                 this.index += 1;
-            }
+            };
             let imagesListen = function (imageInfo) {
 
                 this.medias.push(imageInfo);
                 this.index += 1;
-            }
+            };
             let audiosListen = function (audioInfo) {
 
                 this.medias.push(audioInfo);
                 this.index += 1;
-            }
+            };
             let textsListen = function (textInfo) {
 
                 this.medias.push(textInfo);
                 this.index += 1;
-            }
+            };
 
             CourseOrigin[roomId].watcherListen("videos", videosListen);
             CourseOrigin[roomId].watcherListen("images", imagesListen);
@@ -253,7 +255,7 @@ function courseBroadcastAction(io){
 
                 console.log('[build dir]:' + Files.record.prePath);
                 fs.mkdirSync(Files.record.prePath);
-            };
+            }
 
             // 以追加方式打开磁盘文件用于上传准备工作
             fs.open(Files.record.savePath, 'a', function (err, fd) {
@@ -344,7 +346,7 @@ function courseBroadcastAction(io){
                 Files.upload.type = "images";
             }else if(regVideo.test( name.split('.').pop() )){
                 Files.upload.type = "videos";
-            };
+            }
 
             // 验证文件的存放地址是否存在
             Files.upload.prePath = locateFromRoot( ['/public/', Files.upload.type, '/courses/',
@@ -356,7 +358,7 @@ function courseBroadcastAction(io){
             if(!fs.existsSync(Files.upload.prePath)){
                 console.log('build dir.');
                 fs.mkdirSync(Files.upload.prePath);
-            };
+            }
             // 完整存储地址
             var filePath = locateFromRoot( ['/public/', Files.upload.type, '/courses/',
                 courseName, '/', name].join('') );
@@ -483,7 +485,7 @@ function courseBroadcastAction(io){
             // 需要检查的直播课程的名字
             var condition = {
                 courseName: courseName
-            }
+            };
             // 检查直播是否存在
             CourseBroadcastData.checkBroadcastStatus(condition, function (err, isExit) {
 
@@ -500,7 +502,7 @@ function courseBroadcastAction(io){
                     socket.emit('check', {
                         isError: false,
                         status: 'broadcastIng'
-                    })
+                    });
                     // 非直播状态检查是否已经直播完成或是不存在直播
                 }else {
                     Course.checkStatus(condition, function (err, status) {
@@ -519,14 +521,14 @@ function courseBroadcastAction(io){
 
                             // 课程已经载入数据待发布
                         }else if(status == 'noReady'){
-                            checkedStatus = 'broadcastDone'
+                            checkedStatus = 'broadcastDone';
                         }
 
                         // 向客户端发送消息
                         socket.emit('check', {
                             isError: false,
                             status: checkedStatus
-                        })
+                        });
                     });
                 }
             });
@@ -662,7 +664,7 @@ function courseBroadcastAction(io){
                                     isError: false
                                 });
                            }
-                        )
+                        );
                     },
                     // 上一步失败后执行
                     function fail(info) {

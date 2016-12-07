@@ -78,7 +78,7 @@ bcAdminAction.loginCheck = function () {
         }else {
             bcAdminAction.modalWindow('用户验证信息有误, 请重试...');
         }
-    };
+    }
 };
 
 /* 页面提示模态弹窗 */

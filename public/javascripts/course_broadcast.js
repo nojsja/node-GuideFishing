@@ -114,7 +114,7 @@ broadcastAction.socketInit = function () {
             from: data.from,
             messageType: data.messageType,
             url: data.url || ""
-        }
+        };
         console.log('newMessage: '+ info.path + info.messageType + info.message + info.from);
         broadcastAction.message.received.value = info;
         broadcastAction.message.received.trigger('newMessage', info);
@@ -374,7 +374,7 @@ broadcastAction.watcherActive = function () {
         // 清除缓存
         broadcastAction.file.reader = null;
         broadcastAction.file.origin = null;
-    };
+    }
 
     // 开始上传数据
     function startUpload(info) {
@@ -449,7 +449,7 @@ broadcastAction.watcherActive = function () {
     function receiveNewMsg(info) {
 
         // 集成消息对象
-        var info = {
+        var _info = {
             // 消息发送者和消息内容,媒体类型数据的url
             from: info.args.from,
             msg: info.args.message,
@@ -459,7 +459,7 @@ broadcastAction.watcherActive = function () {
         };
 
         // 执行DOM更新
-        broadcastAction.newMessageUpdate(info);
+        broadcastAction.newMessageUpdate(_info);
     }
     
     /** 直播状态检查
@@ -514,7 +514,7 @@ broadcastAction.watcherActive = function () {
 
             broadcastAction.newMessageUpdate(courseOriginArray[index]);
         }
-    };
+    }
 
     // 结束直播事件
     function finish(info) {
@@ -719,7 +719,7 @@ broadcastAction.getMediaDataInit = function (type) {
     // 绑定事件
     $recordButton.click(function () {
 
-        if(broadcastAction.record.status == ""){
+        if(broadcastAction.record.status === ""){
             // 当前未录音
             broadcastAction.record.status = "none";
         }
@@ -749,7 +749,7 @@ broadcastAction.getMediaDataInit = function (type) {
         index: 1,
         blobData: "",
         recorder: {},
-        audioContext: new AudioContext || new webkitAudioContext(),
+        audioContext: new AudioContext() || new webkitAudioContext(),
         mediaConstraints: { audio: true },
         fileReader: new FileReader()
     };

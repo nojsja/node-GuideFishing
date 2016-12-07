@@ -80,11 +80,9 @@
                     <!--已经存在的分段列表-->
                     <div class="category-list">
                         <span class="glyphicon glyphicon-pushpin"></span>
-
                     </div>
                 </div>
             </div>
-            <!--描述信息-->
         </div>
 
         <!--分数段设置-->
@@ -121,6 +119,7 @@
             </div>
         </div>
 
+        <!--描述信息-->
         <div class="col-md-12 form-group">
             <label class="info-title">题目简介</label>
             <textarea rows="5" class="form-control" id="abstract" placeholder="请输入简要的描述信息"></textarea>
@@ -150,11 +149,17 @@
                 <!--自定义选项的得分-->
 
                 <!--下面三个Div是catogary的关联DIV-->
-                <div id="scoreDefineDiv" class="child-of-category"><input type="checkbox" id="scoreDefine">自定义得分</div>
+                <div id="scoreDefineDiv" class="child-of-category">
+                    <input type="checkbox" id="scoreDefine">自定义得分
+                </div>
                 <!--除去自定义得分模式下的反向积分模式-->
-                <div id="negativeTypeDiv" class="child-of-category"><input type="checkbox" class="nega-posi" id="negativeType">反向得分</div>
+                <div id="negativeTypeDiv" class="child-of-category">
+                    <input type="checkbox" class="nega-posi" id="negativeType">反向得分
+                </div>
                 <!--除去自定义得分模式下的反向积分模式-->
-                <div id="positiveTypeDiv" class="child-of-category"><input type="checkbox" class="nega-posi" id="positiveType">正向得分</div>
+                <div id="positiveTypeDiv" class="child-of-category">
+                    <input type="checkbox" class="nega-posi" id="positiveType">正向得分
+                </div>
 
                 <!--CA型得分-->
                 <div class="score-child-div">

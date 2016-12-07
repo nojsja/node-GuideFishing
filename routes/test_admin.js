@@ -6,7 +6,7 @@
 /**
  *  获取的题目伪数据
  *  var test = {
-    courseType: "potential",
+    testType: "potential",
     date: getDate(),
     scoreMode: "Common",
     abstract: "这是一组性格测试的题目集合",
@@ -55,34 +55,12 @@ function admin(app) {
         });
     });
 
-    /* 获取管理员预览页面 */
-    app.get('/test/admin/preview/:courseType/:testTitle', function (req, res) {
-        res.render('test_preview', {
-            title: '快速预览',
-            courseType: req.params.courseType,
-            testTitle: req.params.testTitle
-        });
-    });
-
-    /* 手动预览之前需要输入预览文档的testType和testTitle */
-    app.get('/test/admin/preview', function (req, res) {
-
-        //筛选条件
-        var testType = req.body.courseType;
-        var testTitle = req.body.testTitle;
-        res.render('test_preview',  {
-            title: '快速预览',
-            courseType: testType,
-            testTitle: testTitle
-        });
-    });
-
     /* 存储一个文档 */
     app.post('/test/save', function (req, res) {
 
         //文档对象
         var test = {};
-        test.courseType = req.body.courseType;
+        test.testType = req.body.testType;
         test.date = getDate();
         test.scoreMode = req.body.scoreMode;
         test.abstract = req.body.abstract;
@@ -123,11 +101,11 @@ function admin(app) {
     app.post('/test/deleteOne', function (req, res) {
 
         //必须要获取的文档主键,数据模拟
-        var testType = req.body.courseType;
+        var testType = req.body.testType;
         var testTitle = req.body.testTitle;
 
         AllTest.deleteOneDoc({
-            courseType: testType,
+            testType: testType,
             testTitle: testTitle
         }, function (err) {
             if(err){
@@ -149,7 +127,7 @@ function admin(app) {
         var testType = "character";
 
         AllTest.deleteSomeDoc({
-            courseType: testType
+            testType: testType
         }, function (err) {
             if(err){
                 return res.json(JSON.stringify( {

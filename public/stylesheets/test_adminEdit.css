@@ -101,21 +101,6 @@ a {
     display: block;
 }
 
-/* 设置得分的所有分段 */
-#scoreSectionSet {
-
-}
-
-/* 显示 */
-.score-section-set_show {
-    display: block;
-}
-
-/* 隐藏 */
-.score-section-set_hidden {
-    display: none;
-}
-
 /* 点击效果 */
 .test-type_click,
 .score-mode_click,
@@ -349,18 +334,13 @@ a {
 
 /* 得分模式设置 */
 #scoreSectionSet,
-#childModeAdd{
+#childModeAdd {
     display: none;
 }
 
 /* 子模式隐藏 */
 .child-mode-add_hidden {
     display: none;
-}
-
-/* 子模式出现 */
-.child-mode-add_show {
-    display: block;
 }
 
 /* 自定义得分,默认不显示 */

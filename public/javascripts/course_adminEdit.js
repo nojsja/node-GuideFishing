@@ -369,7 +369,7 @@ editAction.updatePreview = function (JSONdata) {
     editAction.updatePreview[editAction.currentPreviewType](JSONobject);
 };
 
-editAction.updatePreview['audio'] = function (JSONobject) {
+editAction.updatePreview.audio = function (JSONobject) {
 
     // 清除子节点数据
     var $previewList = $('.preview-list');
@@ -433,7 +433,7 @@ editAction.updatePreview['audio'] = function (JSONobject) {
 // <div class="list-item-video">
 //     <video src="/temp/test.mp4" title="视频"></video>
 // </div>
-editAction.updatePreview['video'] = function (JSONobject) {
+editAction.updatePreview.video = function (JSONobject) {
 
     // 清除子节点数据
     var $previewList = $('.preview-list');
@@ -492,7 +492,7 @@ editAction.updatePreview['video'] = function (JSONobject) {
 // <div class="list-item-image">
 //     <img src="/temp/test.png" title="图片">
 // </div>
-editAction.updatePreview['image'] = function (JSONobject) {
+editAction.updatePreview.image = function (JSONobject) {
 
     // 清除子节点数据
     var $previewList = $('.preview-list');

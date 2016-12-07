@@ -83,7 +83,7 @@ AllTest.readList = function (docCondition, callback) {
 
         /* 进行条件判断客户端的筛选需求 */
         for(var con in docCondition) {
-            console.log(con);
+            console.log(con + 1 + JSON.stringify(docCondition[con]));
             if(con == "limit") {
                 number = docCondition[con];
             }else if(con == "skip") {
@@ -92,8 +92,7 @@ AllTest.readList = function (docCondition, callback) {
                 select = docCondition[con];
             }else if(con == "testTypeArray"){
                 testTypeArray = docCondition[con];
-            }
-            else {
+            } else {
                 //复制属性
                 condition[con] = docCondition[con];
             }
@@ -110,11 +109,11 @@ AllTest.readList = function (docCondition, callback) {
             .then(function (info) {
 
                 Tests.count({}, function (err, count) {
+
                     if(err){
                         console.log(err);
                         return callback(err);
                     }
-                    console.log('defer 1 count:　' + count);
                     // 大于等于则直接返回
                     if(info.skipNum >= count){
                         return callback(null, info.testArray);
@@ -127,7 +126,6 @@ AllTest.readList = function (docCondition, callback) {
 
                     var query = Tests.find().where(info.condition);
                     if(info.testTypeArray.length > 0){
-                        console.log(info.testArray.length);
                         query.in('testType', info.testTypeArray);
                     }
                     query.limit(info.number);
@@ -140,12 +138,12 @@ AllTest.readList = function (docCondition, callback) {
                     query.exec(function (err, docs) {
 
                         if(err){
+                            console.log(err);
                             return callback(err);
                         }
                         for(var i in docs) {
                             info.testArray.push(docs[i]);
                         }
-                        console.log('length: ' + info.testArray.length);
                         //返回对象数组
                         callback(null, info.testArray);
                     });
@@ -157,7 +155,7 @@ AllTest.readList = function (docCondition, callback) {
         // 开始有序化处理
         defer.resolve({
             number: number,
-            skipNum: skipNum, 
+            skipNum: skipNum,
             select: select,
             condition: condition,
             testArray: testArray,
@@ -208,7 +206,6 @@ AllTest.updatePopular = function (callback) {
                 testType: docs[index].testType
             });
         }
-        console.log(JSON.stringify(popularData));
         // 存储数据
         popularSave(popularData);
     });
@@ -224,19 +221,20 @@ AllTest.updatePopular = function (callback) {
                 console.log("[popularSave error]: " + err);
                 return callback(err);
             }
-            console.log('the number of deleted docs: ' + results);
 
             // 遍历存储数据
             for(let index in popularArray){
 
                 let popularModel = new PopularTest(popularArray[index]);
-                popularModel.save(function (err, savedDoc) {
+                popularModel.save(callback);
+            }
+            // 回调函数
+            function callback(err, saveDoc) {
 
-                    if(err){
-                        console.log('[popularSave error]: ' + err);
-                        return callback(err);
-                    }
-                });
+                if(err){
+                    console.log('[popularSave error]: ' + err);
+                    return callback(err);
+                }
             }
         });
     }
@@ -259,7 +257,6 @@ AllTest.getPopular = function (callback) {
         for (let index in docs){
             popularArray.push(docs[index]);
         }
-        console.log('popular array: ' + JSON.stringify(popularArray));
         // 成功后返回数据
         callback(null, popularArray);
     });
@@ -300,6 +297,7 @@ AllTest.deleteSomeDoc = function (docsCondition, callback) {
     //删除条件
     query.where(condition);
     query.exec(function (err, results) {
+
         if(err){
             return callback(err);
         }
@@ -308,6 +306,6 @@ AllTest.deleteSomeDoc = function (docsCondition, callback) {
         callback(null);
     });
 
-}
+};
 
 module.exports = AllTest;

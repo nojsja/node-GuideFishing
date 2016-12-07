@@ -35,10 +35,10 @@ function index(app) {
             condition.testType = req.body.testType;
         }
         if(req.body.skip){
-            condition.skip = req.body.skip;
+            condition.skip = Number.parseInt(req.body.skip);
         }
         if(req.body.limit){
-            condition.limit = req.body.limit;
+            condition.limit = Number.parseInt(req.body.limit);
         }
         if(req.body.select){
             condition.select = req.body.select;
@@ -54,6 +54,7 @@ function index(app) {
                console.log('readList error.');
                return res.json(JSON.stringify({
                    error: err,
+                   testArray: []
                }));
            }
            console.log('readList success.');

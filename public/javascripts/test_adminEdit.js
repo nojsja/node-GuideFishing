@@ -63,11 +63,11 @@ $(function () {
     // 鼠标离开事件
     $('.score-mode').mouseleave(function () {
         singleTon.hiddenHoverLabel();
-    })
-    //刷新事件绑定
-    window.addEventListener("beforeunload", function(event) {
-        event.returnValue = "警告";
     });
+    //刷新事件绑定
+    // window.addEventListener("beforeunload", function(event) {
+    //     event.returnValue = "警告";
+    // });
 });
 
 /*** 页面变量 ***/
@@ -125,7 +125,7 @@ editAction.initWatcher = function () {
     // 定义题目集合的观察者模式
     this.testGroup.listen = function (fn) {
         this.watcherList.push(fn);
-    }
+    };
     this.testGroup.trigger = function () {
         for(var index in this.watcherList){
             // this -> testGroup
@@ -141,7 +141,7 @@ editAction.initWatcher = function () {
         for(var index in this.watcherList){
             this.watcherList[index].apply(this);
         }
-    }
+    };
 };
 
 /* 注册观察者 */
@@ -160,9 +160,9 @@ editAction.activeWatcher = function () {
             // 相关选项
             $('.child-of-category').prop('class', 'child-of-category child-of-category_show');
             // 移除类别模式设置
-            $('#childModeAdd').prop('class', 'child-mode-add_show');
+            $('#childModeAdd').css('display', 'block');
             // 类别得分模式下不需要得分段
-            $('#scoreSectionSet').prop('class', 'score-section-set_hidden');
+            $('#scoreSectionSet').css('display', 'none');
             
             // 添加类别事件
             $('#categoryConfirm').click(function () {
@@ -192,8 +192,8 @@ editAction.activeWatcher = function () {
 
             $('.child-of-category').prop('class', 'child-of-category child-of-category_hidden');
             // 移除分段设置
-            $('#scoreSectionSet').prop('class', 'score-section-set_show');
-            $('#childModeAdd').prop('class', 'child-mode-add_hidden');
+            $('#scoreSectionSet').css('display', 'block');
+            $('#childModeAdd').css('display', 'none');
 
             var childModes = editAction.scoreModeGroup[editAction.scoreMode.value];
             var scoreChildDiv = $('.score-child-div');
@@ -210,7 +210,7 @@ editAction.activeWatcher = function () {
             // 选择得分子类型
             $('.score-child').click(function () {
                 editAction.testGroup.group[editAction.currentNumber].itemMode = $(this).prop('id');
-                $('.score-child').prop('class', 'type-item score-child')
+                $('.score-child').prop('class', 'type-item score-child');
 
                 $(this).prop('class', 'type-item score-child score-child_click');
             });
@@ -258,8 +258,10 @@ editAction.activeWatcher = function () {
                     $('.edit-new').prop('class', 'edit-new border-left');
                     $(this).prop('class', 'edit-new border-left_red');
                     // 置为初始状态
+                    $('#scoreDefine, #negativeType, #positiveType').prop('checked', false);
                     // 得分子类型和选项个数重置
-                    $('.score-child, .item-number, .category-child').prop('class', 'score-child score-child_click');
+                    $('.score-child, .item-number, .category-child')
+                        .prop('class', 'type-item score-child');
                     // 所有选项移除
                     $('.choises').children().remove();
                     // 当前的题号
@@ -312,11 +314,11 @@ editAction.activeWatcher = function () {
         var categorySection = editAction.categorySection.section;
 
         // 添加DOM
-        for(var index in categorySection){
+        for(var index2 in categorySection){
             (function () {
                 var $div = $('<div class="type-item category-child">');
-                $div.prop('id', categorySection[index].categoryMode)
-                    .text(categorySection[index].categoryMode);
+                $div.prop('id', categorySection[index2].categoryMode)
+                    .text(categorySection[index2].categoryMode);
 
                 scoreChildDiv.append($div);
             })();
@@ -324,9 +326,9 @@ editAction.activeWatcher = function () {
         // 选择得分子类型
         $('.category-child').click(function () {
             editAction.testGroup.group[editAction.currentNumber].itemMode = $(this).prop('id');
-            $('.category-child').prop('class', 'category-child');
+            $('.category-child').prop('class', 'type-item category-child');
 
-            $(this).prop('class', 'category-child category-child_click');
+            $(this).prop('class', 'type-item category-child category-child_click');
         });
 
         // 自定义得分绑定
@@ -379,7 +381,7 @@ editAction.activeWatcher = function () {
 editAction.addTestItem = function () {
 
     // 添加检查
-    if(editAction.scoreMode.value == null){
+    if(editAction.scoreMode.value === null){
         return editAction.modalWindow("请先完善上面的'得分类型'一项");
     }
 
@@ -442,7 +444,7 @@ editAction.editConfirm = function () {
     }
 
     // 当没有第二种子类型而同时又不是自定义类型时触发
-    if(!currentGroup.otherMode && !currentGroup.scoreDefine){
+    if(!currentGroup.otherMode && !currentGroup.scoreDefine && editAction.scoreMode == "Category"){
         return editAction.modalWindow("请完善当前题目得分子类型!");
     }
 
@@ -573,7 +575,7 @@ editAction.choiseNumberSet = function () {
             // 添加DOM结构
             $div.append($label)
                 .append($input);
-            $choises.append($div)
+            $choises.append($div);
 
             // 允许自定义得分
             if(editAction.testGroup.group[editAction.currentNumber].scoreDefine){
@@ -585,7 +587,6 @@ editAction.choiseNumberSet = function () {
                 // 绑定事件
                 // 为每个选项绑定得分值,适用于user-defined模式下
                 $scoreInput.on('input', function (e) {
-                    alert($(this).val());
                     $input.attr('scoreValue', $(this).val());
                 });
                 $scoreDiv.append($scoreLabel)
@@ -613,7 +614,7 @@ editAction.submitCheck = function () {
     // 测评类型
     var testType = editAction.testType;
     if(!testType){
-        return editAction.modalWindow("请输入测评类型!")
+        return editAction.modalWindow("请输入测评类型!");
     }
     submitData.testType = testType;
 
@@ -655,7 +656,7 @@ editAction.submitCheck = function () {
     }
     submitData.testGroup = editAction.testGroup.group;
 
-    console.log(submitData);
+    return console.log(submitData);
 
     /* 请求后台存储创建的题目对象数据 */
     $.post('/test/save', submitData, function (JSONdata) {
@@ -675,7 +676,7 @@ editAction.modalWindow = function(text) {
         backdrop : true,
         keyboard : true
     });
-}
+};
 
 /* 获取当前鼠标相对于document的坐标 */
 var getMousePosition = function(event) {
@@ -722,7 +723,7 @@ var singleTon = (function () {
                 show(text, position);
             },
             hidden: hidden
-        }
+        };
     })();
     // 显示悬浮框DOM
     function buildHoverLabel(position, text) {
@@ -744,7 +745,7 @@ var singleTon = (function () {
         },
         // 隐藏DOM
         hiddenHoverLabel: hoverLabel.hidden
-    }
+    };
 })();
 
 /*** 测试脚本 ***/

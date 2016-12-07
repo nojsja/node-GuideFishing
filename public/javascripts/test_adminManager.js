@@ -18,7 +18,8 @@ $(function () {
     $('#conditionSubmit').click(managerAction.getConditionTests);
     // 添加筛选条件事件绑定
     // 绑定checkbox事件
-    $('.condition-courseType-item').change(managerAction.checkboxEvent);
+    $('.condition-testType-item').prop('checked', false);
+    $('.condition-testType-item').change(managerAction.checkboxEvent);
 
     // 得到数据列表
     managerAction.getList();
@@ -27,7 +28,8 @@ $(function () {
 
 /* 页面对象 */
 var managerAction = {
-    courseType: "ALL",
+
+    testType: "ALL",
     // 标题字段
     testTitle: null,
     // 跳页起始点
@@ -40,7 +42,7 @@ var managerAction = {
     testTypeArray: [],
     // 需要选择的字段
     select: {
-        courseType: 1,
+        testType: 1,
         testTitle: 1,
         date: 1,
         scoreMode: 1,
@@ -56,7 +58,7 @@ managerAction.checkboxEvent = function () {
     var array = managerAction.testTypeArray;
 
     if($(this).prop('checked')){
-        if(array.length == 0){
+        if(array.length === 0){
             array.push(checkedValue);
         }else {
             for(var index in array){
@@ -68,13 +70,13 @@ managerAction.checkboxEvent = function () {
         }
         // 选中取消
     }else {
-        if(array.length == 0){
+        if(array.length === 0){
             return;
         }else {
-            for(var index in array){
-                if(array[index] == checkedValue){
+            for(var index2 in array){
+                if(array[index2] == checkedValue){
                     // splice删除数组
-                    array.splice(index,1);
+                    array.splice(index2,1);
                 }
             }
         }
@@ -121,8 +123,8 @@ managerAction.getConditionTests = function () {
 managerAction.previewWindow = function (testType, testTitle) {
 
     // 访问地址
-    var urlArray = ['/test/testView', '/', testType, '/', testTitle];
-    $.post(urlArray.join(''), function (JSONdata) {
+    var urlArray = ['/test/testView/', testType, '/', testTitle].join('');
+    $.post(urlArray, function (JSONdata) {
 
         var JSONobject = JSON.parse(JSONdata);
         // 列表
@@ -163,7 +165,7 @@ managerAction.previewWindow = function (testType, testTitle) {
         backdrop : true,
         keyboard : true
     });
-}
+};
 
 /* 更新页面数据表格 */
 managerAction.updateTable = function (JSONdata) {
@@ -172,7 +174,7 @@ managerAction.updateTable = function (JSONdata) {
     var testArray = JSONobject.testArray;
     var $testTable = $('#testTable');
 
-    if(testArray.length == 0){
+    if(testArray.length === 0){
         return managerAction.modalWindow("数据库没有任何相关数据!");
     }else {
         $('.removeable').remove();
@@ -184,7 +186,7 @@ managerAction.updateTable = function (JSONdata) {
                 $titleTd.text(test.testTitle);
 
                 var $typeTd = $('<td>');
-                $typeTd.text(test.courseType);
+                $typeTd.text(test.testType);
 
                 var $dateTd = $('<td>');
                 $dateTd.text(test.date);
@@ -201,9 +203,9 @@ managerAction.updateTable = function (JSONdata) {
                 /* 删除事件绑定 */
                 $deleteSpan.click(function () {
                     var that = this;
-                    $.post('/deleteOne', {
+                    $.post('/test/deleteOne', {
                         testTitle: test.testTitle,
-                        courseType: test.courseType
+                        testType: test.testType
                     }, function (JSONdata) {
                         var JSONobject = JSON.parse(JSONdata);
                         if(JSONobject.error){
@@ -223,11 +225,11 @@ managerAction.updateTable = function (JSONdata) {
 
                 /* 预览 */
                 var $previewTd = $('<td>');
-                var $previewSpan = $('<span class="glyphicon glyphicon-eye-open preview">')
+                var $previewSpan = $('<span class="glyphicon glyphicon-eye-open preview">');
                 /* 预览事件绑定 */
                 $previewSpan.click(function () {
                     // 触发预览事件
-                    managerAction.previewWindow(test.courseType, test.testTitle);
+                    managerAction.previewWindow(test.testType, test.testTitle);
                 }).appendTo($previewTd);
 
                 // 添加到页面上去
@@ -316,7 +318,7 @@ managerAction.pageNavbarAction = function() {
     that.getList = function (){
         // 检测
         submitCheck();
-    }
+    };
 
     // 进行提交检测并绑定筛选数据
     function submitCheck() {
@@ -324,9 +326,9 @@ managerAction.pageNavbarAction = function() {
         var condition = {};
         condition.skip = that.pageStart;
         condition.select = that.select;
-        condition.courseType = that.courseType;
+        condition.testType = that.testType;
 
-        var url = '/test/readCourseList';
+        var url = '/test/readList';
 
         //设置筛选条数和起始条数
         if($('#number').val().trim() > 0){
@@ -334,7 +336,7 @@ managerAction.pageNavbarAction = function() {
         }
 
         // 设置筛选标题
-        if($('#testTitle').val().trim() != ""){
+        if($('#testTitle').val().trim() !== ""){
             condition.testTitle = $('#testTitle').val().trim();
             condition.limit = 1;
         }

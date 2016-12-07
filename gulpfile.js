@@ -27,9 +27,19 @@ gulp.task('minify-css', function () {
 
 /* JS检查 */
 gulp.task('jshint', function () {
-    gulp.src("public/javascripts/*.js").
-    pipe(jshint()).
-    pipe(jshint.reporter());
+
+    gulp.src("public/javascripts/*.js")
+        .pipe(jshint())
+        .pipe(jshint.reporter());
+
+    gulp.src("models/*.js")
+        .pipe(jshint())
+        .pipe(jshint.reporter());
+
+    gulp.src("routes/*.js")
+        .pipe(jshint())
+        .pipe(jshint.reporter());
+
 });
 
 /* 压缩图片 */

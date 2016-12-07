@@ -52,18 +52,18 @@ RecruitDetail.updatePage = function (JSONdata) {
     $mapMarker.text(position);
     $('.introduction-position').append($mapMarker);
     // 更新图片
-    for(var index in imgArray){
+    for(var index1 in imgArray){
         var $imgDiv = $('<img class="environment-image">');
-        $imgDiv.prop('src', imgArray[index].image);
+        $imgDiv.prop('src', imgArray[index1].image);
         // 添加图片到页面
         $('.introduction-environment').append($imgDiv);
     }
     // 更新视频
-    for(var index in videoArray){
-        console.log(videoArray[index]);
+    for(var index2 in videoArray){
+        console.log(videoArray[index2]);
         var $video = $('<video class="video">');
         $video.prop({
-            'src': videoArray[index].video,
+            'src': videoArray[index2].video,
             'controls': 'controls'
         });
         // 添加视频

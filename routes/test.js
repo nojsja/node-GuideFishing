@@ -77,14 +77,17 @@ function test(app) {
         AllTest.getDetail(condition, function (err, doc) {
             if(err){
                 return res.json( JSON.stringify({
-                    error: true
+                    isError: true,
+                    error: err,
+                    testGroup: []
                 }) );
             }
             //成功读取到后返回本组题目
             return res.json( JSON.stringify({
+                isError: false,
                 testGroup: doc.testGroup
             }) );
-        })
+        });
     });
 
     /* 提交评测结果 */

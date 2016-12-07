@@ -53,9 +53,17 @@ viewAction.modalWindow = function(text) {
 viewAction.pageInit = function () {
 
     //获取本套题的所有数据
-    var url = "/test/testView/" + $('.test-type').text().trim() + "/" + $('.test-title').text().trim();
+    var url = ["/test/testView/", $('.test-type').text().trim(),
+        "/", $('.test-title').text().trim()].join('');
+
     $.post(url, {}, function (JSONdata) {
+
         var JSONobject = JSON.parse(JSONdata);
+        // 发生错误
+        if(JSONobject.isError){
+            return viewAction.modalWindow('服务器发生错误,错误码: ' +
+                JSONobject.error);
+        }
         //本组题目列表
         viewAction.testGroup = JSONobject.testGroup
         viewAction.testType = $('.test-type').text().trim();

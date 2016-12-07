@@ -99,9 +99,9 @@ function recruitment(app) {
         if(actionArray[action]){
             actionArray[action]();
         }else {
-            return res.json(JSON.stringify({
+            return res.json( JSON.stringify({
                 error: true
-            }))
+            }) );
         }
 
         // action 方法

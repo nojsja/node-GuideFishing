@@ -75,7 +75,7 @@ indexAction.readMore = function () {
         //更新页面
         indexAction.updatePage(JSONdata);
     });
-}
+};
 
 /* 更新主页事件 */
 indexAction.updatePage = function (JSONdata) {
@@ -104,7 +104,7 @@ indexAction.updatePage = function (JSONdata) {
         indexAction.isClear = false;
     }
     //没有数据提示用户
-    if(parsedData.testArray.length == 0){
+    if(parsedData.testArray.length === 0){
         this.modalWindow('抱歉,没有更多数据!');
     }
     //遍历对象数组构造DOM对象

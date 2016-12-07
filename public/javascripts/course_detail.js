@@ -32,7 +32,7 @@ detailAction.getTypeImage = function () {
     $.post(url, {}, function (JSONdata) {
 
         detailAction.updatePage(JSONdata);
-    }, "JSON")
+    }, "JSON");
 };
 
 /* 更新页面 */

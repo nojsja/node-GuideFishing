@@ -24,7 +24,7 @@ viewAction.readCourseContent = function () {
         courseType: courseType
     }, function (JSONdata) {
         viewAction.updateCourse(JSONdata);
-    }, "JSON")
+    }, "JSON");
 };
 
 /* 更新课程内容 */
