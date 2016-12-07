@@ -91,6 +91,27 @@ function course(app){
         });
     });
 
+    // 获取课程的热门内容
+    app.post('/course/readHot', function (req, res) {
+
+        // 获取热门数据
+        Course.getPopular(function (err, popularArray) {
+
+            if(err){
+                console.log('获取课程热门数据出错!');
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err
+                }) );
+            }
+            // 返回数据
+            res.json( JSON.stringify({
+                isError: false,
+                popularArray: popularArray
+            }) );
+        });
+    });
+
     /* 获取某一个课程的详细内容 */
     app.post('/course/view/readOneCourse', function (req,res) {
 
@@ -145,10 +166,10 @@ function course(app){
             condition.courseType = req.body.courseType;
         }
         if(req.body.skip){
-            condition.skip = req.body.skip;
+            condition.skip = Number.parseInt(req.body.skip) || 0;
         }
         if(req.body.limit){
-            condition.limit = req.body.limit;
+            condition.limit = Number.parseInt(req.body.limit) || 15;
         }
         if(req.body.select){
             condition.select = req.body.select;

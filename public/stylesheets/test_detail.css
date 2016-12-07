@@ -9,18 +9,15 @@ a {
 
 /*首部 header*/
 .header {
-    position: fixed;
     z-index: 100;
     top: 0;
     padding: 0.5rem;
     width: 100%;
     min-height: 2rem;
     height: auto;
-    background-color: #e3e6df;
     font-size: 0;
-    -webkit-box-shadow: 0px 0px 10px #a2a5a2;
-    -moz-box-shadow:  0px 0px 10px #a2a5a2;
-    box-shadow:  0px 0px 10px #a2a5a2;
+    background-color: #588ac6;
+    border-bottom: solid 1px white;
 }
 
 .header-label {
@@ -41,7 +38,7 @@ a {
 .return-home {
     position: absolute;
     right: 1rem;
-    color: #1aa646;
+    color: #8bcaed;
     font-size: 2rem;
 }
 
@@ -49,13 +46,8 @@ a {
 .detail-head {
     min-height: 10rem;
     height: auto;
-    margin-top: 5rem;
     margin-bottom: 2rem;
-    background-color: #588ac6;
-
-    -webkit-box-shadow:  0 0 10px #3b3d3b;
-    -moz-box-shadow:  0 0 10px #3b3d3b;
-    box-shadow:  0 0 10px #3b3d3b;
+    background-color: #577280;
 }
 
 .detail-head-img {
@@ -120,16 +112,16 @@ a {
     min-height: 10rem;
     margin-top: 2rem;
     margin-bottom: 2rem;
+    background: #577280;
 
-    -webkit-box-shadow:  0 0 10px #3b3d3b;
-    -moz-box-shadow:  0 0 10px #3b3d3b;
-    box-shadow:  0 0 10px #3b3d3b;
+    -webkit-box-shadow:  0 0 6px #3b3d3b;
+    -moz-box-shadow:  0 0 6px #3b3d3b;
+    box-shadow:  0 0 6px #3b3d3b;
 }
 
 .detail-body-abstract {
     padding: 0.5rem;
-    background-color: #f4f7f4;
-
+    background: #577280;
 }
 
 .abstract {
@@ -139,7 +131,7 @@ a {
     letter-spacing: 1px;
     min-height: 8rem;
     font-weight: bold;
-    color: #676e67;
+    color: #f0f0f0;
 }
 
 /* 开始按钮 */

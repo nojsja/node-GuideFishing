@@ -17,11 +17,7 @@ a:hover {
     margin-top: 1rem;
     margin-bottom: 2rem;
     padding: 1rem;
-    background-color: rgb(229, 229, 229);
-
-    -webkit-box-shadow:  0 0 8px #7d7d7d;
-    -moz-box-shadow:  0 0 8px #7d7d7d;
-    box-shadow:  0 0 8px #7d7d7d;
+    background-color: #F3F3F3;
 }
 
 /* 公司item */
@@ -47,9 +43,9 @@ a:hover {
     background: url("/images/testType/communication.jpg") no-repeat;
     background-size: cover;
 
-    -webkit-box-shadow:  0 0 10px #134b6e;
-    -moz-box-shadow:  0 0 10px #134b6e;
-    box-shadow:  0 0 10px #134b6e;
+    -webkit-box-shadow:  0 0 0 0;
+    -moz-box-shadow:  0 0 0 0;
+    box-shadow:  0 0 0 0;
 
     transition:All 0.3s ease-in-out;
     -webkit-transition:All 0.3s ease-in-out;
@@ -58,9 +54,9 @@ a:hover {
 }
 
 .company-item:hover {
-    -webkit-box-shadow:  0 0 0 0;
-    -moz-box-shadow:  0 0 0 0;
-    box-shadow:  0 0 0 0;
+    -webkit-box-shadow:  0 0 5px #134b6e;
+    -moz-box-shadow:  0 0 5px #134b6e;
+    box-shadow:  0 0 5px #134b6e;
     
     -webkit-transform: scale(1.1);
     -moz-transform: scale(1.1);
@@ -99,71 +95,6 @@ a:hover {
     overflow: hidden;
     color: #ffffff;
     border-left: solid 2px #1c6897;
-}
-
-/* 页脚导航 */
-.nav-footer {
-    position: absolute;
-    bottom: 1rem;
-    width: 100%;
-    font-size: 2rem;
-}
-
-.nav-footer-border {
-    margin: 0 auto;
-    border: solid 1px green;
-}
-
-.nav-footer-item {
-    border-radius: 5px;
-    padding: 5px;
-    box-sizing: border-box;
-    float: left;
-    width:  30%;
-    min-height: 2rem;
-    height: auto;
-    line-height: 2rem;
-    text-align: center;
-    border: solid 1px #818181;
-    color: #5f5f5f;
-
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -ms-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
-
-    -webkit-box-shadow:  0 5px 10px #1ca09a;
-    -moz-box-shadow:  0 5px 0 #1ca09a;
-    box-shadow:  0 5px  #1ca09a;
-}
-
-.nav-footer-item > a{
-    color: #5f5f5f;
-}
-
-.nav-footer-item > a:hover{
-    color: #ffffff;
-}
-
-.nav-footer-item:hover {
-
-    text-shadow:  0 0 10px #1c6897;
-    color: #ffffff;
-    border: 0;
-    background-color: #d1dbee;
-
-    -webkit-transform: translate(0, -8px);
-    -moz-transform: translate(0, -8px);
-    -ms-transform: translate(0, -8px);
-    -o-transform: translate(0, -8px);
-    transform: translate(0, -8px);
-}
-
-
-/* 中间部分 */
-.nav-footer-center {
-    width:  40%;
 }
 
 

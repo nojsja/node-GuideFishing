@@ -1,0 +1,49 @@
+<!--页面几种查询和测试-->
+<!DOCTYPE html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/ADMIN_TEMP.css">
+
+    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/ADMIN_TEMP.js"></script>
+</head>
+<body>
+
+<!--首部导航-->
+<%include recruitment_header.ejs%>
+
+<!--主体部分-->
+
+<div class="container">
+    <!--课程路由-->
+    <fieldset class="route-fieldset">
+        <legend class="legend">课程路由</legend>
+        <!--所有路由列表-->
+        <div class="route-list-div" field="course">
+
+        </div>
+    </fieldset>
+
+    <!--测评路由-->
+    <fieldset class="route-fieldset">
+        <legend class="legend">测评路由</legend>
+        <div class="route-list-div" field="test">
+
+        </div>
+    </fieldset>
+
+    <!--招聘路由-->
+    <fieldset class="route-fieldset">
+        <legend class="legend">招聘路由</legend>
+        <div class="route-list-div" field="recruitment">
+
+        </div>
+    </fieldset>
+</div>
+
+</body>

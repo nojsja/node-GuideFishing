@@ -10,11 +10,11 @@ a {
 
 .p-head {
     padding: 3px;
-    color: #aaaaaa;
+    color: #8bcaed;
 }
 
 .p-head-system {
-    color: #77abae;
+    color: #e5691d;
 }
 
 .total {
@@ -30,7 +30,7 @@ a {
     font-size: 2rem;
     padding: 5px;
     color: rgb(236, 236, 236);
-    background-color: #8BCAED;
+    background-color: #577280;
     border-bottom:solid 2px #8bcaed;
 }
 
@@ -93,6 +93,7 @@ a {
     margin-top: 1rem;
     padding: 5px;
     color: #4a4a4a;
+    border-top: solid 1px #c2c2c2;
     background-color: #F3F3F3;
 }
 
@@ -132,7 +133,7 @@ a {
 /* 音频自定义 */
 .audio-define {
     position: relative;
-    border: solid 2px blue;
+    border: solid 1px blue;
     border-radius: 7px;
     width: 50%;
     padding: 5px;
@@ -160,7 +161,7 @@ a {
     z-index: 100;
     position: fixed;
     padding: 1rem;
-    background-color: rgb(139, 202, 237);
+    background-color: rgba(87, 114, 128, 0.88);
     color: white;
     position: fixed;
     left:0;
@@ -192,32 +193,11 @@ a {
     display: none;
 }
 
-
-/* footer */
-.footer {
-    margin-bottom: 5px;
-    padding: 0.5rem;
-    text-align: center;
-    min-height: 2rem;
-    bottom: 0;
-    border-top: solid 1px #6095d8;
-    background-color: white;
-}
-
-.footer-img {
-    display: inline-block;
-    background: url("/images/icons/Ciitec.jpg") no-repeat;
-    background-size: cover;
-    width: 5rem;
-    height: 2rem;
-    margin: 0 auto;
-}
-
-.footer-text {
-    display: inline-block;
-    text-align: center;
-    font-size: 1.5rem;
-    color: #3b3d3b;
+/* 光晕效果 */
+.light-shadow {
+    -webkit-box-shadow:  0 0 7px #ffffff;
+    -moz-box-shadow:  0 0 7px #ffffff;
+    box-shadow:  0 0 7px #ffffff;
 }
 
 /*文字特效*/

@@ -5,7 +5,10 @@
  */
 
 var mongoose = require('./tools/Mongoose');
+// 测试模式
 var testSchema = require('./db_schema/test_schema.js').testSchema;
+// 受欢迎的测试模式
+var popularTestSchema = require('./db_schema/popularTest_schema').popularTestSchema;
 
 /* promise 控制流程 */
 var Q = require('q');
@@ -154,13 +157,112 @@ AllTest.readList = function (docCondition, callback) {
         // 开始有序化处理
         defer.resolve({
             number: number,
-            skipNum: skipNum,
+            skipNum: skipNum, 
             select: select,
             condition: condition,
             testArray: testArray,
             testTypeArray: testTypeArray
         });
 
+};
+
+
+/* 受欢迎的课程数据更新和获取 */
+AllTest.updatePopular = function (callback) {
+
+    var db = mongoose.connection;
+    var Test = mongoose.model('Test', testSchema);
+    var PopularTest = mongoose.model('popular_test', popularTestSchema);
+
+    // 筛选条件
+    var condition = {
+        select: {
+            testTitle: 1,
+            testType: 1
+        },
+        limit: 10,
+        sort: {
+            clickRate: -1
+        }
+    };
+    var queryTest = Test.find().where({
+        isReady: true
+    });
+    // 设置筛选
+    queryTest.select(condition.select)
+        .limit(condition.limit)
+        .sort(condition.sort);
+
+    // 执行
+    queryTest.exec(function (err, docs) {
+
+        if(err){
+            console.log('[updatePopular error]:' + err);
+            return callback(err);
+        }
+        // 存储课程数据的数组
+        var popularData = [];
+        for(let index in docs){
+            popularData.push({
+                testTitle: docs[index].testTitle,
+                testType: docs[index].testType
+            });
+        }
+        console.log(JSON.stringify(popularData));
+        // 存储数据
+        popularSave(popularData);
+    });
+
+    // 存储获取到的数据
+    function popularSave(popularArray) {
+
+        // 删除以前的数据
+        var query = PopularTest.remove();
+        query.exec(function (err, results) {
+
+            if(err){
+                console.log("[popularSave error]: " + err);
+                return callback(err);
+            }
+            console.log('the number of deleted docs: ' + results);
+
+            // 遍历存储数据
+            for(let index in popularArray){
+
+                let popularModel = new PopularTest(popularArray[index]);
+                popularModel.save(function (err, savedDoc) {
+
+                    if(err){
+                        console.log('[popularSave error]: ' + err);
+                        return callback(err);
+                    }
+                });
+            }
+        });
+    }
+};
+
+// 获取热门课程数据
+AllTest.getPopular = function (callback) {
+
+    var db = mongoose.connection;
+    var PopularTest = mongoose.model('popular_test', popularTestSchema);
+
+    var query = PopularTest.find().where({});
+    query.exec(function (err, docs) {
+
+        if(err){
+            console.log('[getPopular error]: ' + err);
+            return callback(err);
+        }
+        var popularArray  = [];
+        for (let index in docs){
+            popularArray.push(docs[index]);
+        }
+        console.log('popular array: ' + JSON.stringify(popularArray));
+        // 成功后返回数据
+        callback(null, popularArray);
+    });
 };
 
 /* 删除一个文档 */

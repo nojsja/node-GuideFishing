@@ -19,7 +19,11 @@
 // 获取当前时间
 var getDate = require('./tools/GetDate');
 var mongoose = require('./tools/Mongoose');
+// 课程模式
 var courseSchema = require('./db_schema/course_schema').courseSchema;
+// 受欢迎的课程模式
+var popularCourseSchema = require('./db_schema/popularCourse_schema').popularCourseSchema;
+
 
 /* 构造函数 */
 function Course(course){
@@ -145,21 +149,7 @@ Course.importFromBroadcast = function (condition, callback) {
 /* 获取所有需要导入的课程数据 */
 Course.getLoadData = function (condition, callback) {
 
-    var db = mongoose.connection;
-    var Course = mongoose.model('Course', courseSchema);
-
-    var query = Course.fineOne().where({
-       courseName: condition.courseName
-    });
-    query.exec(function (err, doc) {
-
-        if(err){
-            console.log('[getLoadData error]: ' + err);
-            return callback(err);
-        }
-        // 返回一个课程的所有数据
-        callback(null, doc);
-    });
+    Course.getData(condition, callback);
 }
 
 /* 获取当前直播课程的数据 */
@@ -393,6 +383,7 @@ Course.readList = function (docCondition, callback) {
     Course.count({}, function (err, count) {
 
         if(err){
+            console.log('[get courseCount error]: ' + err);
             return callback(err);
         }
 
@@ -415,6 +406,7 @@ Course.readList = function (docCondition, callback) {
         //执行查询
         query.exec(function (err, docs) {
             if(err){
+                console.log('[readList error]: ' + err);
                 return callback(err);
             }
             for(var i in docs) {
@@ -427,5 +419,136 @@ Course.readList = function (docCondition, callback) {
     });
 };
 
+/* 受欢迎的课程数据更新和获取 */
+Course.updatePopular = function (callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('course', courseSchema);
+    var PopularCourse = mongoose.model('popular_course', popularCourseSchema);
+
+    // 筛选条件
+    var condition = {
+        select: {
+            courseName: 1,
+            courseType: 1
+        },
+        limit: 10,
+        sort: {
+            clickRate: -1
+        }
+    };
+    var queryCourse = Course.find().where({
+        isReady: true
+    });
+    // 设置筛选
+    queryCourse.select(condition.select)
+        .limit(condition.limit)
+        .sort(condition.sort);
+
+    // 执行
+    queryCourse.exec(function (err, docs) {
+
+        if(err){
+            console.log('[updatePopular error]:' + err);
+            return callback(err);
+        }
+        // 存储课程数据的数组
+        var popularData = [];
+        for(let index in docs){
+            popularData.push({
+                courseName: docs[index].courseName,
+                courseType: docs[index].courseType
+            });
+        }
+        console.log(JSON.stringify(popularData));
+        // 存储数据
+        popularSave(popularData);
+    });
+
+    // 存储获取到的数据
+    function popularSave(popularArray) {
+
+        // 删除以前的数据
+        var query = PopularCourse.remove();
+        query.exec(function (err, results) {
+
+            if(err){
+                console.log("[popularSave error]: " + err);
+                return callback(err);
+            }
+             console.log('the number of deleted docs: ' + results);
+
+            // 遍历存储数据
+            for(let index in popularArray){
+
+                let popularModel = new PopularCourse(popularArray[index]);
+                popularModel.save(function (err, savedDoc) {
+
+                    if(err){
+                        console.log('[popularSave error]: ' + err);
+                        return callback(err);
+                    }
+                });
+            }
+        });
+    }
+};
+
+// 获取热门课程数据
+Course.getPopular = function (callback) {
+
+    var db = mongoose.connection;
+    var PopularCourse = mongoose.model('popular_course', popularCourseSchema);
+
+    var query = PopularCourse.find().where({});
+    query.exec(function (err, docs) {
+
+        if(err){
+            console.log('[getPopular error]: ' + err);
+            return callback(err);
+        }
+        var popularArray  = [];
+        for (let index in docs){
+            popularArray.push(docs[index]);
+        }
+        console.log('popular array: ' + JSON.stringify(popularArray));
+        // 成功后返回数据
+        callback(null, popularArray);
+    });
+};
+
+
+
 
 module.exports = Course;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

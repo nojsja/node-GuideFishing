@@ -290,7 +290,7 @@ function courseBroadcastAction(io){
                                 var msgInfo = {
                                     from: user.name,
                                     messageType: "audios",
-                                    path: Files.record.visitPath
+                                    url: Files.record.visitPath
                                 };
                                 console.log(Files.record.visitPath);
                                 // 向其它用户发送消息

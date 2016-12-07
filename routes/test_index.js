@@ -67,7 +67,54 @@ function index(app) {
     /* 读取热门内容列表 */
     app.post('/test/readHot', function (req, res) {
 
+        // 获取热门数据
+        AllTest.getPopular(function (err, popularArray) {
+
+            if(err){
+                console.log('获取课程热门数据出错!');
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err
+                }) );
+            }
+            // 返回数据
+            res.json( JSON.stringify({
+                isError: false,
+                popularArray: popularArray
+            }) );
+        });
     });
 }
 
 module.exports = index;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
