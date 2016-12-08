@@ -14,6 +14,3 @@ $(function () {
     });
 });
 
-/* 页面action对象 */
-var detailAction = {};
-

@@ -6,14 +6,14 @@
 $(function () {
 
     // 获取课程数据
-    viewAction.readCourseContent();
+    ViewAction.readCourseContent();
 });
 
 /* 页面全局变量 */
-var viewAction = {};
+var ViewAction = {};
 
 /* 读取一篇文章的内容 */
-viewAction.readCourseContent = function () {
+ViewAction.readCourseContent = function () {
 
     var url = '/course/view/readOneCourse';
     var courseName = $('#courseName').text().trim();
@@ -23,17 +23,17 @@ viewAction.readCourseContent = function () {
         courseName: courseName,
         courseType: courseType
     }, function (JSONdata) {
-        viewAction.updateCourse(JSONdata);
+        ViewAction.updateCourse(JSONdata);
     }, "JSON");
 };
 
 /* 更新课程内容 */
-viewAction.updateCourse = function (JSONdata) {
+ViewAction.updateCourse = function (JSONdata) {
 
     var JSONobject = JSON.parse(JSONdata);
     console.log(JSONobject);
     if(JSONobject.error){
-        return viewAction.modalWindow('Sorry,发生错误: ' + JSONobject.error);
+        return ViewAction.modalWindow('Sorry,发生错误: ' + JSONobject.error);
     }
     /* 课程内容主体 */
     var $courseContent = $(JSONobject.courseContent);
@@ -47,7 +47,7 @@ viewAction.updateCourse = function (JSONdata) {
 };
 
 /* 模态弹窗 */
-viewAction.modalWindow = function(text) {
+ViewAction.modalWindow = function(text) {
 
     $('.modal-body').text(text);
     $('#modalWindow').modal("show", {

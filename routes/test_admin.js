@@ -75,8 +75,6 @@ function admin(app) {
         }
         test.testGroup = req.body.testGroup;
 
-
-
         //创建数据库模式对象
         var newTest = new AllTest(test);
         newTest.save(function (err) {

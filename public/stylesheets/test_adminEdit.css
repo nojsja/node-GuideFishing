@@ -311,17 +311,21 @@ a {
 
 /* 悬浮窗 */
 .hover-label {
-    background-color: rgba(28, 104, 151, 0.8);
     z-index: 100;
-    padding: 5px;
+    background-color: rgba(28, 104, 151, 0.8);
+    padding: 8px;
     color: white;
     font-size: 1.6rem;
-    width: 10rem;
     position: absolute;
+    width: 10rem;
     height: 1.6rem;
-    line-height: 1.6rem;
     height: auto;
+    line-height: 1.6rem;
     border-radius: 5px;
+
+    word-spacing: 2px;
+    letter-spacing: 2px;
+
     -ms-word-wrap:break-word;
     word-wrap:break-word;
     -ms-word-break: break-all;

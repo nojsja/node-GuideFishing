@@ -9,14 +9,14 @@ $(function () {
     // 公司名称动画
     $('.company').fadeIn();
     // 获取详细信息
-    RecruitDetail.getDetail();
+    RecruitCompanyAction.getDetail();
 });
 
 /* 页面全局存储变量 */
-var RecruitDetail = {};
+var RecruitCompanyAction = {};
 
 /* 获取招聘信息 */
-RecruitDetail.getDetail = function () {
+RecruitCompanyAction.getDetail = function () {
 
     var company = $('.company').text().trim();
     var url = '/recruitment/company';
@@ -24,12 +24,12 @@ RecruitDetail.getDetail = function () {
     // 请求服务器
     $.post(url, { company: company }, function (JSONdata) {
             // 更新页面
-            RecruitDetail.updatePage(JSONdata);
+            RecruitCompanyAction.updatePage(JSONdata);
         }, "JSON");
 };
 
 /* 更新页面 */
-RecruitDetail.updatePage = function (JSONdata) {
+RecruitCompanyAction.updatePage = function (JSONdata) {
 
     var JSONobject = JSON.parse(JSONdata);
     // 招聘信息

@@ -10,24 +10,24 @@
 $(function () {
 
     // 分页导航事件绑定
-    managerAction.pageNavbarAction();
+    ManagerAction.pageNavbarAction();
     // 导航条
     $('#manager').parent().prop('class', 'active');
     // 筛选提交按钮事件绑定
-    $('#allSubmit').click(managerAction.getAllTests);
-    $('#conditionSubmit').click(managerAction.getConditionTests);
+    $('#allSubmit').click(ManagerAction.getAllTests);
+    $('#conditionSubmit').click(ManagerAction.getConditionTests);
     // 添加筛选条件事件绑定
     // 绑定checkbox事件
     $('.condition-testType-item').prop('checked', false);
-    $('.condition-testType-item').change(managerAction.checkboxEvent);
+    $('.condition-testType-item').change(ManagerAction.checkboxEvent);
 
     // 得到数据列表
-    managerAction.getList();
+    ManagerAction.getList();
 
 });
 
 /* 页面对象 */
-var managerAction = {
+var ManagerAction = {
 
     testType: "ALL",
     // 标题字段
@@ -51,11 +51,11 @@ var managerAction = {
 };
 
 /* checkbox事件绑定 */
-managerAction.checkboxEvent = function () {
+ManagerAction.checkboxEvent = function () {
 
     var checkedValue = $(this).val();
     // 类型数组
-    var array = managerAction.testTypeArray;
+    var array = ManagerAction.testTypeArray;
 
     if($(this).prop('checked')){
         if(array.length === 0){
@@ -84,20 +84,20 @@ managerAction.checkboxEvent = function () {
 };
 
 /* 展示所有评测题目数据 */
-managerAction.getAllTests = function () {
+ManagerAction.getAllTests = function () {
     // 初始化数据
-    managerAction.testTitle = null;
-    managerAction.pageStart = 0;
-    managerAction.pageLimit = 20;
-    managerAction.testTypeArray = [];
+    ManagerAction.testTitle = null;
+    ManagerAction.pageStart = 0;
+    ManagerAction.pageLimit = 20;
+    ManagerAction.testTypeArray = [];
 
     //获取列表
-    managerAction.getList();
+    ManagerAction.getList();
 };
 
 /* 展示筛选过的所有评测题目数据 */
-managerAction.getConditionTests = function () {
-    managerAction.getList();
+ManagerAction.getConditionTests = function () {
+    ManagerAction.getList();
 };
 
 /**
@@ -120,7 +120,7 @@ managerAction.getConditionTests = function () {
  * </div>
 
  </div>*/
-managerAction.previewWindow = function (testType, testTitle) {
+ManagerAction.previewWindow = function (testType, testTitle) {
 
     // 访问地址
     var urlArray = ['/test/testView/', testType, '/', testTitle].join('');
@@ -168,14 +168,14 @@ managerAction.previewWindow = function (testType, testTitle) {
 };
 
 /* 更新页面数据表格 */
-managerAction.updateTable = function (JSONdata) {
+ManagerAction.updateTable = function (JSONdata) {
 
     var JSONobject = JSON.parse(JSONdata);
     var testArray = JSONobject.testArray;
     var $testTable = $('#testTable');
 
     if(testArray.length === 0){
-        return managerAction.modalWindow("数据库没有任何相关数据!");
+        return ManagerAction.modalWindow("数据库没有任何相关数据!");
     }else {
         $('.removeable').remove();
         // 遍历更新DOM
@@ -209,7 +209,7 @@ managerAction.updateTable = function (JSONdata) {
                     }, function (JSONdata) {
                         var JSONobject = JSON.parse(JSONdata);
                         if(JSONobject.error){
-                            return managerAction.modalWindow("删除错误,请重试!");
+                            return ManagerAction.modalWindow("删除错误,请重试!");
                         }
                         $(that).parent().parent().remove();
                     }, "JSON");
@@ -229,7 +229,7 @@ managerAction.updateTable = function (JSONdata) {
                 /* 预览事件绑定 */
                 $previewSpan.click(function () {
                     // 触发预览事件
-                    managerAction.previewWindow(test.testType, test.testTitle);
+                    ManagerAction.previewWindow(test.testType, test.testTitle);
                 }).appendTo($previewTd);
 
                 // 添加到页面上去
@@ -247,7 +247,7 @@ managerAction.updateTable = function (JSONdata) {
 };
 
 /* 模态弹窗 */
-managerAction.modalWindow = function(text) {
+ManagerAction.modalWindow = function(text) {
 
     $('.modal-body').text(text);
     $('#modalWindow').modal("show", {
@@ -257,7 +257,7 @@ managerAction.modalWindow = function(text) {
 };
 
 /* 绑定分页导航事件 */
-managerAction.pageNavbarAction = function() {
+ManagerAction.pageNavbarAction = function() {
 
     // 局部作用域变量,减少耦合度
     // 默认页面显示数量
@@ -341,13 +341,13 @@ managerAction.pageNavbarAction = function() {
             condition.limit = 1;
         }
         //设置所有需要筛选的类型
-        if(managerAction.testTypeArray.length > 0){
-             condition.testTypeArray = managerAction.testTypeArray;
+        if(ManagerAction.testTypeArray.length > 0){
+             condition.testTypeArray = ManagerAction.testTypeArray;
         }
 
         $.post(url, condition, function (JSONdata) {
             //更新表格
-            managerAction.updateTable(JSONdata);
+            ManagerAction.updateTable(JSONdata);
         }, "JSON");
     }
 };

@@ -73,6 +73,19 @@ scoreFactory.prototype = {
     }
 };
 
+/** 各种类型的得分模式和与之对应的得分子类型
+ * 一般模式Common对应的子模式CA,CB,CC
+ * 正反计分模式NegaPositive对应的子模式Negative, Positive
+ * 分类别多维度计分对应的子模式自定义得分模式scoreDefine,反向计分模式negativeType和
+ * 正向计分模式positiveType
+ * */
+scoreFactory.scoreModeGroup = {
+
+    Common: ["CA","CB","CC"],
+    NegaPositive: ["Negative", "Positive"],
+    Category: ["scoreDefine", "negativeType", "positiveType"]
+};
+
 /* 得到某套题的得分方法和得分分段信息以及得分分值 */
 scoreFactory.getScoreModeInfo = function (condition, callback) {
 

@@ -90,6 +90,16 @@ function test(app) {
         });
     });
 
+    /* 获取得分模式信息 */
+    app.post('/test/getScoreMode', function (req, res) {
+
+        // 返回的模式信息
+        var data = {
+            scoreModeGroup: scoreFactory.scoreModeGroup
+        };
+        res.json(JSON.stringify(data));
+    });
+    
     /* 提交评测结果 */
     app.post('/test/submit', function (req, res) {
 

@@ -24,9 +24,9 @@ AllTest.prototype.save = function (callback) {
 
     var testGroup = this.testGroup;
     var db = mongoose.connection;
-    var Tests = mongoose.model('Tests', testSchema);
+    var Test = mongoose.model('Test', testSchema);
 
-    var newTestMode = new Tests(testGroup);
+    var newTestMode = new Test(testGroup);
     newTestMode.save(function (err, doc) {
         if(err) {
             console.log(err);
@@ -40,9 +40,9 @@ AllTest.prototype.save = function (callback) {
 AllTest.getDetail = function (docCondition, callback) {
 
     var db = mongoose.connection;
-    var Tests = mongoose.model('Tests', testSchema);
+    var Test = mongoose.model('Test', testSchema);
 
-    var query = Tests.findOne();
+    var query = Test.findOne();
     query.where(docCondition);
     query.exec(function (err, doc) {
         if(err) {
@@ -61,7 +61,7 @@ AllTest.readList = function (docCondition, callback) {
     // defer 要放在局部范围内, 不然会变成全局变量
     var defer = Q.defer();
     var db = mongoose.connection;
-    var Tests = mongoose.model('Tests', testSchema);
+    var Test = mongoose.model('Test', testSchema);
 
         //需要读取的文档的查询条件
         var condition = {};
@@ -108,7 +108,7 @@ AllTest.readList = function (docCondition, callback) {
             })
             .then(function (info) {
 
-                Tests.count({}, function (err, count) {
+                Test.count({}, function (err, count) {
 
                     if(err){
                         console.log(err);
@@ -124,7 +124,7 @@ AllTest.readList = function (docCondition, callback) {
                     console.log('select: ' + JSON.stringify(info.select));
                     console.log('query condition: ' + JSON.stringify(info.condition));
 
-                    var query = Tests.find().where(info.condition);
+                    var query = Test.find().where(info.condition);
                     if(info.testTypeArray.length > 0){
                         query.in('testType', info.testTypeArray);
                     }
@@ -268,9 +268,9 @@ AllTest.deleteOneDoc = function (docCondition, callback) {
     //多个判断依据
     var condition = docCondition;
     var db = mongoose.connection;
-    var Tests = mongoose.model('Tests', testSchema);
+    var Test = mongoose.model('Test', testSchema);
 
-    var query = Tests.findOne().where(condition);
+    var query = Test.findOne().where(condition);
     query.exec(function (err, doc) {
         if(err){
             return callback(err);
@@ -291,9 +291,9 @@ AllTest.deleteSomeDoc = function (docsCondition, callback) {
     //多个判断依据
     var condition = docsCondition;
     var db = mongoose.connection;
-    var Tests = mongoose.model('Tests', testSchema);
+    var Test = mongoose.model('Test', testSchema);
 
-    var query = Tests.remove();
+    var query = Test.remove();
     //删除条件
     query.where(condition);
     query.exec(function (err, results) {
