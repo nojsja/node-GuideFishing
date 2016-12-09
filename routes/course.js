@@ -41,17 +41,14 @@ function course(app){
             date: 1
         };
 
+        // 读取一个课程数据
         Course.readOne(totalCondition, function (err, data) {
 
             console.log(data.courseAbstract);
             if(err){
                 return res.json( JSON.stringify({
-                    title: "课程详情",
-                    courseType: "error!!",
-                    courseName: "error!!",
-                    courseAbstract: "error!!",
-                    clickRate: "error!!",
-                    date: getDate()
+                    ieError: true,
+                    error: err
                 }) );
             }
             // 读取成功
@@ -86,6 +83,7 @@ function course(app){
         res.render('course_view', {
 
             title: "课程学习",
+            slogan: "带渔",
             courseType: req.params.courseType,
             courseName: req.params.courseName
         });
@@ -113,7 +111,7 @@ function course(app){
     });
 
     /* 获取某一个课程的详细内容 */
-    app.post('/course/view/readOneCourse', function (req,res) {
+    app.post('/course/view/readOne', function (req,res) {
 
         // 查询条件
         var totalCondition = {
@@ -122,9 +120,11 @@ function course(app){
         };
         totalCondition.condition.courseType = req.body.courseType;
         totalCondition.condition.courseName = req.body.courseName;
-        // 选择条件
+        // 选择条件 课程编辑内容,直播内容,直播标志,讲师,日期
         totalCondition.select = {
             courseContent: 1,
+            isBroadcast: 1,
+            courseOrigin: 1,
             teacher: 1,
             date: 1
         };
@@ -137,8 +137,11 @@ function course(app){
                     error: err
                 }));
             }
+            // 非基本类型的数据发往客户端需要JSON格式化,解析的时候再解析成对象来操作
             res.json(JSON.stringify({
                 courseContent: data.courseContent,
+                isBroadcast: data.isBroadcast,
+                courseOrigin: data.courseOrigin,
                 teacher: data.teacher,
                 date: data.date
             }));

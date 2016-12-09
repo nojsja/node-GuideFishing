@@ -95,7 +95,7 @@ BroadcastAction.socketInit = function () {
 
         // 格式化接收到的数据
         var info = {
-            message: data.msg,
+            message: data.msg || data.message,
             from: data.from,
             messageType: data.messageType,
             path: data.path || ""
@@ -112,10 +112,11 @@ BroadcastAction.socketInit = function () {
         var info = {
             message: data.msg || "",
             from: data.from,
+            isAdmin: data.isAdmin,
             messageType: data.messageType,
             url: data.url || ""
         };
-        console.log('newMessage: '+ info.path + info.messageType + info.message + info.from);
+
         BroadcastAction.message.received.value = info;
         BroadcastAction.message.received.trigger('newMessage', info);
     });
@@ -448,18 +449,8 @@ BroadcastAction.watcherActive = function () {
     // 接收用户新消息
     function receiveNewMsg(info) {
 
-        // 集成消息对象
-        var _info = {
-            // 消息发送者和消息内容,媒体类型数据的url
-            from: info.args.from,
-            msg: info.args.message,
-            url: info.args.url || "",
-            // 消息的所属类型,对应的有text,video,audio
-            messageType: info.args.messageType
-        };
-
         // 执行DOM更新
-        BroadcastAction.newMessageUpdate(_info);
+        BroadcastAction.newMessageUpdate(info.args);
     }
     
     /** 直播状态检查
@@ -551,9 +542,10 @@ BroadcastAction.newMessageUpdate = function (info) {
 
     // 消息参数
     var from = info.from,
-        msg = info.msg,
+        msg = info.message || info.msg,
         path = info.url,
-        messageType = info.messageType;
+        messageType = info.messageType,
+        isAdmin = BroadcastAction.stringToBoolean(info.isAdmin);
 
     var date = info.date || BroadcastAction.getDate();
 
@@ -568,7 +560,12 @@ BroadcastAction.newMessageUpdate = function (info) {
             var $messageItem =
                 $('<div class="message-list-item message-list-item-user">');
 
-            var $PH = $('<p class="p-head">').text(date + " " + from);
+            var $pHead = $('<p class="p-head">');
+            if(isAdmin){
+                $pHead = $('<p class="p-head p-head-admin">');
+            }
+            var $PH = $($pHead)
+                .text(date + " " + from);
             var $PB = $('<p>').text(msg);
             $messageItem
                 .append($PH)
@@ -587,9 +584,15 @@ BroadcastAction.newMessageUpdate = function (info) {
             var $messageItem =
                 $('<div class="message-list-item message-list-item-user">');
 
+            // 首部信息
+            var $pHead = $('<p class="p-head">');
+            if(isAdmin){
+                $pHead = $('<p class="p-head p-head-admin">');
+            }
+
             // 文本消息
             var $messageItemText =
-                $('<p class="p-head">');
+                $pHead;
             $messageItemText.text(date + " " + from)
                 .appendTo($messageItem);
 
@@ -617,9 +620,15 @@ BroadcastAction.newMessageUpdate = function (info) {
             var $messageItem =
                 $('<div class="message-list-item message-list-item-user">');
 
+            // 首部信息
+            var $pHead = $('<p class="p-head">');
+            if(isAdmin){
+                $pHead = $('<p class="p-head p-head-admin">');
+            }
+
             // 文本消息
             var $messageItemText =
-                $('<div class="p-head">');
+                $pHead;
             $messageItemText.text(date + " " + from)
                 .appendTo($messageItem);
 
@@ -687,9 +696,15 @@ BroadcastAction.newMessageUpdate = function (info) {
             var $messageItem =
                 $('<div class="message-list-item message-list-item-user">');
 
+            // 首部信息
+            var $pHead = $('<p class="p-head">');
+            if(isAdmin){
+                $pHead = $('<p class="p-head p-head-admin">');
+            }
+
             // 文本消息
             var $messageItemText =
-                $('<p class="p-head">');
+                $pHead;
             $messageItemText.text(date + " " + from)
                 .appendTo($messageItem);
 
@@ -797,7 +812,7 @@ BroadcastAction.getMediaDataInit = function (type) {
             } else if(err.MANDATORY_UNSATISFIED_ERROR) {
                 BroadcastAction.modalWindow('指定的媒体类型未接收到媒体流');
             }
-            console.log(err);
+            console.log( '调用麦克风权限发生错误: ' + err);
         }
     }
     
@@ -841,6 +856,18 @@ BroadcastAction.getMediaDataInit = function (type) {
         });
     }
 
+};
+
+/* Boolean字符串转换函数 */
+BroadcastAction.stringToBoolean = function (string) {
+
+    if(string == "true" && typeof (string) == 'string'){
+        return (string = true);
+    }
+    if(string === true && typeof (string) == 'boolean'){
+        return (string = true);
+    }
+    return (string = false);
 };
 
 /* 得到现在的日期 */

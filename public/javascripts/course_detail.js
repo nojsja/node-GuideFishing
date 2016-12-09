@@ -8,8 +8,9 @@ $(function () {
 
     // 开始测试
     $('#startDiv').click(function () {
-        window.location.href = "/course/view/" +
-            DetailAction.courseType + "/" + DetailAction.courseName;
+        window.location.href =
+            [ "/course/view/", DetailAction.courseType,
+                "/", DetailAction.courseName ].join('');
     });
 
     DetailAction.courseType = $('.detail-head-type').text().trim();
@@ -31,20 +32,59 @@ DetailAction.getTypeImage = function () {
     var url = '/course/detail/readTypeImage';
     $.post(url, {}, function (JSONdata) {
 
-        DetailAction.updatePage(JSONdata);
+        var JSONobject = JSON.parse(JSONdata);
+        var imageArray = JSONobject.imageArray;
+        var imageUrl = imageArray[DetailAction.courseType];
+        var backgroundStyle = ["url(", imageUrl, ")", " no-repeat"].join('');
+        // 设置图片
+        $('.detail-head-img').css({
+            'background': backgroundStyle,
+            'background-size': 'cover'
+        });
+
     }, "JSON");
 };
 
-/* 更新页面 */
-DetailAction.updatePage = function (JSONdata) {
+/* 模态弹窗 */
+DetailAction.modalWindow = function(text) {
 
-    var JSONobject = JSON.parse(JSONdata);
-    var imageArray = JSONobject.imageArray;
-    var imageUrl = imageArray[DetailAction.courseType];
-    var backgroundStyle = ["url(", imageUrl, ")", " no-repeat"].join('');
-    // 设置图片
-    $('.detail-head-img').css({
-        'background': backgroundStyle,
-        'background-size': 'cover'
+    $('.modal-body').text(text);
+    $('#modalWindow').modal("show", {
+        backdrop : true,
+        keyboard : true
     });
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

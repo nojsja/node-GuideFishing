@@ -296,6 +296,7 @@ Course.update = function (condition, callback) {
                 doc.set(segment, condition[segment]);
             }
         }
+        // 执行更新
         query.save(function (err) {
            if(err){
                console.log(err);
@@ -323,12 +324,7 @@ Course.readOne = function (totalCondition, callback) {
             console.log(err);
             return callback(err, null);
         }
-        // 返回的数据
-        var data = {
-            courseContent: doc.courseContent,
-            teacher: doc.teacher,
-            date: doc.date
-        };
+
         callback(null, doc);
     });
 };
