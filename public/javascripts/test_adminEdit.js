@@ -11,6 +11,7 @@ $(function () {
     // 初始化观察者模式
     EditAction.initWatcher(EditAction.testGroup);
     EditAction.initWatcher(EditAction.scoreMode);
+    EditAction.initWatcher(EditAction.scoreSection);
     EditAction.initWatcher(EditAction.categorySection);
     // 获取得分模式信息
     EditAction.getScoreMode();
@@ -57,7 +58,9 @@ var EditAction = {
     // 单次记分分值
     scoreValue: null,
     // 分段信息
-    scoreSection: [],
+    scoreSection: {
+        value: [], watcherList: [], trigger: null, listen: null, remove: null
+    },
     // 记分模式
     scoreMode: {
         value: null, watcherList: [], trigger: null, listen: null, remove: null
@@ -250,7 +253,7 @@ EditAction.activeWatcher = function () {
      * 每次有新的题目添加的时候DOM上的元素都会被删除
      * 然后重建, 所有每次都会重新绑定事件, 对浏览器有一定的资源浪费
      * 但是这样子设计在编码上回带来很大的灵活性,需要从两者之间权衡
-     * **/
+     **/
     EditAction.testGroup.listen(function () {
         // 题目列表
         var $totalList = $('.total-list');
@@ -296,7 +299,7 @@ EditAction.activeWatcher = function () {
                     $('.score-child, .item-number, .category-child')
                         .prop('class', 'type-item score-child');
                     // 所有选项移除
-                    $('.choises').children().remove();
+                    // $('.choises').children().remove();
                     // 当前的题号
                     // 注意题号和目前的编号不一样, 题号大一点
                     EditAction.currentNumber = thisGroup.itemNumber - 1;
@@ -312,6 +315,33 @@ EditAction.activeWatcher = function () {
                 $totalList.prepend($editNew);
 
             })(index);
+        }
+    });
+
+    /**
+     * 添加得分分段观察者方法
+     * */
+    EditAction.scoreSection.listen(function () {
+
+        // 列表父元素
+        var $list = $('.info-list');
+        // 移除列表缓存
+        $list.children().remove();
+        // 更新DOM
+        for(var index in EditAction.scoreSection.value) {
+            // 分段
+            var scoreSec = EditAction.scoreSection.value[index];
+            // 分数段
+            var section = "分数段" + scoreSec.scoreHead + "~" + scoreSec.scoreTail + ":";
+            // 添加DOM元素
+            var $div = $('<div class="info-list-item">');
+            var $label = $('<div class="item-label">');
+            $label.text(section);
+            var $result = $('<div class="item-text">');
+            $result.text(scoreSec.result);
+            $div.append($label).append($result);
+
+            $list.append($div);
         }
     });
 
@@ -509,8 +539,6 @@ EditAction.editCancel = function () {
 /* 增加一个统计分段 */
 EditAction.addScoreSection = function () {
 
-    // 列表父元素
-    var $list = $('.info-list');
     // 获取分段段首
     var scoreHead = $('#scoreHeadDiv > input').val();
     // 获取分段段尾
@@ -523,66 +551,33 @@ EditAction.addScoreSection = function () {
     }
 
     // 更新数据依赖
-    EditAction.scoreSection.push({
+    EditAction.scoreSection.value.push({
         scoreHead: scoreHead,
         scoreTail: scoreTail,
         result: scoreResult
     });
 
-    // 移除列表缓存
-    $list.children().remove();
-    // 更新DOM
-    for(var index in EditAction.scoreSection) {
-        // 分段
-        var scoreSec = EditAction.scoreSection[index];
-        // 分数段
-        var section = "分数段" + scoreSec.scoreHead + "~" + scoreSec.scoreTail + ":";
-        // 添加DOM元素
-        var $div = $('<div class="info-list-item">');
-        var $label = $('<div class="item-label">');
-        $label.text(section);
-        var $result = $('<div class="item-text">');
-        $result.text(scoreSec.result);
-        $div.append($label).append($result);
-
-        $list.append($div);
-    }
+    // 触发观察者
+    EditAction.scoreSection.trigger();
 };
 
 /* 删除一个分数段 */
 EditAction.deleteScoreSection = function () {
 
     // 推出最后一个数据
-    EditAction.scoreSection.pop();
-    // 更新DOM
-    // 父元素
-    var $list = $('.info-list');
-    $list.children().remove();
+    EditAction.scoreSection.value.pop();
+    // 更新DOM 触发观察者
+    EditAction.scoreSection.trigger();
 
-    for(var index in EditAction.scoreSection) {
-        // 分段
-        var scoreSec = EditAction.scoreSection[index];
-        // 分数段
-        var section = "分数段" + scoreSec.scoreHead + "~" + scoreSec.scoreTail + ":";
-        // 添加DOM元素
-        var $div = $('<div class="info-list-item">');
-        var $label = $('<div class="item-label">');
-        $label.text(section);
-        var $result = $('<div class="item-text">');
-        $result.text(scoreSec.result);
-        $div.append($label).append($result);
-
-        $list.append($div);
-    }
 };
 
 /** DOM结构
- * 添加选项
+ * 设置选项的个数
  * <div class="input-group">
  * <label class="input-group-addon">A</label>
  * <input type="text" class="form-control" id="inputA">
  * </div>
- * **/
+ **/
 EditAction.choiseNumberSet = function () {
 
     // 切换颜色
@@ -594,14 +589,27 @@ EditAction.choiseNumberSet = function () {
     var choiseTagArray = ["A", "B", "C", "D", "E"];
     // 父元素
     var $choises = $('.choises');
+    // 遍历读取临时保存所有选项的值
+    var choiseTemp = {};
+    $choises.each(function (index, object) {
+
+        var tag = $(object).children('.input-choise').attr('choose');
+        var value = $(object).children('.input-chiose').val();
+        choiseTemp.tag = value;
+    });
     $choises.children().remove();
     $choises.css('display', 'none');
     for(var i = 0; i < number; i++){
+
         (function (index) {
             var $div = $('<div class="input-group">');
             var $label = $('<label class="input-group-addon">');
             $label.text(choiseTagArray[index]);
             var $input = $('<input type="text" class="form-control input-choise">');
+            if(choiseTemp[ choiseTagArray[index] ]){
+                // 设置值
+                $input.val(choiseTemp[ choiseTemp[index] ]);
+            }
             $input.attr('choose', choiseTagArray[index]);
             $input.attr('scoreValue', null);
 
@@ -663,11 +671,11 @@ EditAction.submitCheck = function () {
     }
 
     // 分数段信息和添加的子类型信息
-    if(!EditAction.scoreSection.length && !EditAction.categorySection.section.length) {
+    if(!EditAction.scoreSection.value.length && !EditAction.categorySection.section.length) {
         return EditAction.modalWindow("请至少添加一个分段或子类型");
     }
-    if(EditAction.scoreSection.length){
-        submitData.scoreSection = EditAction.scoreSection;
+    if(EditAction.scoreSection.value.length){
+        submitData.scoreSection = EditAction.scoreSection.value;
     }
     if(EditAction.categorySection.section.length){
         submitData.categorySection = EditAction.categorySection.section;
