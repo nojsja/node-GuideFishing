@@ -43,7 +43,7 @@ function Course(course){
         date : getDate(),
         price : course.price,
         clickRate : 0
-    }
+    };
 
 }
 
@@ -139,8 +139,8 @@ Course.importFromBroadcast = function (condition, callback) {
                 callback(null);
             });
         }else {
-            var err = new Error('未找到直播数据');
-            callback(err);
+            var error = new Error('未找到直播数据');
+            callback(error);
         }
     });
 
@@ -150,7 +150,7 @@ Course.importFromBroadcast = function (condition, callback) {
 Course.getLoadData = function (condition, callback) {
 
     Course.getData(condition, callback);
-}
+};
 
 /* 获取当前直播课程的数据 */
 Course.getData = function (condition, callback) {
@@ -225,7 +225,7 @@ Course.checkStatus = function (condition, callback) {
         ing: 'noReady',
         done: 'isReady',
         none: 'none'
-    }
+    };
     var query = Course.findOne().where({
         courseName: condition.courseName
     });
@@ -296,6 +296,7 @@ Course.update = function (condition, callback) {
                 doc.set(segment, condition[segment]);
             }
         }
+        // 执行更新
         query.save(function (err) {
            if(err){
                console.log(err);
@@ -323,12 +324,7 @@ Course.readOne = function (totalCondition, callback) {
             console.log(err);
             return callback(err, null);
         }
-        // 返回的数据
-        var data = {
-            courseContent: doc.courseContent,
-            teacher: doc.teacher,
-            date: doc.date
-        };
+
         callback(null, doc);
     });
 };
@@ -482,13 +478,15 @@ Course.updatePopular = function (callback) {
             for(let index in popularArray){
 
                 let popularModel = new PopularCourse(popularArray[index]);
-                popularModel.save(function (err, savedDoc) {
+                popularModel.save(callback);
+            }
+            // 回调函数
+            function callback(err, saveDoc) {
 
-                    if(err){
-                        console.log('[popularSave error]: ' + err);
-                        return callback(err);
-                    }
-                });
+                if(err){
+                    console.log('[popularSave error]: ' + err);
+                    return callback(err);
+                }
             }
         });
     }

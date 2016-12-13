@@ -107,7 +107,7 @@ function course_admin(app) {
                 }
             }
             return false;
-        };
+        }
     });
     
     // 获取需要导入的课程数据

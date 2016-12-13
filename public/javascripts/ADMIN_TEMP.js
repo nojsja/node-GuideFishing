@@ -17,7 +17,7 @@ ADMIN_TEMP.getAllRoutes = function () {
     $.post(url, {}, function (JSONdata) {
 
         ADMIN_TEMP.updateRoutes(JSONdata);
-    }, "JSON")
+    }, "JSON");
 };
 
 /* 更新页面路由 */
@@ -50,10 +50,11 @@ ADMIN_TEMP.updateRoutes = function (JSONdata) {
             var $routeDivText = $('<div class="route-div-text">');
             $routeDivText.text(routeObject.text);
             // 自定义路由
+            var $routeDivUrl;
             if(routeObject.isVariable){
-                var $routeDivUrl = $('<div class="route-div-url">');
+                $routeDivUrl = $('<div class="route-div-url">');
             }else {
-                var $routeDivUrl = $('<a class="route-div-url">');
+                $routeDivUrl = $('<a class="route-div-url">');
             }
             $routeDivUrl
                 .text(routeObject.url)

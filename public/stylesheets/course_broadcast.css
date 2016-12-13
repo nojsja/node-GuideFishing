@@ -13,8 +13,12 @@ a {
     color: #8bcaed;
 }
 
+.p-head-admin {
+    color: #70df4c;
+}
+
 .p-head-system {
-    color: #e5691d;
+    color: #aaaaaa;
 }
 
 .total {
@@ -92,7 +96,7 @@ a {
 .message-list-item {
     margin-top: 1rem;
     padding: 5px;
-    color: #4a4a4a;
+    color: #577280;
     border-top: solid 1px #c2c2c2;
     background-color: #F3F3F3;
 }

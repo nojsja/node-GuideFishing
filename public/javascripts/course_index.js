@@ -8,15 +8,15 @@
 $(function () {
 
     // 页面事件绑定
-    courseAction.pageEventBind();
+    CourseAction.pageEventBind();
     //加载指定数量的测试题目列表
-    courseAction.readCourseList({ courseType: "ALL" });
+    CourseAction.readCourseList({ courseType: "ALL" });
     // 更新热门内容
-    courseAction.updateHot();
+    CourseAction.updateHot();
 });
 
 /*** 页面全局变量 ***/
-var courseAction = {
+var CourseAction = {
     //heder是否降下
     headerDown: false,
     //检测页面滚动
@@ -34,61 +34,61 @@ var courseAction = {
 };
 
 /* 页面主要事件绑定 */
-courseAction.pageEventBind = function () {
+CourseAction.pageEventBind = function () {
 
     $('.header-label').click(function () {
-        courseAction.headerDown = !courseAction.headerDown;
+        CourseAction.headerDown = !CourseAction.headerDown;
         $('.type-item').slideToggle();
-        if(courseAction.headerDown) {
+        if(CourseAction.headerDown) {
             $('.header-label > span').prop('class', 'glyphicon glyphicon-chevron-up');
         }else {
             $('.header-label > span').prop('class', 'glyphicon glyphicon-chevron-down');
         }
     });
     //热门内容事件绑定
-    $('.jump').click(courseAction.pageHotContentAction);
+    $('.jump').click(CourseAction.pageHotContentAction);
 
     //顶部和底部跳转
-    $('#top').click(courseAction.goTop);
-    $('#bottom').click(courseAction.goBottom);
+    $('#top').click(CourseAction.goTop);
+    $('#bottom').click(CourseAction.goBottom);
     //高度检测
     /*windowHeightCheck();*/
     //滑动检测函数
-    $(window).scroll(courseAction.scrollCheck);
+    $(window).scroll(CourseAction.scrollCheck);
     //加载更多数据
-    $('.loading-info').click(courseAction.readMore);
+    $('.loading-info').click(CourseAction.readMore);
 
     //指定类型的测试题目
     $('.type-item').click(function () {
-        courseAction.courseTypeDefine.call(this, arguments);
+        CourseAction.courseTypeDefine.call(this, arguments);
     });
 };
 
 /* 读取课程列表 */
-courseAction.readCourseList = function (condition) {
+CourseAction.readCourseList = function (condition) {
 
     var url = "/course/readCourseList";
     //请求服务器
     $.post(url, condition, function (JSONdata) {
         //更新页面
-        courseAction.updatePage(JSONdata);
+        CourseAction.updatePage(JSONdata);
     }, "JSON");
 };
 
 /* 加载更多数量的测评文章 */
-courseAction.readMore = function () {
+CourseAction.readMore = function () {
 
-    courseAction.readCourseList({
-        courseType: courseAction.courseType,
-        skip: courseAction.pageStart
+    CourseAction.readCourseList({
+        courseType: CourseAction.courseType,
+        skip: CourseAction.pageStart
     }, function (JSONdata) {
         //更新页面
-        courseAction.updatePage(JSONdata);
+        CourseAction.updatePage(JSONdata);
     });
-}
+};
 
 /* 更新主页事件 */
-courseAction.updatePage = function (JSONdata) {
+CourseAction.updatePage = function (JSONdata) {
 
     // 课程类型对应中文
     var courseTypeChina = {
@@ -109,19 +109,19 @@ courseAction.updatePage = function (JSONdata) {
         return this.modalWindow("服务器发生错误: " + parsedData.error);
     }
     //清除缓存数据
-    if(courseAction.isClear) {
+    if(CourseAction.isClear) {
         $('#total').children().remove();
         //重置标志位
-        courseAction.isClear = false;
+        CourseAction.isClear = false;
     }
     //没有数据提示用户
-    if(parsedData.courseArray.length == 0){
+    if(parsedData.courseArray.length === 0){
         return this.modalWindow('抱歉,没有更多数据!');
     }
     //遍历对象数组构造DOM对象
     for(var courseIndex in parsedData.courseArray) {
         //增加游标控制页面读取的起始位置
-        courseAction.pageStart += 1;
+        CourseAction.pageStart += 1;
         (function () {
             var course = parsedData.courseArray[courseIndex];
             console.log('course' + course);
@@ -177,39 +177,39 @@ courseAction.updatePage = function (JSONdata) {
 };
 
 /* 自定义课程类型 */
-courseAction.courseTypeDefine = function () {
+CourseAction.courseTypeDefine = function () {
 
     //通过触发对象id获取函数执行环境下的courseType
     var courseType = $(this).prop('id');
     //重置分页数据
-    courseAction.pageStart = 0;
-    courseAction.pageLimit = 15;
-    courseAction.courseType = courseType;
-    courseAction.isClear = true;
+    CourseAction.pageStart = 0;
+    CourseAction.pageLimit = 15;
+    CourseAction.courseType = courseType;
+    CourseAction.isClear = true;
 
     //读取指定类型的列表
-    courseAction.readCourseList({
-        courseType: courseAction.courseType,
-        pageStart: courseAction.pageStart,
-        pageLimit: courseAction.pageLimit
+    CourseAction.readCourseList({
+        courseType: CourseAction.courseType,
+        pageStart: CourseAction.pageStart,
+        pageLimit: CourseAction.pageLimit
 
     }, function (err, JSONdata) {
         if(err){
             return this.modalWindow("发生错误: " + err);
         }
-        courseAction.updatePage(JSONdata);
+        CourseAction.updatePage(JSONdata);
     });
 };
 
 /* 更新热门内容 */
-courseAction.updateHot = function () {
+CourseAction.updateHot = function () {
 
     var url = '/course/readHot';
     $.post(url, {}, function (JSONdata){
 
         var JSONobject = JSON.parse(JSONdata);
         if(JSONobject.isError){
-            return courseAction.modalWindow('服务器发生错误,错误码: ' + JSONobject.error);
+            return CourseAction.modalWindow('服务器发生错误,错误码: ' + JSONobject.error);
         }
 
         // 更新父组件
@@ -231,7 +231,7 @@ courseAction.updateHot = function () {
 };
 
 /* 模态弹窗 */
-courseAction.modalWindow = function(text) {
+CourseAction.modalWindow = function(text) {
 
     $('.modal-body').text(text);
     $('#modalWindow').modal("show", {
@@ -241,16 +241,16 @@ courseAction.modalWindow = function(text) {
 };
 
 /* 页面底部和底部跳转 */
-courseAction.goTop = function goTop() {
+CourseAction.goTop = function goTop() {
     $('html, body').animate({ scrollTop: 0 }, 'slow');
 };
 
-courseAction.goDiv = function goDiv(div) {
+CourseAction.goDiv = function goDiv(div) {
     var a = $("#" + div).offset().top;
     $("html, body").animate({ scrollTop: a }, 'slow');
 };
 
-courseAction.goBottom = function goBottom() {
+CourseAction.goBottom = function goBottom() {
     //两个参数分别是左上角显示的文档的x坐标和y坐标
     //scrollHeight 和 clientHeight分别是文档能够滚动的总高度和文档在当前窗口的可见高度
     window.scrollTo(0, document.documentElement.scrollHeight -
@@ -258,7 +258,7 @@ courseAction.goBottom = function goBottom() {
 };
 
 /* 滚动侦测 */
-courseAction.scrollCheck = function () {
+CourseAction.scrollCheck = function () {
 
     //可见高度
     var clientHeight = $(window).height();
@@ -274,17 +274,17 @@ courseAction.scrollCheck = function () {
 
     //当滑动到1/2页面处的时候就显示跳转按钮
     if(clientHeight + scrollHeight >= (totalHeight * 1) / 2){
-        courseAction.scrollOver = true;
-        if(courseAction.lastScrollOver !== courseAction.scrollOver){
+        CourseAction.scrollOver = true;
+        if(CourseAction.lastScrollOver !== CourseAction.scrollOver){
             $('.page-anchor').fadeIn();
         }
-        courseAction.lastScrollOver = courseAction.scrollOver;
+        CourseAction.lastScrollOver = CourseAction.scrollOver;
     }else {
-        courseAction.scrollOver = false;
-        if(courseAction.lastScrollOver !== courseAction.scrollOver){
+        CourseAction.scrollOver = false;
+        if(CourseAction.lastScrollOver !== CourseAction.scrollOver){
             $('.page-anchor').fadeOut();
         }
-        courseAction.lastScrollOver = courseAction.scrollOver;
+        CourseAction.lastScrollOver = CourseAction.scrollOver;
     }
 };
 

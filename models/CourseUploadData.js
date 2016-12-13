@@ -32,10 +32,10 @@ function CourseUploadData(type, data) {
         this.data = data;
         // 绑定数据模型
         this.schema = this.typeStorage[this.mediaType].schema ||
-            this.typeStorage['file'].schema;
+            this.typeStorage.file.schema;
         // 模型名字
         this.model = this.typeStorage[this.mediaType].model ||
-            this.typeStorage['file'].model;
+            this.typeStorage.file.model;
     }else {
         return new CourseUploadData(type, data);
     }

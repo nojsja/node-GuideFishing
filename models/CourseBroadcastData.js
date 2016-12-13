@@ -171,7 +171,7 @@ CourseBroadcastData.readList = function (docCondition, callback) {
         });
 
     });
-}
+};
 
 /* 保存听课的一个用户的信息 */
 CourseBroadcastData.addLearner = function (condition, callback) {
@@ -181,17 +181,17 @@ CourseBroadcastData.addLearner = function (condition, callback) {
     var Model = mongoose.model('Broadcast', courseBroadcast_schema);
 
     // 筛选数据
-    var condition = {
-        courseName: ''
+    var _condition = {
+        courseName: condition.courseName
     };
     // 直播课程名
-    var broadcastCourseName = condition.courseName;
-    condition.courseName = broadcastCourseName;
+    var broadcastCourseName = _condition.courseName;
+    _condition.courseName = broadcastCourseName;
     // 导入的用户
-    var learner = { name: condition.name };
+    var learner = { name: _condition.name };
 
     // 找到一个课程更新用户数据
-    var query = Model.fineOne().where(condition);
+    var query = Model.fineOne().where(_condition);
     query.exec(function (err, doc) {
 
         if(err){
@@ -233,8 +233,8 @@ CourseBroadcastData.deleteOne = function (condition, callback) {
            });
        }
        else {
-           var err = new Error('未找到直播数据');
-           callback(err);
+           var error = new Error('未找到直播数据');
+           callback(error);
        }
     });
 };

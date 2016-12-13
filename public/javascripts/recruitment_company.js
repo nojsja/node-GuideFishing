@@ -9,14 +9,14 @@ $(function () {
     // 公司名称动画
     $('.company').fadeIn();
     // 获取详细信息
-    RecruitDetail.getDetail();
+    RecruitCompanyAction.getDetail();
 });
 
 /* 页面全局存储变量 */
-var RecruitDetail = {};
+var RecruitCompanyAction = {};
 
 /* 获取招聘信息 */
-RecruitDetail.getDetail = function () {
+RecruitCompanyAction.getDetail = function () {
 
     var company = $('.company').text().trim();
     var url = '/recruitment/company';
@@ -24,12 +24,12 @@ RecruitDetail.getDetail = function () {
     // 请求服务器
     $.post(url, { company: company }, function (JSONdata) {
             // 更新页面
-            RecruitDetail.updatePage(JSONdata);
+            RecruitCompanyAction.updatePage(JSONdata);
         }, "JSON");
 };
 
 /* 更新页面 */
-RecruitDetail.updatePage = function (JSONdata) {
+RecruitCompanyAction.updatePage = function (JSONdata) {
 
     var JSONobject = JSON.parse(JSONdata);
     // 招聘信息
@@ -52,18 +52,18 @@ RecruitDetail.updatePage = function (JSONdata) {
     $mapMarker.text(position);
     $('.introduction-position').append($mapMarker);
     // 更新图片
-    for(var index in imgArray){
+    for(var index1 in imgArray){
         var $imgDiv = $('<img class="environment-image">');
-        $imgDiv.prop('src', imgArray[index].image);
+        $imgDiv.prop('src', imgArray[index1].image);
         // 添加图片到页面
         $('.introduction-environment').append($imgDiv);
     }
     // 更新视频
-    for(var index in videoArray){
-        console.log(videoArray[index]);
+    for(var index2 in videoArray){
+        console.log(videoArray[index2]);
         var $video = $('<video class="video">');
         $video.prop({
-            'src': videoArray[index].video,
+            'src': videoArray[index2].video,
             'controls': 'controls'
         });
         // 添加视频

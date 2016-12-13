@@ -61,7 +61,7 @@ bcIndexAction.readMore = function () {
     bcIndexAction.readBroadcastList({
         skip: bcIndexAction.pageStart
     });
-}
+};
 
 /* 更新主页事件 */
 bcIndexAction.updatePage = function (JSONdata) {
@@ -91,7 +91,7 @@ bcIndexAction.updatePage = function (JSONdata) {
         bcIndexAction.isClear = false;
     }
     //没有数据提示用户
-    if(parsedData.broadcastArray.length == 0){
+    if(parsedData.broadcastArray.length === 0){
         return this.modalWindow('抱歉,没有更多数据!');
     }
     //遍历对象数组构造DOM对象

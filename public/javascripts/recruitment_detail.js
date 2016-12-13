@@ -7,18 +7,18 @@ $(function () {
 
     $('.company').fadeIn();
     // 获取职位列表
-    RecruitmentDetail.getJobList();
+    RecruitDetailAction.getJobList();
 });
 
 /* 页面全局变量 */
 // recruitments -- 所有在招职位
-var RecruitmentDetail = {
+var RecruitDetailAction = {
 
     recruitments: null
 };
 
 /* 获取所有职位列表 */
-RecruitmentDetail.getJobList = function () {
+RecruitDetailAction.getJobList = function () {
 
     var url = '/recruitment/detail/all';
     var company = $('.company').text().trim();
@@ -30,27 +30,27 @@ RecruitmentDetail.getJobList = function () {
             return alert('读取错误!');
         }
         // 更新数据依赖
-        RecruitmentDetail.recruitments = JSONobject.recruitments;
+        RecruitDetailAction.recruitments = JSONobject.recruitments;
         // 更新页面
-        RecruitmentDetail.updatePage();
+        RecruitDetailAction.updatePage();
     }, "JSON");
 };
 
 /* 获取一个职位 */
-RecruitmentDetail.getOneJob = function () {
+RecruitDetailAction.getOneJob = function () {
 
 
 };
 
 /* 更新一个职位的页面 */
-RecruitmentDetail.updatePage = function () {
+RecruitDetailAction.updatePage = function () {
 
     // 更新招聘职位
-    for(var index in RecruitmentDetail.recruitments){
+    for(var index in RecruitDetailAction.recruitments){
 
         // 闭包 -- 当有回调存在的时候使用
         (function (index) {
-            var recruitment = RecruitmentDetail.recruitments[index];
+            var recruitment = RecruitDetailAction.recruitments[index];
             // 构建dom
             var $itemDiv = $('<div class="recruitment-item">');
 
@@ -140,6 +140,6 @@ RecruitmentDetail.updatePage = function () {
 
             // 添加到列表里面
             $('#recruitmentList').append($itemDiv);
-        })(index)
+        })(index);
     }
 };

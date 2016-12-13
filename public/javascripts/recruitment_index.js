@@ -7,17 +7,17 @@
 $(function () {
 
     // 页面事件绑定
-    RecruitIndex.pageEventBand();
+    RecruitIndexAction.pageEventBand();
     // 获取所有公司数据
-    RecruitIndex.getAllCompany();
+    RecruitIndexAction.getAllCompany();
 
 });
 
 /* 页面全局变量 */
-var RecruitIndex = {};
+var RecruitIndexAction = {};
 
 /* 页面事件绑定 */
-RecruitIndex.pageEventBand = function () {
+RecruitIndexAction.pageEventBand = function () {
 
     // 页脚点击事件
     $('.nav-footer-item').click(function () {
@@ -36,7 +36,7 @@ RecruitIndex.pageEventBand = function () {
 
             var action = $(that).attr('target');
             // 跳转页面
-            RecruitIndex.redirect(action);
+            RecruitIndexAction.redirect(action);
         });
     });
 
@@ -44,7 +44,7 @@ RecruitIndex.pageEventBand = function () {
 };
 
 /* 页面跳转 */
-RecruitIndex.redirect = function (action) {
+RecruitIndexAction.redirect = function (action) {
 
     // 动作映射
     var actionCast = {
@@ -64,18 +64,18 @@ RecruitIndex.redirect = function (action) {
 };
 
 /* 获取所有公司列表 */
-RecruitIndex.getAllCompany = function () {
+RecruitIndexAction.getAllCompany = function () {
 
-    var url = '/recruitment/index'
+    var url = '/recruitment/index';
     $.post(url, { action: 'getCompanyList'}, function (JSONdata) {
 
         // 更新页面
-        RecruitIndex.updateCompanyPage(JSONdata);
+        RecruitIndexAction.updateCompanyPage(JSONdata);
     }, "JSON");
 };
 
 /* 更新公司列表 */
-RecruitIndex.updateCompanyPage = function (JSONdata) {
+RecruitIndexAction.updateCompanyPage = function (JSONdata) {
 
     var JSONobject = JSON.parse(JSONdata);
     if(JSONobject.error){

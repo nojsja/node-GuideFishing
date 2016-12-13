@@ -10,14 +10,14 @@
 $(function () {
 
     //初始化页面
-    viewAction.pageInit();
+    TestViewAction.pageInit();
 
     //下一道题目事件绑定
-    $('#next').click(viewAction.nextItem);
+    $('#next').click(TestViewAction.nextItem);
     //上一道题目
-    $('#last').click(viewAction.lastItem);
+    $('#last').click(TestViewAction.lastItem);
     //提交结果
-    $('#submitDiv').click(viewAction.submit);
+    $('#submitDiv').click(TestViewAction.submit);
 
 });
 
@@ -29,7 +29,7 @@ $(function () {
 * testArray -- 本组题目信息
 * */
 
-var viewAction = {
+var TestViewAction = {
     currentNumber: 1,
     //填写选项的对象数组
     choiseArray: [],
@@ -40,7 +40,7 @@ var viewAction = {
 };
 
 /* 模态弹窗 */
-viewAction.modalWindow = function(text) {
+TestViewAction.modalWindow = function(text) {
 
     $('.modal-body').text(text);
     $('#modalWindow').modal("show", {
@@ -50,45 +50,53 @@ viewAction.modalWindow = function(text) {
 };
 
 /* 页面初始化 */
-viewAction.pageInit = function () {
+TestViewAction.pageInit = function () {
 
     //获取本套题的所有数据
-    var url = "/test/testView/" + $('.test-type').text().trim() + "/" + $('.test-title').text().trim();
+    var url = ["/test/testView/", $('.test-type').text().trim(),
+        "/", $('.test-title').text().trim()].join('');
+
     $.post(url, {}, function (JSONdata) {
+
         var JSONobject = JSON.parse(JSONdata);
-        //本组题目列表
-        viewAction.testGroup = JSONobject.testGroup
-        viewAction.testType = $('.test-type').text().trim();
-        viewAction.testTitle = $('.test-title').text().trim();
-        if(viewAction.testGroup.length == 0){
-            return viewAction.modalWindow("抱歉没有任何数据!");
+        // 发生错误
+        if(JSONobject.isError){
+            return TestViewAction.modalWindow('服务器发生错误,错误码: ' +
+                JSONobject.error);
         }
-        viewAction.checkAndUpdate();
+        //本组题目列表
+        TestViewAction.testGroup = JSONobject.testGroup
+        TestViewAction.testType = $('.test-type').text().trim();
+        TestViewAction.testTitle = $('.test-title').text().trim();
+        if(TestViewAction.testGroup.length == 0){
+            return TestViewAction.modalWindow("抱歉没有任何数据!");
+        }
+        TestViewAction.checkAndUpdate();
 
     }, "JSON");
 };
 
 /* 共有的更新页面函数 */
-viewAction.checkAndUpdate = function () {
+TestViewAction.checkAndUpdate = function () {
 
     // 判断编号增加后的当前题目是否已经被选择过了
-    if(viewAction.choiseArray[viewAction.currentNumber - 1]){
-        $('#' + viewAction.choiseArray[viewAction.currentNumber   - 1].choiseTag)
+    if(TestViewAction.choiseArray[TestViewAction.currentNumber - 1]){
+        $('#' + TestViewAction.choiseArray[TestViewAction.currentNumber   - 1].choiseTag)
             .prop('class', 'choise choise_click');
     }
     //重新更新页面
     //题目
-    $('.item-title').text(viewAction.testGroup[viewAction.currentNumber - 1].itemTitle);
-    $('.item-number').text(viewAction.testGroup[viewAction.currentNumber - 1].itemNumber);
+    $('.item-title').text(TestViewAction.testGroup[TestViewAction.currentNumber - 1].itemTitle);
+    $('.item-number').text(TestViewAction.testGroup[TestViewAction.currentNumber - 1].itemNumber);
     //遍历选项结果
     var $itemChoises = $('.item-choises');
     //移除前一道题的选择项
     $itemChoises.children().remove();
 
-    for(var index in viewAction.testGroup[viewAction.currentNumber - 1].itemChoise){
+    for(var index in TestViewAction.testGroup[TestViewAction.currentNumber - 1].itemChoise){
 
         // 目前的选择项
-        var currentTestGroup = viewAction.testGroup[viewAction.currentNumber - 1];
+        var currentTestGroup = TestViewAction.testGroup[TestViewAction.currentNumber - 1];
         //其中一个选项
         var $choiseDiv = $('<div class="choise">');
         //选项标签和选项内容
@@ -113,9 +121,9 @@ viewAction.checkAndUpdate = function () {
     }
 
     //判断是否已经被选择过
-    if(viewAction.choiseArray[viewAction.currentNumber - 1]){
+    if(TestViewAction.choiseArray[TestViewAction.currentNumber - 1]){
 
-        $('#' + viewAction.choiseArray[viewAction.currentNumber   - 1].choiseTag)
+        $('#' + TestViewAction.choiseArray[TestViewAction.currentNumber   - 1].choiseTag)
             .prop('class', 'choise choise_click');
     }
 
@@ -124,7 +132,7 @@ viewAction.checkAndUpdate = function () {
         $('.choise').prop('class', 'choise choise_origin');
         $(this).prop('class', 'choise choise_click');
 
-        viewAction.choiseArray[viewAction.currentNumber - 1] = {
+        TestViewAction.choiseArray[TestViewAction.currentNumber - 1] = {
             choiseTag: $(this).prop('id'),
             scoreDefine: $(this).attr('scoreDefine'),
             itemMode: $(this).attr('itemMode'),
@@ -135,66 +143,66 @@ viewAction.checkAndUpdate = function () {
 }
 
 /* 切换到下一道题目 */
-viewAction.nextItem = function () {
+TestViewAction.nextItem = function () {
 
     // 判断是否存在下一道题目
-    if(!viewAction.testGroup[viewAction.currentNumber - 1 + 1]){
-        viewAction.modalWindow('已经是最后一道题目');
+    if(!TestViewAction.testGroup[TestViewAction.currentNumber - 1 + 1]){
+        TestViewAction.modalWindow('已经是最后一道题目');
         return;
     }
     //判断当前题目是否已经被选择答案
-    if(viewAction.choiseArray[viewAction.currentNumber - 1]){
+    if(TestViewAction.choiseArray[TestViewAction.currentNumber - 1]){
         //增加当前题目的编号
-        viewAction.currentNumber += 1;
+        TestViewAction.currentNumber += 1;
 
-        viewAction.checkAndUpdate();
+        TestViewAction.checkAndUpdate();
 
         //判断是否已经到最后一道题目
-        if(!viewAction.testGroup[viewAction.currentNumber - 1 + 1]){
+        if(!TestViewAction.testGroup[TestViewAction.currentNumber - 1 + 1]){
             $('#submitDiv').fadeIn();
         }
     }else {
-        viewAction.modalWindow('在选择本道题的答案后才能进入下一道题.');
+        TestViewAction.modalWindow('在选择本道题的答案后才能进入下一道题.');
     }
 };
 
 /* 切换到上一道题目 */
-viewAction.lastItem = function () {
+TestViewAction.lastItem = function () {
 
-    if(viewAction.choiseArray[viewAction.currentNumber - 1 - 1]){
+    if(TestViewAction.choiseArray[TestViewAction.currentNumber - 1 - 1]){
         /* 检测当前题目是否已经选择 */
-        if(!viewAction.choiseArray[viewAction.currentNumber - 1]){
-            viewAction.modalWindow('请选择当前题目的答案...');
+        if(!TestViewAction.choiseArray[TestViewAction.currentNumber - 1]){
+            TestViewAction.modalWindow('请选择当前题目的答案...');
             return;
         }
-        viewAction.currentNumber -= 1;
+        TestViewAction.currentNumber -= 1;
 
-        viewAction.checkAndUpdate();
+        TestViewAction.checkAndUpdate();
 
     }else {
-        viewAction.modalWindow("已经位于第一道题目!");
+        TestViewAction.modalWindow("已经位于第一道题目!");
     }
 };
 
 /* 提交结果 */
-viewAction.submit = function () {
+TestViewAction.submit = function () {
 
     /* 检测当前题目是否已经选择 */
-    if(!viewAction.choiseArray[viewAction.currentNumber - 1]){
-        viewAction.modalWindow('请选择当前题目的答案...');
+    if(!TestViewAction.choiseArray[TestViewAction.currentNumber - 1]){
+        TestViewAction.modalWindow('请选择当前题目的答案...');
         return;
     }
     $.post('/test/submit', {
         submitData: {
-            testType: viewAction.testType,
-            testTitle: viewAction.testTitle,
-            choiseArray: viewAction.choiseArray
+            testType: TestViewAction.testType,
+            testTitle: TestViewAction.testTitle,
+            choiseArray: TestViewAction.choiseArray
         }
     }, function (JSONdata) {
         var JSONobject = JSON.parse(JSONdata);
         //获取结果错误
         if(JSONobject.error){
-            viewAction.modalWindow('抱歉,服务器发生错误!');
+            TestViewAction.modalWindow('抱歉,服务器发生错误!');
         }
         //返回评测结果,更新页面
         $('.test-result').text(JSONobject.result);

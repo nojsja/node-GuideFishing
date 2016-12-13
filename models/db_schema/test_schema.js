@@ -56,6 +56,6 @@ var testSchema = new Schema({
         categoryMode: String,
         categoryDescribe: String
     }]
-}, {collection: 'tests'});
+}, {collection: 'test'});
 
 exports.testSchema = testSchema;

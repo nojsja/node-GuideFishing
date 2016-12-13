@@ -55,10 +55,9 @@
 <script type="text/javascript">
 
     /* 注意ejs模板中可以用%-获取非转义字符 */
-
     // 设置描述内容
-    detailAction.$$abstract = '<%- courseAbstract %>';
-    $('.abstract').append( $(detailAction.$$abstract).html() );
+    DetailAction.$$abstract = '<%- courseAbstract %>';
+    $('.abstract').append( $(DetailAction.$$abstract).html() );
 
 </script>
 </body>

@@ -101,21 +101,6 @@ a {
     display: block;
 }
 
-/* 设置得分的所有分段 */
-#scoreSectionSet {
-
-}
-
-/* 显示 */
-.score-section-set_show {
-    display: block;
-}
-
-/* 隐藏 */
-.score-section-set_hidden {
-    display: none;
-}
-
 /* 点击效果 */
 .test-type_click,
 .score-mode_click,
@@ -326,17 +311,21 @@ a {
 
 /* 悬浮窗 */
 .hover-label {
-    background-color: rgba(28, 104, 151, 0.8);
     z-index: 100;
-    padding: 5px;
+    background-color: rgba(28, 104, 151, 0.8);
+    padding: 8px;
     color: white;
     font-size: 1.6rem;
-    width: 10rem;
     position: absolute;
+    width: 10rem;
     height: 1.6rem;
-    line-height: 1.6rem;
     height: auto;
+    line-height: 1.6rem;
     border-radius: 5px;
+
+    word-spacing: 2px;
+    letter-spacing: 2px;
+
     -ms-word-wrap:break-word;
     word-wrap:break-word;
     -ms-word-break: break-all;
@@ -349,18 +338,13 @@ a {
 
 /* 得分模式设置 */
 #scoreSectionSet,
-#childModeAdd{
+#childModeAdd {
     display: none;
 }
 
 /* 子模式隐藏 */
 .child-mode-add_hidden {
     display: none;
-}
-
-/* 子模式出现 */
-.child-mode-add_show {
-    display: block;
 }
 
 /* 自定义得分,默认不显示 */
