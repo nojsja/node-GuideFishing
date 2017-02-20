@@ -507,7 +507,10 @@ Course.getPopular = function (callback) {
         }
         var popularArray  = [];
         for (let index in docs){
-            popularArray.push(docs[index]);
+            popularArray.push({
+                courseName: docs[index].courseName,
+                courseType: docs[index].courseType
+            });
         }
         console.log('popular array: ' + JSON.stringify(popularArray));
         // 成功后返回数据

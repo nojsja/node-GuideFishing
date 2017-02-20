@@ -102,6 +102,9 @@ function course(app){
                     error: err
                 }) );
             }
+            for(var i = 0; i < popularArray.length; i++){
+                popularArray[i].preDress = '/course/detail/';
+            }
             // 返回数据
             res.json( JSON.stringify({
                 isError: false,

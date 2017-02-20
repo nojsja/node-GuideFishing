@@ -55,10 +55,14 @@ CourseAction.pageEventBind = function () {
     /*windowHeightCheck();*/
     //滑动检测函数
     $(window).scroll(CourseAction.scrollCheck);
+    $(window).scroll(function () {
+        //每隔500毫秒检测一次
+       FnDelay(CourseAction.scrollCheck, 500);
+    });
     //加载更多数据
-    $('.loading-info').click(CourseAction.readMore);
+    $('#loadMore').click(CourseAction.readMore);
 
-    //指定类型的测试题目
+    //指定类型的课程
     $('.type-item').click(function () {
         CourseAction.courseTypeDefine.call(this, arguments);
     });
@@ -124,7 +128,6 @@ CourseAction.updatePage = function (JSONdata) {
         CourseAction.pageStart += 1;
         (function () {
             var course = parsedData.courseArray[courseIndex];
-            console.log('course' + course);
             //最外层container
             var $courseContainer = $('<div class="content-item">');
             //图钉图标
@@ -213,19 +216,21 @@ CourseAction.updateHot = function () {
         }
 
         // 更新父组件
-        var $popularFather = $('.hot-title-item');
+        var $popularFather = $('.hot-item-list');
         // 清除缓存
         $popularFather.children().remove();
         // 更新页面
         for (var index in JSONobject.popularArray){
             var popular  = JSONobject.popularArray[index];
+            var $li = $('<li>');
             var $a = $('<a>');
+            // 课程url由前缀、课程类型和课程名字组成
             $a.text(popular.courseName)
                 .prop({
-                    href: ['/course/detail/', popular.courseType, '/', popular.courseName].join('')
+                    href: [popular.preDress, popular.courseType, '/', popular.courseName].join('')
                 });
-
-            $popularFather.append($a);
+            $li.append($a);
+            $popularFather.append($li);
         }
     }, "JSON");
 };
@@ -287,6 +292,44 @@ CourseAction.scrollCheck = function () {
         CourseAction.lastScrollOver = CourseAction.scrollOver;
     }
 };
+
+/* 防止高频调用的函数 */
+var FnDelay =
+    (function FnDelay(){
+
+        //采用单例模式进行内部封装
+        // 存储所有需要调用的函数
+        var fnObject = {};
+
+        // 三个参数分别是被调用函数，设置的延迟时间，是否需要立即调用
+        return function(fn, delayTime, IsImediate){
+
+            // 立即调用
+            if(!delayTime || IsImediate){
+                return fn();
+            }
+
+            // 判断函数是否已经在调用中
+            if(fnObject[fn]){
+                return;
+            }else {
+                // 定时器
+                var timer = setTimeout(function(){
+                    fn();
+                    //清除定时器
+                    clearTimeout(timer);
+                    delete(fnObject[fn]);
+                }, delayTime);
+
+                fnObject[fn] = {
+                    "status": 'waitToRun',
+                    "delayTime": delayTime,
+                    "timer": timer
+                };
+
+            }
+        };
+    })();
 
 /* 窗口各种高度检测函数 */
 function windowHeightCheck() {
