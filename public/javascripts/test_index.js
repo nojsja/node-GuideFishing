@@ -219,11 +219,7 @@ TestIndexAction.updateHot = function () {
 /* 模态弹窗 */
 TestIndexAction.modalWindow = function(text) {
 
-    $('.modal-body').text(text);
-    $('#modalWindow').modal("show", {
-        backdrop : true,
-        keyboard : true
-    });
+    ModalWindow.show(text);
 };
 
 /* 页面底部和底部跳转 */

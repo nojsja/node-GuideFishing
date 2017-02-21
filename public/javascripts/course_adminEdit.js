@@ -673,9 +673,5 @@ editAction.uploadEventBind = function () {
 /* 模态弹窗 */
 editAction.modalWindow = function(text) {
 
-    $('.modal-body').text(text);
-    $('#modalWindow').modal("show", {
-        backdrop : true,
-        keyboard : true
-    });
+    ModalWindow.show(text);
 };

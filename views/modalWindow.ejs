@@ -1,25 +1,219 @@
-<!--modalWindow-->
+
 <!--Bootstrap模态弹窗组件-->
+<!--<div class="modal fade" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">-->
+    <!--<div class="modal-dialog">-->
+        <!--<div class="modal-content">-->
+            <!--<div class="modal-header">-->
+                <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">-->
+                    <!--&times;-->
+                <!--</button>-->
+                <!--<h4 class="modal-title" id="myModalLabel">-->
+                    <!--<b>小提示</b>-->
+                <!--</h4>-->
+            <!--</div>-->
+            <!--&lt;!&ndash;可以自定义提示信息&ndash;&gt;-->
+            <!--<div class="modal-body tips">-->
 
-<div class="modal fade" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    &times;
-                </button>
-                <h4 class="modal-title" id="myModalLabel">
-                    <b>小提示</b>
-                </h4>
-            </div>
-            <!--可以自定义提示信息-->
-            <div class="modal-body tips">
+            <!--</div>-->
+            <!--<div class="modal-footer">-->
+                <!--<button type="button" class="btn btn-danger" data-dismiss="modal">关闭-->
+                <!--</button>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">关闭
-                </button>
+<!--自定义模态弹窗组件-->
+<head>
+    <style type="text/css">
+        .modal-wrapper {
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background-color: rgba(103,103,103,0.6);
+            display: none;
+        }
+        /* 相对定位对于移动元素位置很重要 */
+        .modal-content {
+            position: relative;
+            padding: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            width: 50%;
+            min-height: 10rem;
+            height: auto;
+            margin: 10rem auto 0;
+
+            background-color: white;
+            box-shadow: 0 0 10px black;
+        }
+
+        .modal-content-tip {
+            text-align: left;
+            padding: 2px;
+            margin-bottom: 4px;
+        }
+
+        .modal-content-text {
+            padding: 1rem;
+            width: 80%;
+            margin: auto;
+            font-size: 1.5rem;
+            color: #41545f;
+        }
+
+        .modal-content-text-outter {
+            border-top: solid 1px #577280;
+            border-bottom: solid 1px #577280;
+            margin-bottom: 3rem;
+        }
+
+        #accept {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            width: 4rem;
+            background-color: #00b200;
+            padding: 2px;
+            font-size: 1.4rem;
+            border-radius: 4px;
+            color: white;
+        }
+        #accept:hover, #accept:active {
+            background-color: #008500;
+            transition: 0.3s background-color linear;
+        }
+
+        /*
+        *筛选手机以及相关的小屏幕
+        */
+        @media screen and (max-width: 400px){
+            .modal-content {
+                position: relative;
+                padding: 1rem;
+                border-radius: 5px;
+                text-align: center;
+                width: 80%;
+                min-height: 10rem;
+                height: auto;
+                margin: 10rem auto 0;
+
+                background-color: white;
+                box-shadow: 0 0 10px black;
+            }
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        // dom加载完后执行的函数
+        window.onload = function () {
+
+            // 模态窗口初始化函数
+            window.ModalWindow =
+                (function () {
+
+                    // 整个弹窗组件
+                    var modal = document.getElementById('ModalWindow');
+                    // 显示的主要内容
+                    var modalContent = document.getElementById('ModalContent');
+                    var acceptButton = document.getElementById('accept');
+                    // 显示的文字信息
+                    var contentP = document.getElementById('contentText');
+
+                    // 绑定点击关闭事件
+                    acceptButton.onclick = function () {
+                        modalHidden();
+                    };
+
+                    // 模态窗口弹出
+                    function modalShow(text) {
+                        contentP.innerText = text;
+                        // 设置透明度和初始位置
+                        modalContent.style.opacity = 0;
+                        // 注意'px'两个字符还要占用两个长度，这是字符串转化为数字
+                        modalContent.style.top =
+                            Number(modalContent.style.top.substr(0, modalContent.style.top.length - 2)) + 20 + 'px';
+
+                        var opacityValue = 0.0;
+                        modal.style.display = 'block';
+                        // 弹出动画效果
+                        // 注意JavaScript中小数想加的时候可能会舍去
+                        function popAnimation() {
+                            if(modalContent.style.opacity    == 1){
+                                return;
+                            }else {
+                                opacityValue += 5.0;
+                                var topValue = Number(modalContent.style.top.substr(0, modalContent.style.top.length - 2));
+                                // 动画函数一共会调用20次
+                                modalContent.style.top = topValue - ( 20 / (100 / 5))  + 'px';
+                                modalContent.style.opacity = opacityValue / 100;
+
+                                // 递归调用
+                                setTimeout(popAnimation, 10);
+                            }
+                        }
+                        setTimeout(popAnimation, 10);
+                    }
+
+                    // 模态窗口隐藏
+                    function modalHidden() {
+                        // 设置透明度和初始位置
+                        modalContent.style.opacity = 1;
+                        // 注意'px'两个字符还要占用两个长度，这是字符串转化为数字
+
+                        var opacityValue = 100.0;
+                        // 弹出动画效果
+                        // 注意JavaScript中小数想加的时候可能会舍去
+                        function pushAnimation() {
+                            if(modalContent.style.opacity == 0){
+                                modal.style.display = 'none';
+                                modalContent.style.top = 0 + 'px';
+                                return;
+                            }else {
+                                opacityValue -= 5.0;
+                                var topValue = Number(modalContent.style.top.substr(0, modalContent.style.top.length - 2));
+                                // 动画函数一共会调用20次
+                                modalContent.style.top = topValue + ( 20 / (100 / 5))  + 'px';
+                                modalContent.style.opacity = opacityValue / 100;
+
+                                // 递归调用
+                                setTimeout(pushAnimation, 10);
+                            }
+                        }
+                        setTimeout(pushAnimation, 10);
+                    }
+
+                    // 返回调用接口
+                    return {
+                        show: modalShow,
+                        hidden: modalHidden
+                    }
+                })();
+        };
+
+    </script>
+
+</head>
+
+<body>
+<!--模态弹窗-->
+<div class="modal-wrapper" id="ModalWindow">
+    <div class="modal-content" id="ModalContent">
+        <div class="modal-content-tip">
+            小提示
+        </div>
+
+        <div class="modal-content-text-outter">
+            <div class="modal-content-text">
+                <p id="contentText"></p>
             </div>
         </div>
+
+        <div id="accept">确定</div>
     </div>
 </div>
+</body>

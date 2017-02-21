@@ -42,11 +42,7 @@ var TestViewAction = {
 /* 模态弹窗 */
 TestViewAction.modalWindow = function(text) {
 
-    $('.modal-body').text(text);
-    $('#modalWindow').modal("show", {
-        backdrop : true,
-        keyboard : true
-    });
+    ModalWindow.show(text);
 };
 
 /* 页面初始化 */

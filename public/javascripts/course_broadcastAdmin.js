@@ -84,10 +84,6 @@ bcAdminAction.loginCheck = function () {
 /* 页面提示模态弹窗 */
 bcAdminAction.modalWindow = function(text) {
 
-    $('.modal-body').text(text);
-    $('#modalWindow').modal("show", {
-        backdrop : true,
-        keyboard : true
-    });
+    ModalWindow.show(text);
 };
 

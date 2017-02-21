@@ -45,8 +45,6 @@ CourseAction.pageEventBind = function () {
             $('.header-label > span').prop('class', 'glyphicon glyphicon-chevron-down');
         }
     });
-    //热门内容事件绑定
-    $('.jump').click(CourseAction.pageHotContentAction);
 
     //顶部和底部跳转
     $('#top').click(CourseAction.goTop);
@@ -54,7 +52,6 @@ CourseAction.pageEventBind = function () {
     //高度检测
     /*windowHeightCheck();*/
     //滑动检测函数
-    $(window).scroll(CourseAction.scrollCheck);
     $(window).scroll(function () {
         //每隔500毫秒检测一次
        FnDelay(CourseAction.scrollCheck, 500);
@@ -120,7 +117,7 @@ CourseAction.updatePage = function (JSONdata) {
     }
     //没有数据提示用户
     if(parsedData.courseArray.length === 0){
-        return this.modalWindow('抱歉,没有更多数据!');
+        return CourseAction.modalWindow('抱歉,没有更多数据!');
     }
     //遍历对象数组构造DOM对象
     for(var courseIndex in parsedData.courseArray) {
@@ -236,13 +233,8 @@ CourseAction.updateHot = function () {
 };
 
 /* 模态弹窗 */
-CourseAction.modalWindow = function(text) {
-
-    $('.modal-body').text(text);
-    $('#modalWindow').modal("show", {
-        backdrop : true,
-        keyboard : true
-    });
+CourseAction.modalWindow = function (text) {
+  ModalWindow.show(text);
 };
 
 /* 页面底部和底部跳转 */

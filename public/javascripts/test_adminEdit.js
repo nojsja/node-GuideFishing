@@ -707,11 +707,7 @@ EditAction.submitCheck = function () {
 /* 模态弹窗 */
 EditAction.modalWindow = function(text) {
 
-    $('.modal-body').text(text);
-    $('#modalWindow').modal("show", {
-        backdrop : true,
-        keyboard : true
-    });
+    ModalWindow.show(text);
 };
 
 /* 获取当前鼠标相对于document的坐标 */

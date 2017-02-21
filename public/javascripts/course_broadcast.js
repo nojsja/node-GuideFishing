@@ -883,11 +883,7 @@ BroadcastAction.getDate = function () {
 /* 模态弹窗 */
 BroadcastAction.modalWindow = function(text) {
 
-    $('.modal-body').text(text);
-    $('#modalWindow').modal("show", {
-        backdrop : true,
-        keyboard : true
-    });
+    ModalWindow.show(text);
 };
 
 
