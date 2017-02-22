@@ -9,10 +9,12 @@ $(function () {
 
     // 页面事件绑定
     CourseAction.pageEventBind();
-    //加载指定数量的测试题目列表
+    //加载指定数量的测试题目列表6
     CourseAction.readCourseList({ courseType: "ALL" });
     // 更新热门内容
     CourseAction.updateHot();
+    // 模态弹窗初始化
+    njj.SlideView.init();
 });
 
 /*** 页面全局变量 ***/
@@ -234,7 +236,7 @@ CourseAction.updateHot = function () {
 
 /* 模态弹窗 */
 CourseAction.modalWindow = function (text) {
-  ModalWindow.show(text);
+  njj.ModalWindow.show(text);
 };
 
 /* 页面底部和底部跳转 */

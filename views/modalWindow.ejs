@@ -1,28 +1,4 @@
 
-<!--Bootstrap模态弹窗组件-->
-<!--<div class="modal fade" id="modalWindow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">-->
-    <!--<div class="modal-dialog">-->
-        <!--<div class="modal-content">-->
-            <!--<div class="modal-header">-->
-                <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">-->
-                    <!--&times;-->
-                <!--</button>-->
-                <!--<h4 class="modal-title" id="myModalLabel">-->
-                    <!--<b>小提示</b>-->
-                <!--</h4>-->
-            <!--</div>-->
-            <!--&lt;!&ndash;可以自定义提示信息&ndash;&gt;-->
-            <!--<div class="modal-body tips">-->
-
-            <!--</div>-->
-            <!--<div class="modal-footer">-->
-                <!--<button type="button" class="btn btn-danger" data-dismiss="modal">关闭-->
-                <!--</button>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-<!--</div>-->
-
 <!--自定义模态弹窗组件-->
 <head>
     <style type="text/css">
@@ -107,95 +83,115 @@
         }
     </style>
 
-    <script type="text/javascript">
+    <!--<script type="text/javascript">-->
 
-        // dom加载完后执行的函数
-        window.onload = function () {
+        <!--// dom加载完后执行的函数-->
+        <!--window.onload = function () {-->
 
-            // 模态窗口初始化函数
-            window.ModalWindow =
-                (function () {
+            <!--// 模态窗口初始化函数-->
+            <!--window.ModalWindow =-->
+                <!--(function () {-->
 
-                    // 整个弹窗组件
-                    var modal = document.getElementById('ModalWindow');
-                    // 显示的主要内容
-                    var modalContent = document.getElementById('ModalContent');
-                    var acceptButton = document.getElementById('accept');
-                    // 显示的文字信息
-                    var contentP = document.getElementById('contentText');
+                    <!--// 初始化标志-->
+                    <!--var isInit = false;-->
+                    <!--var modal, modalContent, acceptButton, contentP;-->
 
-                    // 绑定点击关闭事件
-                    acceptButton.onclick = function () {
-                        modalHidden();
-                    };
+                    <!--// 组件初始化事件-->
+                    <!--function modalInit() {-->
+                        <!--isInit = true;-->
+                        <!--// 整个弹窗组件-->
+                        <!--modal = document.getElementById('ModalWindow');-->
+                        <!--// 显示的主要内容-->
+                        <!--modalContent = document.getElementById('ModalContent');-->
+                        <!--acceptButton = document.getElementById('accept');-->
+                        <!--// 显示的文字信息-->
+                        <!--contentP = document.getElementById('contentText');-->
 
-                    // 模态窗口弹出
-                    function modalShow(text) {
-                        contentP.innerText = text;
-                        // 设置透明度和初始位置
-                        modalContent.style.opacity = 0;
-                        // 注意'px'两个字符还要占用两个长度，这是字符串转化为数字
-                        modalContent.style.top =
-                            Number(modalContent.style.top.substr(0, modalContent.style.top.length - 2)) + 20 + 'px';
+                        <!--// 绑定点击关闭事件-->
+                        <!--acceptButton.onclick = function () {-->
+                            <!--modalHidden();-->
+                        <!--};-->
+                    <!--}-->
 
-                        var opacityValue = 0.0;
-                        modal.style.display = 'block';
-                        // 弹出动画效果
-                        // 注意JavaScript中小数想加的时候可能会舍去
-                        function popAnimation() {
-                            if(modalContent.style.opacity    == 1){
-                                return;
-                            }else {
-                                opacityValue += 5.0;
-                                var topValue = Number(modalContent.style.top.substr(0, modalContent.style.top.length - 2));
-                                // 动画函数一共会调用20次
-                                modalContent.style.top = topValue - ( 20 / (100 / 5))  + 'px';
-                                modalContent.style.opacity = opacityValue / 100;
+                    <!--// 模态窗口弹出-->
+                    <!--function modalShow(text) {-->
 
-                                // 递归调用
-                                setTimeout(popAnimation, 10);
-                            }
-                        }
-                        setTimeout(popAnimation, 10);
-                    }
+                        <!--// 初始化检测-->
+                        <!--if(!isInit){-->
+                            <!--modalInit();-->
+                        <!--}-->
 
-                    // 模态窗口隐藏
-                    function modalHidden() {
-                        // 设置透明度和初始位置
-                        modalContent.style.opacity = 1;
-                        // 注意'px'两个字符还要占用两个长度，这是字符串转化为数字
+                        <!--contentP.innerText = text;-->
+                        <!--// 设置透明度和初始位置-->
+                        <!--modalContent.style.opacity = 0;-->
+                        <!--// 注意'px'两个字符还要占用两个长度，这是字符串转化为数字-->
+                        <!--modalContent.style.top =-->
+                            <!--Number(modalContent.style.top.substr(0, modalContent.style.top.length - 2)) + 20 + 'px';-->
 
-                        var opacityValue = 100.0;
-                        // 弹出动画效果
-                        // 注意JavaScript中小数想加的时候可能会舍去
-                        function pushAnimation() {
-                            if(modalContent.style.opacity == 0){
-                                modal.style.display = 'none';
-                                modalContent.style.top = 0 + 'px';
-                                return;
-                            }else {
-                                opacityValue -= 5.0;
-                                var topValue = Number(modalContent.style.top.substr(0, modalContent.style.top.length - 2));
-                                // 动画函数一共会调用20次
-                                modalContent.style.top = topValue + ( 20 / (100 / 5))  + 'px';
-                                modalContent.style.opacity = opacityValue / 100;
+                        <!--var opacityValue = 0.0;-->
+                        <!--modal.style.display = 'block';-->
+                        <!--// 弹出动画效果-->
+                        <!--// 注意JavaScript中小数想加的时候可能会舍去-->
+                        <!--function popAnimation() {-->
+                            <!--if(modalContent.style.opacity    == 1){-->
+                                <!--return;-->
+                            <!--}else {-->
+                                <!--opacityValue += 5.0;-->
+                                <!--var topValue = Number(modalContent.style.top.substr(0, modalContent.style.top.length - 2));-->
+                                <!--// 动画函数一共会调用20次-->
+                                <!--modalContent.style.top = topValue - ( 20 / (100 / 5))  + 'px';-->
+                                <!--modalContent.style.opacity = opacityValue / 100;-->
 
-                                // 递归调用
-                                setTimeout(pushAnimation, 10);
-                            }
-                        }
-                        setTimeout(pushAnimation, 10);
-                    }
+                                <!--// 递归调用-->
+                                <!--setTimeout(popAnimation, 10);-->
+                            <!--}-->
+                        <!--}-->
+                        <!--setTimeout(popAnimation, 10);-->
+                    <!--}-->
 
-                    // 返回调用接口
-                    return {
-                        show: modalShow,
-                        hidden: modalHidden
-                    }
-                })();
-        };
+                    <!--// 模态窗口隐藏-->
+                    <!--function modalHidden() {-->
 
-    </script>
+                        <!--// 初始化检测-->
+                        <!--if(!isInit){-->
+                            <!--modalInit();-->
+                        <!--}-->
+
+                        <!--// 设置透明度和初始位置-->
+                        <!--modalContent.style.opacity = 1;-->
+                        <!--// 注意'px'两个字符还要占用两个长度，这是字符串转化为数字-->
+
+                        <!--var opacityValue = 100.0;-->
+                        <!--// 弹出动画效果-->
+                        <!--// 注意JavaScript中小数想加的时候可能会舍去-->
+                        <!--function pushAnimation() {-->
+                            <!--if(modalContent.style.opacity == 0){-->
+                                <!--modal.style.display = 'none';-->
+                                <!--modalContent.style.top = 0 + 'px';-->
+                                <!--return;-->
+                            <!--}else {-->
+                                <!--opacityValue -= 5.0;-->
+                                <!--var topValue = Number(modalContent.style.top.substr(0, modalContent.style.top.length - 2));-->
+                                <!--// 动画函数一共会调用20次-->
+                                <!--modalContent.style.top = topValue + ( 20 / (100 / 5))  + 'px';-->
+                                <!--modalContent.style.opacity = opacityValue / 100;-->
+
+                                <!--// 递归调用-->
+                                <!--setTimeout(pushAnimation, 10);-->
+                            <!--}-->
+                        <!--}-->
+                        <!--setTimeout(pushAnimation, 10);-->
+                    <!--}-->
+
+                    <!--// 返回调用接口-->
+                    <!--return {-->
+                        <!--show: modalShow,-->
+                        <!--hidden: modalHidden-->
+                    <!--}-->
+                <!--})();-->
+        <!--};-->
+
+    <!--</script>-->
 
 </head>
 

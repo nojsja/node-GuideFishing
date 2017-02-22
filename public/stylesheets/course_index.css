@@ -9,7 +9,7 @@ a {
 
 .header {
     position: fixed;
-    z-index: 100;
+    z-index: 1003;
     top: 0;
     padding: 0.5rem;
     width: 100%;
@@ -54,7 +54,7 @@ a {
 }
 
 .hot-container {
-    margin-top: 6rem;
+    margin-top: 2rem;
 }
 
 .hot-item-list {

@@ -13,6 +13,8 @@
     <link rel='stylesheet' href='/stylesheets/course_index.css' />
 
     <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <!--自己的框架-->
+    <script type="text/javascript" src="/javascripts/lib/mine/nojsja.js"></script>
     <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
     <script type="text/javascript" src="/javascripts/course_index.js"></script>
 </head>
@@ -27,6 +29,8 @@
     <div class="type-item" id="english">英语进阶</div>
     <div class="type-item" id="personal">个人提升</div>
 </header>
+
+<%- include slideImage.ejs%>
 
 <!--热门课程列表-->
 <div class="hot-container">
