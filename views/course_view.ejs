@@ -10,6 +10,7 @@
     <link rel='stylesheet' href='/stylesheets/course_view.css' />
 
     <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/mine/nojsja.js"></script>
     <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
     <script type="text/javascript" src="/javascripts/course_view.js"></script>
 </head>
@@ -19,25 +20,27 @@
 <%include recruitment_header.ejs%>
 
 <!--课程主体部分-->
-<div class="container total">
+<div class="total">
 
-    <!--课程名字-->
-    <div id="courseName">
-        <%= courseName %>
-    </div>
-
-    <!--其它信息-->
-    <div class="info-div">
+    <!--标题部分-->
+    <div class="course-head">
+        <!--课程名字-->
+        <div id="courseName">
+            <%= courseName %>
+        </div>
         <!--课程类型-->
         <div id="courseType">
             <%= courseType %>
-        </div>
-        <!--发布时间-->
-        <div id="date">
+        </div><br>
 
-        </div>
-        <!--讲师-->
-        <div id="teacher">
+        <!--发布信息-->
+        <div class="info-div">
+            <!--讲师-->
+            <div id="teacher">
+            </div>
+            <!--发布时间-->
+            <div id="date">
+            </div>
 
         </div>
     </div>
@@ -57,7 +60,7 @@
 </body>
 
 <!--中以科创页脚-->
-<%- include footer%>
-<%- include modalWindow%>
+<%- include footer.ejs%>
+<%- include modalWindow.ejs%>
 </body>
 </html>

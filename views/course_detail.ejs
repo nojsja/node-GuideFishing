@@ -11,6 +11,7 @@
     <link rel='stylesheet' href='/stylesheets/course_detail.css' />
 
     <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/mine/nojsja.js"></script>
     <script type="text/javascript" src="/javascripts/course_detail.js"></script>
 </head>
 <body>
@@ -22,23 +23,23 @@
 </header>
 
 <!--评测介绍首部-->
-<div class="container detail-head">
+<div class="detail-head">
     <div class="detail-head-img"></div>
     <p class="detail-head-type"><%= courseType %></p>
-    <p class="detail-head-title box1">
+    <p class="detail-head-title">
         <%= courseName %>
     </p>
     <div class="detail-head-other">
         <div class="other-date"><%= date %></div>
-        <div class="other-read">
-            <span class="glyphicon glyphicon-eye-open"><%= clickRate %></span>
-        </div>
+        <!--<div class="other-read">-->
+            <!--<span class="glyphicon glyphicon-eye-open"><%= clickRate %></span>-->
+        <!--</div>-->
     </div>
 
 </div>
 
 <!--评测介绍主体-->
-<div class="container detail-body">
+<div class="detail-body">
     <div class="detail-body-abstract">
         <div class="abstract">
 
@@ -60,6 +61,8 @@
     $('.abstract').append( $(DetailAction.$$abstract).html() );
 
 </script>
+
+<%-include modalWindow.ejs%>
 </body>
 
 

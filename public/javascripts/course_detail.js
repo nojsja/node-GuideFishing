@@ -47,8 +47,7 @@ DetailAction.getTypeImage = function () {
 
 /* 模态弹窗 */
 DetailAction.modalWindow = function(text) {
-
-    ModalWindow.show(text);
+    njj.ModalWindow.show(text);
 };
 
 

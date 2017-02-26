@@ -291,8 +291,55 @@
                 init: slideInit
             };
         })(),
+
+        /* 获取当前日期 */
+        GetDate: function getDate() {
+
+            var dateArray = [];
+            var date = new Date();
+            var getMonth = (date.getMonth() + 1 < 10) ? ("0" + (date.getMonth() + 1)) : ("" + (date.getMonth() + 1));
+            var getDate = (date.getDate() < 10) ? ("0" + date.getDate()) : ("" +date.getDate());
+
+            dateArray.push(date.getFullYear(), "-", getMonth, "-", getDate,
+                " ", date.getHours(), ":", date.getMinutes(), ":", date.getSeconds());
+
+            return (dateArray.join(""));
+        },
+
+        /* 防止高频调用函数 */
+        FnDelay: (function FnDelay(){
+
+            //采用单例模式进行内部封装
+            // 存储所有需要调用的函数
+            var fnObject = {};
+
+            // 三个参数分别是被调用函数，设置的延迟时间，是否需要立即调用
+            return function(fn, delayTime, IsImediate){
+
+                // 立即调用
+                if(!delayTime || IsImediate){
+                    return fn();
+                }
+                // 判断函数是否已经在调用中
+                if(fnObject[fn]){
+                    return;
+                }else {
+                    // 定时器
+                    var timer = setTimeout(function(){
+                        fn();
+                        //清除定时器
+                        clearTimeout(timer);
+                        delete(fnObject[fn]);
+                    }, delayTime);
+
+                    fnObject[fn] = {
+                        "status": 'waitToRun',
+                        "delayTime": delayTime,
+                        "timer": timer
+                    };
+                }
+            };
+        })(),
     };
-
-
 
 })();

@@ -83,7 +83,7 @@ function course(app){
         res.render('course_view', {
 
             title: "课程学习",
-            slogan: "带渔",
+            slogan: "带渔课程",
             courseType: req.params.courseType,
             courseName: req.params.courseName
         });
