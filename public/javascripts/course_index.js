@@ -15,6 +15,8 @@ $(function () {
     CourseAction.updateHot();
     // 模态弹窗初始化
     njj.SlideView.init();
+    // 悬浮按钮初始化
+    njj.HoverButton.init();
 });
 
 /*** 页面全局变量 ***/

@@ -7,9 +7,9 @@
         div.arrow-left {
             width: 0px;
             height: 0px;
-            border-bottom: 1rem solid transparent;
-            border-top: 1rem solid transparent;
-            border-right: 1rem solid #98ccdf;
+            border-bottom: 2rem solid transparent;
+            border-top: 2rem solid transparent;
+            border-right: 2rem solid rgba(152, 204, 223, 0.8);
             font-size: 0px;
             line-height: 0px;
         }
@@ -18,9 +18,9 @@
         div.arrow-top {
             width: 0px;
             height: 0px;
-            border-left: 1rem solid transparent;
-            border-right: 1rem solid transparent;
-            border-bottom: 1rem solid #98ccdf;
+            border-left: 2rem solid transparent;
+            border-right: 2rem solid transparent;
+            border-bottom: 2rem solid rgba(152, 204, 223, 0.8);
             /*以下属性可以是IE5兼容*/
             font-size: 0px;
             line-height: 0px;
@@ -28,8 +28,8 @@
 
         .hover-wrapper {
             position: fixed;
-            width: 2rem;
-            height: 2rem;
+            width: 4rem;
+            height: 4rem;
             bottom: 1rem;
             right: 1rem;
         }
@@ -91,7 +91,7 @@
             }
             100%{
                 opacity: 1;
-                top: -2rem;
+                top: -4rem;
                 right: 0;
             }
         }
@@ -115,7 +115,7 @@
         @keyframes goTopHidden {
             0%{
                 opacity: 1;
-                top: -2rem;
+                top: -4rem;
             }
             100%{
                 opacity: 0;
@@ -160,7 +160,7 @@
             100%{
                 opacity: 1;
                 top: 0;
-                left: -2rem;
+                left: -4rem;
             }
         }
         /* 按钮收起 */
@@ -184,7 +184,7 @@
             0%{
                 opacity: 1;
                 top: 0;
-                left: -2rem;
+                left: -4rem;
             }
             100%{
                 opacity: 0;
@@ -193,78 +193,9 @@
             }
         }
     </style>
-    <!--脚本-->
-    <script type="text/javascript">
-
-        /* 页面载入完成 */
-        window.onload = function () {
-            var isClick = false;
-            var hoverArea = document.getElementById('hoverArea');
-            var goTop = document.getElementById('goTop');
-            var returnHistory = document.getElementById('returnHistory');
-
-            // 鼠标放上去
-            hoverArea.onclick = function () {
-                isClick = !isClick;
-                if(isClick){
-                    goTop.setAttribute('class',"hover-go-top hover-go-top-show");
-                    returnHistory.setAttribute('class',"hover-return-history hover-return-history-show");
-                }else {
-                    goTop.setAttribute('class', "hover-go-top hover-go-top-hidden");
-                    returnHistory.setAttribute('class', "hover-return-history hover-return-history-hidden");
-                }
-            };
-
-            goTop.onclick = function () {
-                scrollTo(0, 0);
-            };
-            returnHistory.onclick = function (){
-                window.history.go(-1);
-            };
-        };
-
-    </script>
 </head>
 
 <body>
-
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
-<div>sdjfgklsdj</div>
 
 <!--内容边界-->
 <div class="hover-wrapper">

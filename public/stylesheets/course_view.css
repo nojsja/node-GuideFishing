@@ -40,6 +40,7 @@ a {
     padding: 2px;
     text-align: left;
     font-size: 2rem;
+    background: #475bcb;
     background: -webkit-linear-gradient(to bottom, #3f51b5, #475bcb);
     background:linear-gradient(to bottom, #3f51b5, #475bcb);
 }
@@ -109,7 +110,6 @@ a {
     padding: 10px;
     min-height: 300px;
 }
-
 
 /* 单条消息 */
 .message-list-item {
