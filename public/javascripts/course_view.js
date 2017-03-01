@@ -11,6 +11,8 @@ $(function () {
 
     // 获取课程数据
     ViewAction.readCourseContent();
+    // 模态弹窗初始化
+    nojsja.ModalWindow.init();
 });
 
 /* 页面全局变量 */
@@ -274,5 +276,5 @@ ViewAction.getDate = function () {
 
 /* 模态弹窗 */
 ViewAction.modalWindow = function(text) {
-    ModalWindow.show(text);
+    nojsja.ModalWindow.show(text);
 };

@@ -96,6 +96,8 @@ function course_broadcast(app) {
             }
             console.log('readBroadList success.');
             res.json(JSON.stringify({
+                preAddressAdmin: '/course/broadcast/room/adminCheck/',
+                preAddressUser: '/course/broadcast/room/user/',
                 broadcastArray: broadcastArray,
                 typeImgUrl: typeImgUrl
             }));

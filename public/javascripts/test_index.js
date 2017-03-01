@@ -7,6 +7,7 @@
 
 /* 初始化函数 */
 $(function () {
+
     $('.header-label').click(function () {
         TestIndexAction.headerDown = !TestIndexAction.headerDown;
         $('.type-item').slideToggle();
@@ -23,7 +24,9 @@ $(function () {
     //高度检测
     /*windowHeightCheck();*/
     //滑动检测函数
-    $(window).scroll(TestIndexAction.scrollCheck);
+    $(window).scroll(function () {
+        nojsja.FnDelay(TestIndexAction.scrollCheck, 500);
+    });
     //加载更多数据
     $('.loading-info').click(TestIndexAction.readMore);
     //加载指定数量的测试题目列表
@@ -34,6 +37,10 @@ $(function () {
     $('.type-item').click(function () {
         TestIndexAction.testTypeDefine.call(this, arguments);
     });
+    // 模态弹窗初始化
+    nojsja.ModalWindow.init();
+    // 轮播图片初始化
+    nojsja.SlideView.init();
 });
 
 /*** 页面全局变量 ***/
@@ -195,23 +202,25 @@ TestIndexAction.updateHot = function () {
 
         var JSONobject = JSON.parse(JSONdata);
         if(JSONobject.isError){
-            return courseAction.modalWindow('服务器发生错误,错误码: ' + JSONobject.error);
+            return TestIndexAction.modalWindow('服务器发生错误,错误码: ' + JSONobject.error);
         }
 
         // 更新父组件
-        var $popularFather = $('.hot-title-item');
+        var $popularFather = $('.hot-item-list');
         // 清除缓存
         $popularFather.children().remove();
         // 更新页面
         for (var index in JSONobject.popularArray){
             var popular  = JSONobject.popularArray[index];
+            var $li = $('<li>');
             var $a = $('<a>');
+            // 课程url由前缀、课程类型和课程名字组成
             $a.text(popular.courseName)
                 .prop({
-                    href: ['/course/detail/', popular.courseType, '/', popular.courseName].join('')
+                    href: [popular.preDress, popular.courseType, '/', popular.courseName].join('')
                 });
-
-            $popularFather.append($a);
+            $li.append($a);
+            $popularFather.append($li);
         }
     }, "JSON");
 };
@@ -219,7 +228,7 @@ TestIndexAction.updateHot = function () {
 /* 模态弹窗 */
 TestIndexAction.modalWindow = function(text) {
 
-    ModalWindow.show(text);
+    nojsja.ModalWindow.show(text);
 };
 
 /* 页面底部和底部跳转 */
@@ -269,15 +278,3 @@ TestIndexAction.scrollCheck = function () {
         TestIndexAction.lastScrollOver = TestIndexAction.scrollOver;
     }
 };
-
-/* 窗口各种高度检测函数 */
-function windowHeightCheck() {
-    console.log('$(window).height() = ' + $(window).height());
-    console.log('document.body.clientHeight = ' + document.body.clientHeight);
-    console.log('document.body.scrollHeight = ' + document.body.scrollHeight);
-    console.log('$(document).height() = ' + $(document).height());
-    console.log('$(window).scrollTop() = ' + $(window).scrollTop());
-    console.log('window.innerHeight = ' + window.innerHeight);
-    console.log('document.documentElement.clientHeight = ' + document.documentElement.clientHeight);
-    console.log('document.documentElement.scrollHeight = ' + document.documentElement.scrollHeight);
-}

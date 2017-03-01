@@ -14,6 +14,7 @@
       <link rel='stylesheet' href='/stylesheets/test_index.css' />
 
       <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+      <script type="text/javascript" src="/javascripts/lib/mint/nojsja.js"></script>
       <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
       <script type="text/javascript" src="/javascripts/test_index.js"></script>
   </head>
@@ -29,21 +30,17 @@
       <div class="type-item" id="potential">潜能测试</div>
   </header>
 
-  <!--热门评测列表-->
-  <div class="container hot-container">
-      <div class="nav-tabs-border">
-          <ul class="nav nav-tabs">
-              <li >
-                  <a class="jump"><span id="hotSpan" class="glyphicon glyphicon-list">所有热门</span></a>
-              </li>
-          </ul>
-          <div class="tab-content hot-title">
-              <div class="active">
-                  <div class="hot-title-item">
+  <!-- 图片轮播墙 -->
+  <%- include slideView.ejs%>
 
-                  </div>
-              </div>
-          </div>
+  <!--热门评测列表-->
+  <div class="hot-container">
+      <!--标题-->
+      <div class="hot-title">热门测评</div>
+      <!--热门列表-->
+      <div class="hot-item-list">
+          <li><a class="hot-item">这是一个热门</a></li>
+          <li><a class="hot-item">这是一个热门</a></li>
       </div>
   </div>
 

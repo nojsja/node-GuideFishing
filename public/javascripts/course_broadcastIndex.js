@@ -11,6 +11,8 @@ $(function () {
     bcIndexAction.pageEventBind();
     //加载指定数量的测试题目列表
     bcIndexAction.readBroadcastList();
+    // 模态弹窗初始化
+    nojsja.ModalWindow.init();
 });
 
 /*** 页面全局变量 ***/
@@ -80,6 +82,9 @@ bcIndexAction.updatePage = function (JSONdata) {
     var parsedData = JSON.parse(JSONdata);
     //测评类型的图片url数组
     var typeImgUrl = parsedData.typeImgUrl;
+    // url前缀
+    var preAddressUser = parsedData.preAddressUser;
+    var preAddressAdmin = parsedData.preAddressAdmin;
 
     if(parsedData.error){
         return this.modalWindow("服务器发生错误: " + parsedData.error);
@@ -110,19 +115,18 @@ bcIndexAction.updatePage = function (JSONdata) {
             //内容标题
             var $contentTitle = $('<a class="content-item-title">');
             //添加超链接
-            var url = '/course/broadcast/room/user/' + broadcast.courseName;
+            var url = preAddressUser + broadcast.courseName;
             $contentTitle.prop('href', url);
             $contentTitle.text(broadcast.courseName);
             //内容摘要和图标
             var $abstract = $('<div class="content-item-abstract">');
-            var $teacher = $('<span class="glyphicon glyphicon-user">');
+            var $teacher = $('<div class="teacher"></div>');
             var $intoRoom = $('<input type="button" class="btn btn-default btn-sm" value="管理员登入">');
             $intoRoom.click(function () {
-                window.location = '/course/broadcast/room/adminCheck/' + broadcast.courseName;
+                window.location = preAddressAdmin + broadcast.courseName;
             });
             $abstract
                 .append($teacher.text(broadcast.teacher.name))
-                .append($('<br>'))
                 .append($intoRoom);
             //DOM构造
             $contentLeft.append($contentTitle).append($abstract).append($pushPin);
@@ -162,7 +166,7 @@ bcIndexAction.updatePage = function (JSONdata) {
 /* 模态弹窗 */
 bcIndexAction.modalWindow = function(text) {
 
-    ModalWindow.show(text);
+    nojsja.ModalWindow.show(text);
 };
 
 /* 页面底部和底部跳转 */
