@@ -13,8 +13,8 @@ $(function () {
     CourseAction.readCourseList({ courseType: "ALL" });
     // 更新热门内容
     CourseAction.updateHot();
-    // 模态弹窗初始化
-    njj.SlideView.init();
+    // 滑动图片初始化
+    CourseAction.buildSlideView();
     // 悬浮按钮初始化
     njj.HoverButton.init();
 });
@@ -66,6 +66,19 @@ CourseAction.pageEventBind = function () {
     //指定类型的课程
     $('.type-item').click(function () {
         CourseAction.courseTypeDefine.call(this, arguments);
+    });
+};
+
+/* 创建滑动视图 */
+CourseAction.buildSlideView = function () {
+
+    var readUrl = '/course/readSlideImage';
+    $.post(readUrl, function (jsonData) {
+        var jsonObject = JSON.parse(jsonData);
+        if(jsonObject.isError){
+            return CourseAction.modalWindow(jsonObject.error);
+        }
+        nojsja.SlideView.init(jsonObject.slideImageArray);
     });
 };
 
@@ -238,7 +251,7 @@ CourseAction.updateHot = function () {
 
 /* 模态弹窗 */
 CourseAction.modalWindow = function (text) {
-  njj.ModalWindow.show(text);
+  nojsja.ModalWindow.show(text);
 };
 
 /* 页面底部和底部跳转 */

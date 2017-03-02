@@ -11,8 +11,6 @@ $(function () {
     bcIndexAction.pageEventBind();
     //加载指定数量的测试题目列表
     bcIndexAction.readBroadcastList();
-    // 模态弹窗初始化
-    nojsja.ModalWindow.init();
 });
 
 /*** 页面全局变量 ***/

@@ -37,10 +37,8 @@ $(function () {
     $('.type-item').click(function () {
         TestIndexAction.testTypeDefine.call(this, arguments);
     });
-    // 模态弹窗初始化
-    nojsja.ModalWindow.init();
     // 轮播图片初始化
-    nojsja.SlideView.init();
+    TestIndexAction.bulidSlideView();
 });
 
 /*** 页面全局变量 ***/
@@ -59,6 +57,23 @@ var TestIndexAction = {
     testType: "ALL",
     //是否清除页面已存数据
     isClear: false
+};
+
+/* 轮播图片初始化 */
+TestIndexAction.bulidSlideView = function () {
+    
+    var readUrl = "/test/readSlideImage";
+    // 请求加载图片数组
+    $.post(readUrl, function (jsonData) {
+
+        var data = JSON.parse(jsonData);
+
+        if(data.isError){
+            return TestIndexAction.modalWindow('发生错误：' + data.error);
+        }
+        nojsja.SlideView.init(data.slideImageArray);
+
+    });
 };
 
 /* 读取测试列表 */
@@ -212,12 +227,13 @@ TestIndexAction.updateHot = function () {
         // 更新页面
         for (var index in JSONobject.popularArray){
             var popular  = JSONobject.popularArray[index];
+            console.log(popular.preDress);
             var $li = $('<li>');
             var $a = $('<a>');
             // 课程url由前缀、课程类型和课程名字组成
-            $a.text(popular.courseName)
+            $a.text(popular.testTitle)
                 .prop({
-                    href: [popular.preDress, popular.courseType, '/', popular.courseName].join('')
+                    href: [popular.preDress, popular.testType, '/', popular.testTitle].join('')
                 });
             $li.append($a);
             $popularFather.append($li);

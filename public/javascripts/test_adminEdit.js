@@ -9,10 +9,10 @@
 $(function () {
 
     // 初始化观察者模式
-    EditAction.initWatcher(EditAction.testGroup);
-    EditAction.initWatcher(EditAction.scoreMode);
-    EditAction.initWatcher(EditAction.scoreSection);
-    EditAction.initWatcher(EditAction.categorySection);
+    nojsja.ObserverPattern.init(EditAction.testGroup);
+    nojsja.ObserverPattern.init(EditAction.scoreMode);
+    nojsja.ObserverPattern.init(EditAction.scoreSection);
+    nojsja.ObserverPattern.init(EditAction.categorySection);
     // 获取得分模式信息
     EditAction.getScoreMode();
     // 注册观察者函数
@@ -135,14 +135,19 @@ EditAction.pageEventBind = function () {
 
     // 鼠标显示悬浮框
     $('.score-mode').hover(function (event) {
-        var position = getMousePosition(event);
+
+        var position = nojsja.GetMousePosition(event);
         var describe = $(this).attr('describe');
         singleTon.buildHoverLabel(position, describe);
+
     });
     // 鼠标离开事件
     $('.score-mode').mouseleave(function () {
+
         singleTon.hiddenHoverLabel();
+
     });
+
     //刷新事件绑定
     // window.addEventListener("beforeunload", function(event) {
     //     event.returnValue = "警告";
@@ -150,7 +155,7 @@ EditAction.pageEventBind = function () {
 };
 
 /* 分数模式的简单观察者 */
-EditAction.initWatcher = function (object) {
+nojsja.ObserverPattern.init = function (object) {
 
     // 定义分数模式的观察者回调函数
     object.watcherList = [];
@@ -707,20 +712,7 @@ EditAction.submitCheck = function () {
 /* 模态弹窗 */
 EditAction.modalWindow = function(text) {
 
-    ModalWindow.show(text);
-};
-
-/* 获取当前鼠标相对于document的坐标 */
-var getMousePosition = function(event) {
-
-    var e = event || window.event;
-    var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
-    var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
-    var x = e.pageX || (e.clientX + scrollX);
-    var y = e.pageY || (e.clientY + scrollY);
-
-    // 返回坐标对象, 即相对于top和left的位置距离
-    return { x: x, y: y };
+    nojsja.ModalWindow.show(text);
 };
 
 /* 惰性单例模式减少资源开销 */

@@ -17,6 +17,7 @@
 * choiseTag -- 选项标志,比如ABC, choiseContent -- 各个选项的内容, 比如A:符合,B:一般,C:不符合
 * choiseValue -- 自定义模式下每个选项自定义的得分
 * scoreMode -- 该组题目的得分模式
+* clickRate -- 点击量
 * abstract -- 该组题目的简要描述
 * testTitle -- 该组题目的总标题
 * frequency -- 该组题目的点击量
@@ -45,6 +46,7 @@ var testSchema = new Schema({
     scoreMode: String,
     scoreValue: Number,
     abstract: String,
+    clickRate: Number,
     testTitle: {type: String, required: true, unique: true},
     frequency: Number,
     scoreSection: [{

@@ -63,7 +63,37 @@ function course(app){
             });
         });
     });
-    
+
+    /* 获取滑动组件图片数组 */
+    app.post('/course/readSlideImage', function (req, res) {
+
+        var readUrl = locateFromRoot('/public/images/courseSlide/');
+        var visitUrl = '/images/courseSlide/';
+
+        ReadCourseImg(readUrl, visitUrl, function (data) {
+
+            if(data){
+
+                var imageArray =  [];
+                for(var image in data){
+                    imageArray.push({
+                        text: image,
+                        imageUrl: data[image]
+                    });
+                }
+                res.json( JSON.stringify({
+                    slideImageArray: imageArray,
+                    isError: false
+                }) );
+            }else {
+                res.json( JSON.stringify({
+                    isError: true,
+                    error: data
+                }) );
+            }
+        });
+    });
+
     // 获取类型图片
     app.post('/course/detail/readTypeImage', function (req, res) {
 

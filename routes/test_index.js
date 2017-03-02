@@ -65,6 +65,37 @@ function index(app) {
         });
     });
 
+    /* 读取首页图片 */
+    app.post('/test/readSlideImage', function (req, res) {
+
+        // 读取地址
+        var readUrl = './public/images/testSlide/';
+        // 返回的静态地址
+        var visitUrl = '/images/testSlide/';
+        ReadTestType(readUrl, visitUrl, function (data) {
+
+            if(data){
+
+                var imageArray =  [];
+                for(var image in data){
+                    imageArray.push({
+                       text: image,
+                        imageUrl: data[image]
+                    });
+                }
+                res.json( JSON.stringify({
+                    slideImageArray: imageArray,
+                    isError: false
+                }) );
+            }else {
+                res.json( JSON.stringify({
+                    isError: true,
+                    error: data
+                }) );
+            }
+        });
+    });
+
     /* 读取热门内容列表 */
     app.post('/test/readHot', function (req, res) {
 

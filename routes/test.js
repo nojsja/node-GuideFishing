@@ -16,6 +16,7 @@
 /* 引入工厂模式 */
 var scoreFactory = require('../models/ScoreFactory.js');
 var AllTest = require('../models/AllTest.js');
+var MongoSchedule = require('../models/MongoSchedule.js');
 
 /* 测试题目路由 */
 function test(app) {
@@ -110,6 +111,11 @@ function test(app) {
             //返回评测结果的json数据,包括评测得分和结果分析
             res.json(JSON.stringify(resultData));
         });
+    });
+
+    // 测试更新热门数据
+    app.post('/test/updateHot', function (req, res) {
+        MongoSchedule();
     });
 }
 

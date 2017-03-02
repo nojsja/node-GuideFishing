@@ -16,6 +16,7 @@ function readTypeImg(readurl, visitUrl, callback) {
     var urlImgObj = {};
     fs.readdir(readurl, function (err, files) {
         if(err){
+            callback(null);
             return console.log(err);
         }
         for(var i in files){

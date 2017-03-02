@@ -43,6 +43,52 @@
         return false;
     };
 
+    /* 观察者模式方法 */
+    nojsja["ObserverPattern"] = function () {
+
+        // 观察者初始化
+        function observerInit(object) {
+            // 定义分数模式的观察者回调函数
+            object.watcherList = [];
+            // 为分数模式注册新的观察者
+            object.listen = function (fn) {
+                object.watcherList.push(fn);
+            };
+            // 被观察者事件触发
+            object.trigger = function () {
+                for(var index in object.watcherList){
+                    object.watcherList[index].apply(object);
+                }
+            };
+            // 解绑观察者事件监听
+            object.remove = function (fn) {
+                var length = object.watcherList.length;
+                for(var i = length - 1; i >= 0; i-- ){
+                    if(fn === object.watcherList[i]){
+                        object.watcherList.splice(i, 1);
+                    }
+                }
+            };
+        }
+
+        return {
+            init: observerInit
+        }
+    };
+
+    /* 获取鼠标当前相对于document的绝对坐标 */
+    nojsja["GetMousePosition"] = function (event) {
+
+        var e = event || window.event;
+        var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+        var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+        var x = e.pageX || (e.clientX + scrollX);
+        var y = e.pageY || (e.clientY + scrollY);
+
+        // 返回坐标对象, 即相对于top和left的位置距离
+        return { x: x, y: y };
+    };
+
     /* 模态弹窗方法 */
     nojsja["ModalWindow"] = (function () {
         // 初始化标志
@@ -156,7 +202,7 @@
         var isInit = false;
 
         // 轮播初始化
-        var slideInit = function () {
+        var slideInit = function (imageArray) {
 
             if(isInit){
                 return;
@@ -180,25 +226,8 @@
             // 图片部件的宽度，用于滚动轮播
             slideInfo.imageWidth = document.getElementById('slideWrapper').offsetWidth;
             slideInfo.imageHeight = document.getElementById('slideWrapper').offsetHeight;
-            slideInfo.imageArray.push({
-                imageUrl: "/images/courseSlide/Javascript_1.jpg",
-                text: "这是JavaScript_1.jpg",
-                visitUrl: "/images/courseSlide/Javascript_1.jpg",
-                // Y轴移动的距离
-                offsetHeight: 0
-            });
-            slideInfo.imageArray.push({
-                imageUrl: "/images/courseSlide/Javascript_2.jpg",
-                text: "这是JavaScript_2.jpg",
-                visitUrl: "/images/courseSlide/Javascript_2.jpg",
-                offsetHeight: 0
-            });
-            slideInfo.imageArray.push({
-                imageUrl: "/images/courseSlide/Nodejs.jpg",
-                text: "这是image/Nodejs.jpg",
-                visitUrl: "/images/courseSlide/Nodejs.jpg",
-                offsetHeight: 0
-            });
+            slideInfo.imageArray = imageArray;
+
             // 创建DOM
             var slideItemList = document.getElementById('slideItemList');
             var slideText = document.getElementById('slideText');
