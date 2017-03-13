@@ -40,14 +40,21 @@ var CourseAction = {
 /* 页面主要事件绑定 */
 CourseAction.pageEventBind = function () {
 
-    $('.header-label').click(function () {
+    // 选择课程类型
+    $('#courseTypeChoose').click(function () {
         CourseAction.headerDown = !CourseAction.headerDown;
         $('.type-item').slideToggle();
         if(CourseAction.headerDown) {
-            $('.header-label > span').prop('class', 'glyphicon glyphicon-chevron-up');
+            $('.header-label > span:nth-child(2)').prop('class', 'glyphicon glyphicon-chevron-up');
         }else {
-            $('.header-label > span').prop('class', 'glyphicon glyphicon-chevron-down');
+            $('.header-label > span:nth-child(2)').prop('class', 'glyphicon glyphicon-chevron-down');
         }
+    });
+
+    // 检查登录账户信息
+    $('#userInfo').click(function () {
+
+        window.location.href = '/userInfo';
     });
 
     //顶部和底部跳转

@@ -8,10 +8,10 @@ a {
 }
 
 .header {
+    padding: 0.5rem;
     position: fixed;
     z-index: 1003;
     top: 0;
-    padding: 0.5rem;
     width: 100%;
     min-height: 2rem;
     height: auto;
@@ -24,6 +24,11 @@ a {
     cursor: pointer;
 }
 
+#userInfo {
+    float: right;
+    margin-right: 1rem;
+}
+
 #upAndDown {
     text-align: center;
 }
@@ -31,9 +36,15 @@ a {
 .header-label {
     text-align: center;
     font-size: 2rem;
-    margin-bottom: 0.5rem;
+    margin: 0.5rem auto 0.5rem;
     color: white;
     line-height: 2rem;
+}
+
+/* 课程类型选择 */
+#courseTypeChoose{
+    font-size: 2rem;
+    color: white;
 }
 
 .header-label > span {

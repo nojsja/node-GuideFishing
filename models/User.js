@@ -14,8 +14,7 @@ function User(info) {
         account: info.account || '--broke--',
         password: info.password || '--broke--',
         root: info.root || false,
-        purchasedCourse: [],
-        purchasedTest: []
+        purchasedItem: []
     };
 }
 
@@ -173,4 +172,49 @@ User.purchaseCheck = function (condition, callback) {
         }
     });
 
+};
+
+/* 获取个人信息 */
+User.getSelfinfo = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var User = mongoose.model('user', userSchema);
+
+    var query = User.findOne();
+    query.where({
+       account:  condition.account
+    });
+    
+    query.exec(function (err, doc) {
+        if(err){
+            console.log('[error]获取购买信息出错！');
+            return callback(err);
+        }
+        // 成功返回数据
+        if(doc){
+
+            if(condition.select){
+                // 要求筛选的数据
+                var select = {};
+                for(let i = 0; i < condition.select.length; i++){
+
+                    if( doc[condition.select[i]] ){
+                        select[ condition.select[i] ] = doc[condition.select[i]];
+                    }
+                }
+
+                // 返回数据
+                callback(false, select);
+            }else {
+                // 默认返回的数据
+                callback(false, {
+                    account: doc.account,
+                    password: doc.password,
+                    root: doc.root,
+                    purchasedItem: doc.purchasedItem
+                });
+            }
+
+        }
+    });
 };
