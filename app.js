@@ -29,6 +29,7 @@ var recruitment = require('./routes/recruitment');
 var course = require('./routes/course');
 var course_admin = require('./routes/course_admin');
 var course_broadcast = require('./routes/course_broadcast');
+var user = require('./routes/user');
 var ADMIN_TEMP = require('./routes/ADMIN_TEMP');
 
 var app = express();
@@ -49,6 +50,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 MongoSession(app);
 
 //建立路由规则
+user(app);
 test_index(app);
 test(app);
 test_admin(app);

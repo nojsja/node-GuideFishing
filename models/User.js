@@ -13,6 +13,7 @@ function User(info) {
     this.userData = {
         account: info.account || '--broke--',
         password: info.password || '--broke--',
+        nickName: info.nickName || '--broke--',
         root: info.root || false,
         purchasedItem: []
     };
@@ -21,6 +22,7 @@ function User(info) {
 /* 存储一个用户数据 */
 User.prototype.save = function (callback) {
 
+    console.log('save');
     var db = mongoose.connection;
     var User = mongoose.model('user', userSchema);
 
@@ -45,7 +47,7 @@ User.prototype.save = function (callback) {
                 callback(null, true);
             });
         }
-    })
+    });
 
 };
 
@@ -218,3 +220,5 @@ User.getSelfinfo = function (condition, callback) {
         }
     });
 };
+
+module.exports = User;

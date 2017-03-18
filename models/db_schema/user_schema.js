@@ -1,7 +1,8 @@
 /**
  * Created by yangw on 2017/2/20.
  * 存储用户信息的结构模式
- * account: 账户名
+ * account: 邮箱账户
+ * nickName: 昵称
  * password: 密码
  * purchasedItem: 已购项目
  * root: 是否具有管理员权限
@@ -15,6 +16,7 @@ var Schema = mongoose.Schema;
 var userSchema = new Schema({
 
     account: {type: String, required: true, unique: true},
+    nickName: {type: String, required: true},
     password: {type: String, required: true},
     root: Boolean,
     purchasedItem: [{

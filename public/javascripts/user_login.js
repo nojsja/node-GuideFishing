@@ -1,9 +1,6 @@
 /**
  * Created by yangw on 2017/3/13.
  */
-/**
- * Created by yangw on 2016/8/18.
- */
 
 /* 初始化操作 */
 $(function () {
@@ -22,6 +19,7 @@ $(function () {
         $('#nameCheck').slideDown("slow");
         $('#pswCheckGroup').slideDown("slow");
         loginAction.state = "signup";
+        loginAction.urlLogin = "/signup";
     });
 
     $('#loginTitle').click(function() {
@@ -29,99 +27,174 @@ $(function () {
         $('#nameCheck').slideUp("slow");
         $('#pswCheckGroup').slideUp("slow");
         loginAction.state = "login";
+        loginAction.urlLogin = "/login";
     });
 
-    //绑定检查的事件
-    check();
     //登录检测
     $('#ok').click(function() {
-        if(!loginAction.emailStatus){
+
+        // 检查状态
+        check.start();
+        if(!loginAction.checkStatus.emailStatus){
             loginAction.modalWindow("邮箱格式不对额!");
             return;
         }
-        if(!loginAction.pswStatus){
+        if(!loginAction.checkStatus.pswStatus){
             loginAction.modalWindow("密码格式有错额!");
             return;
         }
-        if(!loginAction.RePswStatus && (loginAction.state == "signup")){
+        if(!loginAction.checkStatus.RePswStatus && (loginAction.state == "signup")){
             loginAction.modalWindow("两次填写的密码不同额!");
             return;
         }
-        if(($('#name').val() === "") && (loginAction.state === "signup")){
+        if( !loginAction.userInfo.nickName && (loginAction.state === "signup") ){
             loginAction.modalWindow("至少要填一下你的昵称吧!");
             return;
         }
-        var back = (loginAction.state === "login") ? loginAction.loginAction() : loginAction.signupAction();
+
+        var back = (loginAction.state === "login") ? loginAction.login() : loginAction.signup();
     });
+
+    /* 格式检测函数 */
+    var check = (function(){
+
+        //邮箱检测
+        $('#email').blur(emailCheck);
+        // 非法字符检测
+        $('#password').blur(passwordCheck);
+        // 姓名赋值
+        $('#nickName').blur(nickNameCheck);
+        // 密码一致性检查
+        $('#pswCheck').blur(pswRepeatCheck);
+
+        // 邮箱检查函数
+        function emailCheck() {
+
+            if( charaAction.emailCheck( $('#email').val().trim() ) ){
+                $('#emailStatus').attr({"class" : "glyphicon glyphicon-ok"});
+                loginAction.checkStatus.emailStatus = true;
+                loginAction.userInfo.account = $('#email').val().trim();
+            }else {
+                $('#emailStatus').attr({"class" : "glyphicon glyphicon-remove"});
+                loginAction.checkStatus.emailStatus = false;
+            }
+        }
+        
+        // 昵称输入检查
+        function nickNameCheck() {
+            var nickName = $('#nickName').val().trim();
+            if( charaAction.charaCheck(nickName) ){
+                loginAction.userInfo.nickName = $('#nickName').val().trim();
+                $('#nameStatus').attr({"class" : "glyphicon glyphicon-ok"});
+            }else {
+                $('#nameStatus').attr({"class" : "glyphicon glyphicon-remove"});
+            }
+        }
+
+        // 密码非法字符检查函数
+        function passwordCheck() {
+
+            if( charaAction.charaCheck($('#password').val().trim()) ){
+                $('#pwdStatus').attr({"class" : "glyphicon glyphicon-ok"});
+                loginAction.checkStatus.pswStatus = true;
+                loginAction.userInfo.password = $('#password').val().trim();
+            }else {
+                $('#pwdStatus').attr({"class" : "glyphicon glyphicon-remove"});
+                loginAction.checkStatus.pswStatus = false;
+            }
+        }
+
+        //密码一致性检查
+        function pswRepeatCheck() {
+
+            if( ($('#password').val() == $('#pswCheck').val()) && ($('#password').val().trim() !== "") ){
+                $('#rePswStatus').attr({"class" : "glyphicon glyphicon-ok"});
+                loginAction.checkStatus.RePswStatus = true;
+            }else {
+                $('#rePswStatus').attr({"class" : "glyphicon glyphicon-remove"});
+                loginAction.checkStatus.RePswStatus = true;
+            }
+        }
+
+        // 返回调用接口
+        return {
+            start: function () {
+                emailCheck();
+                nickNameCheck();
+                pswRepeatCheck();
+                passwordCheck();
+            }
+        }
+    })();
+
 });
 
-/* 页面state对象 */
+/* 页面state对象
+ * urlLogin -- 提交到的后台url
+  * state  -- 登录或注册
+  * isRemember -- 是否记住密码
+  * userInfo -- 提交的用户信息
+  * checkStatus -- 登录检查状态
+  * */
 var loginAction = {
 
     urlLogin : "/login",
     state : "login",
-    account: "",
-    password : "",
-    emailStatus : false,
-    pswStatus : false,
-    RePswStatus : false,
-    rememberPsw : false
+    isRemember: false,
+    userInfo: {
+        account: null,
+        password: null,
+        nickName: null
+    },
+    checkStatus: {
+        emailStatus : false,
+        pswStatus : false,
+        RePswStatus : false,
+        rememberPsw : false
+    }
 };
 
 /* 字符检测对象 */
-var charaAction = {};
+var charaAction = {
+    /* 非法字符检测 */
+    charaCheck: function(text) {
+        if(text === ""){
+            return false;
+        }
+        //正则匹配
+        var pattern = /[\\*@$%^#/]/;
+        if(pattern.test(text)){
+            return false;
+        }else {
+            return true;
+        }
+    },
 
-/* 加载头像请求 */
-loginAction.loadHeadImg = function() {
-
-    $.post(loginAction.urlLogin, {
-            action:"loadHeadImg"
-        }, function (JSONdata) {
-            loginAction.loadImgAction(JSONdata);
-        }, "JSON"
-    );
+    /* 邮箱格式检测 */
+    emailCheck: function (text) {
+        var pattern = /[0-9a-zA-Z]+@[0-9a-zA-Z]+.\w+/;
+        //正则匹配
+        if(pattern.test(text)){
+            return true;
+        }else {
+            return false;
+        }
+    }
 };
 
 /* 模态弹窗 */
 loginAction.modalWindow = function(text) {
 
-    $('.modal-body').text(text);
-    $('#modalWindow').modal("show",{
-        backdrop:true,
-        keyboard:true
-    });
-};
-
-/* 加载头像操作 */
-loginAction.loadImgAction = function(JSONdata) {
-
-    //头像根目录
-    var baseUrl = JSONdata.baseUrl;
-    if (JSONdata.images === null){
-        loginAction.modalWindow("服务器错误!请刷新..");
-        return;
-    }
-    var images = JSONdata.images;
-    for (var i = 0; (images[i] !== null && images[i] !== undefined); i++){
-        var image = images[i];
-        var $imgDiv = $("<div></div>");
-        var $img = $("<img>");
-        $img.attr({
-            "src" : baseUrl + image,
-            "class" : "login-icon"
-        });
-        $imgDiv.append($img);
-        $('.icon-div').append($imgDiv);
-    }
+    nojsja.ModalWindow.show(text);
 };
 
 /* 登录操作 */
-loginAction.loginAction = function() {
+loginAction.login = function() {
 
     $.post(loginAction.urlLogin, {
             action : loginAction.state,
-            email : loginAction.email,
-            password : loginAction.password,
+            account : loginAction.userInfo.account,
+            password : loginAction.userInfo.password,
             isRemember : loginAction.rememberPsw
         }, function (JSONdata) {
             if(JSONdata.status != "ok"){
@@ -135,91 +208,18 @@ loginAction.loginAction = function() {
 };
 
 /* 注册操作 */
-loginAction.signupAction = function() {
+loginAction.signup = function() {
 
     $.post(loginAction.urlLogin,
         {
             action : loginAction.state,
-            email : loginAction.email,
-            password : loginAction.password,
-            name : loginAction.name,
+            account : loginAction.userInfo.account,
+            password : loginAction.userInfo.password,
+            nickName : loginAction.userInfo.nickName,
             isRemember : loginAction.rememberPsw
         },
         function (JSONdata) {
-            if(JSONdata.status != "ok"){
-                loginAction.modalWindow(JSONdata.statusText);
-            }else {
-                loginAction.modalWindow(JSONdata.statusText);
-            }
+            loginAction.modalWindow(JSONdata.statusText);
         }, "JSON"
     );
-};
-
-/* 格式检测函数 */
-var check = function(){
-
-    //邮箱检测
-    $('#email').blur(function() {
-        if( charaAction.emailCheck($('#email').val()) ){
-            $('#emailStatus').attr({"class" : "glyphicon glyphicon-ok"});
-            loginAction.emailStatus = true;
-            loginAction.email = $('#email').val();
-        }else {
-            $('#emailStatus').attr({"class" : "glyphicon glyphicon-remove"});
-            loginAction.emailStatus = false;
-        }
-    });
-
-    //非法字符检测
-    $('#password').blur(function() {
-        if( charaAction.charaCheck($('#password').val()) ){
-            $('#pwdStatus').attr({"class" : "glyphicon glyphicon-ok"});
-            loginAction.pswStatus = true;
-            loginAction.password = $('#password').val();
-        }else {
-            $('#pwdStatus').attr({"class" : "glyphicon glyphicon-remove"});
-            loginAction.pswStatus = false;
-        }
-    });
-
-    $('#name').blur(function() {
-        loginAction.name = $('#name').val();
-    });
-
-    $('#pswCheck').blur(function() {
-        if( ($('#password').val() == $('#pswCheck').val()) && ($('#password').val() !== "") ){
-            $('#rePswStatus').attr({"class" : "glyphicon glyphicon-ok"});
-            loginAction.RePswStatus = true;
-        }else {
-            $('#rePswStatus').attr({"class" : "glyphicon glyphicon-remove"});
-            loginAction.RePswStatus = true;
-        }
-    });
-};
-
-/* 非法字符检测 */
-charaAction.charaCheck = function(text) {
-
-    if(text === ""){
-        return false;
-    }
-    //正则匹配
-    var pattern = /[\\*@$%^#/]/;
-    if(pattern.test(text)){
-        return false;
-    }else {
-        return true;
-    }
-};
-
-/* 邮箱格式检测 */
-charaAction.emailCheck = function (text) {
-
-    var pattern = /[0-9a-zA-Z]+@[0-9a-zA-Z]+.\w+/;
-    //正则匹配
-    if(pattern.test(text)){
-        return true;
-    }else {
-        return false;
-    }
 };

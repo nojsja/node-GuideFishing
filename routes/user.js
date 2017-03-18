@@ -10,8 +10,10 @@ function user(app) {
     // 获取登录页面
     app.get('/login', function (req, res) {
 
-        res.render('/user_login', {
-            action: 'login'
+        res.render('user_login', {
+            action: 'login',
+            title: '用户登录',
+            slogan: '带渔教育'
         });
     });
 
@@ -36,10 +38,13 @@ function user(app) {
                 }
                 if(pass){
                     // 成功登录
+                    req.session.account = account;
                     res.json( JSON.stringify({
                         isError: false,
                         pass: true
                     }) );
+
+
                 }else {
                     // 密码或账户有误
                     res.json( JSON.stringify({
@@ -61,7 +66,9 @@ function user(app) {
     // 获取注册页面
     app.get('/signup', function (req, res) {
         res.render('user_login', {
-            action: 'signup'
+            action: 'signup',
+            title: '用户注册',
+            slogan: '带渔教育'
         });
     });
 
@@ -69,15 +76,17 @@ function user(app) {
     app.post('/signup', function (req, res) {
 
         var account = req.body.account,
+            nickName = req.body.nickName,
             password = req.body.password;
 
         // 新建用户对象
         var newUSer = new User({
             account: account,
             password: password,
+            nickName: nickName,
             root: false
         });
-        
+
         newUSer.save(function (err, pass) {
 
             //发生错误
@@ -89,6 +98,7 @@ function user(app) {
             }
 
             if(pass){
+                req.session.account = account;
                 // 注册成功
                 res.json( JSON.stringify({
                     isError: false,
@@ -111,12 +121,17 @@ function user(app) {
 
         // 用户已经登录
         if(req.session.account){
-            res.render('/user_info', {
+            res.render('user_info', {
+                title: "个人信息",
                 account: req.session.account
             });
         }else {
             // 未登录
-            res.render('/user_login');
+            res.render('user_login', {
+                title: "用户登录",
+                action: "login",
+                slogan: "带渔教育"
+            });
         }
     });
     

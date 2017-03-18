@@ -1,33 +1,47 @@
     <style type="text/css">
-        /* footer */
+
+        /* 边框区域 */
         .footer {
             margin-bottom: 5px;
             padding: 0.5rem;
             text-align: center;
             min-height: 2rem;
             bottom: 0;
+            /* 去除inline-block的边框间隙 */
+            font-size: 0;
             border-top: solid 1px #6095d8;
             background-color: white;
         }
 
+        /* 图片标志 */
         .footer-img {
             display: inline-block;
-            background: url("/images/icons/Ciitec.jpg") no-repeat;
-            background-size: cover;
-            width: 5rem;
-            height: 2rem;
+            vertical-align: top;
+            width: auto;
+            height: 1.5rem;
             margin: 0 auto;
         }
+        .footer-img > img {
+            height: 100%;
+            width: auto;
+        }
 
+        /* 底部文字 */
         .footer-text {
+            vertical-align: top;
             display: inline-block;
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
+            line-height: 1.5rem;
+            height: 1.5rem;
             color: #3b3d3b;
         }
     </style>
+
     <!--用户系统主页的页脚-->
     <footer class="footer">
-        <div class="footer-img"></div>
+        <div class="footer-img">
+            <img src="/images/icons/Ciitec.jpg">
+        </div>
         <div class="footer-text">中以科创 <a href="http://www.ciitec.net/">Ciitec</a></div>
     </footer>
