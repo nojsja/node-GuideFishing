@@ -62,6 +62,14 @@ function user(app) {
             }) );
         }
     });
+    
+    // 注销
+    app.post('/logout', function (req, res) {
+        req.session.account = undefined;
+        res.json( JSON.stringify({
+            isError: false
+        }) );
+    });
 
     // 获取注册页面
     app.get('/signup', function (req, res) {

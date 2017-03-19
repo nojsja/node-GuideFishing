@@ -7,6 +7,7 @@
 * 注:
 * collection -- 存入的表名
 * testType -- 评测类型,例如人格测试,性格测试, 情感测试, 交际测试等等
+* testTags -- 测评标签(与课程标签相关，用来做课程推荐)
 * testGroup -- 存储一组题目的所有题目,每个题目包含题目描述itemTitle,
 * 题号itemNumber,和选项数据itemChoise,选项数据包含选号和选项两个字段
 * itemTitle -- 本道题的标题, itemNumber --本道题的编号,
@@ -34,6 +35,7 @@ var Schema = mongoose.Schema;
 
 var testSchema = new Schema({
     testType: {type: String, required: true},
+    testTags: [{type: String}],
     date: String,
     testGroup: [{
         scoreDefine: Boolean,

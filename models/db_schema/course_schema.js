@@ -10,6 +10,7 @@
  *  jobFound(求职秘籍), jobSkill(职场技能),
  *  software(软件技巧), english(英语进阶), personal(个人提升)
  * courseAbstract -- 课程概述
+ * courseTags -- 课程标签(用来做相关推荐)
  * courseOrigin -- 未经编辑的课程数据对象(课程直播的时候录制,包含音频,视频,图片和文本对象的地址)
  * courseOrigin 在编辑课程和直播课程预览的时候可以用到, 多媒体对象包括三个属性: 名字,
  *  地址和发布日期, 普通文本对象包含两个属性: 文本内容和发布时间
@@ -36,6 +37,9 @@ var courseSchema = new Schema({
         required: true
     },
     courseType: String,
+    courseTags: [{
+        type: String
+    }],
     courseAbstract: String,
     isReady: {
         type: Boolean,

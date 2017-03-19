@@ -41,7 +41,7 @@ var CourseAction = {
 CourseAction.pageEventBind = function () {
 
     // 选择课程类型
-    $('#courseTypeChoose').click(function () {
+    $('#courseTypeChoose, #courseTypeChoose2').click(function () {
         CourseAction.headerDown = !CourseAction.headerDown;
         $('.type-item').slideToggle();
         if(CourseAction.headerDown) {

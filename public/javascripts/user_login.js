@@ -192,34 +192,46 @@ loginAction.modalWindow = function(text) {
 loginAction.login = function() {
 
     $.post(loginAction.urlLogin, {
-            action : loginAction.state,
-            account : loginAction.userInfo.account,
-            password : loginAction.userInfo.password,
-            isRemember : loginAction.rememberPsw
-        }, function (JSONdata) {
-            if(JSONdata.status != "ok"){
-                loginAction.modalWindow(JSONdata.statusText);
-            }else {
-                //跳转到主页
-                window.location.href = JSONdata.url;
-            }
-        }, "JSON"
-    );
+        action : loginAction.state,
+        account : loginAction.userInfo.account,
+        password : loginAction.userInfo.password,
+        isRemember : loginAction.rememberPsw
+    }, function (JSONdata) {
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return loginAction.modalWindow('发生错误：' + JSONobject.error);
+        }
+        if(JSONdata.pass){
+            // 注册成功
+            window.history.go(-1);
+        }else {
+            // 注册失败
+            loginAction.modalWindow('用户名或是密码输入错误！');
+        }
+    }, "JSON");
 };
 
 /* 注册操作 */
 loginAction.signup = function() {
 
-    $.post(loginAction.urlLogin,
-        {
-            action : loginAction.state,
-            account : loginAction.userInfo.account,
-            password : loginAction.userInfo.password,
-            nickName : loginAction.userInfo.nickName,
-            isRemember : loginAction.rememberPsw
-        },
-        function (JSONdata) {
-            loginAction.modalWindow(JSONdata.statusText);
-        }, "JSON"
-    );
+    $.post(loginAction.urlLogin, {
+        action : loginAction.state,
+        account : loginAction.userInfo.account,
+        password : loginAction.userInfo.password,
+        nickName : loginAction.userInfo.nickName,
+        isRemember : loginAction.rememberPsw
+
+    }, function (JSONdata) {
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return loginAction.modalWindow('发生错误：' + JSONobject.error);
+        }
+        if(JSONdata.pass){
+            // 注册成功
+            window.history.go(-1);
+        }else {
+            // 注册失败
+            loginAction.modalWindow('抱歉，用户名已经被占用！');
+        }
+    }, "JSON");
 };

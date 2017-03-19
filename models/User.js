@@ -22,22 +22,26 @@ function User(info) {
 /* 存储一个用户数据 */
 User.prototype.save = function (callback) {
 
-    console.log('save');
     var db = mongoose.connection;
-    var User = mongoose.model('user', userSchema);
+    var Model = mongoose.model('User', userSchema);
+    // 账户
+    var account = this.userData.account;
+    var userData = this.userData;
 
     // 检查用户是否已经存在
-    User.userCheck({account: this.userData.account}, function (err, isExit) {
+    User.userCheck({account: account}, function (err, isExit) {
 
+        console.log('check');
         if(err){
             console.log('[error]用户查询出错：' + err);
             return callback(err);
         }
+
         if(isExit){
             callback(null, false);
         }else {
             // 存储用户数据
-            var newUser = new User(this.userData);
+            var newUser = new Model(userData);
             newUser.save(function (err, doc) {
                 if(err){
                     console.log('[error]用户存储出错：' + err);
@@ -55,9 +59,9 @@ User.prototype.save = function (callback) {
 User.userCheck = function (condition, callback) {
 
     var db = mongoose.connection;
-    var User = mongoose.model('user', userSchema);
+    var Model = mongoose.model('user', userSchema);
 
-    var query = User.findOne();
+    var query = Model.findOne();
     query.where(condition);
     query.exec(function (err, doc) {
        if(err){
@@ -77,14 +81,16 @@ User.userCheck = function (condition, callback) {
 User.signin  = function (con, callback) {
 
     var db = mongoose.connection;
-    var User = mongoose.model('user', userSchema);
+    var Model = mongoose.model('user', userSchema);
 
     var condition = {
         account: con.account || null,
         password: con.password || null
     };
 
-    var query = User.findOne();
+    var query = Model.findOne();
+    query.where(condition);
+
     query.exec(function (err, doc) {
         if(err){
             console.log('[error]用户登录出错！');
@@ -98,17 +104,15 @@ User.signin  = function (con, callback) {
             callback(null, false);
         }
     });
-
-    User.where(condition);
 };
 
 /* 存储一条购买记录 */
 User.purchase = function (condition,callback) {
 
     var db = mongoose.connection;
-    var User = mongoose.model('user', userSchema);
+    var Model = mongoose.model('user', userSchema);
 
-    var query = User.findOne();
+    var query = Model.findOne();
     query.where({
         account: condition.account
     });
@@ -146,9 +150,9 @@ User.purchase = function (condition,callback) {
 User.purchaseCheck = function (condition, callback) {
 
     var db = mongoose.connection;
-    var User = mongoose.model('user', userSchema);
+    var Model = mongoose.model('user', userSchema);
     
-    var query = User.findOne();
+    var query = Model.findOne();
     query.where({
        account: condition.account
     });
@@ -180,9 +184,9 @@ User.purchaseCheck = function (condition, callback) {
 User.getSelfinfo = function (condition, callback) {
 
     var db = mongoose.connection;
-    var User = mongoose.model('user', userSchema);
+    var Model = mongoose.model('user', userSchema);
 
-    var query = User.findOne();
+    var query = Model.findOne();
     query.where({
        account:  condition.account
     });
