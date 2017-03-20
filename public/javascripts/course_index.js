@@ -34,8 +34,84 @@ var CourseAction = {
     //加载的测试类型
     courseType: "ALL",
     //是否清除页面已存数据
-    isClear: false
+    isClear: false,
+    // 中英文对应
+    courseTypeChina:{
+        "jobFound": "求职秘籍",
+        "jobSkill": "职场技能",
+        "software": "软件技巧",
+        "english": "英语进阶",
+        "personal": "个人提升"
+    }
 };
+
+/* 享元模式
+ * 这儿只做一个演示不具有参考价值
+  * */
+CourseAction.flyWeightPattern = (function () {
+
+    // 共享对象（存储共享的内部状态,可作为构造函数创建对象）
+    var courseData = function (type) {
+        this.courseType = type;
+    };
+    
+    // 构建工厂
+    var courseFactory = (function () {
+
+        // 共享对象工厂对象池内的对象个数由内部共享状态的组合数决定，可能存在
+        // 没有内部共享状态或是外部共享状态的情况
+        var courseObject = {};
+
+        // 调用接口
+        return {
+            // 添加一个课程DOM元素
+            create: function (type, callback) {
+                if(!courseObject[type]){
+                    courseObject[type] = [];
+                }
+                if(courseObject[type].length == 0){
+                    var newCourseData = new courseData(type);
+                    // 执行回调
+                    callback(newCourseData);
+                    courseObject[type].push(newCourseData);
+                }else {
+                    var courseObjectData = courseObject[type].shift();
+                    callback(courseObjectData);
+                    courseObjectData[type].push(courseObjectData);
+                }
+
+            }
+        };
+    })();
+
+    // 外部状态管理模块
+    var courseManager = (function () {
+
+        // 存储共享对象的多个外部共享属性
+        var externalAttributes= [];
+
+        // 从模块外部设置模块内部属性
+        var setExternalAttribute = function (attributes) {
+            externalAttributes = attributes;
+        };
+
+        // 添加DOM元素
+        var add = function () {
+
+        };
+        return {
+            setExternalAttribute: setExternalAttribute,
+            add: add,
+
+        };
+    })();
+
+    // 返回外部调用接口
+    return {
+        courseFactory: courseFactory,
+        courseManager: courseManager
+    };
+})();
 
 /* 页面主要事件绑定 */
 CourseAction.pageEventBind = function () {
@@ -115,16 +191,6 @@ CourseAction.readMore = function () {
 /* 更新主页事件 */
 CourseAction.updatePage = function (JSONdata) {
 
-    // 课程类型对应中文
-    var courseTypeChina = {
-
-        "jobFound": "求职秘籍",
-        "jobSkill": "职场技能",
-        "software": "软件技巧",
-        "english": "英语进阶",
-        "personal": "个人提升"
-    };
-
     //转换成JSON对象
     var parsedData = JSON.parse(JSONdata);
     //测评类型的图片url数组
@@ -160,6 +226,8 @@ CourseAction.updatePage = function (JSONdata) {
             //添加超链接
             $contentTitle.prop('href','/course/detail/' + course.courseType + '/' +
                 course.courseName);
+
+
             $contentTitle.text(course.courseName);
             //内容摘要和图标
             var $abstract = $('<div class="content-item-abstract">');
@@ -179,7 +247,7 @@ CourseAction.updatePage = function (JSONdata) {
             });
             //该测评所属的类型
             var $courseType = $('<p class="type-text">');
-            $courseType.text(courseTypeChina[course.courseType]);
+            $courseType.text(CourseAction.courseTypeChina[course.courseType]);
             $contentRight.append($typeImg).append($courseType);
 
             //显示的日期

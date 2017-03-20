@@ -3,6 +3,10 @@ body {
     background-color : #F3F3F3;
 }
 
+html {
+    font-size: 16px;
+}
+
 a {
     color: #00B7FF;
 }
@@ -39,7 +43,7 @@ a {
     color: #ffffff;
     padding: 2px;
     text-align: left;
-    font-size: 2rem;
+    font-size: 1.3rem;
     background: #475bcb;
     background: -webkit-linear-gradient(to bottom, #3f51b5, #475bcb);
     background:linear-gradient(to bottom, #3f51b5, #475bcb);
@@ -88,20 +92,20 @@ a {
 /* 课程讲师 */
 #courseType{
     display: inline-block;
-    margin-left: 1rem;
+    margin-left: 0.5rem;
     padding: 2px;
     border: solid 1px #ffffff;
     border-radius: 5px;
     background-color: #78a1b0;
     color: white;
-    font-size: 1.4rem;
+    font-size: 0.9rem;
     text-shadow: 1px 1px 0 #2a3083;
 }
 #teacher,#date{
     display: inline-block;
     color: #ffffff;
     padding: 5px;
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 

@@ -3,21 +3,40 @@ body {
     background-color: #F3F3F3;
 }
 
+html {
+    font-size: 16px;
+}
+
 a {
     color: #00B7FF;
 }
 
 .header {
+    padding: 5px;
     position: fixed;
     z-index: 1003;
     top: 0;
-    padding: 0.5rem;
     width: 100%;
-    min-height: 2rem;
+    min-height: 1.4rem;
     height: auto;
     font-size: 0;
     background-color: rgba(88, 138, 198, 0.86);
     border-bottom: solid 1px #74c2b9;
+}
+
+/* 测评类型选择 */
+#testTypeChoose{
+    font-size: 1.4rem;
+    color: white;
+}
+
+.header-label > span {
+    font-size: 1.4rem;
+}
+
+#userInfo {
+    float: right;
+    margin-right: 0.8rem;
 }
 
 #upAndDown {
@@ -26,14 +45,14 @@ a {
 
 .header-label {
     text-align: center;
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
+    margin: 5px auto 5px;
     color: white;
-    line-height: 2rem;
+    line-height: 1.5rem;
 }
 
 .header-label > span {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
 }
 
 /* 热门区块 */
@@ -50,7 +69,7 @@ a {
 }
 
 .hot-container {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
 }
 
 .hot-item-list {
@@ -83,7 +102,7 @@ a {
     float: left;
     display: none;
     text-align: center;
-    font-size: 1.8rem;
+    font-size: 1rem;
     color: #ffffff;
     border: solid 1px #ffffff;
     border-radius: 5px;
@@ -105,14 +124,14 @@ a {
 
 /* 主体部分 */
 #total {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
 }
 
 /* 评测条目 */
 .content-item {
     position: relative;
-    padding: 1rem;
-    margin-top: 1.5rem;
+    padding: 0.6rem;
+    margin-top: 1rem;
     background-color: #ffffff;
     margin-bottom: 1.5rem;
     font-size: 0;
@@ -121,16 +140,16 @@ a {
 /* 图钉 */
 .push-pin {
     position: absolute;
-    top: -1rem;
+    top: -0.6rem;
     right: 0;
-    font-size: 2rem;
+    font-size: 1rem;
 }
 
 /* 条目左边和右边 */
 .content-item-left {
     display: inline-block;
     box-sizing: border-box;
-    height: 8rem;
+    height: 6rem;
     margin-top: 0;
     text-overflow: ellipsis;
     color: #41545f;
@@ -147,7 +166,7 @@ a {
 .content-item-right {
     display: inline-block;
     box-sizing: border-box;
-    height: 8rem;
+    height: 6rem;
     width: 30%;
     vertical-align: top;
     border-left: solid 4px white;
@@ -157,15 +176,15 @@ a {
 /* 类型信息 */
 .type-img {
     display: block;
-    width: 5rem;
-    height: 5rem;
+    width: 3.5rem;
+    height: 3.5rem;
     margin: 5px auto 0;
     border-radius: 50%;
 }
 
 .type-text {
     text-align: center;
-    font-size: 1.7rem;
+    font-size: 1rem;
     text-shadow: 2px 2px 2px #395980;
     color: white;
 }
@@ -178,7 +197,7 @@ a {
 
 /* 评测标题 */
 .content-item-title {
-    font-size: 1.7rem;
+    font-size: 1.2rem;
     border-bottom: solid 1px #bcbfbc;
     word-spacing: 1px;
     letter-spacing: 2px;
@@ -186,7 +205,7 @@ a {
 
 /* 评测描述 */
 .content-item-abstract {
-    font-size: 1.5rem;
+    font-size: 1rem;
     word-spacing: 1px;
     letter-spacing: 1px;
     margin-top: 0.5rem;
@@ -202,7 +221,7 @@ a {
 }
 
 .content-item-date > span {
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 /* 数据加载loading信息 */

@@ -8,14 +8,20 @@
 /* 初始化函数 */
 $(function () {
 
-    $('.header-label').click(function () {
+    $('#testTypeChoose, #testTypeChoose2').click(function () {
         TestIndexAction.headerDown = !TestIndexAction.headerDown;
         $('.type-item').slideToggle();
         if(TestIndexAction.headerDown) {
-            $('.header-label > span').prop('class', 'glyphicon glyphicon-chevron-up');
+            $('.header-label > span:nth-child(2)').prop('class', 'glyphicon glyphicon-chevron-up');
         }else {
-            $('.header-label > span').prop('class', 'glyphicon glyphicon-chevron-down');
+            $('.header-label > span:nth-child(2)').prop('class', 'glyphicon glyphicon-chevron-down');
         }
+    });
+
+    // 检查登录账户信息
+    $('#userInfo').click(function () {
+
+        window.location.href = '/userInfo';
     });
 
     //顶部和底部跳转

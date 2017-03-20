@@ -3,9 +3,14 @@ body {
     background-color: #eaeaea;
 }
 
+html {
+    font-size: 16px;
+}
+
 a {
     color: #ffffff;
 }
+
 a:hover {
     color: #ffffff;
 }
