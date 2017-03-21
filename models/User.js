@@ -199,6 +199,8 @@ User.getSelfinfo = function (condition, callback) {
         // 成功返回数据
         if(doc){
 
+            console.log(doc);
+
             if(condition.select){
                 // 要求筛选的数据
                 var select = {};
@@ -212,9 +214,13 @@ User.getSelfinfo = function (condition, callback) {
                 // 返回数据
                 callback(false, select);
             }else {
+
+                console.log(doc.purchasedItem);
+
                 // 默认返回的数据
                 callback(false, {
                     account: doc.account,
+                    nickName: doc.nickName,
                     password: doc.password,
                     root: doc.root,
                     purchasedItem: doc.purchasedItem

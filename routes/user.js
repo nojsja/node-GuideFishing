@@ -162,7 +162,7 @@ function user(app) {
                 // 成功返回个人信息
                 res.json( JSON.stringify({
                     isError: false,
-                    selefInfo: data
+                    selfInfo: data
                 }) );
             });
         }else {

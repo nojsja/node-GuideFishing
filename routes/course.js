@@ -231,6 +231,25 @@ function course(app){
         });
     });
 
+    // 更新popular表
+    app.get('/popular/course/update', function (req, res) {
+
+        Course.updatePopular(function (err) {
+            if(err){
+                console.log(err);
+                res.json( JSON.stringify({
+                    isError: true,
+                    error: err
+                }) );
+            }else {
+                res.json( JSON.stringify({
+                    isError: false
+                }) );
+            }
+
+        });
+    });
+
 }
 
 module.exports = course;

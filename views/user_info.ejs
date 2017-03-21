@@ -6,15 +6,60 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
     <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
-    <link rel='stylesheet' href='/stylesheets/course_index.css' />
+    <link rel='stylesheet' href='/stylesheets/user_info.css' />
 
-    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0"></script>
+    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.js"></script>
     <script type="text/javascript" src="/javascripts/lib/mine/nojsja.js"></script>
     <script type="text/javascript" src="/javascripts/user_info.js"></script>
 
 </head>
 
 <body>
+<!--首部导航-->
+<header>
+    <!--背景图片-->
+    <div class="header-img">
+        <img src="/images/selfInfo/flower_mini.jpg">
+    </div>
+    <!--tab切换-->
+    <div class="header-tab">
+        <!--包含个人资料和已购项目-->
+        <div class="tab-title" id="tabMain" target="selfInfoDiv">资料</div>
+        <div class="tab-title" id="tabPurchased" target="purchasedItemDiv">已购</div>
+    </div>
+</header>
 
+<!--tab内容显示页面-->
+<div class="tab-content">
+    <!--个人资料-->
+    <div class="tab-content-info" id="selfInfoDiv">
+
+        <!--列表-->
+        <div class="content-info-list">
+            <!--<div class="info-item">
+                <div class="info-item-title">账户</div>
+                <div class="info-item-content">yangwei13@outlook.com</div>
+            </div>-->
+        </div>
+    </div>
+
+    <!--已购项目-->
+    <div class="tab-content-purchased" id="purchasedItemDiv">
+        <!--列表-->
+        <div class="purchased-item-list">
+
+            <!--一个已购项目-->
+            <!--<div class="purchased-item">
+                <div class="purchased-item-type">课程</div>
+                <a class="purchased-item-title" >怎样学好Node.js</a>
+            </div>-->
+        </div>
+
+    </div>
+</div>
+
+<!--页脚和模态弹窗-->
+<%- include footer.ejs%>
+<%- include modalWindow.ejs%>
 </body>
 </html>
