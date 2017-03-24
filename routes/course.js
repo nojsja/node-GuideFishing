@@ -7,12 +7,17 @@
 var Course = require('../models/Course');
 /* 读取磁盘图片数据形成地址 */
 var ReadCourseImg = require('../models/ReadTypeImg');
+/* 用户模型 */
+var User = require('../models/User');
 /* 获取当前时间和日期 */
 var getDate = require('../models/tools/GetDate');
 /* 获取根目录 */
 var locateFromRoot = require('../models/tools/LocateFromRoot');
 
 function course(app){
+
+    // 局部代理变量
+    var courseRoute = {};
 
     // 获取课程主页
     app.get('/course/index', function (req, res) {
@@ -33,6 +38,7 @@ function course(app){
             select: {},
             condition: {}
         };
+
         totalCondition.condition.courseType = req.params.courseType;
         totalCondition.condition.courseName = req.params.courseName;
         totalCondition.select = {
@@ -44,22 +50,52 @@ function course(app){
         // 读取一个课程数据
         Course.readOne(totalCondition, function (err, data) {
 
-            console.log(data.courseAbstract);
-            if(err){
-                return res.json( JSON.stringify({
-                    ieError: true,
-                    error: err
-                }) );
-            }
-            // 读取成功
-            res.render('course_detail', {
-
+            // 返回的课程数据
+            var courseData = {
                 title: "课程详情",
-                courseType: req.params.courseType,
-                courseName: req.params.courseName,
-                courseAbstract: data.courseAbstract,
-                clickRate: data.clickRate,
-                date: data.date
+                courseType: req.params["courseType"],
+                courseName: req.params["courseName"],
+                courseAbstract: null,
+                clickRate: null,
+                isPurchased: null,
+                date: null,
+                isError: true,
+                error: null
+            }
+
+            if(err){
+                courseData.isError = true;
+                courseData.error = err;
+                return res.render('course_detail', courseData);
+            }
+
+            courseData.courseAbstract = data["courseAbstract"];
+            courseData.clickRate = data["clickRate"];
+            courseData.date = data["date"];
+
+            // 看是否购买
+            User.purchaseCheck({
+                account: req.session.account,
+                data: {
+                    itemName: courseData.courseName,
+                    itemType: courseData.courseType
+                }
+            }, function (err, pass) {
+
+                if(err){
+                    courseData.isError = true;
+                    courseData.error = err;
+                    return res.render('course_detail', courseData);
+                }
+
+                if(pass){
+                    courseData.isPurchased = true;
+                }else {
+                    courseData.isPurchased = false;
+                }
+
+                // 返回页面
+                res.render('course_detail', courseData);
             });
         });
     });
@@ -108,7 +144,10 @@ function course(app){
     });
     
     // 获取课程学习页面
-    app.get('/course/view/:courseType/:courseName', function (req, res) {
+    app.get('/course/view/:courseType/:courseName', function (req, res, next) {
+        courseRoute.purchaseCheck(req, res, next);
+
+    }, function (req, res) {
 
         res.render('course_view', {
 
@@ -249,6 +288,56 @@ function course(app){
 
         });
     });
+
+    /* 通用中间件和函数 */
+
+    // 课程购买检测中间件
+    courseRoute.purchaseCheck = function (req, res, next) {
+
+        // 用户识别账户
+        var account = req.session.account;
+        if(!account){
+
+            return res.json( JSON.stringify({
+                isError: true,
+                error: new Error("用户信息未识别！")
+            }) );
+        }
+
+        var courseName = req.params["courseName"],
+            courseType = req.params["courseType"];
+
+        User.purchaseCheck({
+            account: account,
+            data: {
+                itemName: courseName,
+                itemType: courseType
+            }
+        }, function (err, pass) {
+
+            // 查询出错
+            if(err){
+                res.render('error', {
+                    message: "query error!",
+                    error: {
+                        status: '500',
+                    }
+                });
+            }else {
+                if(pass){
+                    // 交由下一个处理
+                    return next();
+                }
+                res.render('error', {
+                   message: "你还没有购买课程",
+                    error: {
+                       status: '404'
+                    }
+                });
+            }
+        });
+
+    };
 
 }
 

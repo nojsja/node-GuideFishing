@@ -16,6 +16,7 @@
 
 <body>
 <!--首部导航-->
+<%- include recruitment_header.ejs%>
 <header>
     <!--背景图片-->
     <div class="header-img">
@@ -24,7 +25,7 @@
     <!--tab切换-->
     <div class="header-tab">
         <!--包含个人资料和已购项目-->
-        <div class="tab-title" id="tabMain" target="selfInfoDiv">资料</div>
+        <div class="tab-title tab-click" id="tabMain" target="selfInfoDiv">资料</div>
         <div class="tab-title" id="tabPurchased" target="purchasedItemDiv">已购</div>
     </div>
 </header>

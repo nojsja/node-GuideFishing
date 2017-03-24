@@ -49,16 +49,24 @@
 
 <!--进入测试页面按钮-->
 <div id="startDiv">
-    <input type="button" class="btn btn-success" value="开始学习-->">
+    <input type="button" disabled="disabled"  class="btn btn-danger" value="购买" id="purchase">
+    <input type="button" disabled="disabled" class="btn btn-success" value="开始学习-->" id="start">
 </div>
 
 <!--页内脚本-->
 <script type="text/javascript">
 
-    /* 注意ejs模板中可以用%-获取非转义字符 */
-    // 设置描述内容
-    DetailAction.$$abstract = '<%- courseAbstract %>';
-    $('.abstract').append( $(DetailAction.$$abstract).html() );
+    $(function () {
+        /* 注意ejs模板中可以用%-获取非转义字符 */
+        // 设置描述内容
+        DetailAction.$$abstract = '<%- courseAbstract %>';
+        DetailAction.isPurchased = '<%= isPurchased %>';
+        DetailAction.courseName = '<%= courseName%>';
+        DetailAction.courseType = '<%= courseType%>';
+        DetailAction.initialError = '<%= isError %>';
+        DetailAction.error = '<%= error %>';
+        $('.abstract').append( $(DetailAction.$$abstract).html() );
+    });
 
 </script>
 

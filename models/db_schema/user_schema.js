@@ -7,7 +7,7 @@
  * purchasedItem: 已购项目
  * root: 是否具有管理员权限
  * itemType: 所属内容类型
- * type: 分为course 和 test
+ * _type: 分为course 和 test
  */
 
 var mongoose = require('mongoose');
@@ -23,7 +23,7 @@ var userSchema = new Schema({
         itemType: String,
         itemName: String,
         date: String,
-        type: String
+        _type: String
     }],
 }, {collection: 'user'});
 

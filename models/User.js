@@ -4,7 +4,6 @@
  */
 
 var mongoose = require('./tools/Mongoose.js');
-var getDate = require('./tools/GetDate.js');
 var userSchema = require('./db_schema/user_schema').userSchema;
 
 function User(info) {
@@ -124,8 +123,6 @@ User.purchase = function (condition,callback) {
             return callback(err);
         }
         if(doc){
-            condition.data.date = getDate();
-
             var updateAction = {
                     $push: {purchasedItem: condition.data}
             };
@@ -165,7 +162,7 @@ User.purchaseCheck = function (condition, callback) {
 
             for(let item in doc.purchasedItem){
                 if(item.itemName == condition.data.itemName &&
-                    item.type == condition.data.type){
+                    item.itemType == condition.data.itemType){
                     // 已经购买
                     return callback(null, true);
                 }

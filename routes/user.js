@@ -4,6 +4,7 @@
 
 // 用户数据处理模式
 var User = require('../models/User.js');
+var getDate = require('../models/tools/GetDate.js');
 
 function user(app) {
 
@@ -131,7 +132,8 @@ function user(app) {
         if(req.session.account){
             res.render('user_info', {
                 title: "个人信息",
-                account: req.session.account
+                account: req.session.account,
+                slogan: "带渔"
             });
         }else {
             // 未登录
@@ -171,6 +173,41 @@ function user(app) {
                 error: new Error('未登录任何账户！')
             }) );
         }
+    });
+    
+    // 购买一个项目
+    app.post('/purchase/:item', function (req, res) {
+
+        // 验证账户
+        if(!req.session.account){
+            return res.json( JSON.stringify({
+                isError: true,
+                error: new Error('用户信息有误！')
+            }) );
+        }
+
+        // 购买的类型item/course
+        var type = req.params['item'];
+        // 增加购买信息
+        User.purchase({
+            account: req.session.account,
+            data: {
+                itemType: req.body.itemType,
+                itemName: req.body.itemName,
+                date: getDate(),
+                _type: type
+            }
+        }, function (err) {
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err
+                }) );
+            }
+            res.json( JSON.stringify({
+                isError: false
+            }) );
+        });
     });
 
 

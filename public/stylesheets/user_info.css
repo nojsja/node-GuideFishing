@@ -30,6 +30,10 @@ header {
     margin: auto;
     border-radius: 2px;
     background-color: rgba(87, 115, 128, 0.86);
+
+    -webkit-box-shadow:  0 0 5px #577380;
+    -moz-box-shadow:  0 0 5px #577380;
+    box-shadow:  0 0 5px #577380;
 }
 
 .tab-title {
@@ -60,12 +64,12 @@ header {
 }
 /* 内容显示区域 */
 .tab-content {
-    padding: 5px;
 }
 
 /* 个人资料 */
 .tab-content-info {
     background-color: rgba(152,204,223,0.86);
+    min-height: 10rem;
     padding: 5px;
 }
 
@@ -100,6 +104,7 @@ header {
 /* 已购项目 */
 .tab-content-purchased {
     background-color: rgba(224, 224, 224, 0.86);
+    min-height: 10rem;
     display: none;
 }
 

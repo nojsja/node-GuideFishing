@@ -201,7 +201,7 @@ loginAction.login = function() {
         if(JSONobject.isError){
             return loginAction.modalWindow('发生错误：' + JSONobject.error);
         }
-        if(JSONdata.pass){
+        if(JSONobject.pass){
             // 注册成功
             window.history.go(-1);
         }else {
