@@ -17,7 +17,7 @@
 
 // 招聘对象
 var RECRUITMENT = {
-    company: '成都汇阳投资顾问有限公司',
+    company: '成都惠洋投资顾问有限公司',
     introduction: '成都汇阳投资顾问有限公司成立于2001年，' +
     '是中国证监会批准的专业证券投资咨询机构，' +
     '主要从事企业财务管理顾问、项目投资策划、' +
@@ -82,7 +82,8 @@ function recruitment(app) {
         // 渲染页面
         res.render('recruitment_index', {
             title: "所有招聘",
-            slogan: "带渔[授人以渔]"
+            slogan: "带渔[授人以渔]",
+            other: '企业'
         });
     });
 
@@ -127,7 +128,9 @@ function recruitment(app) {
         // 返回客户端数据
         res.render('recruitment_company', {
             title: "招聘详情",
-            company: req.params.company
+            company: req.params.company,
+            slogan: "带渔",
+            other: "公司"
         });
     });
     
@@ -157,7 +160,7 @@ function recruitment(app) {
     });
 
     /* 在系统注册某个公司的信息 */
-    app.post('/recruitment/company/save', function (req, res) {
+    app.get('/recruitment/company/save', function (req, res) {
 
         // 公司信息
         var company = req.body.company || RECRUITMENT.company;
@@ -197,7 +200,9 @@ function recruitment(app) {
         var company = req.params.company;
         res.render('recruitment_detail', {
             title: "招聘详情",
-            company: company
+            company: company,
+            slogan: "带渔",
+            other: "招聘"
         });
 
     });
@@ -262,7 +267,7 @@ function recruitment(app) {
      *  存储一项招聘信息
      *  包括公司名字和发布信息
      *  */
-    app.post('/recruitment/detail/save', function (req, res) {
+    app.get('/recruitment/detail/save', function (req, res) {
 
         // 存储对象
         var condition = {
@@ -294,47 +299,3 @@ function recruitment(app) {
 }
 
 module.exports = recruitment;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

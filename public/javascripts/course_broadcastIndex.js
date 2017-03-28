@@ -9,6 +9,8 @@ $(function () {
 
     // 页面事件绑定
     bcIndexAction.pageEventBind();
+    // 读取直播类型中英文
+    bcIndexAction.updateBroadcastType();
     //加载指定数量的测试题目列表
     bcIndexAction.readBroadcastList();
 });
@@ -26,12 +28,15 @@ var bcIndexAction = {
     //页面加载条数
     pageLimit: 20,
     //是否清除页面已存数据
-    isClear: false
+    isClear: false,
+    broadcastTypeChina: {}
 };
 
 /* 页面主要事件绑定 */
 bcIndexAction.pageEventBind = function () {
 
+    // 初始化悬浮按钮
+    nojsja.HoverButton.init();
     //顶部和底部跳转
     $('#top').click(bcIndexAction.goTop);
     $('#bottom').click(bcIndexAction.goBottom);
@@ -63,23 +68,32 @@ bcIndexAction.readMore = function () {
     });
 };
 
+/* 获取课程类型更新页面 */
+bcIndexAction.updateBroadcastType = function () {
+
+    var url = "/course/courseType";
+    $.post(url, {}, function (JSONdata) {
+
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return TestIndexAction.modalWindow('[error]: ' + JSONobject.error);
+        }
+
+        bcIndexAction.broadcastTypeChina = JSONobject.courseTypeChina;
+
+    }, "JSON");
+};
+
 /* 更新主页事件 */
 bcIndexAction.updatePage = function (JSONdata) {
-
-    // 直播类型对应中文
-    var broadcastTypeChina = {
-
-        "jobFound": "求职秘籍",
-        "jobSkill": "职场技能",
-        "software": "软件技巧",
-        "english": "英语进阶",
-        "personal": "个人提升"
-    };
 
     //转换成JSON对象
     var parsedData = JSON.parse(JSONdata);
     //测评类型的图片url数组
     var typeImgUrl = parsedData.typeImgUrl;
+    // url前缀
+    var preAddressUser = parsedData.preAddressUser;
+    var preAddressAdmin = parsedData.preAddressAdmin;
 
     if(parsedData.error){
         return this.modalWindow("服务器发生错误: " + parsedData.error);
@@ -100,7 +114,6 @@ bcIndexAction.updatePage = function (JSONdata) {
         bcIndexAction.pageStart += 1;
         (function () {
             var broadcast = parsedData.broadcastArray[broadcastIndex];
-            console.log('broadcast' + broadcast);
             //最外层container
             var $broadcastContainer = $('<div class="content-item shadow-grey">');
             //图钉图标
@@ -110,19 +123,18 @@ bcIndexAction.updatePage = function (JSONdata) {
             //内容标题
             var $contentTitle = $('<a class="content-item-title">');
             //添加超链接
-            var url = '/course/broadcast/room/user/' + broadcast.courseName;
+            var url = preAddressUser + broadcast.courseName;
             $contentTitle.prop('href', url);
             $contentTitle.text(broadcast.courseName);
             //内容摘要和图标
             var $abstract = $('<div class="content-item-abstract">');
-            var $teacher = $('<span class="glyphicon glyphicon-user">');
+            var $teacher = $('<div class="teacher"></div>');
             var $intoRoom = $('<input type="button" class="btn btn-default btn-sm" value="管理员登入">');
             $intoRoom.click(function () {
-                window.location = '/course/broadcast/room/adminCheck/' + broadcast.courseName;
+                window.location = preAddressAdmin + broadcast.courseName;
             });
             $abstract
                 .append($teacher.text(broadcast.teacher.name))
-                .append($('<br>'))
                 .append($intoRoom);
             //DOM构造
             $contentLeft.append($contentTitle).append($abstract).append($pushPin);
@@ -138,7 +150,7 @@ bcIndexAction.updatePage = function (JSONdata) {
             });
             //该测评所属的类型
             var $broadcastType = $('<p class="type-text">');
-            $broadcastType.text(broadcastTypeChina[broadcast.courseType]);
+            $broadcastType.text(bcIndexAction.broadcastTypeChina[broadcast.courseType]);
             $contentRight.append($typeImg).append($broadcastType);
 
             //显示的日期
@@ -162,11 +174,7 @@ bcIndexAction.updatePage = function (JSONdata) {
 /* 模态弹窗 */
 bcIndexAction.modalWindow = function(text) {
 
-    $('.modal-body').text(text);
-    $('#modalWindow').modal("show", {
-        backdrop : true,
-        keyboard : true
-    });
+    nojsja.ModalWindow.show(text);
 };
 
 /* 页面底部和底部跳转 */

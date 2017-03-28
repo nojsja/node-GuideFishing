@@ -7,19 +7,40 @@
 var Course = require('../models/Course');
 /* 读取磁盘图片数据形成地址 */
 var ReadCourseImg = require('../models/ReadTypeImg');
-/* 获取当前时间和日期 */
-var getDate = require('../models/tools/GetDate');
+/* 用户模型 */
+var User = require('../models/User');
 /* 获取根目录 */
 var locateFromRoot = require('../models/tools/LocateFromRoot');
 
 function course(app){
 
+    // 局部代理变量
+    var courseRoute = {};
+
     // 获取课程主页
     app.get('/course/index', function (req, res) {
 
         res.render('course_index', {
-            title: "课程主页"
+            title: "课程主页",
+            slogan: "带渔",
+            other: "课程"
         });
+    });
+    
+    // 获取课程类型和中文
+    app.post('/course/courseType', function (req, res) {
+
+        res.json( JSON.stringify({
+            isError: false,
+            // 转化为字符串类型
+            courseTypeChina:{
+                "jobFound": "求职秘籍",
+                "jobSkill": "职场技能",
+                "software": "软件技巧",
+                "english": "英语进阶",
+                "personal": "个人提升"
+            }
+        }) );
     });
 
     // 获取课程详情介绍页面
@@ -33,6 +54,7 @@ function course(app){
             select: {},
             condition: {}
         };
+
         totalCondition.condition.courseType = req.params.courseType;
         totalCondition.condition.courseName = req.params.courseName;
         totalCondition.select = {
@@ -44,26 +66,93 @@ function course(app){
         // 读取一个课程数据
         Course.readOne(totalCondition, function (err, data) {
 
-            console.log(data.courseAbstract);
-            if(err){
-                return res.json( JSON.stringify({
-                    ieError: true,
-                    error: err
-                }) );
-            }
-            // 读取成功
-            res.render('course_detail', {
-
+            // 返回的课程数据
+            var courseData = {
                 title: "课程详情",
-                courseType: req.params.courseType,
-                courseName: req.params.courseName,
-                courseAbstract: data.courseAbstract,
-                clickRate: data.clickRate,
-                date: data.date
+                courseType: req.params["courseType"],
+                courseName: req.params["courseName"],
+                courseAbstract: null,
+                clickRate: null,
+                isPurchased: null,
+                date: null,
+                isError: false,
+                error: null
+            };
+
+            if(err){
+                courseData.isError = true;
+                courseData.error = err;
+                return res.render('course_detail', courseData);
+            }
+
+            courseData.courseAbstract = data["courseAbstract"];
+            courseData.clickRate = data["clickRate"];
+            courseData.date = data["date"];
+
+            // 当前登录账户
+            var account = req.session.account;
+            if(!account){
+                courseData.isPurchased = "unknown";
+                return res.render('course_detail', courseData);
+            }
+
+            // 看是否购买
+            User.purchaseCheck({
+                account: account,
+                data: {
+                    itemName: courseData.courseName,
+                    itemType: courseData.courseType
+                }
+            }, function (err, pass) {
+
+                if(err){
+                    courseData.isError = true;
+                    courseData.error = err;
+                    return res.render('course_detail', courseData);
+                }
+
+                if(pass){
+                    courseData.isPurchased = true;
+                }else {
+                    courseData.isPurchased = false;
+                }
+
+                // 返回页面
+                res.render('course_detail', courseData);
             });
         });
     });
-    
+
+    /* 获取滑动组件图片数组 */
+    app.post('/course/readSlideImage', function (req, res) {
+
+        var readUrl = locateFromRoot('/public/images/courseSlide/');
+        var visitUrl = '/images/courseSlide/';
+
+        ReadCourseImg(readUrl, visitUrl, function (data) {
+
+            if(data){
+
+                var imageArray =  [];
+                for(var image in data){
+                    imageArray.push({
+                        text: image,
+                        imageUrl: data[image]
+                    });
+                }
+                res.json( JSON.stringify({
+                    slideImageArray: imageArray,
+                    isError: false
+                }) );
+            }else {
+                res.json( JSON.stringify({
+                    isError: true,
+                    error: data
+                }) );
+            }
+        });
+    });
+
     // 获取类型图片
     app.post('/course/detail/readTypeImage', function (req, res) {
 
@@ -78,12 +167,16 @@ function course(app){
     });
     
     // 获取课程学习页面
-    app.get('/course/view/:courseType/:courseName', function (req, res) {
+    app.get('/course/view/:courseType/:courseName', function (req, res, next) {
+        courseRoute.purchaseCheck(req, res, next);
+
+    }, function (req, res) {
 
         res.render('course_view', {
 
             title: "课程学习",
             slogan: "带渔",
+            other: "课程",
             courseType: req.params.courseType,
             courseName: req.params.courseName
         });
@@ -101,6 +194,9 @@ function course(app){
                     isError: true,
                     error: err
                 }) );
+            }
+            for(var i = 0; i < popularArray.length; i++){
+                popularArray[i].preDress = '/course/detail/';
             }
             // 返回数据
             res.json( JSON.stringify({
@@ -131,7 +227,6 @@ function course(app){
 
         Course.readOne(totalCondition, function (err, data) {
 
-            console.log(data);
             if(err){
                 return res.json(JSON.stringify({
                     error: err
@@ -197,6 +292,76 @@ function course(app){
             }));
         });
     });
+
+    // 更新popular表
+    app.get('/popular/course/update', function (req, res) {
+
+        Course.updatePopular(function (err) {
+            if(err){
+                console.log(err);
+                res.json( JSON.stringify({
+                    isError: true,
+                    error: err
+                }) );
+            }else {
+                res.json( JSON.stringify({
+                    isError: false
+                }) );
+            }
+
+        });
+    });
+
+    /* 通用中间件和函数 */
+
+    // 课程购买检测中间件
+    courseRoute.purchaseCheck = function (req, res, next) {
+
+        // 用户识别账户
+        var account = req.session.account;
+        if(!account){
+
+            return res.render('user_login', {
+                title: "用户登录",
+                slogan: "带渔",
+                other: "登录"
+            });
+        }
+
+        var courseName = req.params["courseName"],
+            courseType = req.params["courseType"];
+
+        User.purchaseCheck({
+            account: account,
+            data: {
+                itemName: courseName,
+                itemType: courseType
+            }
+        }, function (err, pass) {
+
+            // 查询出错
+            if(err){
+                res.render('error', {
+                    message: "query error!",
+                    error: {
+                        status: '500',
+                    }
+                });
+            }else {
+                if(pass){
+                    // 交由下一个处理
+                    return next();
+                }
+                res.render('error', {
+                   message: "你还没有购买课程",
+                    error: {
+                       status: '404'
+                    }
+                });
+            }
+        });
+
+    };
 
 }
 

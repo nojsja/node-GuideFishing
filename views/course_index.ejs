@@ -13,36 +13,48 @@
     <link rel='stylesheet' href='/stylesheets/course_index.css' />
 
     <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <!--自己的框架-->
+    <script type="text/javascript" src="/javascripts/lib/mine/nojsja.js"></script>
     <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
     <script type="text/javascript" src="/javascripts/course_index.js"></script>
 </head>
 <body>
 
-<header id="head" class="header">
-    <div class="header-label">选择课程类型 <span class="glyphicon glyphicon-chevron-down"></span></div>
-    <!--评测类型-->
-    <div class="type-item" id="jobFound">求职秘籍</div>
-    <div class="type-item" id="software">软件技巧</div>
-    <div class="type-item" id="jobSkill">职场技能</div>
-    <div class="type-item" id="english">英语进阶</div>
-    <div class="type-item" id="personal">个人提升</div>
+<!--通用首部-->
+<div class="header-div">
+    <%- include recruitment_header.ejs%>
+</div>
+
+<!--页面首部-->
+<header id="courseHead" class="header">
+    <div class="header-label">
+        <span id="courseTypeChoose">课程类型</span>
+        <span class="glyphicon glyphicon-chevron-down" id="courseTypeChoose2"></span>
+        <span class="glyphicon glyphicon-user" id="userInfo"></span>
+    </div>
+    <div class="type-item-list">
+        <!--评测类型-->
+        <!--<div class="type-item" id="jobFound">求职秘籍</div>
+        <div class="type-item" id="software">软件技巧</div>
+        <div class="type-item" id="jobSkill">职场技能</div>
+        <div class="type-item" id="english">英语进阶</div>
+        <div class="type-item" id="personal">个人提升</div>-->
+    </div>
+
 </header>
 
-<!--热门评测列表-->
-<div class="container hot-container">
-    <div class="nav-tabs-border">
-        <ul class="nav nav-tabs">
-            <li >
-                <a class="jump"><span id="hotJobFoundSpan" class="glyphicon glyphicon-list">所有热门</span></a>
-            </li>
-        </ul>
-        <div class="tab-content hot-title">
-            <div class="active">
-                <div class="hot-title-item">
+<div class="slide-div">
+    <%- include slideView.ejs%>
+</div>
 
-                </div>
-            </div>
-        </div>
+<!--热门课程列表-->
+<div class="hot-container">
+    <!--标题-->
+    <div class="hot-title">热门课程</div>
+    <!--热门列表-->
+    <div class="hot-item-list">
+        <li><a class="hot-item">这是一个热门</a></li>
+        <li><a class="hot-item">这是一个热门</a></li>
     </div>
 </div>
 
@@ -53,7 +65,7 @@
 
 <!--数据加载loading信息-->
 <div class="loading-info">
-    <input type="button" class="btn btn-success" value="加载更多..."></input>
+    <input id="loadMore" type="button" class="btn btn-success" value="加载更多..."></input>
 </div>
 
 <!--返回顶部按钮-->
@@ -62,6 +74,10 @@
 <%- include footer.ejs%>
 <!--模态弹窗-->
 <%- include modalWindow.ejs%>
+<!--页面悬浮按钮-->
+<%- include hoverButton.ejs%>
 
 </body>
 </html>
+
+

@@ -7,14 +7,21 @@
 
 /* 初始化函数 */
 $(function () {
-    $('.header-label').click(function () {
+
+    $('#testTypeChoose, #testTypeChoose2').click(function () {
         TestIndexAction.headerDown = !TestIndexAction.headerDown;
         $('.type-item').slideToggle();
         if(TestIndexAction.headerDown) {
-            $('.header-label > span').prop('class', 'glyphicon glyphicon-chevron-up');
+            $('.header-label > span:nth-child(2)').prop('class', 'glyphicon glyphicon-chevron-up');
         }else {
-            $('.header-label > span').prop('class', 'glyphicon glyphicon-chevron-down');
+            $('.header-label > span:nth-child(2)').prop('class', 'glyphicon glyphicon-chevron-down');
         }
+    });
+
+    // 检查登录账户信息
+    $('#userInfo').click(function () {
+
+        window.location.href = '/userInfo';
     });
 
     //顶部和底部跳转
@@ -23,17 +30,25 @@ $(function () {
     //高度检测
     /*windowHeightCheck();*/
     //滑动检测函数
-    $(window).scroll(TestIndexAction.scrollCheck);
+    $(window).scroll(function () {
+        nojsja.FnDelay(TestIndexAction.scrollCheck, 500);
+    });
     //加载更多数据
     $('.loading-info').click(TestIndexAction.readMore);
+    // 读取测评类型
+    TestIndexAction.updateTestType();
     //加载指定数量的测试题目列表
     TestIndexAction.readTestList({ testType: "ALL" });
     // 读取热门的评测
     TestIndexAction.updateHot();
+    // 初始化按钮
+    nojsja.HoverButton.init();
     //指定类型的测试题目
     $('.type-item').click(function () {
         TestIndexAction.testTypeDefine.call(this, arguments);
     });
+    // 轮播图片初始化
+    TestIndexAction.bulidSlideView();
 });
 
 /*** 页面全局变量 ***/
@@ -51,7 +66,57 @@ var TestIndexAction = {
     //加载的测试类型
     testType: "ALL",
     //是否清除页面已存数据
-    isClear: false
+    isClear: false,
+    // 测评类型中文
+    testTypeChina: {}
+};
+
+/* 轮播图片初始化 */
+TestIndexAction.bulidSlideView = function () {
+    
+    var readUrl = "/test/readSlideImage";
+    // 请求加载图片数组
+    $.post(readUrl, function (jsonData) {
+
+        var data = JSON.parse(jsonData);
+
+        if(data.isError){
+            return TestIndexAction.modalWindow('发生错误：' + data.error);
+        }
+        nojsja.SlideView.init(data.slideImageArray);
+
+    });
+};
+
+/* 获取课程类型更新页面 */
+TestIndexAction.updateTestType = function () {
+
+    var url = "/test/testType";
+    $.post(url, {}, function (JSONdata) {
+
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return TestIndexAction.modalWindow('[error]: ' + JSONobject.error);
+        }
+
+        // 类型列表
+        var $typeItemList = $('.type-item-list');
+        TestIndexAction.testTypeChina = JSONobject.testTypeChina;
+
+        for(var type in TestIndexAction.testTypeChina){
+            var $type = $('<div class="type-item">');
+            $type.text(TestIndexAction.testTypeChina[type])
+                .prop('id', type);
+
+            $typeItemList.append($type);
+        }
+
+        //指定类型的课程
+        $('.type-item').click(function () {
+            TestIndexAction.testTypeDefine.call(this, arguments);
+        });
+
+    }, "JSON");
 };
 
 /* 读取测试列表 */
@@ -79,15 +144,6 @@ TestIndexAction.readMore = function () {
 
 /* 更新主页事件 */
 TestIndexAction.updatePage = function (JSONdata) {
-
-    // 测试类型对应中文
-    var testTypeChina = {
-        "character": "性格测试",
-        "personality": "人格测试",
-        "emotion": "情感测试",
-        "communication": "交际测试",
-        "potential": "潜能测试"
-    };
 
     //转换成JSON对象
     var parsedData = JSON.parse(JSONdata);
@@ -122,7 +178,7 @@ TestIndexAction.updatePage = function (JSONdata) {
             //内容标题
             var $contentTitle = $('<a class="content-item-title">');
             //添加超链接
-            $contentTitle.prop('href','/test/testDetail/' + test.testType + '/' + test.testTitle);
+            $contentTitle.prop('href','/test/detail/' + test.testType + '/' + test.testTitle);
             $contentTitle.text(test.testTitle);
             //内容摘要和图标
             var $abstract = $('<div class="content-item-abstract">');
@@ -142,7 +198,7 @@ TestIndexAction.updatePage = function (JSONdata) {
             });
             //该测评所属的类型
             var $testType = $('<p class="type-text">');
-            $testType.text(testTypeChina[test.testType]);
+            $testType.text(TestIndexAction.testTypeChina[test.testType]);
             $contentRight.append($typeImg).append($testType);
 
             //显示的日期
@@ -195,23 +251,26 @@ TestIndexAction.updateHot = function () {
 
         var JSONobject = JSON.parse(JSONdata);
         if(JSONobject.isError){
-            return courseAction.modalWindow('服务器发生错误,错误码: ' + JSONobject.error);
+            return TestIndexAction.modalWindow('服务器发生错误,错误码: ' + JSONobject.error);
         }
 
         // 更新父组件
-        var $popularFather = $('.hot-title-item');
+        var $popularFather = $('.hot-item-list');
         // 清除缓存
         $popularFather.children().remove();
         // 更新页面
         for (var index in JSONobject.popularArray){
             var popular  = JSONobject.popularArray[index];
+            console.log(popular.preDress);
+            var $li = $('<li>');
             var $a = $('<a>');
-            $a.text(popular.courseName)
+            // 课程url由前缀、课程类型和课程名字组成
+            $a.text(popular.testTitle)
                 .prop({
-                    href: ['/course/detail/', popular.courseType, '/', popular.courseName].join('')
+                    href: [popular.preDress, popular.testType, '/', popular.testTitle].join('')
                 });
-
-            $popularFather.append($a);
+            $li.append($a);
+            $popularFather.append($li);
         }
     }, "JSON");
 };
@@ -219,11 +278,7 @@ TestIndexAction.updateHot = function () {
 /* 模态弹窗 */
 TestIndexAction.modalWindow = function(text) {
 
-    $('.modal-body').text(text);
-    $('#modalWindow').modal("show", {
-        backdrop : true,
-        keyboard : true
-    });
+    nojsja.ModalWindow.show(text);
 };
 
 /* 页面底部和底部跳转 */
@@ -273,15 +328,3 @@ TestIndexAction.scrollCheck = function () {
         TestIndexAction.lastScrollOver = TestIndexAction.scrollOver;
     }
 };
-
-/* 窗口各种高度检测函数 */
-function windowHeightCheck() {
-    console.log('$(window).height() = ' + $(window).height());
-    console.log('document.body.clientHeight = ' + document.body.clientHeight);
-    console.log('document.body.scrollHeight = ' + document.body.scrollHeight);
-    console.log('$(document).height() = ' + $(document).height());
-    console.log('$(window).scrollTop() = ' + $(window).scrollTop());
-    console.log('window.innerHeight = ' + window.innerHeight);
-    console.log('document.documentElement.clientHeight = ' + document.documentElement.clientHeight);
-    console.log('document.documentElement.scrollHeight = ' + document.documentElement.scrollHeight);
-}

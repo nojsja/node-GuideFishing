@@ -9,10 +9,16 @@ $(function () {
 
     // 页面事件绑定
     CourseAction.pageEventBind();
+    // 更新课程类型
+    CourseAction.updateCourseType();
     //加载指定数量的测试题目列表
     CourseAction.readCourseList({ courseType: "ALL" });
     // 更新热门内容
     CourseAction.updateHot();
+    // 滑动图片初始化
+    CourseAction.buildSlideView();
+    // 悬浮按钮初始化
+    njj.HoverButton.init();
 });
 
 /*** 页面全局变量 ***/
@@ -30,23 +36,98 @@ var CourseAction = {
     //加载的测试类型
     courseType: "ALL",
     //是否清除页面已存数据
-    isClear: false
+    isClear: false,
+    // 中英文对应
+    courseTypeChina: {}
 };
+
+/* 享元模式
+ * 这儿只做一个演示不具有参考价值
+  * */
+CourseAction.flyWeightPattern = (function () {
+
+    // 共享对象（存储共享的内部状态,可作为构造函数创建对象）
+    var courseData = function (type) {
+        this.courseType = type;
+    };
+    
+    // 构建工厂
+    var courseFactory = (function () {
+
+        // 共享对象工厂对象池内的对象个数由内部共享状态的组合数决定，可能存在
+        // 没有内部共享状态或是外部共享状态的情况
+        var courseObject = {};
+
+        // 调用接口
+        return {
+            // 添加一个课程DOM元素
+            create: function (type, callback) {
+                if(!courseObject[type]){
+                    courseObject[type] = [];
+                }
+                if(courseObject[type].length == 0){
+                    var newCourseData = new courseData(type);
+                    // 执行回调
+                    callback(newCourseData);
+                    courseObject[type].push(newCourseData);
+                }else {
+                    var courseObjectData = courseObject[type].shift();
+                    callback(courseObjectData);
+                    courseObjectData[type].push(courseObjectData);
+                }
+
+            }
+        };
+    })();
+
+    // 外部状态管理模块
+    var courseManager = (function () {
+
+        // 存储共享对象的多个外部共享属性
+        var externalAttributes= [];
+
+        // 从模块外部设置模块内部属性
+        var setExternalAttribute = function (attributes) {
+            externalAttributes = attributes;
+        };
+
+        // 添加DOM元素
+        var add = function () {
+
+        };
+        return {
+            setExternalAttribute: setExternalAttribute,
+            add: add,
+
+        };
+    })();
+
+    // 返回外部调用接口
+    return {
+        courseFactory: courseFactory,
+        courseManager: courseManager
+    };
+})();
 
 /* 页面主要事件绑定 */
 CourseAction.pageEventBind = function () {
 
-    $('.header-label').click(function () {
+    // 选择课程类型
+    $('#courseTypeChoose, #courseTypeChoose2').click(function () {
         CourseAction.headerDown = !CourseAction.headerDown;
         $('.type-item').slideToggle();
         if(CourseAction.headerDown) {
-            $('.header-label > span').prop('class', 'glyphicon glyphicon-chevron-up');
+            $('.header-label > span:nth-child(2)').prop('class', 'glyphicon glyphicon-chevron-up');
         }else {
-            $('.header-label > span').prop('class', 'glyphicon glyphicon-chevron-down');
+            $('.header-label > span:nth-child(2)').prop('class', 'glyphicon glyphicon-chevron-down');
         }
     });
-    //热门内容事件绑定
-    $('.jump').click(CourseAction.pageHotContentAction);
+
+    // 检查登录账户信息
+    $('#userInfo').click(function () {
+
+        window.location.href = '/userInfo';
+    });
 
     //顶部和底部跳转
     $('#top').click(CourseAction.goTop);
@@ -54,13 +135,55 @@ CourseAction.pageEventBind = function () {
     //高度检测
     /*windowHeightCheck();*/
     //滑动检测函数
-    $(window).scroll(CourseAction.scrollCheck);
+    $(window).scroll(function () {
+        //每隔500毫秒检测一次
+       nojsja.FnDelay(CourseAction.scrollCheck, 500);
+    });
     //加载更多数据
-    $('.loading-info').click(CourseAction.readMore);
+    $('#loadMore').click(CourseAction.readMore);
+};
 
-    //指定类型的测试题目
-    $('.type-item').click(function () {
-        CourseAction.courseTypeDefine.call(this, arguments);
+/* 获取课程类型更新页面 */
+CourseAction.updateCourseType = function () {
+
+    var url = "/course/courseType";
+    $.post(url, {}, function (JSONdata) {
+
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return CourseAction.modalWindow('[error]: ' + JSONobject.error);
+        }
+
+        // 类型列表
+        var $typeItemList = $('.type-item-list');
+        CourseAction.courseTypeChina = JSONobject.courseTypeChina;
+
+        for(var type in CourseAction.courseTypeChina){
+            var $type = $('<div class="type-item">');
+            $type.text(CourseAction.courseTypeChina[type])
+                .prop('id', type);
+
+            $typeItemList.append($type);
+        }
+
+        //指定类型的课程
+        $('.type-item').click(function () {
+            CourseAction.courseTypeDefine.call(this, arguments);
+        });
+
+    }, "JSON");
+};
+
+/* 创建滑动视图 */
+CourseAction.buildSlideView = function () {
+
+    var readUrl = '/course/readSlideImage';
+    $.post(readUrl, function (jsonData) {
+        var jsonObject = JSON.parse(jsonData);
+        if(jsonObject.isError){
+            return CourseAction.modalWindow(jsonObject.error);
+        }
+        nojsja.SlideView.init(jsonObject.slideImageArray);
     });
 };
 
@@ -90,16 +213,6 @@ CourseAction.readMore = function () {
 /* 更新主页事件 */
 CourseAction.updatePage = function (JSONdata) {
 
-    // 课程类型对应中文
-    var courseTypeChina = {
-
-        "jobFound": "求职秘籍",
-        "jobSkill": "职场技能",
-        "software": "软件技巧",
-        "english": "英语进阶",
-        "personal": "个人提升"
-    };
-
     //转换成JSON对象
     var parsedData = JSON.parse(JSONdata);
     //测评类型的图片url数组
@@ -116,7 +229,7 @@ CourseAction.updatePage = function (JSONdata) {
     }
     //没有数据提示用户
     if(parsedData.courseArray.length === 0){
-        return this.modalWindow('抱歉,没有更多数据!');
+        return CourseAction.modalWindow('抱歉,没有更多数据!');
     }
     //遍历对象数组构造DOM对象
     for(var courseIndex in parsedData.courseArray) {
@@ -124,7 +237,6 @@ CourseAction.updatePage = function (JSONdata) {
         CourseAction.pageStart += 1;
         (function () {
             var course = parsedData.courseArray[courseIndex];
-            console.log('course' + course);
             //最外层container
             var $courseContainer = $('<div class="content-item">');
             //图钉图标
@@ -136,6 +248,8 @@ CourseAction.updatePage = function (JSONdata) {
             //添加超链接
             $contentTitle.prop('href','/course/detail/' + course.courseType + '/' +
                 course.courseName);
+
+
             $contentTitle.text(course.courseName);
             //内容摘要和图标
             var $abstract = $('<div class="content-item-abstract">');
@@ -155,7 +269,7 @@ CourseAction.updatePage = function (JSONdata) {
             });
             //该测评所属的类型
             var $courseType = $('<p class="type-text">');
-            $courseType.text(courseTypeChina[course.courseType]);
+            $courseType.text(CourseAction.courseTypeChina[course.courseType]);
             $contentRight.append($typeImg).append($courseType);
 
             //显示的日期
@@ -213,31 +327,28 @@ CourseAction.updateHot = function () {
         }
 
         // 更新父组件
-        var $popularFather = $('.hot-title-item');
+        var $popularFather = $('.hot-item-list');
         // 清除缓存
         $popularFather.children().remove();
         // 更新页面
         for (var index in JSONobject.popularArray){
             var popular  = JSONobject.popularArray[index];
+            var $li = $('<li>');
             var $a = $('<a>');
+            // 课程url由前缀、课程类型和课程名字组成
             $a.text(popular.courseName)
                 .prop({
-                    href: ['/course/detail/', popular.courseType, '/', popular.courseName].join('')
+                    href: [popular.preDress, popular.courseType, '/', popular.courseName].join('')
                 });
-
-            $popularFather.append($a);
+            $li.append($a);
+            $popularFather.append($li);
         }
     }, "JSON");
 };
 
 /* 模态弹窗 */
-CourseAction.modalWindow = function(text) {
-
-    $('.modal-body').text(text);
-    $('#modalWindow').modal("show", {
-        backdrop : true,
-        keyboard : true
-    });
+CourseAction.modalWindow = function (text) {
+  nojsja.ModalWindow.show(text);
 };
 
 /* 页面底部和底部跳转 */

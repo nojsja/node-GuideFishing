@@ -2,55 +2,74 @@
     <style type="text/css">
         /* 首部 */
         #head {
-            height: 3rem;
-            background-color: #4f6774;
-            margin-bottom: 3rem;
+            height: 2rem;
+            background: #7ca2b6;
+            background: -webkit-linear-gradient(to bottom, #4f6774, #7ca2b6);
+            background: linear-gradient(to bottom, #4f6774, #7ca2b6);
             box-sizing: border-box;
+            border-bottom: solid 1px white;
+        }
+
+        #head a {
+            text-decoration: none;
+        }
+
+        #head a:hover {
+            color: white;
         }
 
         /* 公司标志 */
         .icon-div {
             box-sizing: border-box;
-            width: 8rem;
-            height: 3rem;
-            background: url("/images/icons/Ciitec_origin.jpg") no-repeat right;
+            width: 2rem;
+            height: 2rem;
+            background: url("/images/icons/Ciitec_origin.jpg") no-repeat center;
             -webkit-background-size: contain;
-            border: solid 1px #4f6774;
             background-size: contain;
             display: inline-block;
-            float: right;
+
         }
 
         /* 公司标语 */
         .slogan-div {
-            background-color: white;
             box-sizing: border-box;
-            border-bottom: solid 3px #7094a2;
-            border-left: solid 3px #7094a2;
-            border-right: solid 3px #7094a2;
-
             padding-left: 10px;
             padding-right: 10px;
             vertical-align: top;
-            line-height: 3rem;
+            line-height: 2rem;
             display: inline-block;
-            color: #e5691d;
-            font-size: 1.5rem;
+            color: #98ccdf;
+            text-shadow: 2px 2px 1px #41555f;
+            font-size: 1.2rem;
+        }
 
-            -webkit-box-shadow:  0 0 6px white;
-            -moz-box-shadow:  0 0 6px white;
-            box-shadow:  0 0 6px white;
+        /* other信息 */
+        .other-div{
+            box-sizing: border-box;
+            padding-left: 10px;
+            padding-right: 10px;
+            vertical-align: top;
+            line-height: 2rem;
+            display: inline-block;
+            color: #8abacb;
+            float: right;
+            font-size: 1rem;
         }
     </style>
 </head>
 <body>
+
 <!--网页首部-->
 <header id="head">
     <div class="container">
-        <!--口号-->
-        <div class="slogan-div"><%= slogan %></div>
         <!--公司标志-->
-        <div class="icon-div"></div>
+        <a href="/recruitment/index">
+            <div class="icon-div"></div>
+        </a>
+        <!--口号-->
+        <a class="slogan-div" href="/recruitment/index"><%= slogan %></a>
+        <!--其它信息-->
+        <div class="other-div"><%= other %></div>
     </div>
 </header>
 </body>

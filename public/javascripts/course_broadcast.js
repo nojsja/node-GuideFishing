@@ -73,10 +73,6 @@ var BroadcastAction = {
 /* 初始化socket连接 */
 BroadcastAction.socketInit = function () {
 
-    // 弹出窗口
-    var userName  = "Johnson" || prompt('请输入昵称');
-    $('#name').text(userName);
-
     // 连接到服务器,绑定观察者对象
     BroadcastAction.socket = io();
     // 监听事件
@@ -161,6 +157,11 @@ BroadcastAction.socketInit = function () {
 
 /* 页面事件绑定 */
 BroadcastAction.pageEventBind = function () {
+
+    // 返回
+    $('.return-home').click(function () {
+        window.history.go(-1);
+    });
 
     // 当前课程名(也是直播间的名字)
     BroadcastAction.courseName = $('.broadcast-room').text().trim();
@@ -883,11 +884,7 @@ BroadcastAction.getDate = function () {
 /* 模态弹窗 */
 BroadcastAction.modalWindow = function(text) {
 
-    $('.modal-body').text(text);
-    $('#modalWindow').modal("show", {
-        backdrop : true,
-        keyboard : true
-    });
+    ModalWindow.show(text);
 };
 
 

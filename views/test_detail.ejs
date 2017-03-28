@@ -12,6 +12,7 @@
     <link rel='stylesheet' href='/stylesheets/test_detail.css' />
 
     <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/mine/nojsja.js"></script>
     <script type="text/javascript" src="/javascripts/test_detail.js"></script>
 </head>
 <body>
@@ -49,7 +50,32 @@
 
 <!--进入测试页面按钮-->
 <div id="startDiv">
-    <input type="button" class="btn btn-success" value="开始测试-->">
+    <input type="button" class="btn btn-danger" value="购买" id="purchase">
+    <input type="button" class="btn btn-success" value="开始测试-->" id="start">
 </div>
+
+<!--底部导航-->
+<%- include footer.ejs %>
+<!--模态弹窗-->
+<%- include modalWindow.ejs %>
+<!--悬浮按钮-->
+<%- include hoverButton.ejs %>
+
+<!--页内脚本-->
+<script type="text/javascript">
+
+
+    /* 注意ejs模板中可以用%-获取非转义字符 */
+    // 设置描述内容
+    DetailAction.$$abstract = '<%- abstract %>';
+    DetailAction.isPurchased = '<%= isPurchased %>';
+    DetailAction.testTitle = '<%= testTitle%>';
+    DetailAction.testType = '<%= testType %>';
+    DetailAction.initialError = '<%= isError %>';
+    DetailAction.error = '<%= error %>';
+    $('.abstract').append( $(DetailAction.$$abstract).html() );
+
+
+</script>
 
 </body>

@@ -20,11 +20,14 @@ function course_broadcast(app) {
         res.render('course_broadcast', {
             title: "课程直播",
             broadcastRoom: req.params.id,
-            admin: false
+            admin: false,
+            slogan: "带渔",
+            account: req.session.nickName || "游客",
+            other: "课程直播"
         });
     });
 
-    // 管理员登录聊天室
+    // 管理员登录聊天室(账户已经被验证过了)
     app.get('/course/broadcast/room/admin/:id', function (req, res) {
 
         // 客户端的请求信息和进入的房间号
@@ -38,7 +41,9 @@ function course_broadcast(app) {
             // 标题和房间号
             res.render('course_broadcastAdmin', {
                 title: "登录验证",
-                broadcastRoom: room
+                broadcastRoom: room,
+                slogan: "带渔",
+                other: "登录"
             });
         }else {
 
@@ -47,7 +52,10 @@ function course_broadcast(app) {
             res.render('course_broadcast', {
                 title: "课程直播",
                 broadcastRoom: room,
-                admin: true
+                admin: true,
+                account: "管理员",
+                slogan: "带渔",
+                other: "课程直播"
             });
         }
     });
@@ -58,7 +66,8 @@ function course_broadcast(app) {
         // 渲染页面到客户端
         res.render('course_broadcastIndex', {
             title: "所有直播",
-            slogan: "带渔直播"
+            slogan: "带渔",
+            other: "课程直播"
         });
     });
 
@@ -96,6 +105,8 @@ function course_broadcast(app) {
             }
             console.log('readBroadList success.');
             res.json(JSON.stringify({
+                preAddressAdmin: '/course/broadcast/room/adminCheck/',
+                preAddressUser: '/course/broadcast/room/user/',
                 broadcastArray: broadcastArray,
                 typeImgUrl: typeImgUrl
             }));
@@ -109,6 +120,8 @@ function course_broadcast(app) {
         res.render('course_broadcastAdmin', {
             title: "管理员登录",
             broadcastRoom: req.params.id,
+            slogan: "带渔",
+            other: "直播"
         });
     });
 
@@ -126,6 +139,7 @@ function course_broadcast(app) {
             teacher: account,
             password: password
         }, function (err, isPass) {
+            console.log(err + isPass);
             if(err){
                 return res.json( JSON.stringify({
                     isError: true,
@@ -133,6 +147,8 @@ function course_broadcast(app) {
                 }) );
             }
             if(isPass){
+                // 管理员账户
+                req.session.adminAccount = account;
                 res.json( JSON.stringify({
                     isError: false,
                     isPass: true,

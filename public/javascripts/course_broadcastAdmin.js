@@ -23,6 +23,8 @@ var bcAdminAction = {
 /* 页面初始化函数 */
 bcAdminAction.pageEventBind = function () {
 
+    // 悬浮按钮初始化
+    nojsja.HoverButton.init();
     // 登录按钮绑定
     $('#login').click(bcAdminAction.loginCheck);
 
@@ -84,10 +86,6 @@ bcAdminAction.loginCheck = function () {
 /* 页面提示模态弹窗 */
 bcAdminAction.modalWindow = function(text) {
 
-    $('.modal-body').text(text);
-    $('#modalWindow').modal("show", {
-        backdrop : true,
-        keyboard : true
-    });
+    nojsja.ModalWindow.show(text);
 };
 

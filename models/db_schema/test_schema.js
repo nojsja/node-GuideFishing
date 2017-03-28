@@ -7,6 +7,7 @@
 * 注:
 * collection -- 存入的表名
 * testType -- 评测类型,例如人格测试,性格测试, 情感测试, 交际测试等等
+* testTags -- 测评标签(与课程标签相关，用来做课程推荐)
 * testGroup -- 存储一组题目的所有题目,每个题目包含题目描述itemTitle,
 * 题号itemNumber,和选项数据itemChoise,选项数据包含选号和选项两个字段
 * itemTitle -- 本道题的标题, itemNumber --本道题的编号,
@@ -17,6 +18,7 @@
 * choiseTag -- 选项标志,比如ABC, choiseContent -- 各个选项的内容, 比如A:符合,B:一般,C:不符合
 * choiseValue -- 自定义模式下每个选项自定义的得分
 * scoreMode -- 该组题目的得分模式
+* clickRate -- 点击量
 * abstract -- 该组题目的简要描述
 * testTitle -- 该组题目的总标题
 * frequency -- 该组题目的点击量
@@ -33,6 +35,7 @@ var Schema = mongoose.Schema;
 
 var testSchema = new Schema({
     testType: {type: String, required: true},
+    testTags: [{type: String}],
     date: String,
     testGroup: [{
         scoreDefine: Boolean,
@@ -45,6 +48,7 @@ var testSchema = new Schema({
     scoreMode: String,
     scoreValue: Number,
     abstract: String,
+    clickRate: Number,
     testTitle: {type: String, required: true, unique: true},
     frequency: Number,
     scoreSection: [{

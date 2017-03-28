@@ -21,23 +21,10 @@ RecruitIndexAction.pageEventBand = function () {
 
     // 页脚点击事件
     $('.nav-footer-item').click(function () {
-        var that = this;
-        // jQuery 动画
-        $('.content-marker').animate({
-            'width': '0'
-        }, 'fast', function () {
-            var content = $(that).text();
-            $('.content-marker').text(content);
-        });
 
-        $('.content-marker').animate({
-            'width': '100px'
-        }, 'fast', function () {
-
-            var action = $(that).attr('target');
-            // 跳转页面
-            RecruitIndexAction.redirect(action);
-        });
+        var action = $(this).attr('target');
+        // 跳转页面
+        RecruitIndexAction.redirect(action);
     });
 
 
@@ -56,6 +43,12 @@ RecruitIndexAction.redirect = function (action) {
         },
         course: {
             url: '/course/index'
+        },
+        selfinfo: {
+            url: '/userinfo'
+        },
+        broadcast: {
+            url: '/course/broadcast/index'
         }
     };
 

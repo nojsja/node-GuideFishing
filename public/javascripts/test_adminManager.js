@@ -249,11 +249,7 @@ ManagerAction.updateTable = function (JSONdata) {
 /* 模态弹窗 */
 ManagerAction.modalWindow = function(text) {
 
-    $('.modal-body').text(text);
-    $('#modalWindow').modal("show", {
-        backdrop : true,
-        keyboard : true
-    });
+    ModalWindow.show(text);
 };
 
 /* 绑定分页导航事件 */

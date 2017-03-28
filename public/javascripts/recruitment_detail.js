@@ -6,6 +6,7 @@
 $(function () {
 
     $('.company').fadeIn();
+    nojsja.HoverButton.init();
     // 获取职位列表
     RecruitDetailAction.getJobList();
 });

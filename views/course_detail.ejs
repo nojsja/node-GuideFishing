@@ -11,6 +11,7 @@
     <link rel='stylesheet' href='/stylesheets/course_detail.css' />
 
     <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/mine/nojsja.js"></script>
     <script type="text/javascript" src="/javascripts/course_detail.js"></script>
 </head>
 <body>
@@ -22,23 +23,23 @@
 </header>
 
 <!--评测介绍首部-->
-<div class="container detail-head">
+<div class="detail-head">
     <div class="detail-head-img"></div>
     <p class="detail-head-type"><%= courseType %></p>
-    <p class="detail-head-title box1">
+    <p class="detail-head-title">
         <%= courseName %>
     </p>
     <div class="detail-head-other">
         <div class="other-date"><%= date %></div>
-        <div class="other-read">
-            <span class="glyphicon glyphicon-eye-open"><%= clickRate %></span>
-        </div>
+        <!--<div class="other-read">-->
+            <!--<span class="glyphicon glyphicon-eye-open"><%= clickRate %></span>-->
+        <!--</div>-->
     </div>
 
 </div>
 
 <!--评测介绍主体-->
-<div class="container detail-body">
+<div class="detail-body">
     <div class="detail-body-abstract">
         <div class="abstract">
 
@@ -48,18 +49,30 @@
 
 <!--进入测试页面按钮-->
 <div id="startDiv">
-    <input type="button" class="btn btn-success" value="开始学习-->">
+    <input type="button" disabled="disabled"  class="btn btn-danger" value="购买" id="purchase">
+    <input type="button" disabled="disabled" class="btn btn-success" value="开始学习-->" id="start">
 </div>
 
 <!--页内脚本-->
 <script type="text/javascript">
 
-    /* 注意ejs模板中可以用%-获取非转义字符 */
-    // 设置描述内容
-    DetailAction.$$abstract = '<%- courseAbstract %>';
-    $('.abstract').append( $(DetailAction.$$abstract).html() );
+
+        /* 注意ejs模板中可以用%-获取非转义字符 */
+        // 设置描述内容
+        DetailAction.$$abstract = '<%- courseAbstract %>';
+        DetailAction.isPurchased = '<%= isPurchased %>';
+        DetailAction.courseName = '<%= courseName%>';
+        DetailAction.courseType = '<%= courseType%>';
+        DetailAction.initialError = '<%= isError %>';
+        DetailAction.error = '<%= error %>';
+        $('.abstract').append( $(DetailAction.$$abstract).html() );
+
 
 </script>
+
+<!--底部导航-->
+<%- include footer.ejs%>
+<%-include modalWindow.ejs%>
 </body>
 
 

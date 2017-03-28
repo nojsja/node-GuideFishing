@@ -11,6 +11,8 @@ $(function () {
 
     // 获取课程数据
     ViewAction.readCourseContent();
+    // 悬浮按钮初始化
+    nojsja.HoverButton.init();
 });
 
 /* 页面全局变量 */
@@ -274,10 +276,5 @@ ViewAction.getDate = function () {
 
 /* 模态弹窗 */
 ViewAction.modalWindow = function(text) {
-
-    $('.modal-body').text(text);
-    $('#modalWindow').modal("show", {
-        backdrop : true,
-        keyboard : true
-    });
+    nojsja.ModalWindow.show(text);
 };

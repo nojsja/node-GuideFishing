@@ -2,4 +2,6 @@
 <!--错误页面-->
 <h1><%= message %></h1>
 <h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<% if(error.stack) { %>
+    <pre><%= error.stack %></pre>
+<% } %>

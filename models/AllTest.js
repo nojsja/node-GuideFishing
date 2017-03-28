@@ -36,6 +36,45 @@ AllTest.prototype.save = function (callback) {
     });
 };
 
+/* 更新测评数据 */
+AllTest.update = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Test = mongoose.model('Test', testSchema);
+
+    // 筛选的课程名
+    var testTitle = condition.testTitle;
+    // 所有可以更新的字段
+    var allSegment = ['testType', 'testTitle', 'scoreMode', 'scoreValue',
+        'abstract', 'clickRate', 'scoreSection', 'categorySection'];
+
+    var query = Test.findOne().where({
+        testTitle: testTitle
+    });
+    // 执行查找更新
+    query.exec(function (err, doc) {
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+        // 更新所有字段
+        for(let segment in condition){
+            if(allSegment.indexOf(segment) != -1){
+                doc.set(segment, condition[segment]);
+            }
+        }
+        // 执行更新
+        query.save(function (err) {
+            if(err){
+                console.log(err);
+                return callback(err);
+            }
+            callback(null);
+        });
+    });
+
+};
+
 /* 读取一组题目的信息 */
 AllTest.getDetail = function (docCondition, callback) {
 
@@ -43,7 +82,11 @@ AllTest.getDetail = function (docCondition, callback) {
     var Test = mongoose.model('Test', testSchema);
 
     var query = Test.findOne();
-    query.where(docCondition);
+    if(docCondition.select){
+        query.select(docCondition.select);
+    }
+    query.where(docCondition.condition);
+
     query.exec(function (err, doc) {
         if(err) {
             return callback(err);
@@ -178,14 +221,12 @@ AllTest.updatePopular = function (callback) {
             testTitle: 1,
             testType: 1
         },
-        limit: 10,
+        limit: 3,
         sort: {
             clickRate: -1
         }
     };
-    var queryTest = Test.find().where({
-        isReady: true
-    });
+    var queryTest = Test.find().where({});
     // 设置筛选
     queryTest.select(condition.select)
         .limit(condition.limit)
@@ -255,7 +296,10 @@ AllTest.getPopular = function (callback) {
         }
         var popularArray  = [];
         for (let index in docs){
-            popularArray.push(docs[index]);
+            popularArray.push({
+                testTitle: docs[index].testTitle,
+                testType: docs[index].testType
+            });
         }
         // 成功后返回数据
         callback(null, popularArray);

@@ -10,10 +10,30 @@ function index(app) {
     /* 获取评测主页 */
     app.get('/test/index', function (req, res) {
         res.render('test_index', {
-            title: '评测系统主页'
+            title: '评测系统主页',
+            slogan: '带渔',
+            other: '测评'
         });
     });
-    
+
+    /* 获取评测类型 */
+    // 获取课程类型和中文
+    app.post('/test/testType', function (req, res) {
+
+        res.json( JSON.stringify({
+            isError: false,
+            // 转化为字符串类型
+            // 测试类型对应中文
+            testTypeChina: {
+                "character": "性格测试",
+                "personality": "人格测试",
+                "emotion": "情感测试",
+                "communication": "交际测试",
+                "potential": "潜能测试"
+            }
+        }) );
+    });
+
     /* 读取评测列表,以JSON对象对象数组传递 */
     app.post('/test/readList', function (req, res) {
 
@@ -65,6 +85,37 @@ function index(app) {
         });
     });
 
+    /* 读取首页图片 */
+    app.post('/test/readSlideImage', function (req, res) {
+
+        // 读取地址
+        var readUrl = './public/images/testSlide/';
+        // 返回的静态地址
+        var visitUrl = '/images/testSlide/';
+        ReadTestType(readUrl, visitUrl, function (data) {
+
+            if(data){
+
+                var imageArray =  [];
+                for(var image in data){
+                    imageArray.push({
+                       text: image,
+                        imageUrl: data[image]
+                    });
+                }
+                res.json( JSON.stringify({
+                    slideImageArray: imageArray,
+                    isError: false
+                }) );
+            }else {
+                res.json( JSON.stringify({
+                    isError: true,
+                    error: data
+                }) );
+            }
+        });
+    });
+
     /* 读取热门内容列表 */
     app.post('/test/readHot', function (req, res) {
 
@@ -78,6 +129,11 @@ function index(app) {
                     error: err
                 }) );
             }
+
+            for(var i = 0; i < popularArray.length; i++){
+                popularArray[i].preDress = '/test/detail/';
+            }
+
             // 返回数据
             res.json( JSON.stringify({
                 isError: false,
