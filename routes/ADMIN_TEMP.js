@@ -62,7 +62,8 @@ function ADMIN_TEMP(app){
 
         res.render('ADMIN_TEMP', {
             title: '路由管理',
-            slogan: '所有路由'
+            slogan: '所有路由',
+            other: '路由'
         });
     });
     

@@ -56,7 +56,7 @@
 <!--页内脚本-->
 <script type="text/javascript">
 
-    $(function () {
+
         /* 注意ejs模板中可以用%-获取非转义字符 */
         // 设置描述内容
         DetailAction.$$abstract = '<%- courseAbstract %>';
@@ -66,10 +66,12 @@
         DetailAction.initialError = '<%= isError %>';
         DetailAction.error = '<%= error %>';
         $('.abstract').append( $(DetailAction.$$abstract).html() );
-    });
+
 
 </script>
 
+<!--底部导航-->
+<%- include footer.ejs%>
 <%-include modalWindow.ejs%>
 </body>
 

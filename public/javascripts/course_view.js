@@ -11,8 +11,8 @@ $(function () {
 
     // 获取课程数据
     ViewAction.readCourseContent();
-    // 模态弹窗初始化
-    nojsja.ModalWindow.init();
+    // 悬浮按钮初始化
+    nojsja.HoverButton.init();
 });
 
 /* 页面全局变量 */

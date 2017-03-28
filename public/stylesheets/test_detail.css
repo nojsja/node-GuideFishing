@@ -51,7 +51,7 @@ a {
     min-height: 10rem;
     height: auto;
     margin-bottom: 2rem;
-    background-color: #577280;
+    background-color: #648393;
 }
 
 .detail-head-img {
@@ -86,7 +86,6 @@ a {
 }
 
 /* 首部其它信息 */
-
 .other-date {
     height: 2rem;
     line-height: 2rem;
@@ -110,20 +109,16 @@ a {
 }
 
 .detail-body {
+    width: 95%;
+    border-radius: 5px;
     height: auto;
     min-height: 10rem;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    background: #577280;
-
-    -webkit-box-shadow:  0 0 6px #3b3d3b;
-    -moz-box-shadow:  0 0 6px #3b3d3b;
-    box-shadow:  0 0 6px #3b3d3b;
+    margin: 2rem auto 2rem;
+    background: #7aa0b4;
 }
 
 .detail-body-abstract {
     padding: 0.5rem;
-    background: #577280;
 }
 
 .abstract {

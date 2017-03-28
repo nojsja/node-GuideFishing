@@ -82,7 +82,11 @@ AllTest.getDetail = function (docCondition, callback) {
     var Test = mongoose.model('Test', testSchema);
 
     var query = Test.findOne();
-    query.where(docCondition);
+    if(docCondition.select){
+        query.select(docCondition.select);
+    }
+    query.where(docCondition.condition);
+
     query.exec(function (err, doc) {
         if(err) {
             return callback(err);

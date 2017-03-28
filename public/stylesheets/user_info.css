@@ -28,6 +28,7 @@ header {
     font-size: 0;
     width: 90%;
     margin: auto;
+    border: solid 1px white;
     border-radius: 2px;
     background-color: rgba(87, 115, 128, 0.86);
 
@@ -64,6 +65,8 @@ header {
 }
 /* 内容显示区域 */
 .tab-content {
+    width: 95%;
+    margin: auto;
 }
 
 /* 个人资料 */
@@ -92,13 +95,15 @@ header {
     width: 4rem;
     color: #e2e2e2;
     padding: 2px;
+    border-radius: 5px;
     background-color: rgb(88,138,198);
 }
 
 .info-item-content {
     margin-left: 5px;
     padding: 2px;
-    color: #588ac6;
+    color: #ffffff;
+    text-shadow: 2px 2px 1px #607d8d;
 }
 
 /* 已购项目 */

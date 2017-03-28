@@ -9,6 +9,8 @@ $(function () {
 
     // 页面事件绑定
     bcIndexAction.pageEventBind();
+    // 读取直播类型中英文
+    bcIndexAction.updateBroadcastType();
     //加载指定数量的测试题目列表
     bcIndexAction.readBroadcastList();
 });
@@ -26,12 +28,15 @@ var bcIndexAction = {
     //页面加载条数
     pageLimit: 20,
     //是否清除页面已存数据
-    isClear: false
+    isClear: false,
+    broadcastTypeChina: {}
 };
 
 /* 页面主要事件绑定 */
 bcIndexAction.pageEventBind = function () {
 
+    // 初始化悬浮按钮
+    nojsja.HoverButton.init();
     //顶部和底部跳转
     $('#top').click(bcIndexAction.goTop);
     $('#bottom').click(bcIndexAction.goBottom);
@@ -63,18 +68,24 @@ bcIndexAction.readMore = function () {
     });
 };
 
+/* 获取课程类型更新页面 */
+bcIndexAction.updateBroadcastType = function () {
+
+    var url = "/course/courseType";
+    $.post(url, {}, function (JSONdata) {
+
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return TestIndexAction.modalWindow('[error]: ' + JSONobject.error);
+        }
+
+        bcIndexAction.broadcastTypeChina = JSONobject.courseTypeChina;
+
+    }, "JSON");
+};
+
 /* 更新主页事件 */
 bcIndexAction.updatePage = function (JSONdata) {
-
-    // 直播类型对应中文
-    var broadcastTypeChina = {
-
-        "jobFound": "求职秘籍",
-        "jobSkill": "职场技能",
-        "software": "软件技巧",
-        "english": "英语进阶",
-        "personal": "个人提升"
-    };
 
     //转换成JSON对象
     var parsedData = JSON.parse(JSONdata);
@@ -103,7 +114,6 @@ bcIndexAction.updatePage = function (JSONdata) {
         bcIndexAction.pageStart += 1;
         (function () {
             var broadcast = parsedData.broadcastArray[broadcastIndex];
-            console.log('broadcast' + broadcast);
             //最外层container
             var $broadcastContainer = $('<div class="content-item shadow-grey">');
             //图钉图标
@@ -140,7 +150,7 @@ bcIndexAction.updatePage = function (JSONdata) {
             });
             //该测评所属的类型
             var $broadcastType = $('<p class="type-text">');
-            $broadcastType.text(broadcastTypeChina[broadcast.courseType]);
+            $broadcastType.text(bcIndexAction.broadcastTypeChina[broadcast.courseType]);
             $contentRight.append($typeImg).append($broadcastType);
 
             //显示的日期

@@ -28,6 +28,9 @@
 
 <body>
 
+<!--页首-->
+<%- include recruitment_header.ejs%>
+
 <!--直播间-->
 <div class="broadcast-room">
     <%= broadcastRoom %>
@@ -36,14 +39,14 @@
 <% if(admin) {%>
 <!--结束直播按钮-->
 <div class="finish-broadcast-div">
-    <span class="glyphicon glyphicon-remove-sign"></span>
+    <span>结束</span>
 </div>
 <% } %>
 
 <!--消息主体部分-->
 <div class="container total" id="total">
     <!--用户名-->
-    <div id="name"></div>
+    <div id="name"><%= account %></div>
     <!--消息列表-->
     <div class="message-list" id="messageList">
 
@@ -57,7 +60,7 @@
         <!--消息输入-->
         <div class="message-input-div input-group">
             <input type="text" class="form-control" id="messageInput">
-            <span type="button" class="btn btn-success input-group-addon" id="messageSend">发送</span>
+            <span type="button" class="btn btn-default input-group-addon" id="messageSend">发送</span>
         </div>
 
 
@@ -88,8 +91,12 @@
 </div>
 
 <!--页脚-->
-<%include footer.ejs%>
+<%- include footer.ejs %>
 <!--模态弹窗-->
-<%include modalWindow.ejs%>
+<%- include modalWindow.ejs %>
+<!--返回按钮-->
+<div class="return-home">
+    <div><span class="glyphicon glyphicon-arrow-left">返回</span></div>
+</div>
 
 </body>

@@ -22,79 +22,60 @@ html {
 }
 
 .total {
-    padding-bottom: 1em;
-    margin-bottom: 1em;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
     display: block;
     height: 100%;
 }
 
 .choose-div {
     width : 100%;
-    /*float: left;*/
     overflow: hidden;
     margin : auto;
     height : auto;
     background-color: rgb(130, 169, 190);
     font-size: 1.2rem;
-    padding: 5px;
 }
 
-.login-choose,
-.signup-choose {
+.choose-div-button{
+    border: solid 1px #7a9eb1;
+    border-bottom: 0;
     width : 50%;
     text-align : center;
     float : left;
     color: white;
     font-size : 1.2em;
 
-    -webkit-transition: text-shadow 0.3s;
-    -moz-transition: text-shadow 0.3s;
-    -ms-transition: text-shadow 0.3s;
-    -o-transition: text-shadow 0.3s;
-    transition: text-shadow 0.3s;
+    -webkit-transition: background-color 0.3s;
+    -moz-transition: background-color 0.3s;
+    -ms-transition: background-color 0.3s;
+    -o-transition: background-color 0.3s;
+    transition: background-color 0.3s;
 }
 
-.login-choose:hover,
-.signup-choose:hover {
+.choose-div-button-click {
     font-size : 1.2em;
-    text-shadow:
-            0px 0px 0 rgb(188,178,188),1px 0px 0 rgb(173,163,173),
-            2px 0px 0 rgb(157,147,157),3px 0px 0 rgb(142,132,142),
-            4px 0px 0 rgb(126,116,126),5px 0px 0 rgb(111,101,111),
-            6px 0px 0 rgb(95,85,95), 7px 0px 0 rgb(79,69,79),
-            8px 0px 7px rgba(0,0,0,0.35),8px 0px 1px rgba(0,0,0,0.5),
-            0px 0px 7px rgba(0,0,0,.2);
+    background-color: #F3F3F3;
+    color: #7a9eb1;
 }
 
+/* 输入区域 */
 .login-div {
     width : 100%;
     height : auto;
     display : block;
     margin : auto;
+
 }
 
-.icon-div {
-    width : 100%;
-    height : auto;
-    /* 清除浮动 */
-    overflow: hidden;
-    float : left;
-}
-
-.icon-div > div {
-    width : 20%;
-    height : 20%;
-    float : left;
-}
-
-.icon-div > div > img {
-    padding : 5px;
-    width : 100%;
-}
 .input-div {
-    margin-top: 1em;
     width : 100%;
     float : left;
+    border: solid 1px #7a9eb1;
+    background-color: white;
+    border-top: 0;
+    padding: 10px;
     height : auto;
 }
 
@@ -108,4 +89,14 @@ html {
 .spacing {
     word-spacing: 8px;
     letter-spacing: 1px;
+}
+
+.box1 {
+    text-shadow:
+            0px 0px 0 rgb(188,178,188),1px 0px 0 rgb(173,163,173),
+            2px 0px 0 rgb(157,147,157),3px 0px 0 rgb(142,132,142),
+            4px 0px 0 rgb(126,116,126),5px 0px 0 rgb(111,101,111),
+            6px 0px 0 rgb(95,85,95), 7px 0px 0 rgb(79,69,79),
+            8px 0px 7px rgba(0,0,0,0.35),8px 0px 1px rgba(0,0,0,0.5),
+            0px 0px 7px rgba(0,0,0,.2);
 }

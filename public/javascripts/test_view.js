@@ -34,7 +34,7 @@ var TestViewAction = {
     //填写选项的对象数组
     choiseArray: [],
     //一组题里面的所有题目对象数组
-    testArray: [],
+    testGroup: [],
     testType: null,
     testTitle: null
 };
@@ -42,14 +42,15 @@ var TestViewAction = {
 /* 模态弹窗 */
 TestViewAction.modalWindow = function(text) {
 
-    ModalWindow.show(text);
+    nojsja.ModalWindow.show(text);
 };
 
 /* 页面初始化 */
 TestViewAction.pageInit = function () {
 
+
     //获取本套题的所有数据
-    var url = ["/test/testView/", $('.test-type').text().trim(),
+    var url = ["/test/view/", $('.test-type').text().trim(),
         "/", $('.test-title').text().trim()].join('');
 
     $.post(url, {}, function (JSONdata) {
@@ -68,6 +69,8 @@ TestViewAction.pageInit = function () {
             return TestViewAction.modalWindow("抱歉没有任何数据!");
         }
         TestViewAction.checkAndUpdate();
+        // 初始化悬浮按钮
+        nojsja.HoverButton.init();
 
     }, "JSON");
 };

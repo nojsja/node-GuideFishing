@@ -23,15 +23,14 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="choose-div">
-                <div class="signup-choose" id="signupTitle">注册</div>
-                <div class="login-choose" id="loginTitle">登录</div>
+                <div class="choose-div-button choose-div-button-click" id="loginTitle" action="login">登录</div>
+                <div class="choose-div-button" id="signupTitle" action="signup">注册</div>
             </div>
 
             <div class="login-div">
 
                 <div class="input-div">
                     <fieldset>
-                        <legend id="action">用户登录</legend>
                         <div class="form-group">
                             <label>账 户</label>
                             <div class="input-group">
@@ -76,9 +75,10 @@
     </div>
 </div>
 <!--模态弹窗口组件-->
-<%-include modalWindow.ejs%>
-
+<%-include modalWindow.ejs %>
+<!--悬浮按钮-->
+<%- include hoverButton.ejs %>
 <!--页脚-->
-<%- include footer%>
+<%- include footer %>
 </body>
 </html>

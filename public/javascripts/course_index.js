@@ -9,7 +9,9 @@ $(function () {
 
     // 页面事件绑定
     CourseAction.pageEventBind();
-    //加载指定数量的测试题目列表6
+    // 更新课程类型
+    CourseAction.updateCourseType();
+    //加载指定数量的测试题目列表
     CourseAction.readCourseList({ courseType: "ALL" });
     // 更新热门内容
     CourseAction.updateHot();
@@ -36,13 +38,7 @@ var CourseAction = {
     //是否清除页面已存数据
     isClear: false,
     // 中英文对应
-    courseTypeChina:{
-        "jobFound": "求职秘籍",
-        "jobSkill": "职场技能",
-        "software": "软件技巧",
-        "english": "英语进阶",
-        "personal": "个人提升"
-    }
+    courseTypeChina: {}
 };
 
 /* 享元模式
@@ -145,11 +141,37 @@ CourseAction.pageEventBind = function () {
     });
     //加载更多数据
     $('#loadMore').click(CourseAction.readMore);
+};
 
-    //指定类型的课程
-    $('.type-item').click(function () {
-        CourseAction.courseTypeDefine.call(this, arguments);
-    });
+/* 获取课程类型更新页面 */
+CourseAction.updateCourseType = function () {
+
+    var url = "/course/courseType";
+    $.post(url, {}, function (JSONdata) {
+
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return CourseAction.modalWindow('[error]: ' + JSONobject.error);
+        }
+
+        // 类型列表
+        var $typeItemList = $('.type-item-list');
+        CourseAction.courseTypeChina = JSONobject.courseTypeChina;
+
+        for(var type in CourseAction.courseTypeChina){
+            var $type = $('<div class="type-item">');
+            $type.text(CourseAction.courseTypeChina[type])
+                .prop('id', type);
+
+            $typeItemList.append($type);
+        }
+
+        //指定类型的课程
+        $('.type-item').click(function () {
+            CourseAction.courseTypeDefine.call(this, arguments);
+        });
+
+    }, "JSON");
 };
 
 /* 创建滑动视图 */

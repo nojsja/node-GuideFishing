@@ -11,13 +11,21 @@ a {
     color: #00B7FF;
 }
 
+/* 布局DIV */
+.header-div {
+    margin-top: 2.5rem;
+}
+
+.slide-div {
+    margin-top: 2rem;
+}
+
 .header {
     padding: 5px;
     position: fixed;
     z-index: 1003;
     top: 0;
     width: 100%;
-    min-height: 1.4rem;
     height: auto;
     font-size: 0;
     background-color: rgba(88, 138, 198, 0.86);
@@ -26,12 +34,12 @@ a {
 
 /* 测评类型选择 */
 #testTypeChoose{
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     color: white;
 }
 
 .header-label > span {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
 }
 
 #userInfo {
@@ -45,14 +53,12 @@ a {
 
 .header-label {
     text-align: center;
-    font-size: 1.4rem;
-    margin: 5px auto 5px;
+    margin: auto;
     color: white;
-    line-height: 1.5rem;
 }
 
 .header-label > span {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
 }
 
 /* 热门区块 */
@@ -159,10 +165,6 @@ a {
     background-color: #fff0db;
 }
 
-.content-item-left > a {
-    text-decoration: none;
-}
-
 .content-item-right {
     display: inline-block;
     box-sizing: border-box;
@@ -198,9 +200,12 @@ a {
 /* 评测标题 */
 .content-item-title {
     font-size: 1.2rem;
-    border-bottom: solid 1px #bcbfbc;
     word-spacing: 1px;
     letter-spacing: 2px;
+    text-decoration: none;
+}
+.content-item-title:hover {
+    text-decoration: none;
 }
 
 /* 评测描述 */

@@ -20,22 +20,32 @@
 </head>
 <body>
 
+<!--通用首部-->
+<div class="header-div">
+    <%- include recruitment_header.ejs%>
+</div>
+
 <!--页面首部-->
-<header id="head" class="header">
+<header id="courseHead" class="header">
     <div class="header-label">
-        <span id="courseTypeChoose">选择课程类型</span>
+        <span id="courseTypeChoose">课程类型</span>
         <span class="glyphicon glyphicon-chevron-down" id="courseTypeChoose2"></span>
         <span class="glyphicon glyphicon-user" id="userInfo"></span>
     </div>
-    <!--评测类型-->
-    <div class="type-item" id="jobFound">求职秘籍</div>
-    <div class="type-item" id="software">软件技巧</div>
-    <div class="type-item" id="jobSkill">职场技能</div>
-    <div class="type-item" id="english">英语进阶</div>
-    <div class="type-item" id="personal">个人提升</div>
+    <div class="type-item-list">
+        <!--评测类型-->
+        <!--<div class="type-item" id="jobFound">求职秘籍</div>
+        <div class="type-item" id="software">软件技巧</div>
+        <div class="type-item" id="jobSkill">职场技能</div>
+        <div class="type-item" id="english">英语进阶</div>
+        <div class="type-item" id="personal">个人提升</div>-->
+    </div>
+
 </header>
 
-<%- include slideView.ejs%>
+<div class="slide-div">
+    <%- include slideView.ejs%>
+</div>
 
 <!--热门课程列表-->
 <div class="hot-container">

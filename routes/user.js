@@ -29,7 +29,7 @@ function user(app) {
                 account: account,
                 password: password
 
-            }, function (error, pass) {
+            }, function (error, pass, info) {
 
                 if(error){
                     return res.json( JSON.stringify({
@@ -40,6 +40,8 @@ function user(app) {
                 if(pass){
                     // 成功登录
                     req.session.account = account;
+                    req.session.nickName = info.nickName;
+
                     res.json( JSON.stringify({
                         isError: false,
                         pass: true
@@ -107,7 +109,9 @@ function user(app) {
             }
 
             if(pass){
+                /* session中存储账户和昵称 */
                 req.session.account = account;
+                req.session.nickName = nickName;
                 // 注册成功
                 res.json( JSON.stringify({
                     isError: false,
@@ -133,14 +137,16 @@ function user(app) {
             res.render('user_info', {
                 title: "个人信息",
                 account: req.session.account,
-                slogan: "带渔"
+                slogan: "带渔",
+                other: "个人信息"
             });
         }else {
             // 未登录
             res.render('user_login', {
                 title: "用户登录",
                 action: "login",
-                slogan: "带渔教育"
+                slogan: "带渔教育",
+                other: "用户"
             });
         }
     });
@@ -187,13 +193,15 @@ function user(app) {
         }
 
         // 购买的类型item/course
-        var type = req.params['item'];
+        var type = req.params['item'],
+            itemType = req.body.itemType,
+            itemName = req.body.itemName;
         // 增加购买信息
         User.purchase({
             account: req.session.account,
             data: {
-                itemType: req.body.itemType,
-                itemName: req.body.itemName,
+                itemType: itemType,
+                itemName: itemName,
                 date: getDate(),
                 _type: type
             }

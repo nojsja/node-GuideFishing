@@ -7,6 +7,8 @@ $(function () {
     infoAction.pageEventBand();
     // 更新个人信息
     infoAction.getSelfInfo();
+    // hoverButton
+    nojsja.HoverButton.init();
 });
 
 /* 页面全局变量 */
@@ -80,14 +82,17 @@ infoAction.updateInfo = function (JSONdata) {
     }
 
     // 更新已购项目
-    for( var purchasedItem in purchasedArray){
+    // for in 数组遍历是取得index
+    for( var index in purchasedArray){
+
 
         var $purchasedItem = $('<div class="purchased-item">');
         var $purchasedItemType = $('<div class="purchased-item-type">');
-        $purchasedItemType.text(purchasedItem.type);
+        $purchasedItemType.text(purchasedArray[index]._type);
         var $purchasedItemTitle = $('<a class="purchased-item-title"> ');
-        $purchasedItemTitle.text(purchasedItem.itemName)
-            .prop( 'href', ['/course/detail/', purchasedItem.itemType, '/', purchasedItem.itemName].join('') );
+        $purchasedItemTitle.text(purchasedArray[index].itemName)
+            .prop( 'href', ['/course/detail/', purchasedArray[index].itemType, '/',
+                purchasedArray[index].itemName].join('') );
 
         $purchasedItem.append($purchasedItemType)
             .append($purchasedItemTitle);

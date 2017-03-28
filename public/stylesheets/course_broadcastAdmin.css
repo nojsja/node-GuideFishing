@@ -4,11 +4,15 @@ body {
     background-color: #F3F3F3;
 }
 
+html {
+    font-size: 16px;
+}
+
 a {
     color: #00B7FF;
 }
 
 /* 主体部分 */
 .total {
-    margin-top: 3rem;
+    margin-top: 2rem;
 }

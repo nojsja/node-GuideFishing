@@ -14,22 +14,23 @@ $(function () {
             loginAction.rememberPsw = false;
         }
     });
-    $('#signupTitle').click(function() {
-        $('#action').text("用户注册");
-        $('#nameCheck').slideDown("slow");
-        $('#pswCheckGroup').slideDown("slow");
-        loginAction.state = "signup";
-        loginAction.urlLogin = "/signup";
-    });
+    $('.choose-div-button').click(function() {
 
-    $('#loginTitle').click(function() {
-        $('#action').text("用户登录");
-        $('#nameCheck').slideUp("slow");
-        $('#pswCheckGroup').slideUp("slow");
-        loginAction.state = "login";
-        loginAction.urlLogin = "/login";
+        $('.choose-div-button').prop('class', 'choose-div-button');
+        $(this).prop('class', 'choose-div-button choose-div-button-click');
+        var action = $(this).attr('action');
+        if(action == "login"){
+            $('#nameCheck').slideUp("slow");
+            $('#pswCheckGroup').slideUp("slow");
+            loginAction.state = "login";
+            loginAction.urlLogin = "/login";
+        }else {
+            $('#nameCheck').slideDown("slow");
+            $('#pswCheckGroup').slideDown("slow");
+            loginAction.state = "signup";
+            loginAction.urlLogin = "/signup";
+        }
     });
-
     //登录检测
     $('#ok').click(function() {
 
@@ -126,6 +127,9 @@ $(function () {
             }
         }
     })();
+
+    /* 初始化悬浮按钮 */
+    nojsja.HoverButton.init();
 
 });
 

@@ -1,6 +1,4 @@
 <!--index-->
-<!--用户系统首页-->
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -20,22 +18,31 @@
   </head>
   <body>
 
-  <header id="head" class="header">
+  <!--通用首部-->
+  <div class="header-div">
+      <%- include recruitment_header.ejs%>
+  </div>
+
+  <header id="testHead" class="header">
       <div class="header-label">
-          <span id="testTypeChoose">选择评测类型</span>
+          <span id="testTypeChoose">评测类型</span>
           <span class="glyphicon glyphicon-chevron-down" id="testTypeChoose2"></span>
           <span class="glyphicon glyphicon-user" id="userInfo"></span>
       </div>
-      <!--评测类型-->
-      <div class="type-item" id="personality">人格测试</div>
-      <div class="type-item" id="character">性格测试</div>
-      <div class="type-item" id="emotion">情感测试</div>
-      <div class="type-item" id="communication">交际测试</div>
-      <div class="type-item" id="potential">潜能测试</div>
+      <!--评测类型列表-->
+      <div class="type-item-list">
+          <!--评测类型-->
+          <!--<div class="type-item" id="personality">人格测试</div>
+          <div class="type-item" id="character">性格测试</div>
+          <div class="type-item" id="emotion">情感测试</div>
+          <div class="type-item" id="communication">交际测试</div>
+          <div class="type-item" id="potential">潜能测试</div>-->
+      </div>
   </header>
 
-  <!-- 图片轮播墙 -->
-  <%- include slideView.ejs%>
+  <div class="slide-div">
+      <%- include slideView.ejs%>
+  </div>
 
   <!--热门评测列表-->
   <div class="hot-container">
@@ -58,7 +65,7 @@
   </div>
 
   <!--返回顶部按钮-->
-  <%- include test_pageAnchor.ejs%>
+  <%- include hoverButton.ejs%>
   <!--底部导航-->
   <%- include footer.ejs%>
   <!--模态弹窗-->

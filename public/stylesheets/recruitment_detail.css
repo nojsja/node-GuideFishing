@@ -3,14 +3,18 @@ body {
     background-color: #eaeaea;
 }
 
+html {
+    font-size: 16px;
+}
+
 a {
     color: #00B7FF;
 }
 
 /* 总体布局 */
 .total {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
 
     -webkit-box-shadow:  0 0 10px #676767;
     -moz-box-shadow:  0 0 10px #676767;
@@ -22,7 +26,7 @@ a {
     display: none;
     white-space: nowrap;
     text-align: center;
-    font-size: 2rem;
+    font-size: 1.3rem;
     font-weight: bold;
     padding: 4px;
     margin-top: 1rem;
@@ -105,9 +109,9 @@ a {
     height: auto;
     margin: 0 auto;
 
-    -webkit-box-shadow:  0 0 10px #207fbb;
-    -moz-box-shadow:  0 0 10px #207fbb;
-    box-shadow:  0 0 10px #207fbb;
+    -webkit-box-shadow:  0 0 5px #207fbb;
+    -moz-box-shadow:  0 0 5px #207fbb;
+    box-shadow:  0 0 5px #207fbb;
 }
 
 /* 职位介绍 */
@@ -123,25 +127,24 @@ a {
     position: absolute;
     top: 0.1rem;
     right: 0.1rem;
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: #e57a4a;
 }
 
-
 /* 标题 */
 .item-title {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     margin-bottom: 0.5rem;
     text-align: center;
-    width: 10rem;
+    width: 6rem;
     height: 2rem;
     line-height: 2rem;
     background-color: #196494;
     color: #efefef;
     font-weight: bold;
 
-    -webkit-box-shadow:  5px 5px 0 #7c7c7c;
-    -moz-box-shadow:  5px 5px 0 #7c7c7c;
+    -webkit-box-shadow:  4px 4px 0 #7c7c7c;
+    -moz-box-shadow:  4px 4px 0 #7c7c7c;
     box-shadow:  4px 4px 0 #7c7c7c;
 }
 

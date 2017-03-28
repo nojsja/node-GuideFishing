@@ -97,7 +97,7 @@ User.signin  = function (con, callback) {
         }
         if(doc){
             // 登录成功
-            callback(null, true);
+            callback(null, true, { nickName: doc.nickName });
         }else {
             // 登录失败
             callback(null, false);
@@ -160,15 +160,19 @@ User.purchaseCheck = function (condition, callback) {
         }
         if(doc){
 
-            for(let item in doc.purchasedItem){
+            var item;
+            for(let index in doc.purchasedItem){
+                item = doc.purchasedItem[index];
                 if(item.itemName == condition.data.itemName &&
                     item.itemType == condition.data.itemType){
                     // 已经购买
                     return callback(null, true);
                 }
+                if(index == doc.purchasedItem.length - 1){
+                    callback(null, false);
+                }
             }
 
-            return callback(null, false);
         }else{
             var error = new Error('用户信息有误！');
             callback(error);
@@ -195,8 +199,6 @@ User.getSelfinfo = function (condition, callback) {
         }
         // 成功返回数据
         if(doc){
-
-            console.log(doc);
 
             if(condition.select){
                 // 要求筛选的数据

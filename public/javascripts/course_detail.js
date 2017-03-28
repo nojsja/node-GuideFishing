@@ -6,18 +6,29 @@
 
 $(function () {
 
+    console.log(DetailAction);
+
+    // 注意Boolean强制转化
+
     // 状态初始化
-    if(DetailAction.isPurchased){
+    if(DetailAction.isPurchased == "true"){
         $('#start').prop('disabled', false);
+        $('#purchase').prop('disabled', "disabled");
     }else {
-        $('#purchase').prop('disabled', false);
+        if(DetailAction.isPurchased == "unknown"){
+            $('#purchase').prop('disabled', "disabled");
+            $('#start').prop('disabled', "disabled");
+        }else {
+            $('#purchase').prop('disabled', false);
+            $('#start').prop('disabled', "disabled");
+        }
     }
 
     // 查看课程
     $('#start').click(function () {
 
         // 检查初始化错误
-        if(DetailAction.initialError){
+        if(DetailAction.initialError == "true"){
             return DetailAction.modalWindow('页面载入出错，请刷新！');
         }
         window.location.href =

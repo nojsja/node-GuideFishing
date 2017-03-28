@@ -9,8 +9,6 @@ var Course = require('../models/Course');
 var ReadCourseImg = require('../models/ReadTypeImg');
 /* 用户模型 */
 var User = require('../models/User');
-/* 获取当前时间和日期 */
-var getDate = require('../models/tools/GetDate');
 /* 获取根目录 */
 var locateFromRoot = require('../models/tools/LocateFromRoot');
 
@@ -23,8 +21,26 @@ function course(app){
     app.get('/course/index', function (req, res) {
 
         res.render('course_index', {
-            title: "课程主页"
+            title: "课程主页",
+            slogan: "带渔",
+            other: "课程"
         });
+    });
+    
+    // 获取课程类型和中文
+    app.post('/course/courseType', function (req, res) {
+
+        res.json( JSON.stringify({
+            isError: false,
+            // 转化为字符串类型
+            courseTypeChina:{
+                "jobFound": "求职秘籍",
+                "jobSkill": "职场技能",
+                "software": "软件技巧",
+                "english": "英语进阶",
+                "personal": "个人提升"
+            }
+        }) );
     });
 
     // 获取课程详情介绍页面
@@ -59,9 +75,9 @@ function course(app){
                 clickRate: null,
                 isPurchased: null,
                 date: null,
-                isError: true,
+                isError: false,
                 error: null
-            }
+            };
 
             if(err){
                 courseData.isError = true;
@@ -73,9 +89,16 @@ function course(app){
             courseData.clickRate = data["clickRate"];
             courseData.date = data["date"];
 
+            // 当前登录账户
+            var account = req.session.account;
+            if(!account){
+                courseData.isPurchased = "unknown";
+                return res.render('course_detail', courseData);
+            }
+
             // 看是否购买
             User.purchaseCheck({
-                account: req.session.account,
+                account: account,
                 data: {
                     itemName: courseData.courseName,
                     itemType: courseData.courseType
@@ -152,7 +175,8 @@ function course(app){
         res.render('course_view', {
 
             title: "课程学习",
-            slogan: "带渔课程",
+            slogan: "带渔",
+            other: "课程",
             courseType: req.params.courseType,
             courseName: req.params.courseName
         });
@@ -203,7 +227,6 @@ function course(app){
 
         Course.readOne(totalCondition, function (err, data) {
 
-            console.log(data);
             if(err){
                 return res.json(JSON.stringify({
                     error: err
@@ -298,10 +321,11 @@ function course(app){
         var account = req.session.account;
         if(!account){
 
-            return res.json( JSON.stringify({
-                isError: true,
-                error: new Error("用户信息未识别！")
-            }) );
+            return res.render('user_login', {
+                title: "用户登录",
+                slogan: "带渔",
+                other: "登录"
+            });
         }
 
         var courseName = req.params["courseName"],
