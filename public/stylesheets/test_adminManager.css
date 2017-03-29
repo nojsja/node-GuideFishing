@@ -1,6 +1,9 @@
 body {
     font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-    font-weight: bold;
+}
+
+html {
+    font-size: 16px;
 }
 
 a {
@@ -20,9 +23,9 @@ a {
     padding-top: 1rem;
     padding-bottom: 1rem;
 
-    -webkit-box-shadow:  0 0px 10px #60606a;
-    -moz-box-shadow:  0 0px 10px #60606a;
-    box-shadow:  0 0px 10px #60606a;
+    -webkit-box-shadow:  0 0px 6px #60606a;
+    -moz-box-shadow:  0 0px 6px #60606a;
+    box-shadow:  0 0px 6px #60606a;
 }
 
 .condition-testType,
@@ -52,9 +55,9 @@ a {
     padding-top: 1rem;
     padding-bottom: 1rem;
 
-    -webkit-box-shadow: 0 0px 10px #626262;
-    -moz-box-shadow: 0 0px 10px #626262;
-    box-shadow: 0 0px 10px #626262;
+    -webkit-box-shadow: 0 0px 6px #626262;
+    -moz-box-shadow: 0 0px 6px #626262;
+    box-shadow: 0 0px 6px #626262;
 }
 
 /* 删除和编辑 */
@@ -71,8 +74,8 @@ a {
     margin-bottom: 1em;
     font-size: 1.5rem;
     padding: 2px;
-    background-color: #c2c6c1;
-    color: #676767;
+    background-color: #929292;
+    color: #e0e5df;
     text-align: center;
 }
 

@@ -58,23 +58,76 @@ function ADMIN_TEMP(app){
     };
 
     /* 获取页面 */
-    app.get('/admin_temp', function (req, res) {
+    app.get('/admin/routes', function (req, res, next) {
+        adminCheck(req, res, next);
+    } , function (req, res) {
 
-        res.render('ADMIN_TEMP', {
-            title: '路由管理',
-            slogan: '所有路由',
-            other: '路由'
+        res.render('admin_routes', {
+            title: '路由管理'
         });
     });
     
+    /* 管理员登录页面 */
+    app.get('/admin/login', function (req, res) {
+
+        res.render('admin_login', {
+            title: "带渔管理员登录"
+        });
+    });
+
+    /* 登录验证 */
+    app.post('/admin/login', function (req, res) {
+
+        var account = req.body.account,
+            password = req.body.password;
+
+        if(account == "Johnson" && password == "020154"){
+            req.session.admin = "Johnson";
+            res.json( JSON.stringify({
+                isError: false,
+                pass: true,
+                redirectUrl: "/admin/routes"
+            }) );
+        }else {
+            res.json( JSON.stringify({
+                isError: false,
+                pass: false
+            }) );
+        }
+    });
+    
     /* 获取所有路由 */
-    app.post('/admin_temp', function (req, res) {
+    app.post('/admin/routes', function(req, res, next){
+        adminCheck(req, res, next);
+    }, function (req, res) {
 
         // 向客户端发送数据
         res.json(JSON.stringify( {
             routes: routes
         }) );
     });
+
+    /* 页脚页面 */
+    app.get('/admin/footer/:type', function (req, res) {
+
+        res.render('admin_footerPage', {
+            title: "其它",
+            content: req.param("type")
+        });
+    });
+
+    /* 权限验证中间件 */
+    var adminCheck = function (req, res, next) {
+
+        // 验证用户
+        if(req.session.admin){
+            return next();
+        }else {
+            res.render('admin_login', {
+                title: "管理员登录"
+            });
+        }
+    };
 }
 
 module.exports = ADMIN_TEMP;

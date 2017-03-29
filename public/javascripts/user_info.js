@@ -24,6 +24,21 @@ var infoAction = {
 /* 页面事件绑定 */
 infoAction.pageEventBand = function () {
 
+    /* 注销登录 */
+    $('.signout').click(function () {
+
+        var url = "/logout";
+        $.post(url, {}, function (JSONdata) {
+
+            var JSONobject = JSON.parse(JSONdata);
+            if(JSONobject.isError){
+                return infoAction.modalWindow('[error]: ' + JSONobject.error);
+            }
+            window.history.go(-1);
+        }, "JSON");
+    });
+
+    /* 切换导航 */
     $('#tabMain, #tabPurchased').bind('click', function () {
 
         $('.tab-title').prop('class', 'tab-title');

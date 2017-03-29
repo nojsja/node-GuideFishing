@@ -97,8 +97,8 @@ EditAction.pageEventBind = function () {
         $(this).blur();
     });
 
-    // 初始化导航条显示信息
-    $('#create').parent().prop('class', 'active');
+    // 导航条
+    $('#testCreate').parent().prop('class', 'active');
     //选择题目类型
     $('.test-type').click(function () {
         // 效果改变

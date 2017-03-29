@@ -222,15 +222,20 @@
         }
 
         // 模态窗口弹出
-        function modalShow(text) {
+        function modalShow(text, condition) {
 
             // 初始化检测
             if(!isInit){
                 modalInit();
             }
 
-            // 禁用滚动
-            nojsja.ScrollHandler.disableScroll();
+            // 禁用窗口的滚动事件，这儿其实应该阻止事件冒泡
+            // 可以手动传参设置可不可滚动
+            if(condition && condition.scroll){
+
+            }else{
+                nojsja.ScrollHandler.disableScroll();
+            }
 
             contentP.innerText = text;
             // 设置透明度和初始位置
@@ -244,7 +249,7 @@
             // 弹出动画效果
             // 注意JavaScript中小数想加的时候可能会舍去
             function popAnimation() {
-                if(modalContent.style.opacity    == 1){
+                if(modalContent.style.opacity == 1){
                     return;
                 }else {
                     opacityValue += 5.0;
@@ -564,7 +569,9 @@
     /* 禁用浏览器滚动的方法 */
     nojsja["ScrollHandler"] = (function () {
 
+        // 上下左右的键值码keycode
         var keys = {37: 1, 38: 1, 39: 1, 40: 1};
+        // 阻止事件冒泡
         function preventDefault(e) {
             e = e || window.event;
             if (e.preventDefault)
@@ -582,38 +589,66 @@
         var oldonwheel, oldonmousewheel1, oldonmousewheel2, oldontouchmove, oldonkeydown
             , isDisabled;
 
-        function disableScroll() {
-            if (window.addEventListener) // older FF
-                window.addEventListener('DOMMouseScroll', preventDefault, false);
+        function disableScroll(object) {
+
+            /* 新旧浏览器适配 */
+            if (window.addEventListener) {
+                if(object && (typeof object == "object")){
+                    object.addEventListener('DOMMouseScroll', preventDefault, false);
+                }else {
+                    window.addEventListener('DOMMouseScroll', preventDefault, false);
+                }
+            }// older FF
+
+            // 保存事件
             oldonwheel = window.onwheel;
-            window.onwheel = preventDefault; // modern standard
-
             oldonmousewheel1 = window.onmousewheel;
-            window.onmousewheel = preventDefault; // older browsers, IE
             oldonmousewheel2 = document.onmousewheel;
-            document.onmousewheel = preventDefault; // older browsers, IE
-
             oldontouchmove = window.ontouchmove;
-            window.ontouchmove = preventDefault; // mobile
-
             oldonkeydown = document.onkeydown;
-            document.onkeydown = preventDefaultForScrollKeys;
+
+            if(object && (typeof object == "object")){
+                object.onwheel = preventDefault; // modern standard
+                object.onmousewheel = preventDefault; // older browsers, IE
+                object.onmousewheel = preventDefault; // older browsers, IE
+                object.ontouchmove = preventDefault; // mobile
+                document.onkeydown = preventDefaultForScrollKeys;
+            }else {
+                window.onwheel = preventDefault; // modern standard
+                window.onmousewheel = preventDefault; // older browsers, IE
+                document.onmousewheel = preventDefault; // older browsers, IE
+                window.ontouchmove = preventDefault; // mobile
+                document.onkeydown = preventDefaultForScrollKeys;
+            }
             isDisabled = true;
         }
 
-        function enableScroll() {
+        function enableScroll(object) {
+
             if (!isDisabled) return;
-            if (window.removeEventListener)
-                window.removeEventListener('DOMMouseScroll', preventDefault, false);
 
-            window.onwheel = oldonwheel; // modern standard
+            if (window.removeEventListener){
+                if(object && (typeof object == "object")){
+                    object.removeEventListener('DOMMouseScroll', preventDefault, false);
+                }else {
+                    window.removeEventListener('DOMMouseScroll', preventDefault, false);
+                }
+            }
 
-            window.onmousewheel = oldonmousewheel1; // older browsers, IE
-            document.onmousewheel = oldonmousewheel2; // older browsers, IE
+            if(object && (typeof object == "object")){
+                object.onwheel = oldonwheel; // modern standard
+                object.onmousewheel = oldonmousewheel1; // older browsers, IE
+                object.onmousewheel = oldonmousewheel2; // older browsers, IE
+                object.ontouchmove = oldontouchmove; // mobile
+                document.onkeydown = oldonkeydown;
+            }else {
+                window.onwheel = oldonwheel; // modern standard
+                window.onmousewheel = oldonmousewheel1; // older browsers, IE
+                document.onmousewheel = oldonmousewheel2; // older browsers, IE
+                window.ontouchmove = oldontouchmove; // mobile
+                document.onkeydown = oldonkeydown;
+            }
 
-            window.ontouchmove = oldontouchmove; // mobile
-
-            document.onkeydown = oldonkeydown;
             isDisabled = false;
         }
 

@@ -188,6 +188,9 @@ editAction.ueditorInit = function() {
 /* 页面事件绑定,DOM操作 */
 editAction.pageEventBind = function () {
 
+    // 导航条
+    $('#courseCreate').parent().prop('class', 'active');
+
     $('#uploadAudioProgress, #uploadImgProgress, #uploadVideoProgress').hide();
     // 清除标题
     $('#courseName').val('');
@@ -673,5 +676,5 @@ editAction.uploadEventBind = function () {
 /* 模态弹窗 */
 editAction.modalWindow = function(text) {
 
-    ModalWindow.show(text);
+    nojsja.ModalWindow.show(text);
 };

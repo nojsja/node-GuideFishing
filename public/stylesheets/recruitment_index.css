@@ -23,6 +23,8 @@ a:hover {
     margin-bottom: 1rem;
     padding: 5px;
     background-color: #F3F3F3;
+    border-top: solid 1px #dcdcdc;
+    border-bottom: solid 1px #dcdcdc;
 }
 
 /* 公司item */
@@ -99,6 +101,7 @@ a:hover {
     background-color: #e57a4a;
     overflow: hidden;
     color: #ffffff;
+    border: solid 1px white;
     border-left: solid 2px #1c6897;
 }
 
@@ -149,7 +152,7 @@ a:hover {
 
     text-shadow:  3px 2px 2px #1c6897;
     color: #ffffff;
-    border: 0;
+    border-top: solid 1px #648393;
     background-color: #d1dbee;
 
     -webkit-transform: translate(0, -8px);

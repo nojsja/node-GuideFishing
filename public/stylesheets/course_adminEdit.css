@@ -3,6 +3,10 @@ body {
     font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+html {
+    font-size: 16px;
+}
+
 a {
     color: #00B7FF;
 }
@@ -240,20 +244,20 @@ a {
 
 /* 上传区域触发 */
 .self-trigger-upload {
-    left: 0;
-    top: 0;
+    left: 1rem;
+    top: 6rem;
 }
 
 /* 预览区域触发 */
 .self-trigger-preview {
-    right: 0;
-    top: 0;
+    right: 1rem;
+    top: 6rem;
 }
 
 /* 载入课程 */
 .self-trigger-load {
-    left: 0;
-    top: 5rem;
+    left: 1rem;
+    top: 11rem;
 }
 
 /* 页面主体部分 */

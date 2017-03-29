@@ -1,6 +1,9 @@
 body {
     font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-    font-weight: bold;
+}
+
+html {
+    font-size: 16px;
 }
 
 a {

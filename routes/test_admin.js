@@ -42,14 +42,18 @@ var getDate = require('../models/tools/GetDate.js');
 function admin(app) {
 
     /* 获取管理员创建页面 */
-    app.get('/test/admin/create', function (req, res) {
+    app.get('/test/admin/create', function (req, res, next) {
+        adminCheck(req, res, next);
+    }, function (req, res) {
         res.render('test_adminEdit', {
             title: '创建新的评测'
         });
     });
 
     /* 获取管理员管理页面 */
-    app.get('/test/admin/manager', function (req, res) {
+    app.get('/test/admin/manager', function (req, res, next) {
+        adminCheck(req, res, next);
+    }, function (req, res) {
         res.render('test_adminManager', {
             title: '管理所有评测'
         });
@@ -138,6 +142,20 @@ function admin(app) {
             } ));
         });
     });
+
+    /* 权限验证中间件 */
+    var adminCheck = function (req, res, next) {
+
+        // 验证用户
+        if(req.session.admin){
+            return next();
+        }else {
+            res.render('admin_login', {
+                title: "管理员登录"
+            });
+        }
+    };
+
 }
 
 module.exports = admin;

@@ -30,7 +30,7 @@ var course = require('./routes/course');
 var course_admin = require('./routes/course_admin');
 var course_broadcast = require('./routes/course_broadcast');
 var user = require('./routes/user');
-var ADMIN_TEMP = require('./routes/ADMIN_TEMP');
+var admin = require('./routes/admin');
 
 var app = express();
 
@@ -58,7 +58,7 @@ recruitment(app);
 course(app);
 course_admin(app);
 course_broadcast(app);
-ADMIN_TEMP(app);
+admin(app);
 
 //node-schedule定时执行任务,更新popolar表,每天的凌晨零点
 var rule = new schedule.RecurrenceRule()

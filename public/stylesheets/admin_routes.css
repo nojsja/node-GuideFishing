@@ -2,7 +2,6 @@
 
 body {
     font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-    background-color: #dcdcdc;
 }
 
 html {
@@ -18,13 +17,13 @@ a {
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
     padding: 5px;
-    background-color: white;
+    background-color: #e7e7e7;
 }
 
 /* 路由legend */
 .legend {
-    text-shadow: 5px 5px 3px #395980;
-    color: #ffffff;
+    text-shadow: 3px 3px 2px #5a8cc9;
+    color: #727272;
 }
 
 /* 各个路由 */
@@ -40,6 +39,7 @@ a {
 .route-div-text{
     border-radius: 5px;
     display: inline-block;
+    font-size: 1.5rem;
     background-color: #577280;
     color: white;
     font-weight: bold;
@@ -48,11 +48,11 @@ a {
 
 /* 路由地址 */
 .route-div-url{
-    font-size: 1.2rem;
     margin-left: 1rem;
     display: inline-block;
     color: #e5691d;
     text-shadow: 0 0 5px #74c2b9;
+    font-size: 1.5rem;
 }
 
 .route-div-tips {

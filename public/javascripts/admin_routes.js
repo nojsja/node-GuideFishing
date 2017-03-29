@@ -4,24 +4,26 @@
 $(function () {
 
     // 获取所有路由数据
-    ADMIN_TEMP.getAllRoutes();
+    AdminRoutes.getAllRoutes();
+    // 导航条
+    $('#routes').parent().prop('class', 'active');
 });
 
 // 页面全局变量
-var ADMIN_TEMP = {};
+var AdminRoutes = {};
 
 /* 获取所有路由 */
-ADMIN_TEMP.getAllRoutes = function () {
+AdminRoutes.getAllRoutes = function () {
 
-    var url = '/admin_temp';
+    var url = '/admin/routes';
     $.post(url, {}, function (JSONdata) {
 
-        ADMIN_TEMP.updateRoutes(JSONdata);
+        AdminRoutes.updateRoutes(JSONdata);
     }, "JSON");
 };
 
 /* 更新页面路由 */
-ADMIN_TEMP.updateRoutes = function (JSONdata) {
+AdminRoutes.updateRoutes = function (JSONdata) {
 
     // 转换JSON对象
     var JSONobject = JSON.parse(JSONdata);

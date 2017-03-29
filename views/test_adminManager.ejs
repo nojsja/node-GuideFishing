@@ -12,6 +12,7 @@
     <link rel='stylesheet' href='/stylesheets/test_adminManager.css' />
 
     <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/mine/nojsja.js"></script>
     <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
     <script type="text/javascript" src="/javascripts/test_adminManager.js"></script>
 </head>
@@ -20,7 +21,7 @@
 
 <!--首部导航-->
 <header class="head">
-    <% include test_adminHeader.ejs%>
+    <% include admin_header.ejs%>
 </header>
 
 <!--主要内容管理部分-->
@@ -32,11 +33,10 @@
 
         <div class="col-md-2 title">测试类型</div>
         <div class="col-md-12 condition-testType">
-            <label class="checkbox-inline"><input type="checkbox" value="character" class="condition-testType-item">性格测试</label>
-            <label class="checkbox-inline"><input type="checkbox" value="potential" class="condition-testType-item">潜能测试</label>
-            <label class="checkbox-inline"><input type="checkbox" value="communication" class="condition-testType-item">交际测试</label>
-            <label class="checkbox-inline"><input type="checkbox" value="emotion" class="condition-testType-item">情感测试</label>
-            <label class="checkbox-inline"><input type="checkbox" value="personality" class="condition-testType-item">人格测试</label>
+            <label class="checkbox-inline">
+                <input type="checkbox" value="character" class="condition-testType-item">
+                <span>性格测试</span>
+            </label>
         </div>
 
         <div class="col-md-2 title">测试题目</div>
@@ -93,13 +93,11 @@
 </div>
 
 <!--模态弹窗-->
-<% include modalWindow.ejs%>
+
 
 <!--题目预览模态窗口-->
-<% include test_preview.ejs%>
+<% include test_preview2.ejs %>
 
 <!--页脚导航-->
-<footer>
-    <% include footer.ejs%>
-</footer>
+<% include admin_footer.ejs %>
 </body>
