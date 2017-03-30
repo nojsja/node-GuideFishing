@@ -24,6 +24,9 @@ var courseSchema = require('./db_schema/course_schema').courseSchema;
 // 受欢迎的课程模式
 var popularCourseSchema = require('./db_schema/popularCourse_schema').popularCourseSchema;
 
+// Tag 模型
+var Tag = require('./Tag');
+
 
 /* 构造函数 */
 function Course(course){
@@ -40,11 +43,28 @@ function Course(course){
         courseContent : course.courseContent,
         teacher : course.teacher,
         password: course.password,
+        courseTags: course.courseTags,
         date : getDate(),
         price : course.price,
         clickRate : 0
     };
 
+    // 课程标签(数组)
+    if(course.courseTags instanceof Array){
+
+        // 创建新数组的迭代器方法
+        this.tagArray = course.courseTags.map(function (item) {
+
+            return {
+                tagName: item,
+                tagType: "course",
+                contentName: course.courseName,
+                contentType: course.courseType
+            }
+        });
+    }else {
+        this.tagArray = [];
+    }
 }
 
 /* 存储一条课程数据 */
@@ -53,6 +73,7 @@ Course.prototype.save = function (callback) {
     var db = mongoose.connection;
     var Model = mongoose.model('Course', courseSchema);
     var courseData = this.courseData;
+    var tagArray = this.tagArray;
 
     // 先进行检查是否已经存在数据
     Course.deleteIfExit({ courseName: courseData.courseName }, function (err) {
@@ -68,7 +89,15 @@ Course.prototype.save = function (callback) {
                 console.log(err);
                 return callback(err);
             }
-            callback(null);
+            var newTag = new Tag(tagArray);
+            newTag.save(function (err) {
+                if(err){
+                    console.log("[error]: " + err );
+                    callback(err);
+                }else {
+                    callback(null);
+                }
+            });
         });
     });
 };

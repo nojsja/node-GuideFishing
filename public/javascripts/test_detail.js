@@ -21,12 +21,13 @@ $(function () {
     });
 
     // 注意Boolean强制转化
-    // 状态初始化
+    // 状态初始化，检测用户登录状态和购买状态
     if(DetailAction.isPurchased == "true"){
         $('#start').prop('disabled', false);
         $('#purchase').prop('disabled', "disabled");
     }else {
         if(DetailAction.isPurchased == "unknown"){
+            DetailAction.modalWindow("登录后才能进行其它操作 :)");
             $('#purchase').prop('disabled', "disabled");
             $('#start').prop('disabled', "disabled");
         }else {

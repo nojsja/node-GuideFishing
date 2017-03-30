@@ -299,6 +299,35 @@ a {
     margin-bottom: 1em;
 }
 
+/* 标签 */
+#tagText {
+    width: 8rem;
+}
+
+.tag-list {
+    font-size: 0;
+    margin-top: 5px;
+    height: 4.5rem;
+    background-color: #cecece;
+}
+
+.tag-list-item {
+    font-size: 1.5rem;
+    padding: 3px;
+    margin: 1rem;
+    display: inline-block;
+    background-color: #f58030;
+    border-radius: 5px;
+    border: solid 1px white;
+    color: white;
+    font-weight: bold;
+}
+.tag-list-item:hover {
+    border: solid 1px #f58030;
+    background-color: transparent;
+    color: #f58030;
+}
+
 /* 类型描述 */
 .type-item {
     font-size: 1.5rem;
