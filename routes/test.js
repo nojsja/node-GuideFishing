@@ -261,38 +261,40 @@ function test(app) {
             });
         }
 
-        var testTitle = req.params["testTitle"],
-            testType = req.params["testType"];
+        return next();
 
-        User.purchaseCheck({
-            account: account,
-            data: {
-                itemName: testTitle,
-                itemType: testType
-            }
-        }, function (err, pass) {
+        // var testTitle = req.params["testTitle"],
+        //     testType = req.params["testType"];
 
-            // 查询出错
-            if(err){
-                res.render('error', {
-                    message: "query error!",
-                    error: {
-                        status: '500',
-                    }
-                });
-            }else {
-                if(pass){
-                    // 交由下一个处理
-                    return next();
-                }
-                res.render('error', {
-                    message: "你还没有购买课程",
-                    error: {
-                        status: '404'
-                    }
-                });
-            }
-        });
+        // User.purchaseCheck({
+        //     account: account,
+        //     data: {
+        //         itemName: testTitle,
+        //         itemType: testType
+        //     }
+        // }, function (err, pass) {
+        //
+        //     // 查询出错
+        //     if(err){
+        //         res.render('error', {
+        //             message: "query error!",
+        //             error: {
+        //                 status: '500',
+        //             }
+        //         });
+        //     }else {
+        //         if(pass){
+        //             // 交由下一个处理
+        //             return next();
+        //         }
+        //         res.render('error', {
+        //             message: "你还没有购买课程",
+        //             error: {
+        //                 status: '404'
+        //             }
+        //         });
+        //     }
+        // });
 
     };
 }

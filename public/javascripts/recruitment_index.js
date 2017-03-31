@@ -84,6 +84,9 @@ RecruitIndexAction.updateCompanyPage = function (JSONdata) {
 
         var company = companys[index].company;
         var $companyBorder = $('<div class="company-border">');
+        $companyBorder.click(function () {
+           window.location.href =  "/recruitment/" + company;
+        });
         var $companyItem = $('<div class="company-item">');
         var $shadow = $('<div class="shadow">');
         var $a = $('<a class="company-title">');

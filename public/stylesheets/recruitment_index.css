@@ -89,11 +89,13 @@ a:hover {
 
 /* 顶部标识 */
 /* 强制不换行 */
-.content-marker {
+.content-marker-div {
     margin-top: 1rem;
     margin-bottom: 1rem;
+}
+
+.content-marker {
     text-align: center;
-    width: 4rem;
     padding: 2px;
     white-space: nowrap;
     font-size: 1.2rem;
@@ -115,11 +117,11 @@ a:hover {
 }
 
 .nav-footer-border {
-    margin: 0 auto;
-    border: solid 1px green;
+    text-align: center;
 }
 
 .nav-footer-item {
+    background-color: #577581;
     border-radius: 5px;
     font-size: 1.2rem;
     padding: 5px;
@@ -130,7 +132,7 @@ a:hover {
     height: auto;
     line-height: 1.5rem;
     text-align: center;
-    border: solid 1px #818181;
+    border: solid 1px #cecece;
     color: #f5f9f6;
 
     -webkit-transition: all 0.2s;
