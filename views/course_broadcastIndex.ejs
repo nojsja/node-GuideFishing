@@ -18,9 +18,13 @@
 </head>
 <body>
 
-<%include recruitment_header.ejs%>
-<!--文字特效-->
-<!--<div class="milky">带渔直播</div>-->
+<%- include recruitment_header.ejs %>
+
+<!--讨论组搜索-->
+<div class="broadcast-search-div">
+    <input type="text" id="broadcastSearchText" class="broadcast-search-text" placeholder="输入课程名搜索..">
+    <span class="broadcast-search-button" id="broadcastSearchButton">搜索</span>
+</div>
 
 <!--内容展示主要区域-->
 <div class="container" id="total">

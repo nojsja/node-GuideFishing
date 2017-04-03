@@ -202,7 +202,7 @@
     nojsja["ModalWindow"] = (function () {
         // 初始化标志
         var isInit = false;
-        var modal, modalContent, acceptButton, contentP;
+        var modal, modalContent, acceptButton, contentP, selfDefineDiv;
 
         // 组件初始化事件
         function modalInit() {
@@ -214,6 +214,8 @@
             acceptButton = document.getElementById('accept');
             // 显示的文字信息
             contentP = document.getElementById('contentText');
+            // 自定义组件的父级div
+            selfDefineDiv = document.getElementById('selfDefineDiv');
 
             // 绑定点击关闭事件
             acceptButton.onclick = function () {
@@ -231,10 +233,15 @@
 
             // 禁用窗口的滚动事件，这儿其实应该阻止事件冒泡
             // 可以手动传参设置可不可滚动
-            if(condition && condition.scroll){
+            if(!condition || !condition.scroll){
 
-            }else{
                 nojsja.ScrollHandler.disableScroll();
+            }
+
+            // 清除自定义DOM
+            if(!condition || !condition.selfDefineKeep){
+
+                selfDefineRemove();
             }
 
             contentP.innerText = text;
@@ -265,6 +272,25 @@
             setTimeout(popAnimation, 10);
         }
 
+        /* 添加自定义组件到modalWindow */
+        function selfDefine(defineHtml) {
+
+            if(!isInit){
+                modalInit();
+            }
+
+            selfDefineRemove();
+
+            selfDefineDiv.appendChild(defineHtml);
+        }
+
+        /* 清除自定义组件 */
+        function selfDefineRemove() {
+            for(var i = 0; i < selfDefineDiv.childNodes.length; i++){
+                selfDefineDiv.removeChild(selfDefineDiv.childNodes[0]);
+            }
+        }
+        
         // 模态窗口隐藏
         function modalHidden() {
 
@@ -305,6 +331,7 @@
         // 返回调用接口
         return {
             show: modalShow,
+            define: selfDefine,
             hidden: modalHidden
         }
     })();
@@ -470,6 +497,79 @@
 
         return {
             init: slideInit
+        };
+    })();
+
+    /* 小工具函数 */
+    nojsja["Tool"] = (function () {
+
+        // 获取当前日期 //
+        function GetDate() {
+
+            var dateArray = [];
+            var date = new Date();
+            var getMonth = (date.getMonth() + 1 < 10) ? ("0" + (date.getMonth() + 1)) : ("" + (date.getMonth() + 1));
+            var getDate = (date.getDate() < 10) ? ("0" + date.getDate()) : ("" +date.getDate());
+
+            dateArray.push(date.getFullYear(), "-", getMonth, "-", getDate,
+                " ", date.getHours(), ":", date.getMinutes(), ":", date.getSeconds());
+
+            return (dateArray.join(""));
+        }
+
+        // 防止高频调用函数 //
+        function FnDelay() {
+            //采用单例模式进行内部封装
+            // 存储所有需要调用的函数
+            var fnObject = {};
+
+            // 三个参数分别是被调用函数，设置的延迟时间，是否需要立即调用
+            return function(fn, delayTime, IsImediate){
+
+                // 立即调用
+                if(!delayTime || IsImediate){
+                    return fn();
+                }
+                // 判断函数是否已经在调用中
+                if(fnObject[fn]){
+                    return;
+                }else {
+                    // 定时器
+                    var timer = setTimeout(function(){
+                        fn();
+                        //清除定时器
+                        clearTimeout(timer);
+                        delete(fnObject[fn]);
+                    }, delayTime);
+
+                    fnObject[fn] = {
+                        "status": 'waitToRun',
+                        "delayTime": delayTime,
+                        "timer": timer
+                    };
+                }
+            };
+        }
+
+        // Boolean类型转换函数 //
+        /* Boolean字符串转换函数 */
+        function StringToBoolean (string) {
+
+            if(string == "true" && typeof (string) == 'string'){
+                return (string = true);
+            }
+            if(string === true && typeof (string) == 'boolean'){
+                return (string = true);
+            }
+            return (string = false);
+        };
+
+        // 返回调用接口
+        return {
+            GetDate: GetDate,
+            FnDelay: FnDelay,
+            StringToBoolean: StringToBoolean
+
         };
     })();
 

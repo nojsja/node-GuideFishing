@@ -8,7 +8,10 @@ html {
 }
 
 a {
-    color: #00B7FF;
+    color: white;
+}
+a:hover {
+    color: white;
 }
 
 /* 总体布局 */
@@ -44,7 +47,7 @@ a {
     top: 3rem;
     background-color: rgba(28, 104, 151, 0.7);
     border-left: solid 2px #e57a4a;
-    padding: 10px;
+    padding: 5px;
 }
 
 /* 返回大厅 */
@@ -54,7 +57,7 @@ a {
     bottom: 2rem;
     background-color: rgba(28, 104, 151, 0.7);
     border-left: solid 2px #e57a4a;
-    padding: 10px;
+    padding: 5px;
 }
 
 .get-recruitments > a,

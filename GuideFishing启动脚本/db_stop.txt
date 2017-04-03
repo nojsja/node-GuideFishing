@@ -1,0 +1,4 @@
+ÃüÁîÐÐÔËÐÐ---
+mongo
+use admin
+db.shutdownServer()

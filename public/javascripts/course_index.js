@@ -117,9 +117,9 @@ CourseAction.pageEventBind = function () {
         CourseAction.headerDown = !CourseAction.headerDown;
         $('.type-item').slideToggle();
         if(CourseAction.headerDown) {
-            $('.header-label > span:nth-child(2)').prop('class', 'glyphicon glyphicon-chevron-up');
+            $('.header-label > i').prop('class', 'icon-angle-up');
         }else {
-            $('.header-label > span:nth-child(2)').prop('class', 'glyphicon glyphicon-chevron-down');
+            $('.header-label > i').prop('class', 'icon-angle-down');
         }
     });
 
@@ -245,10 +245,12 @@ CourseAction.updatePage = function (JSONdata) {
             var $contentLeft = $('<div class="content-item-left">');
             //内容标题
             var $contentTitle = $('<a class="content-item-title">');
+            var url = '/course/detail/' + course.courseType + '/' + course.courseName;
             //添加超链接
-            $contentTitle.prop('href','/course/detail/' + course.courseType + '/' +
-                course.courseName);
-
+            $contentTitle.prop('href', url);
+            $courseContainer.click(function () {
+                window.location.href = url;
+            });
 
             $contentTitle.text(course.courseName);
             //内容摘要和图标

@@ -18,12 +18,12 @@ function course_broadcast(app) {
 
         // 标题和房间号
         res.render('course_broadcast', {
-            title: "课程直播",
+            title: "讨论组",
             broadcastRoom: req.params.id,
             admin: false,
             slogan: "带渔",
             account: req.session.nickName || "游客",
-            other: "课程直播"
+            other: "讨论组"
         });
     });
 
@@ -50,12 +50,12 @@ function course_broadcast(app) {
             console.log('管理员登录验证通过!房间名:  ' + room);
             // 标题和房间号
             res.render('course_broadcast', {
-                title: "课程直播",
+                title: "讨论组",
                 broadcastRoom: room,
                 admin: true,
                 account: "管理员",
                 slogan: "带渔",
-                other: "课程直播"
+                other: "讨论组"
             });
         }
     });
@@ -65,9 +65,47 @@ function course_broadcast(app) {
 
         // 渲染页面到客户端
         res.render('course_broadcastIndex', {
-            title: "所有直播",
+            title: "讨论组",
             slogan: "带渔",
-            other: "课程直播"
+            other: "课程讨论组"
+        });
+    });
+
+    // 筛选一个直播
+    app.post('/course/broadcast/readOne', function (req, res) {
+
+        // 查询条件
+        var condition = {
+            courseName: req.body.courseName || ''
+        };
+
+        // 课程图片地址
+        var typeImgUrl = {};
+        // 阅读地址和客户端访问地址
+        // locateFromRoot 是当前执行文件的所在地址
+        var readUrl = locateFromRoot('/public/images/courseType/');
+        var visitUrl = '/images/courseType/';
+        ReadBroadcastImg(readUrl, visitUrl, function (data) {
+            typeImgUrl = data;
+        });
+
+        // 数据库
+        broadcastData.readOne(condition, function (err, broadcastArray) {
+
+            if(err) {
+                console.log('readBroadcastList error.');
+                return res.json(JSON.stringify({
+                    isError: true,
+                    error: err,
+                }));
+            }
+            console.log('readBroadcast success.');
+            res.json(JSON.stringify({
+                preAddressAdmin: '/course/broadcast/room/adminCheck/',
+                preAddressUser: '/course/broadcast/room/user/',
+                broadcastArray: broadcastArray,
+                typeImgUrl: typeImgUrl
+            }));
         });
     });
 
@@ -121,7 +159,7 @@ function course_broadcast(app) {
             title: "管理员登录",
             broadcastRoom: req.params.id,
             slogan: "带渔",
-            other: "直播"
+            other: "讨论组"
         });
     });
 

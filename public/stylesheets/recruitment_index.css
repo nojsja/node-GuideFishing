@@ -25,6 +25,8 @@ a:hover {
     background-color: #F3F3F3;
     border-top: solid 1px #dcdcdc;
     border-bottom: solid 1px #dcdcdc;
+    border-left: solid 3px #f58030;
+    border-right: solid 3px #f58030;
 }
 
 /* 公司item */
@@ -98,7 +100,7 @@ a:hover {
     text-align: center;
     padding: 2px;
     white-space: nowrap;
-    font-size: 1.2rem;
+    font-size: 1rem;
     vertical-align: middle;
     background-color: #e57a4a;
     overflow: hidden;
@@ -127,7 +129,8 @@ a:hover {
     padding: 5px;
     box-sizing: border-box;
     display: inline-block;
-    width:  25%;
+    min-width:  25%;
+    width: auto;
     min-height: 1.5rem;
     height: auto;
     line-height: 1.5rem;

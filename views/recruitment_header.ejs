@@ -1,13 +1,14 @@
-<head>
     <style type="text/css">
         /* 首部 */
         #head {
+            font-size: 0;
             height: 2rem;
             background: #7ca2b6;
             background: -webkit-linear-gradient(to bottom, #4f6774, #7ca2b6);
             background: linear-gradient(to bottom, #4f6774, #7ca2b6);
             box-sizing: border-box;
             border-bottom: solid 1px white;
+            overflow: hidden;
         }
 
         #head a {
@@ -19,7 +20,7 @@
         }
 
         /* 公司标志 */
-        .icon-div {
+        .company-div {
             box-sizing: border-box;
             width: 2rem;
             height: 2rem;
@@ -55,8 +56,121 @@
             float: right;
             font-size: 1rem;
         }
+
+        /* 展播文字 */
+        .slide-text-div {
+            display: inline-block;
+            height: 2rem;
+            text-align: center;
+            vertical-align: top;
+            overflow: hidden;
+        }
+        .slide-text-top {
+            position: relative;
+            padding: 3px;
+            font-size: 1rem;
+            line-height: 2rem;
+            color: #ffffff;
+
+            -webkit-animation: slideTextTop;
+            -o-animation: slideTextTop;
+            animation: slideTextTop;
+
+            -webkit-animation-delay: 1s;
+            -moz-animation-delay: 1s;
+            -o-animation-delay: 1s;
+            animation-delay: 1s;
+            
+            -webkit-animation-duration: 4s;
+            -moz-animation-duration: 4s;
+            -o-animation-duration: 4s;
+            animation-duration: 4s;
+
+            -webkit-animation-iteration-count: infinite;
+            -moz-animation-iteration-count: infinite;
+            -o-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+
+            -webkit-animation-timing-function: ease-in-out;
+            -moz-animation-timing-function: ease-in-out;
+            -o-animation-timing-function: ease-in-out;
+            animation-timing-function: ease-in-out;
+        }
+
+        .slide-text-bottom {
+            position: relative;
+            padding: 3px;
+            font-size: 1rem;
+            line-height: 2rem;
+            color: #ffffff;
+
+            -webkit-animation: slideTextBottom;
+            -o-animation: slideTextBottom;
+            animation: slideTextBottom;
+
+            -webkit-animation-delay: 1s;
+            -moz-animation-delay: 1s;
+            -o-animation-delay: 1s;
+            animation-delay: 1s;
+
+            -webkit-animation-duration: 4s;
+            -moz-animation-duration: 4s;
+            -o-animation-duration: 4s;
+            animation-duration: 4s;
+
+            -webkit-animation-iteration-count: infinite;
+            -moz-animation-iteration-count: infinite;
+            -o-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+
+            -webkit-animation-timing-function: ease-in-out;
+            -moz-animation-timing-function: ease-in-out;
+            -o-animation-timing-function: ease-in-out;
+            animation-timing-function: ease-in-out;
+        }
+        
+        /* 展播文字动画 */
+        @keyframes slideTextTop {
+            0% {
+                top: -2rem;
+                font-size: 1rem;
+                color: #909090;
+            }
+
+            50% {
+                top: 0rem;
+                font-size: 0.8rem;
+                color: #FFFFFF;
+            }
+
+            100% {
+                top: -2rem;
+                font-size: 1rem;
+                color: #909090
+            }
+        }
+        @keyframes slideTextBottom {
+            0% {
+                bottom: -2rem;
+                font-size: 0.8rem;
+                color: #909090;
+            }
+
+            50% {
+                bottom: 0rem;
+                font-size: 1rem;
+                color: #FFFFFF;
+            }
+
+            100% {
+                bottom: -2rem;
+                font-size: 0.8rem;
+                color: #909090;
+            }
+        }
+
+
     </style>
-</head>
 <body>
 
 <!--网页首部-->
@@ -64,10 +178,16 @@
     <div class="container">
         <!--公司标志-->
         <a href="/recruitment/index">
-            <div class="icon-div"></div>
+            <div class="company-div"></div>
         </a>
         <!--口号-->
         <a class="slogan-div" href="/recruitment/index"><%= slogan %></a>
+        <!--展示文字-->
+        <div class="slide-text-div">
+            <span class="slide-text-top">测评</span>
+            <span class="slide-text-bottom">课程</span>
+            <span class="slide-text-top">招聘</span>
+        </div>
         <!--其它信息-->
         <div class="other-div"><%= other %></div>
     </div>

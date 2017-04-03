@@ -252,6 +252,11 @@ ViewAction.updateCoursePage = function (JSONdata) {
 
 };
 
+/* 更新相关推荐课程 */
+ViewAction.updateRecommendation = function () {
+
+};
+
 /* Boolean字符串转换函数 */
 ViewAction.stringToBoolean = function (string) {
 

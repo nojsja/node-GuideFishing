@@ -17,7 +17,7 @@ $(function () {
     //上一道题目
     $('#last').click(TestViewAction.lastItem);
     //提交结果
-    $('#submitDiv').click(TestViewAction.submit);
+    $('#submit').click(TestViewAction.submit);
 
 });
 
@@ -27,6 +27,7 @@ $(function () {
 * choiseTag -- 选项的标志ABC
 * itemMode -- 选项模式
 * testArray -- 本组题目信息
+* testResultDom -- 测评结果的缓存DOM
 * */
 
 var TestViewAction = {
@@ -36,7 +37,8 @@ var TestViewAction = {
     //一组题里面的所有题目对象数组
     testGroup: [],
     testType: null,
-    testTitle: null
+    testTitle: null,
+    testResultDom: null
 };
 
 /* 模态弹窗 */
@@ -68,6 +70,7 @@ TestViewAction.pageInit = function () {
         if(TestViewAction.testGroup.length == 0){
             return TestViewAction.modalWindow("抱歉没有任何数据!");
         }
+        TestViewAction.checkAndUpdate();
         TestViewAction.checkAndUpdate();
         // 初始化悬浮按钮
         nojsja.HoverButton.init();
@@ -203,8 +206,32 @@ TestViewAction.submit = function () {
         if(JSONobject.error){
             TestViewAction.modalWindow('抱歉,服务器发生错误!');
         }
+
+        // 构建结果缓存DOM
+        /*
+        * <!--测评结果-->
+         <div class="container test-result-border">
+         <span class="glyphicon glyphicon-search test-result-title">结果分析</span>
+         <div class="test-result">
+         </div>
+         </div>
+        * */
+
+        if(TestViewAction.testResultDom){
+
+        }else {
+            var $testResult = $('<div class="test-result">');
+
+            TestViewAction.testResultDom = $testResult[0];
+        }
+
+        nojsja.ModalWindow.define(TestViewAction.testResultDom);
+
+        nojsja.ModalWindow.show('测试结果', {
+            scroll: true,
+            selfDefineKeep: true
+        });
         //返回评测结果,更新页面
         $('.test-result').text(JSONobject.result);
-        $('.test-result-border').slideDown();
     }, "JSON");
 };

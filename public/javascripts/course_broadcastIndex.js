@@ -29,7 +29,10 @@ var bcIndexAction = {
     pageLimit: 20,
     //是否清除页面已存数据
     isClear: false,
-    broadcastTypeChina: {}
+    // 中英切换
+    broadcastTypeChina: {},
+    // 直播列表缓存
+    broadcastArray: []
 };
 
 /* 页面主要事件绑定 */
@@ -46,7 +49,67 @@ bcIndexAction.pageEventBind = function () {
     $(window).scroll(bcIndexAction.scrollCheck);
     //加载更多数据
     $('#readMore').click(bcIndexAction.readMore);
+    // 绑定搜索动画
+    $('#broadcastSearchButton').click(function () {
 
+        bcIndexAction.broadcastSearch.spreadCheck();
+    });
+
+    // 初始化
+    bcIndexAction.broadcastSearchInit();
+};
+
+bcIndexAction.broadcastSearchInit = function () {
+
+    /* 讨论组搜索模块 */
+    bcIndexAction.broadcastSearch = (function () {
+
+        // 输入框收起
+        var isSpread = false;
+        // 查询地址
+        var url = "/course/broadcast/readOne";
+        // 输入框
+        var $searchText = $('#broadcastSearchText');
+        var searchValue = null;
+
+        // 输入框状态检查
+        function spreadCheck() {
+
+            if(!isSpread){
+                $searchText.prop('class', 'broadcast-search-text broadcast-search-animation');
+                isSpread = true;
+            }else {
+
+                if(searchValue === $searchText.val().trim()){
+                    return;
+                }
+                searchValue = $searchText.val().trim();
+                if(!searchValue || searchValue == ''){
+                    return bcIndexAction.modalWindow("请输入查询参数!");
+                }
+                sendRequest();
+            }
+        }
+
+        // 发起搜索请求
+        function sendRequest() {
+
+            $.post(url, {
+                courseName: searchValue
+            }, function (JSONdata) {
+
+                // 清除页面
+                bcIndexAction.isClear = true;
+                // 更新DOM
+                bcIndexAction.updatePage(JSONdata);
+            }, "JSON");
+        }
+
+        return {
+            spreadCheck: spreadCheck
+        };
+
+    })();
 };
 
 /* 读取直播列表 */
@@ -108,6 +171,8 @@ bcIndexAction.updatePage = function (JSONdata) {
     if(parsedData.broadcastArray.length === 0){
         return this.modalWindow('抱歉,没有更多数据!');
     }
+    // 做DOM缓存
+    bcIndexAction.broadcastArray = parsedData.broadcastArray;
     //遍历对象数组构造DOM对象
     for(var broadcastIndex in parsedData.broadcastArray) {
         //增加游标控制页面读取的起始位置
@@ -124,18 +189,21 @@ bcIndexAction.updatePage = function (JSONdata) {
             var $contentTitle = $('<a class="content-item-title">');
             //添加超链接
             var url = preAddressUser + broadcast.courseName;
+            $broadcastContainer.click(function () {
+                window.location.href = url;
+            });
             $contentTitle.prop('href', url);
             $contentTitle.text(broadcast.courseName);
             //内容摘要和图标
             var $abstract = $('<div class="content-item-abstract">');
             var $teacher = $('<div class="teacher"></div>');
-            var $intoRoom = $('<input type="button" class="btn btn-default btn-sm" value="管理员登入">');
-            $intoRoom.click(function () {
-                window.location = preAddressAdmin + broadcast.courseName;
-            });
-            $abstract
-                .append($teacher.text(broadcast.teacher.name))
-                .append($intoRoom);
+            // var $intoRoom = $('<input type="button" class="btn btn-default btn-sm" value="管理员登入">');
+            // $intoRoom.click(function () {
+            //     window.location = preAddressAdmin + broadcast.courseName;
+            // });
+            $abstract.append($teacher.text(broadcast.teacher.name));
+
+            // $abstract.append($intoRoom);
             //DOM构造
             $contentLeft.append($contentTitle).append($abstract).append($pushPin);
 

@@ -741,11 +741,11 @@ BroadcastAction.getMediaDataInit = function (type) {
         }
         // 如果正在录音
         if(BroadcastAction.record.status == "none"){
-            $(this).attr('class', 'glyphicon glyphicon-off recording');
+            $(this).attr('class', 'icon-volume-up recording');
             BroadcastAction.record.status = "recording";
             startRecord();
         }else {
-            $(this).attr('class', 'glyphicon glyphicon-record');
+            $(this).attr('class', 'icon-volume-up');
             BroadcastAction.record.status = "none";
             stopRecord();
         }
