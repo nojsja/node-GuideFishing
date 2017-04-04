@@ -30,9 +30,9 @@ $(function () {
     //高度检测
     /*windowHeightCheck();*/
     //滑动检测函数
-    $(window).scroll(function () {
-        nojsja.FnDelay(TestIndexAction.scrollCheck, 500);
-    });
+    // $(window).scroll(function () {
+    //     nojsja.FnDelay(TestIndexAction.scrollCheck, 500);
+    // });
     //加载更多数据
     $('.loading-info').click(TestIndexAction.readMore);
     // 读取测评类型

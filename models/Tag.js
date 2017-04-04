@@ -151,12 +151,13 @@ Tag.getTagContent = function (condition, callback) {
     var db  = mongoose.connection;
     var Model  = mongoose.model('Tag', tagSchema);
 
-    // 筛选条件：标签类型和条目数
+    // 筛选条件：标签类型和条目数，以及需要排除的项目filter
     var tagNameArray = condition.tagNameArray,
         tagTypeArray = condition.tagTypeArray,
+        filter = condition.filter || null,
         count = condition.count || 5;
 
-     if( !(tagName &&tagTypeArray) ){
+     if( !(tagNameArray && tagTypeArray) ){
         return callback(new Error('查询内容跟有误!'));
      }
 
@@ -179,23 +180,55 @@ Tag.getTagContent = function (condition, callback) {
              var breakCondition = tagTypeArray.every(function (item) {
                  return (responseData[item] !== undefined) && (responseData[item].length == count);
              });
+
              for(let index in doc.tagContent){
 
                  let _tagType = doc.tagContent[index].tagType;
 
-                 if(tagTypeArray.indexOf(_tagType) >= 0 &&
-                     responseData[_tagType].length < count){
+                 if(tagTypeArray.indexOf(_tagType) >= 0){
 
-                     if( responseData[_tagType]){
-                         responseData[_tagType].push({
-                             contentType: doc.tagContent[index].contentType,
-                             contentName: doc.tagContent[index].contentName
-                         });
+                     // 排除要筛选掉的文章
+                     if( filter ){
+
+                         if ( doc.tagContent[index].contentType != filter.filterContentType ||
+                             doc.tagContent[index].contentName != filter.filterContentName ){
+
+                             if( responseData[_tagType]){
+
+                                 if(responseData[_tagType].length < count){
+
+                                     responseData[_tagType].push({
+                                         contentType: doc.tagContent[index].contentType,
+                                         contentName: doc.tagContent[index].contentName
+                                     });
+                                 }
+
+                             }else {
+                                 responseData[_tagType] = [{
+                                     contentType: doc.tagContent[index].contentType,
+                                     contentName: doc.tagContent[index].contentName
+                                 }];
+                             }
+                         }
+
                      }else {
-                         responseData[_tagType] = [{
-                             contentType: doc.tagContent[index].contentType,
-                             contentName: doc.tagContent[index].contentName
-                         }];
+
+                         if( responseData[_tagType]){
+
+                             if(responseData[_tagType].length < count){
+
+                                 responseData[_tagType].push({
+                                     contentType: doc.tagContent[index].contentType,
+                                     contentName: doc.tagContent[index].contentName
+                                 });
+                             }
+
+                         }else {
+                             responseData[_tagType] = [{
+                                 contentType: doc.tagContent[index].contentType,
+                                 contentName: doc.tagContent[index].contentName
+                             }];
+                         }
                      }
 
                  }

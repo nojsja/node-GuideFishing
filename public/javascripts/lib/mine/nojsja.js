@@ -552,7 +552,6 @@
         }
 
         // Boolean类型转换函数 //
-        /* Boolean字符串转换函数 */
         function StringToBoolean (string) {
 
             if(string == "true" && typeof (string) == 'string'){
@@ -564,12 +563,22 @@
             return (string = false);
         };
 
+        // 获取指定范围内的随机数 //
+        function GetRandomNum(Min,Max) {
+            // 1.Math.random(); 结果为0-1间的一个随机数(包括0,不包括1) 
+            // 2.Math.floor(num); 参数num为一个数值，函数结果为num的整数部分。 
+            // 3.Math.round(num); 参数num为一个数值，函数结果为num四舍五入后的整数。
+            var Range = Max - Min;
+            var Rand = Math.random();
+            return(Min + Math.round(Rand * Range));
+        }
+
         // 返回调用接口
         return {
             GetDate: GetDate,
             FnDelay: FnDelay,
-            StringToBoolean: StringToBoolean
-
+            StringToBoolean: StringToBoolean,
+            GetRandomNum: GetRandomNum
         };
     })();
 

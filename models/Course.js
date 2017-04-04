@@ -521,7 +521,7 @@ Course.updatePopular = function (callback) {
     }
 };
 
-// 获取热门课程数据
+/* 获取热门课程数据 */
 Course.getPopular = function (callback) {
 
     var db = mongoose.connection;
@@ -547,28 +547,37 @@ Course.getPopular = function (callback) {
     });
 };
 
+/* 获取相关课程推荐 */
+Course.getRecommendation = function (condition, callback) {
+
+    var _condition = {
+        tagNameArray: condition.tagNameArray,
+        tagTypeArray: condition.tagTypeArray,
+        count: condition.count || 6
+    };
+    // 刷选条件
+    if( condition.filter.filterContentType && condition.filter.filterContentName ){
+
+        _condition.filter = {
+            filterContentType: condition.filter.filterContentType,
+            filterContentName: condition.filter.filterContentName
+        };
+    }
+
+    Tag.getTagContent(_condition, function (err, tagContentArray) {
+
+        if(err){
+            console.log('[errror]: ' + err);
+            return callback(err);
+        }
+
+        callback(null, tagContentArray);
+    });
+};
 
 
 
 module.exports = Course;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

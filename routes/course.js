@@ -153,7 +153,7 @@ function course(app){
         });
     });
 
-    // 获取类型图片
+    /* 获取类型图片 */
     app.post('/course/detail/readTypeImage', function (req, res) {
 
         var readUrl = locateFromRoot('/public/images/courseType/');
@@ -166,7 +166,7 @@ function course(app){
         });
     });
     
-    // 获取课程学习页面
+    /* 获取课程学习页面 */
     app.get('/course/view/:courseType/:courseName', function (req, res, next) {
         courseRoute.purchaseCheck(req, res, next);
 
@@ -182,7 +182,7 @@ function course(app){
         });
     });
 
-    // 获取课程的热门内容
+    /* 获取课程的热门内容 */
     app.post('/course/readHot', function (req, res) {
 
         // 获取热门数据
@@ -219,6 +219,9 @@ function course(app){
         // 选择条件 课程编辑内容,直播内容,直播标志,讲师,日期
         totalCondition.select = {
             courseContent: 1,
+            courseTags: 1,
+            courseType: 1,
+            courseName: 1,
             isBroadcast: 1,
             courseOrigin: 1,
             teacher: 1,
@@ -233,17 +236,16 @@ function course(app){
                 }));
             }
             // 非基本类型的数据发往客户端需要JSON格式化,解析的时候再解析成对象来操作
-            res.json(JSON.stringify({
-                courseContent: data.courseContent,
-                isBroadcast: data.isBroadcast,
-                courseOrigin: data.courseOrigin,
-                teacher: data.teacher,
-                date: data.date
-            }));
+
+            for(var attr in totalCondition.select){
+                totalCondition.select[attr] = data[attr];
+            }
+
+            res.json( JSON.stringify(totalCondition.select) );
         });
     });
 
-    // 读取课程列表
+    /* 读取课程列表 */
     app.post('/course/readCourseList', function (req, res) {
 
         var condition = {};
@@ -293,7 +295,7 @@ function course(app){
         });
     });
 
-    // 更新popular表
+    /* 更新popular表 */
     app.get('/popular/course/update', function (req, res) {
 
         Course.updatePopular(function (err) {
@@ -309,6 +311,44 @@ function course(app){
                 }) );
             }
 
+        });
+    });
+
+    /* 获取推荐课程内容 */
+    app.post('/course/recommendation', function (req, res) {
+
+        // 筛选条件
+        var condition = {};
+
+        condition.tagNameArray = req.body.tagNameArray;
+        condition.tagTypeArray = req.body.tagTypeArray;
+        condition.count = req.body.count;
+
+        if(!condition.tagTypeArray || !condition.tagNameArray) {
+            return res.json( JSON.stringify({
+                isError: true,
+                error: new Error("发送数据有误！")
+            }) );
+        }
+
+        condition.filter = req.body.filter ? {
+            filterContentName: req.body.filter.filterContentName,
+            filterContentType: req.body.filter.filterContentType
+
+        } : null;
+
+        Course.getRecommendation(condition, function (err, tagContentArray) {
+
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err
+                }) );
+            }
+            res.json( JSON.stringify({
+                isError: false,
+                tagContentArray: tagContentArray
+            }) );
         });
     });
 

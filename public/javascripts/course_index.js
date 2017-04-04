@@ -135,10 +135,10 @@ CourseAction.pageEventBind = function () {
     //高度检测
     /*windowHeightCheck();*/
     //滑动检测函数
-    $(window).scroll(function () {
-        //每隔500毫秒检测一次
-       nojsja.FnDelay(CourseAction.scrollCheck, 500);
-    });
+    // $(window).scroll(function () {
+    //     //每隔500毫秒检测一次
+    //    nojsja.FnDelay(CourseAction.scrollCheck, 500);
+    // });
     //加载更多数据
     $('#loadMore').click(CourseAction.readMore);
 };
