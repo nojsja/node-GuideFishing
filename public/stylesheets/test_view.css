@@ -189,6 +189,62 @@ a {
     text-shadow: 0 0 10px #b40000;
 }
 
+/* 相关课程推荐 */
+.course-recommendation-div {
+    display: none;
+    padding: 0.5rem;
+    border: solid 1px #dcdcdc;
+    background-color: rgba(185,185,185,0.51);
+    min-height: 5rem;
+}
+
+.course-recommendation-div-show {
+    display: block;
+}
+
+.recommendation-title {
+    text-align: center;
+    color: #dcdcdc;
+}
+
+.recommendation-list {
+    background-color: #e9e9e9;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.recommendation-item {
+    font-size: 0;
+    border-bottom: solid 1px white;
+    margin-top: 0.5rem;
+}
+.recommendation-item > span:nth-child(1){
+    font-size: 1rem;
+    color: #3861b5;
+}
+.recommendation-item:first-child {
+    margin-top: 0;
+}
+.recommendation-item:last-child {
+    border-bottom: 0;
+}
+
+.recommendation-item-type {
+    padding: 2px;
+    font-size: 0.8rem;
+    display: inline-block;
+    color: #dc8e3e;
+    border-radius: 5px;
+    border: solid 1px #dc8e3e;
+}
+
+.recommendation-item-title {
+    color: #56737f;
+    padding: 3px;
+    margin-left: 0.5rem;
+    font-size: 1rem;
+}
+
 /*文字特效*/
 .box1 {
     text-shadow:

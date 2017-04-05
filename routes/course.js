@@ -59,6 +59,7 @@ function course(app){
         totalCondition.condition.courseName = req.params.courseName;
         totalCondition.select = {
             courseAbstract: 1,
+            courseTags: 1,
             clickRate: 1,
             date: 1
         };
@@ -72,6 +73,7 @@ function course(app){
                 courseType: req.params["courseType"],
                 courseName: req.params["courseName"],
                 courseAbstract: null,
+                courseTags: [],
                 clickRate: null,
                 isPurchased: null,
                 date: null,
@@ -88,6 +90,7 @@ function course(app){
             courseData.courseAbstract = data["courseAbstract"];
             courseData.clickRate = data["clickRate"];
             courseData.date = data["date"];
+            courseData.courseTags = data["courseTags"];
 
             // 当前登录账户
             var account = req.session.account;

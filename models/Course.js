@@ -556,7 +556,7 @@ Course.getRecommendation = function (condition, callback) {
         count: condition.count || 6
     };
     // 刷选条件
-    if( condition.filter.filterContentType && condition.filter.filterContentName ){
+    if( condition.filter ){
 
         _condition.filter = {
             filterContentType: condition.filter.filterContentType,

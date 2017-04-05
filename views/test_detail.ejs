@@ -39,6 +39,13 @@
 
 </div>
 
+<!--课程相关的标签-->
+<div class="detail-tags-div">
+    <!--<span class="tag-item tag-change-animation">标签1</span>-->
+    <!--<span class="tag-item tag-change-reverse-animation">标签2</span>-->
+    <!--<span class="tag-item tag-change-animation">标签2</span>-->
+</div>
+
 <!--评测介绍主体-->
 <div class="container detail-body">
     <div class="detail-body-abstract">
@@ -69,6 +76,7 @@
     // 设置描述内容
     DetailAction.$$abstract = '<%- abstract %>';
     DetailAction.isPurchased = '<%= isPurchased %>';
+    DetailAction.testTags = '<%= testTags %>';
     DetailAction.testTitle = '<%= testTitle%>';
     DetailAction.testType = '<%= testType %>';
     DetailAction.initialError = '<%= isError %>';

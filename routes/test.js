@@ -44,6 +44,7 @@ function test(app) {
                 abstract: 1,
                 date: 1,
                 frequency: 1,
+                testTags: 1
             }
         };
         // 当前登录账户
@@ -54,6 +55,7 @@ function test(app) {
             title: '评测详情',
             testTitle: testTitle,
             testType: testType,
+            testTags: [],
             abstract: 'error!!!',
             date: 'error!!!',
             frequency: 'error!!!',
@@ -78,6 +80,7 @@ function test(app) {
            responseTest.abstract = doc.abstract;
            responseTest.date = doc.date;
            responseTest.frequency  = doc.frequency;
+           responseTest.testTags = doc.testTags;
 
            if(!account){
                return res.render('test_detail', responseTest);
@@ -126,7 +129,8 @@ function test(app) {
             select: {
                 abstract: 1,
                 clickRate: 1,
-                date: 1
+                date: 1,
+                testTags: 1
             },
             condition: {
                 testTitle: testTitle,
@@ -142,6 +146,7 @@ function test(app) {
                 title: "测评页面",
                 testType: testType,
                 testTitle: testTitle,
+                testTags: [],
                 abstract: null,
                 clickRate: null,
                 date: null,
@@ -163,6 +168,7 @@ function test(app) {
                 testData.abstract = data["abstract"];
                 testData.clickRate = data["clickRate"];
                 testData.date = data["date"];
+                testData.testTags = data["testTags"];
                 res.render('test_view', testData);
 
             }else {
@@ -189,6 +195,7 @@ function test(app) {
         AllTest.getDetail({
             select: {
                 testGroup: 1,
+                testTags: 1
             },
             condition: condition
         }, function (err, doc) {
@@ -202,7 +209,8 @@ function test(app) {
             //成功读取到后返回本组题目
             return res.json( JSON.stringify({
                 isError: false,
-                testGroup: doc.testGroup
+                testGroup: doc.testGroup,
+                testTags: doc.testTags
             }) );
         });
     });

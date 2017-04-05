@@ -31,6 +31,8 @@ $(function () {
 * */
 
 var TestViewAction = {
+    count: 6,
+    tagTypeArray: ["course"],
     currentNumber: 1,
     //填写选项的对象数组
     choiseArray: [],
@@ -67,6 +69,7 @@ TestViewAction.pageInit = function () {
         TestViewAction.testGroup = JSONobject.testGroup
         TestViewAction.testType = $('.test-type').text().trim();
         TestViewAction.testTitle = $('.test-title').text().trim();
+        TestViewAction.tagNameArray = JSONobject.testTags;
         if(TestViewAction.testGroup.length == 0){
             return TestViewAction.modalWindow("抱歉没有任何数据!");
         }
@@ -233,5 +236,64 @@ TestViewAction.submit = function () {
         });
         //返回评测结果,更新页面
         $('.test-result').text(JSONobject.result);
+
+        // 获取推荐课程
+        TestViewAction.getRecommendation();
+    }, "JSON");
+};
+
+/* 更新相关推荐课程 */
+TestViewAction.getRecommendation = function () {
+
+    $('.course-recommendation-div').prop('class', 'course-recommendation-div course-recommendation-div-show');
+    var url = "/course/recommendation";
+    // 获取1 到 tagNameArray.length的随机数
+    var randomNumber = nojsja["Tool"].GetRandomNum(1, TestViewAction.tagNameArray.length);
+    var _tagNameArray = [];
+    _tagNameArray.push(TestViewAction.tagNameArray[randomNumber - 1])
+
+    $.post(url, {
+        count: TestViewAction.count,
+        tagNameArray: _tagNameArray,
+        tagTypeArray: TestViewAction.tagTypeArray
+
+    }, function (JSONdata) {
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return TestViewAction.modalWindow("发生错误：" + JSONobject.error);
+        }
+        // 更新DOM数据
+        /* DOM 结构
+         <div class="recommendation-item">
+         <span>1</span>
+         <a href="jobFound/skill" class="recommendation-item-title">Node.js入门指导</a>
+         <div class="recommendation-item-type">职业技能</div>
+         </div>
+         */
+        var $recommendationList = $('.recommendation-list');
+        var index = 1;
+        for(var item in JSONobject.tagContentArray){
+
+            JSONobject.tagContentArray[item].forEach(function (tagContent) {
+
+                var $recommendationItem = $('<div class="recommendation-item">');
+                var $indexSpan = $('<span>');
+                $indexSpan.text(index++);
+
+                var $itemTitle = $('<a class="recommendation-item-title">');
+                $itemTitle.prop('href', ['/course/', tagContent.contentType, '/', tagContent.contentName].join(''));
+                $itemTitle.text(tagContent.contentName);
+
+                var $itemType = $('<div class="recommendation-item-type">');
+                $itemType.text(tagContent.contentType);
+
+                $recommendationItem.append($indexSpan)
+                    .append($itemTitle)
+                    .append($itemTitle);
+                $recommendationList.append($recommendationItem);
+            });
+        }
+
+
     }, "JSON");
 };

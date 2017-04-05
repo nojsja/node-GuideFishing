@@ -12,7 +12,7 @@
       "exec_mode": "fork",
 //      "watch": ["models", "routes", "GuideFishing.json", "gulpfile.js", "MongoConfig.js"],
       "watch": true,
-      "ignore_watch" : ["public", "document", ".idea", "db_scripts", "views", "node_modules"],
+      "ignore_watch" : ["public", "document", ".idea", "db_scripts", "node_modules"],
 
       "error_file": "./logs/error/error.txt",
       //"out_file": "./logs/normal/normal.txt",
