@@ -1,7 +1,7 @@
 
 <!--自定义模态弹窗组件-->
     <style type="text/css">
-       
+
         .modal-wrapper {
             z-index: 1000;
             top: 0;
@@ -22,7 +22,7 @@
 
         /* 内容定位器 */
         .modal-content-wrapper {
-            position: fixed;
+            position: absolute;
             margin: 10rem auto 0;
             height: auto;
             width: 100%;
@@ -35,7 +35,6 @@
             border-radius: 5px;
             text-align: center;
             width: 50%;
-            min-height: 10rem;
             margin: auto;
             height: auto;
             background-color: white;
@@ -52,24 +51,24 @@
             padding: 0.5rem;
             width: 80%;
             margin: auto;
-            font-size: 1.2rem;
+            font-size: 1.7rem;
             color: #41545f;
         }
 
         .modal-content-text-outter {
             border-top: solid 1px #577280;
             border-bottom: solid 1px #577280;
-            margin-bottom: 3rem;
+            min-height: 10rem;
+            margin-bottom: 4rem;
         }
-
         #accept {
             position: absolute;
             bottom: 1rem;
             right: 1rem;
             width: 4rem;
             background-color: #00b200;
-            padding: 2px;
-            font-size: 1.2rem;
+            font-size: 1.6rem;
+            padding: 4px;
             border-radius: 4px;
             color: white;
         }
@@ -81,7 +80,7 @@
         /*
         *筛选手机以及相关的小屏幕
         */
-        @media screen and (max-width: 400px){
+        @media only screen and (max-width: 400px){
             .modal-content {
                 position: relative;
                 padding: 1rem;
@@ -92,6 +91,30 @@
                 height: auto;
                 background-color: white;
                 box-shadow: 0 0 10px black;
+            }
+            .modal-content-text {
+                padding: 0.5rem;
+                width: 80%;
+                margin: auto;
+                font-size: 1.2rem;
+                color: #41545f;
+            }
+            .modal-content-text-outter {
+                border-top: solid 1px #577280;
+                border-bottom: solid 1px #577280;
+                min-height: 5rem;
+                margin-bottom: 2rem;
+            }
+            #accept {
+                position: absolute;
+                bottom: 0.5rem;
+                right: 0.5rem;
+                width: 4rem;
+                background-color: #00b200;
+                padding: 2px;
+                font-size: 1.1rem;
+                border-radius: 4px;
+                color: white;
             }
         }
     </style>
@@ -107,6 +130,11 @@
                 <div class="modal-content-text-outter">
                     <div class="modal-content-text">
                         <p id="contentText"></p>
+                    </div>
+
+                    <!--自定义组件-->
+                    <div class="self-define-div" id="selfDefineDiv">
+
                     </div>
                 </div>
 

@@ -6,9 +6,12 @@
 
 $(function () {
 
-    console.log(DetailAction);
-
+    // 更新课程标签
+    DetailAction.updateCourseTags();
     // 注意Boolean强制转化
+
+    // 悬浮按钮初始化
+    nojsja.HoverButton.init();
 
     // 状态初始化
     if(DetailAction.isPurchased == "true"){
@@ -16,6 +19,7 @@ $(function () {
         $('#purchase').prop('disabled', "disabled");
     }else {
         if(DetailAction.isPurchased == "unknown"){
+            DetailAction.modalWindow("登录后才能进行其它操作 :)");
             $('#purchase').prop('disabled', "disabled");
             $('#start').prop('disabled', "disabled");
         }else {
@@ -92,41 +96,33 @@ DetailAction.getTypeImage = function () {
     }, "JSON");
 };
 
+/* 更新标签 -- DOM 结构
+ * <span class="tag-item tag-change-animation">标签1</span>
+ * */
+DetailAction.updateCourseTags = function () {
+
+    var $detailTagsDiv = $('.detail-tags-div');
+    // tag css动画对象 -- 除余法则
+    var tagAnimation = {
+        0: "tag-item tag-change-reverse-animation",
+        1: "tag-item tag-change-animation"
+    };
+    var index = 1;
+    // 字符串转数组
+    DetailAction.courseTags = DetailAction.courseTags.split(',');
+
+    DetailAction.courseTags.forEach(function (tag) {
+
+        var $tagSpan = $('<span>');
+        $tagSpan.prop('class', tagAnimation[index++ % 2]);
+        $tagSpan.text(tag);
+
+        $detailTagsDiv.append($tagSpan);
+    });
+};
+
 /* 模态弹窗 */
 DetailAction.modalWindow = function(text) {
     njj.ModalWindow.show(text);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

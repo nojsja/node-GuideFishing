@@ -50,7 +50,7 @@ a {
 .detail-head {
     min-height: 10rem;
     height: auto;
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
     background-color: #648393;
 }
 
@@ -77,6 +77,7 @@ a {
     text-align: center;
     color: #f3ffff;
     font-size: 1.4rem;
+    text-shadow: 2px 2px 1px #000;
 }
 
 .detail-head-other {
@@ -113,7 +114,7 @@ a {
     border-radius: 5px;
     height: auto;
     min-height: 10rem;
-    margin: 2rem auto 2rem;
+    margin: 0.5rem auto 2rem;
     background: #7aa0b4;
 }
 
@@ -136,6 +137,109 @@ a {
     text-align: center;
     margin-top: 2rem;
     margin-bottom: 2rem;
+}
+
+/* 标签区域 */
+.detail-tags-div {
+    text-align: center;
+    font-size: 0;
+}
+
+.tag-item {
+    position: relative;
+    font-size: 1rem;
+    margin: 5px;
+    display: inline-block;
+    padding: 3px;
+    color: #009c00;
+    font-weight: bold;
+    border: solid 2px #009c00;
+    border-radius: 5px;
+
+    -webkit-transform: rotate(7deg);
+    -moz-transform: rotate(7deg);
+    -ms-transform: rotate(7deg);
+    -o-transform: rotate(7deg);
+    transform: rotate(7deg);
+
+}
+
+.tag-item:hover, .tag-item:active {
+
+    -webkit-transform: scale(1.3);
+    -moz-transform: scale(1.3);
+    -ms-transform: scale(1.3);
+    -o-transform: scale(1.3);
+    transform: scale(1.3);
+    
+    -webkit-animation-play-state: paused;
+    -moz-animation-play-state: paused;
+    -o-animation-play-state: paused;
+    animation-play-state: paused;
+}
+
+.tag-change-animation {
+    -webkit-animation: tag-change 2s linear 0s infinite forwards;
+    -o-animation: tag-change 2s linear 0s infinite forwards;
+    animation: tag-change 2s linear 0s infinite forwards;
+}
+
+.tag-change-reverse-animation {
+    -webkit-animation: tag-change-reverse 2s linear 0s infinite forwards;
+    -o-animation: tag-change-reverse 2s linear 0s infinite forwards;
+    animation: tag-change-reverse 2s linear 0s infinite forwards;
+}
+
+@keyframes tag-change {
+    0% {
+        color: #009c00;
+        border: solid 1px #009c00;
+        top: 0;
+    }
+    25% {
+        color: #54b7bc;
+        border: solid 1px #54b7bc;
+    }
+    50% {
+        color: #755cbc;
+        border: solid 1px #755cbc;
+        top: -2px;
+    }
+    75% {
+        color: #d07233;
+        border: solid 1px #d07233;
+    }
+    100% {
+        color: #009c00;
+        border: solid 1px #009c00;
+        top: 0;
+    }
+}
+
+@keyframes tag-change-reverse {
+    0% {
+        color: #009c00;
+        border: solid 1px #009c00;
+        bottom: 0;
+    }
+    25% {
+        color: #d07233;
+        border: solid 1px #d07233;
+    }
+    50% {
+        color: #755cbc;
+        border: solid 1px #755cbc;
+        bottom: -2px;
+    }
+    75% {
+        color: #54b7bc;
+        border: solid 1px #54b7bc;
+    }
+    100% {
+        color: #009c00;
+        border: solid 1px #009c00;
+        bottom: 0;
+    }
 }
 
 /*文字特效*/

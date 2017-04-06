@@ -69,6 +69,8 @@ function user(app) {
     // 注销
     app.post('/logout', function (req, res) {
         req.session.account = undefined;
+        req.session.nickName = undefined;
+
         res.json( JSON.stringify({
             isError: false
         }) );

@@ -23,6 +23,10 @@ a:hover {
     margin-bottom: 1rem;
     padding: 5px;
     background-color: #F3F3F3;
+    border-top: solid 1px #dcdcdc;
+    border-bottom: solid 1px #dcdcdc;
+    border-left: solid 3px #f58030;
+    border-right: solid 3px #f58030;
 }
 
 /* 公司item */
@@ -87,18 +91,21 @@ a:hover {
 
 /* 顶部标识 */
 /* 强制不换行 */
-.content-marker {
+.content-marker-div {
     margin-top: 1rem;
     margin-bottom: 1rem;
+}
+
+.content-marker {
     text-align: center;
-    width: 4rem;
     padding: 2px;
     white-space: nowrap;
-    font-size: 1.2rem;
+    font-size: 1rem;
     vertical-align: middle;
     background-color: #e57a4a;
     overflow: hidden;
     color: #ffffff;
+    border: solid 1px white;
     border-left: solid 2px #1c6897;
 }
 
@@ -112,22 +119,23 @@ a:hover {
 }
 
 .nav-footer-border {
-    margin: 0 auto;
-    border: solid 1px green;
+    text-align: center;
 }
 
 .nav-footer-item {
+    background-color: #577581;
     border-radius: 5px;
     font-size: 1.2rem;
     padding: 5px;
     box-sizing: border-box;
     display: inline-block;
-    width:  25%;
+    min-width:  25%;
+    width: auto;
     min-height: 1.5rem;
     height: auto;
     line-height: 1.5rem;
     text-align: center;
-    border: solid 1px #818181;
+    border: solid 1px #cecece;
     color: #f5f9f6;
 
     -webkit-transition: all 0.2s;
@@ -149,7 +157,7 @@ a:hover {
 
     text-shadow:  3px 2px 2px #1c6897;
     color: #ffffff;
-    border: 0;
+    border-top: solid 1px #648393;
     background-color: #d1dbee;
 
     -webkit-transform: translate(0, -8px);

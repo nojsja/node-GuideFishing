@@ -9,6 +9,7 @@
     <meta name="keywords" content="recruitment" />
 
     <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/lib/font-awesome.min.css">
     <link rel='stylesheet' href='/stylesheets/recruitment_detail.css' />
 
     <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
@@ -42,13 +43,15 @@
     </div>
 
     <!--获取在招职位-->
-    <div class="get-recruitments">
-        <a href="/recruitment/<%= company %>/detail">在招职位</a>
-    </div>
+
+        <a href="/recruitment/<%= company %>/detail">
+            <div class="get-recruitments">在招职位</div>
+        </a>
+
     <!--返回大厅-->
-    <div class="return-home">
-        <a href="/recruitment/index"><span class="glyphicon glyphicon-home">返回</span></a>
-    </div>
+    <a href="/recruitment/index">
+        <div class="return-home"><i class="icon-arrow-left"></i>返回</div>
+    </a>
 </div>
 
 <!--页脚导航-->

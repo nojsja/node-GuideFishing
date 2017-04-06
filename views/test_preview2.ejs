@@ -1,0 +1,137 @@
+
+<!--自定义题目预览模态弹窗组件-->
+<!-- 鼠标滚轮事件需要处理 -->
+<style type="text/css">
+
+    .modal-wrapper {
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        /* 如果是absolute的话，高宽仍然是视口的值，只是定位相对于顶部 */
+        position: fixed;
+        overflow: auto;
+        /* 移动设备使用触摸进行滚动 */
+        -webkit-overflow-scrolling: touch;
+        background-color: rgba(103,103,103,0.6);
+        display: none;
+    }
+
+    /* 内容定位器 */
+    .modal-content-wrapper {
+        position: absolute;
+        margin: 10rem auto 0;
+        height: auto;
+        width: 100%;
+    }
+
+    /* 相对定位对于移动元素位置很重要 */
+    .modal-content {
+        position: relative;
+        padding: 1rem;
+        border-radius: 5px;
+        text-align: center;
+        width: 50%;
+        min-height: 10rem;
+        margin: auto;
+        height: auto;
+        background-color: white;
+        box-shadow: 0 0 10px black;
+    }
+
+    .modal-content-tip {
+        text-align: left;
+        padding: 2px;
+        margin-bottom: 4px;
+    }
+
+    .modal-content-text {
+        padding: 0.5rem;
+        width: 80%;
+        margin: auto;
+        font-size: 1.2rem;
+        color: #41545f;
+    }
+
+    .modal-content-text-outter {
+        border-top: solid 1px #577280;
+        border-bottom: solid 1px #577280;
+        margin-bottom: 3rem;
+    }
+
+    #accept {
+        position: absolute;
+        bottom: 1rem;
+        right: 1rem;
+        width: 4rem;
+        background-color: #00b200;
+        padding: 2px;
+        font-size: 1.2rem;
+        border-radius: 4px;
+        color: white;
+    }
+    #accept:hover, #accept:active {
+        background-color: #008500;
+        transition: 0.3s background-color linear;
+    }
+
+    /*
+    *筛选手机以及相关的小屏幕
+    */
+    @media screen and (max-width: 400px){
+        .modal-content {
+            position: relative;
+            padding: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            width: 80%;
+            min-height: 10rem;
+            height: auto;
+            background-color: white;
+            box-shadow: 0 0 10px black;
+        }
+    }
+</style>
+
+<!--模态弹窗-->
+<div id="wheelWrapper">
+<div class="modal-wrapper" id="ModalWindow">
+    <div class="modal-content-wrapper">
+        <div class="modal-content" id="ModalContent">
+            <div class="modal-content-tip">
+                小提示
+            </div>
+
+            <div class="modal-content-text-outter">
+                <div class="modal-content-text">
+                    <p id="contentText"></p>
+
+                    <div class="preview-list">
+
+                        <!--其中一个题目项-->
+                        <div class="preview-item">
+                            <!--编号-->
+                            <div class="item-number">1</div>
+                            <!--标题-->
+                            <div class="item-title">这是标题</div>
+                            <!--选项组-->
+                            <div class="item-choises">
+                                <!--各个选项-->
+                                <div class="choise">选项A</div>
+                                <div class="choise">选项B</div>
+                                <div class="choise">选项C</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="accept">确定</div>
+        </div>
+    </div>
+</div>
+</div>

@@ -29,6 +29,7 @@ var scoreFactory = function (submitData, callback) {
     //提交的选项数据
     var choiseArray = submitData.choiseArray;
     var that = this;
+    // 构造函数执行的查询
     scoreFactory.getScoreModeInfo(condition, function (scoreModeInfo) {
 
         //读取失败

@@ -202,7 +202,7 @@
     nojsja["ModalWindow"] = (function () {
         // 初始化标志
         var isInit = false;
-        var modal, modalContent, acceptButton, contentP;
+        var modal, modalContent, acceptButton, contentP, selfDefineDiv;
 
         // 组件初始化事件
         function modalInit() {
@@ -214,6 +214,8 @@
             acceptButton = document.getElementById('accept');
             // 显示的文字信息
             contentP = document.getElementById('contentText');
+            // 自定义组件的父级div
+            selfDefineDiv = document.getElementById('selfDefineDiv');
 
             // 绑定点击关闭事件
             acceptButton.onclick = function () {
@@ -222,15 +224,25 @@
         }
 
         // 模态窗口弹出
-        function modalShow(text) {
+        function modalShow(text, condition) {
 
             // 初始化检测
             if(!isInit){
                 modalInit();
             }
 
-            // 禁用滚动
-            nojsja.ScrollHandler.disableScroll();
+            // 禁用窗口的滚动事件，这儿其实应该阻止事件冒泡
+            // 可以手动传参设置可不可滚动
+            if(!condition || !condition.scroll){
+
+                nojsja.ScrollHandler.disableScroll();
+            }
+
+            // 清除自定义DOM
+            if(!condition || !condition.selfDefineKeep){
+
+                selfDefineRemove();
+            }
 
             contentP.innerText = text;
             // 设置透明度和初始位置
@@ -244,7 +256,7 @@
             // 弹出动画效果
             // 注意JavaScript中小数想加的时候可能会舍去
             function popAnimation() {
-                if(modalContent.style.opacity    == 1){
+                if(modalContent.style.opacity == 1){
                     return;
                 }else {
                     opacityValue += 5.0;
@@ -260,6 +272,25 @@
             setTimeout(popAnimation, 10);
         }
 
+        /* 添加自定义组件到modalWindow */
+        function selfDefine(defineHtml) {
+
+            if(!isInit){
+                modalInit();
+            }
+
+            selfDefineRemove();
+
+            selfDefineDiv.appendChild(defineHtml);
+        }
+
+        /* 清除自定义组件 */
+        function selfDefineRemove() {
+            for(var i = 0; i < selfDefineDiv.childNodes.length; i++){
+                selfDefineDiv.removeChild(selfDefineDiv.childNodes[0]);
+            }
+        }
+        
         // 模态窗口隐藏
         function modalHidden() {
 
@@ -300,6 +331,7 @@
         // 返回调用接口
         return {
             show: modalShow,
+            define: selfDefine,
             hidden: modalHidden
         }
     })();
@@ -468,6 +500,88 @@
         };
     })();
 
+    /* 小工具函数 */
+    nojsja["Tool"] = (function () {
+
+        // 获取当前日期 //
+        function GetDate() {
+
+            var dateArray = [];
+            var date = new Date();
+            var getMonth = (date.getMonth() + 1 < 10) ? ("0" + (date.getMonth() + 1)) : ("" + (date.getMonth() + 1));
+            var getDate = (date.getDate() < 10) ? ("0" + date.getDate()) : ("" +date.getDate());
+
+            dateArray.push(date.getFullYear(), "-", getMonth, "-", getDate,
+                " ", date.getHours(), ":", date.getMinutes(), ":", date.getSeconds());
+
+            return (dateArray.join(""));
+        }
+
+        // 防止高频调用函数 //
+        function FnDelay() {
+            //采用单例模式进行内部封装
+            // 存储所有需要调用的函数
+            var fnObject = {};
+
+            // 三个参数分别是被调用函数，设置的延迟时间，是否需要立即调用
+            return function(fn, delayTime, IsImediate){
+
+                // 立即调用
+                if(!delayTime || IsImediate){
+                    return fn();
+                }
+                // 判断函数是否已经在调用中
+                if(fnObject[fn]){
+                    return;
+                }else {
+                    // 定时器
+                    var timer = setTimeout(function(){
+                        fn();
+                        //清除定时器
+                        clearTimeout(timer);
+                        delete(fnObject[fn]);
+                    }, delayTime);
+
+                    fnObject[fn] = {
+                        "status": 'waitToRun',
+                        "delayTime": delayTime,
+                        "timer": timer
+                    };
+                }
+            };
+        }
+
+        // Boolean类型转换函数 //
+        function StringToBoolean (string) {
+
+            if(string == "true" && typeof (string) == 'string'){
+                return (string = true);
+            }
+            if(string === true && typeof (string) == 'boolean'){
+                return (string = true);
+            }
+            return (string = false);
+        };
+
+        // 获取指定范围内的随机数 //
+        function GetRandomNum(Min,Max) {
+            // 1.Math.random(); 结果为0-1间的一个随机数(包括0,不包括1) 
+            // 2.Math.floor(num); 参数num为一个数值，函数结果为num的整数部分。 
+            // 3.Math.round(num); 参数num为一个数值，函数结果为num四舍五入后的整数。
+            var Range = Max - Min;
+            var Rand = Math.random();
+            return(Min + Math.round(Rand * Range));
+        }
+
+        // 返回调用接口
+        return {
+            GetDate: GetDate,
+            FnDelay: FnDelay,
+            StringToBoolean: StringToBoolean,
+            GetRandomNum: GetRandomNum
+        };
+    })();
+
     /* 获取当前日期 */
     nojsja["GetDate"] = function getDate() {
 
@@ -564,7 +678,9 @@
     /* 禁用浏览器滚动的方法 */
     nojsja["ScrollHandler"] = (function () {
 
+        // 上下左右的键值码keycode
         var keys = {37: 1, 38: 1, 39: 1, 40: 1};
+        // 阻止事件冒泡
         function preventDefault(e) {
             e = e || window.event;
             if (e.preventDefault)
@@ -582,38 +698,66 @@
         var oldonwheel, oldonmousewheel1, oldonmousewheel2, oldontouchmove, oldonkeydown
             , isDisabled;
 
-        function disableScroll() {
-            if (window.addEventListener) // older FF
-                window.addEventListener('DOMMouseScroll', preventDefault, false);
+        function disableScroll(object) {
+
+            /* 新旧浏览器适配 */
+            if (window.addEventListener) {
+                if(object && (typeof object == "object")){
+                    object.addEventListener('DOMMouseScroll', preventDefault, false);
+                }else {
+                    window.addEventListener('DOMMouseScroll', preventDefault, false);
+                }
+            }// older FF
+
+            // 保存事件
             oldonwheel = window.onwheel;
-            window.onwheel = preventDefault; // modern standard
-
             oldonmousewheel1 = window.onmousewheel;
-            window.onmousewheel = preventDefault; // older browsers, IE
             oldonmousewheel2 = document.onmousewheel;
-            document.onmousewheel = preventDefault; // older browsers, IE
-
             oldontouchmove = window.ontouchmove;
-            window.ontouchmove = preventDefault; // mobile
-
             oldonkeydown = document.onkeydown;
-            document.onkeydown = preventDefaultForScrollKeys;
+
+            if(object && (typeof object == "object")){
+                object.onwheel = preventDefault; // modern standard
+                object.onmousewheel = preventDefault; // older browsers, IE
+                object.onmousewheel = preventDefault; // older browsers, IE
+                object.ontouchmove = preventDefault; // mobile
+                document.onkeydown = preventDefaultForScrollKeys;
+            }else {
+                window.onwheel = preventDefault; // modern standard
+                window.onmousewheel = preventDefault; // older browsers, IE
+                document.onmousewheel = preventDefault; // older browsers, IE
+                window.ontouchmove = preventDefault; // mobile
+                document.onkeydown = preventDefaultForScrollKeys;
+            }
             isDisabled = true;
         }
 
-        function enableScroll() {
+        function enableScroll(object) {
+
             if (!isDisabled) return;
-            if (window.removeEventListener)
-                window.removeEventListener('DOMMouseScroll', preventDefault, false);
 
-            window.onwheel = oldonwheel; // modern standard
+            if (window.removeEventListener){
+                if(object && (typeof object == "object")){
+                    object.removeEventListener('DOMMouseScroll', preventDefault, false);
+                }else {
+                    window.removeEventListener('DOMMouseScroll', preventDefault, false);
+                }
+            }
 
-            window.onmousewheel = oldonmousewheel1; // older browsers, IE
-            document.onmousewheel = oldonmousewheel2; // older browsers, IE
+            if(object && (typeof object == "object")){
+                object.onwheel = oldonwheel; // modern standard
+                object.onmousewheel = oldonmousewheel1; // older browsers, IE
+                object.onmousewheel = oldonmousewheel2; // older browsers, IE
+                object.ontouchmove = oldontouchmove; // mobile
+                document.onkeydown = oldonkeydown;
+            }else {
+                window.onwheel = oldonwheel; // modern standard
+                window.onmousewheel = oldonmousewheel1; // older browsers, IE
+                document.onmousewheel = oldonmousewheel2; // older browsers, IE
+                window.ontouchmove = oldontouchmove; // mobile
+                document.onkeydown = oldonkeydown;
+            }
 
-            window.ontouchmove = oldontouchmove; // mobile
-
-            document.onkeydown = oldonkeydown;
             isDisabled = false;
         }
 

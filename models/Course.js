@@ -24,6 +24,9 @@ var courseSchema = require('./db_schema/course_schema').courseSchema;
 // 受欢迎的课程模式
 var popularCourseSchema = require('./db_schema/popularCourse_schema').popularCourseSchema;
 
+// Tag 模型
+var Tag = require('./Tag');
+
 
 /* 构造函数 */
 function Course(course){
@@ -40,11 +43,28 @@ function Course(course){
         courseContent : course.courseContent,
         teacher : course.teacher,
         password: course.password,
+        courseTags: course.courseTags,
         date : getDate(),
         price : course.price,
         clickRate : 0
     };
 
+    // 课程标签(数组)
+    if(course.courseTags instanceof Array){
+
+        // 创建新数组的迭代器方法
+        this.tagArray = course.courseTags.map(function (item) {
+
+            return {
+                tagName: item,
+                tagType: "course",
+                contentName: course.courseName,
+                contentType: course.courseType
+            }
+        });
+    }else {
+        this.tagArray = [];
+    }
 }
 
 /* 存储一条课程数据 */
@@ -53,6 +73,7 @@ Course.prototype.save = function (callback) {
     var db = mongoose.connection;
     var Model = mongoose.model('Course', courseSchema);
     var courseData = this.courseData;
+    var tagArray = this.tagArray;
 
     // 先进行检查是否已经存在数据
     Course.deleteIfExit({ courseName: courseData.courseName }, function (err) {
@@ -68,7 +89,15 @@ Course.prototype.save = function (callback) {
                 console.log(err);
                 return callback(err);
             }
-            callback(null);
+            var newTag = new Tag(tagArray);
+            newTag.save(function (err) {
+                if(err){
+                    console.log("[error]: " + err );
+                    callback(err);
+                }else {
+                    callback(null);
+                }
+            });
         });
     });
 };
@@ -492,7 +521,7 @@ Course.updatePopular = function (callback) {
     }
 };
 
-// 获取热门课程数据
+/* 获取热门课程数据 */
 Course.getPopular = function (callback) {
 
     var db = mongoose.connection;
@@ -518,32 +547,72 @@ Course.getPopular = function (callback) {
     });
 };
 
+/* 获取相关课程推荐 */
+Course.getRecommendation = function (condition, callback) {
 
+    var _condition = {
+        tagNameArray: condition.tagNameArray,
+        tagTypeArray: condition.tagTypeArray,
+        count: condition.count || 6
+    };
+    // 刷选条件
+    if( condition.filter ){
+
+        _condition.filter = {
+            filterContentType: condition.filter.filterContentType,
+            filterContentName: condition.filter.filterContentName
+        };
+    }
+
+    Tag.getTagContent(_condition, function (err, tagContentArray) {
+
+        if(err){
+            console.log('[error]: ' + err);
+            return callback(err);
+        }
+
+        callback(null, tagContentArray);
+    });
+};
+
+/* 更改课程审查属性 -- 审查通过 */
+Course.examinePass = function (con, callback) {
+
+    var db = mongoose.connection;
+    var Model = mongoose.model('Course', courseSchema);
+
+    var query = Model.findOne();
+    query.where({
+        courseName: con.courseName,
+        courseType: con.courseType
+    });
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log('[error]: ' + err);
+            return callback(err);
+        }
+        // 文档存在
+        if(doc){
+            // 已经审查通过了
+            if(doc.examine.pass){
+                console.log('已经审查过了！');
+                return callback(null, false);
+            }
+            doc.examine.pass = true;
+            doc.examine.adminAccount = con.adminAccount;
+            doc.date = getDate();
+            // 审查成功
+            callback(null, true);
+        }else {
+            var error = new Error('文档为找到！');
+            callback(error);
+        }
+    });
+};
 
 
 module.exports = Course;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

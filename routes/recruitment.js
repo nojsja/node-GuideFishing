@@ -81,9 +81,9 @@ function recruitment(app) {
 
         // 渲染页面
         res.render('recruitment_index', {
-            title: "所有招聘",
-            slogan: "带渔[授人以渔]",
-            other: '企业'
+            title: "带渔首页",
+            slogan: "带渔",
+            other: '首页'
         });
     });
 

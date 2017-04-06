@@ -26,6 +26,7 @@ $(function () {
  * course对象的属性说明
  * courseName -- 课程名字
  * courseType -- 课程类型
+ * courseTags -- 课程标签(最多三个)
  * isReady -- 是否是正式发布的课程
  * courseOrigin -- 用于存储直播数据,包含视频,音频,文本和图片
  * courseAbstract -- 课程摘要
@@ -33,6 +34,7 @@ $(function () {
  * teacher -- 讲师
  * password -- 讲师登录密码
  * price -- 课程价格
+ * tags -- 课程标签
  * */
 var editAction = {
 
@@ -66,10 +68,17 @@ var editAction = {
             isBroadcast: false,
             courseOrigin: [],
             courseAbstract: "",
+            courseTags: [],
+            examine: {
+                pass: false,
+                adminAccount: null,
+                date: null
+            },
             courseContent: "",
             teacher: "",
             password: "",
-            price: ""
+            price: "",
+            tags: []
         },
         // 观察者方法
         // 观察者列表, 注入方法和触发方法
@@ -156,6 +165,13 @@ editAction.watcherActive = function () {
             return editAction.modalWindow('讲师登录密码需要填写完整!');
         }
         editAction.course.info.password = password;
+    }).listen(function () {
+
+        //标签
+        var courseTags = editAction.course.info.courseTags;
+        if(courseTags.length == 0){
+            return editAction.modalWindow('请至少输入一个自定义标签!');
+        }
     });
 };
 
@@ -188,6 +204,9 @@ editAction.ueditorInit = function() {
 /* 页面事件绑定,DOM操作 */
 editAction.pageEventBind = function () {
 
+    // 导航条
+    $('#courseCreate').parent().prop('class', 'active');
+
     $('#uploadAudioProgress, #uploadImgProgress, #uploadVideoProgress').hide();
     // 清除标题
     $('#courseName').val('');
@@ -206,6 +225,45 @@ editAction.pageEventBind = function () {
         editAction.course.info.courseName = $(this).val();
         // 上传事件绑定
         editAction.uploadEventBind();
+    });
+
+    // 标签输入时间绑定
+    $('#tagAdd').click(function () {
+
+        var targetId = $(this).attr('target');
+        var tagText = $('#' + targetId).val().trim();
+        if(!tagText || tagText == ''){
+            return editAction.modalWindow('请在左侧输入标签名');
+        }
+        if(editAction.course.info.courseTags.length == 3){
+            return editAction.modalWindow('标签最多能添加三个');
+        }
+        if(editAction.course.info.courseTags.indexOf(tagText) >= 0){
+            return editAction.modalWindow('标签重复');
+        }
+        editAction.course.info.courseTags.push(tagText);
+        // 更新DOM <div class="tag-list-item" title="点击删除标签">123</div>
+        var $tagList = $('.tag-list');
+
+        updateTag();
+        // 递归更新tag
+        function updateTag() {
+            $tagList.children().remove();
+            for(var i = 0; i < editAction.course.info.courseTags.length; i++) {
+
+                (function (i) {
+                    var tag = editAction.course.info.courseTags[i];
+                    var $tag = $('<div class="tag-list-item" title="点击删除标签">');
+                    $tag.text(tag);
+                    $tag.click(function () {
+                        editAction.course.info.courseTags.splice(i, 1);
+                        updateTag();
+                    });
+                    $tagList.append($tag);
+                })(i);
+            }
+        }
+
     });
 
     // 提交课程数据或是直播数据
@@ -228,7 +286,9 @@ editAction.pageEventBind = function () {
         var courseData = {
             courseName: editAction.course.info.courseName,
             courseType: editAction.course.info.courseType,
+            examine: editAction.course.info.examine,
             isReady: editAction.course.info.isReady,
+            courseTags: editAction.course.info.courseTags,
             isBroadcast: editAction.course.info.isBroadcast,
             courseOrigin: editAction.course.info.courseOrigin,
             courseAbstract: editAction.course.info.courseAbstract,
@@ -328,8 +388,32 @@ editAction.loadCourseData = function (JSONdata) {
         password: JSONobject.loadData.password || "",
         courseContent: JSONobject.loadData.courseContent || "",
         courseOrigin: JSONobject.loadData.courseOrigin || [],
+        courseTags: JSONobject.loadData.courseTags || [],
         isReady: JSONobject.loadData.isReady || "false"
     };
+
+    // 设置标签
+    // 更新DOM <div class="tag-list-item" title="点击删除标签">123</div>
+    var $tagList = $('.tag-list');
+    updateTag();
+    // 递归更新tag
+    function updateTag() {
+        $tagList.children().remove();
+        for(var i = 0; i < loadObject.courseTags.length; i++) {
+
+            (function (i) {
+                var tag = loadObject.courseTags[i];
+                var $tag = $('<div class="tag-list-item" title="点击删除标签">');
+                editAction.course.info.courseTags.push(tag);
+                $tag.text(tag);
+                $tag.click(function () {
+                    editAction.course.info.courseTags.splice(i, 1);
+                    updateTag();
+                });
+                $tagList.append($tag);
+            })(i);
+        }
+    }
 
     // 设置分类
     var $typeItems = $('.type > .type-item');
@@ -673,5 +757,5 @@ editAction.uploadEventBind = function () {
 /* 模态弹窗 */
 editAction.modalWindow = function(text) {
 
-    ModalWindow.show(text);
+    nojsja.ModalWindow.show(text);
 };

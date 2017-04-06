@@ -5,6 +5,7 @@
  */
 
 var mongoose = require('./tools/Mongoose');
+var getDate = require('./tools/GetDate');
 // 测试模式
 var testSchema = require('./db_schema/test_schema.js').testSchema;
 // 受欢迎的测试模式
@@ -350,6 +351,42 @@ AllTest.deleteSomeDoc = function (docsCondition, callback) {
         callback(null);
     });
 
+};
+
+/* 更改测评审查属性 -- 审查通过 */
+AllTest.examinePass = function (con, callback) {
+
+    var db = mongoose.connection;
+    var Model = mongoose.model('Test', testSchema);
+
+    var query = Model.findOne();
+    query.where({
+        testTotle: con.testTitle,
+        testType: con.testType
+    });
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log('[error]: ' + err);
+            return callback(err);
+        }
+        // 文档存在
+        if(doc){
+            // 已经审查通过了
+            if(doc.examine.pass){
+                console.log('已经审查过了！');
+                return callback(null, false);
+            }
+            doc.examine.pass = true;
+            doc.examine.adminAccount = con.adminAccount;
+            doc.date = getDate();
+            // 审查成功
+            callback(null, true);
+        }else {
+            var error = new Error('文档为找到！');
+            callback(error);
+        }
+    });
 };
 
 module.exports = AllTest;

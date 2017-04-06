@@ -109,6 +109,40 @@ CourseBroadcastData.teacherLogin = function (condition, callback) {
     });
 };
 
+/* 读取一个直播 */
+CourseBroadcastData.readOne = function (condition, callback) {
+
+    var db = Mongoose.connection;
+    var mongoose = Mongoose;
+    var Broadcast = mongoose.model('Broadcast', courseBroadcast_schema);
+
+    if(!condition.courseName){
+        return callback(null, []);
+    }
+    var query = Broadcast.findOne();
+    query.where({
+        courseName: condition.courseName
+    });
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log('[error]: ' + err);
+            return callback(err);
+        }
+        if(doc){
+            return callback( null, [{
+                courseName: doc.courseName,
+                courseType: doc.courseType,
+                date: doc.date,
+                teacher: doc.teacher
+            }] )
+        }
+        callback(null, []);
+
+    });
+
+};
+
 /* 读取直播课程列表 */
 CourseBroadcastData.readList = function (docCondition, callback) {
 

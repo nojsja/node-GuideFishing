@@ -12,9 +12,9 @@ $(function () {
         TestIndexAction.headerDown = !TestIndexAction.headerDown;
         $('.type-item').slideToggle();
         if(TestIndexAction.headerDown) {
-            $('.header-label > span:nth-child(2)').prop('class', 'glyphicon glyphicon-chevron-up');
+            $('.header-label > i').prop('class', 'icon-angle-up');
         }else {
-            $('.header-label > span:nth-child(2)').prop('class', 'glyphicon glyphicon-chevron-down');
+            $('.header-label > i').prop('class', 'icon-angle-down');
         }
     });
 
@@ -30,9 +30,9 @@ $(function () {
     //高度检测
     /*windowHeightCheck();*/
     //滑动检测函数
-    $(window).scroll(function () {
-        nojsja.FnDelay(TestIndexAction.scrollCheck, 500);
-    });
+    // $(window).scroll(function () {
+    //     nojsja.FnDelay(TestIndexAction.scrollCheck, 500);
+    // });
     //加载更多数据
     $('.loading-info').click(TestIndexAction.readMore);
     // 读取测评类型
@@ -177,8 +177,12 @@ TestIndexAction.updatePage = function (JSONdata) {
             var $contentLeft = $('<div class="content-item-left">');
             //内容标题
             var $contentTitle = $('<a class="content-item-title">');
+            var url = '/test/detail/' + test.testType + '/' + test.testTitle;
+            $testContainer.click(function () {
+               window.location.href = url;
+            });
             //添加超链接
-            $contentTitle.prop('href','/test/detail/' + test.testType + '/' + test.testTitle);
+            $contentTitle.prop('href',url);
             $contentTitle.text(test.testTitle);
             //内容摘要和图标
             var $abstract = $('<div class="content-item-abstract">');

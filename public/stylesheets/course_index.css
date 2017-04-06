@@ -37,8 +37,9 @@ a {
 }
 
 #userInfo {
-    float: right;
-    margin-right: 0.8rem;
+    position: absolute;
+    top: 0.7rem;
+    right: 1rem;
 }
 
 #upAndDown {
@@ -47,6 +48,7 @@ a {
 
 .header-label {
     text-align: center;
+    font-size: 1.3rem;
     margin: auto;
     color: white;
 }
@@ -69,7 +71,7 @@ a {
     border-top: 0em;
     color: #7094a2;
     background-color: #f0f0f0;
-    -webkit-box-shadow:  50 5px 5px #7094a2;
+    -webkit-box-shadow:  0 5px 5px #7094a2;
     -moz-box-shadow:  0 5px 5px #7094a2;
     box-shadow:  0 0 5px #7094a2;
 }
@@ -153,8 +155,8 @@ a {
 /* 图钉 */
 .push-pin {
     position: absolute;
-    top: -0.6rem;
-    right: 0;
+    top: -0.5rem;
+    right: -0.1rem;
     font-size: 1rem;
 }
 
@@ -200,7 +202,7 @@ a {
 
 /* 评测标题 */
 .content-item-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
     word-spacing: 1px;
     letter-spacing: 2px;
     text-decoration: none;

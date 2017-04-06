@@ -8,6 +8,7 @@
     <meta name="keywords" content="course-broadcast" />
 
     <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/lib/font-awesome.min.css">
     <link rel='stylesheet' href='/stylesheets/course_broadcast.css' />
 
     <!--引入socket.io, 路径是自动映射的-->
@@ -34,6 +35,11 @@
 <!--直播间-->
 <div class="broadcast-room">
     <%= broadcastRoom %>
+</div>
+
+<!--返回按钮-->
+<div class="return-home">
+    <div><i class="icon-arrow-left">返回</i></div>
 </div>
 
 <% if(admin) {%>
@@ -71,7 +77,7 @@
         <!--录音-->
         <div class="record-div">
             <!--录音/停止录音-->
-            <span class="glyphicon glyphicon-record" id="recordButton"></span>
+            <i class="icon-volume-up" id="recordButton"></i>
         </div>
         <!--发送媒体类型文件-->
         <div class="file-send-div">
@@ -94,9 +100,5 @@
 <%- include footer.ejs %>
 <!--模态弹窗-->
 <%- include modalWindow.ejs %>
-<!--返回按钮-->
-<div class="return-home">
-    <div><span class="glyphicon glyphicon-arrow-left">返回</span></div>
-</div>
 
 </body>

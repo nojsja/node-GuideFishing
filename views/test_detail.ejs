@@ -27,7 +27,7 @@
 <div class="container detail-head">
     <div class="detail-head-img"></div>
     <p class="detail-head-type"><%= testType %></p>
-    <p class="detail-head-title box1">
+    <p class="detail-head-title">
         <%= testTitle %>
     </p>
     <div class="detail-head-other">
@@ -37,6 +37,13 @@
         </div>
     </div>
 
+</div>
+
+<!--课程相关的标签-->
+<div class="detail-tags-div">
+    <!--<span class="tag-item tag-change-animation">标签1</span>-->
+    <!--<span class="tag-item tag-change-reverse-animation">标签2</span>-->
+    <!--<span class="tag-item tag-change-animation">标签2</span>-->
 </div>
 
 <!--评测介绍主体-->
@@ -50,7 +57,7 @@
 
 <!--进入测试页面按钮-->
 <div id="startDiv">
-    <input type="button" class="btn btn-danger" value="购买" id="purchase">
+    <!--<input type="button" class="btn btn-danger" value="购买" id="purchase">-->
     <input type="button" class="btn btn-success" value="开始测试-->" id="start">
 </div>
 
@@ -69,6 +76,7 @@
     // 设置描述内容
     DetailAction.$$abstract = '<%- abstract %>';
     DetailAction.isPurchased = '<%= isPurchased %>';
+    DetailAction.testTags = '<%= testTags %>';
     DetailAction.testTitle = '<%= testTitle%>';
     DetailAction.testType = '<%= testType %>';
     DetailAction.initialError = '<%= isError %>';

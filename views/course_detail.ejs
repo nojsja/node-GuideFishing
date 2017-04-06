@@ -22,7 +22,7 @@
     </div>
 </header>
 
-<!--评测介绍首部-->
+<!--课程介绍首部-->
 <div class="detail-head">
     <div class="detail-head-img"></div>
     <p class="detail-head-type"><%= courseType %></p>
@@ -38,7 +38,14 @@
 
 </div>
 
-<!--评测介绍主体-->
+<!--课程相关的标签-->
+<div class="detail-tags-div">
+    <!--<span class="tag-item tag-change-animation">标签1</span>-->
+    <!--<span class="tag-item tag-change-reverse-animation">标签2</span>-->
+    <!--<span class="tag-item tag-change-animation">标签2</span>-->
+</div>
+
+<!--课程介绍主体-->
 <div class="detail-body">
     <div class="detail-body-abstract">
         <div class="abstract">
@@ -47,7 +54,7 @@
     </div>
 </div>
 
-<!--进入测试页面按钮-->
+<!--进入课程页面按钮-->
 <div id="startDiv">
     <input type="button" disabled="disabled"  class="btn btn-danger" value="购买" id="purchase">
     <input type="button" disabled="disabled" class="btn btn-success" value="开始学习-->" id="start">
@@ -63,6 +70,7 @@
         DetailAction.isPurchased = '<%= isPurchased %>';
         DetailAction.courseName = '<%= courseName%>';
         DetailAction.courseType = '<%= courseType%>';
+        DetailAction.courseTags = '<%= courseTags %>';
         DetailAction.initialError = '<%= isError %>';
         DetailAction.error = '<%= error %>';
         $('.abstract').append( $(DetailAction.$$abstract).html() );
@@ -71,8 +79,9 @@
 </script>
 
 <!--底部导航-->
-<%- include footer.ejs%>
-<%-include modalWindow.ejs%>
+<%- include footer.ejs %>
+<%- include hoverButton.ejs %>
+<%- include modalWindow.ejs %>
 </body>
 
 

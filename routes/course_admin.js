@@ -17,7 +17,9 @@ var CourseBroadcastData = require('../models/CourseBroadcastData');
 function course_admin(app) {
     
     // 进入所有课程管理后台
-    app.get('/course/admin/manager', function (req, res) {
+    app.get('/course/admin/manager', function (req, res, next) {
+        adminCheck(req, res, next);
+    }, function (req, res) {
 
         res.render('course_adminManager', {
             title: "课程管理"
@@ -25,7 +27,9 @@ function course_admin(app) {
     });
 
     // 进入课程编辑后台
-    app.get('/course/admin/edit', function (req, res) {
+    app.get('/course/admin/edit', function (req, res, next) {
+        adminCheck(req, res, next);
+    }, function (req, res) {
 
         res.render('course_adminEdit', {
             title: "课程编辑"
@@ -38,7 +42,7 @@ function course_admin(app) {
         // 规定字段数组
         var elementArary = ['courseName', 'courseType', 'courseAbstract',
             'courseContent', 'courseOrigin', 'password', 'isReady', 'isBroadcast',
-            'teacher', 'price'];
+            'teacher', 'price', 'courseTags', 'examine'];
         // 含有非字符串类型的数据最好先转化为JSON字符串然后再转化成JSON对象
         // 否则服务器会把Boolean类型会被处理成String类型
         var courseData = JSON.parse(req.body.courseData);
@@ -169,6 +173,19 @@ function course_admin(app) {
         });
 
     });
+
+    /* 权限验证中间件 */
+    var adminCheck = function (req, res, next) {
+
+        // 验证用户
+        if(req.session.admin){
+            return next();
+        }else {
+            res.render('admin_login', {
+                title: "管理员登录"
+            });
+        }
+    };
 }
 
 module.exports = course_admin;

@@ -1,12 +1,37 @@
-/**
- * Created by yangw on 2016/11/14.
- * pm2启动脚本
- */
 
 {
-    apps: [{
-        script: './bin/GuideFishing',
-        instances: '1',
-        exec_mode: 'cluster'
-    }]
+  "note": "[注释]这是pm2的启动脚本，使用pm2运行app需要定位到根目录下执行：pm2 start GuideFishing.json",
+  "note": "[注释]开发模式下应该用fork单线程模式，产品环境下应该用cluster集群模式",
+
+  "apps": [
+    {
+      "name": "GuideFishing",
+      "script": "./bin/GuideFishing",
+      "instances": "1",
+      //"exec_mode": "cluster",
+      "exec_mode": "fork",
+//      "watch": ["models", "routes", "GuideFishing.json", "gulpfile.js", "MongoConfig.js"],
+      "watch": true,
+      "ignore_watch" : ["public", "document", ".idea", "db_scripts", "node_modules"],
+
+      "error_file": "./logs/error/error.txt",
+      //"out_file": "./logs/normal/normal.txt",
+
+      "watch_options": {
+        "followSymlinks": false,
+        "persistent": true,
+        "usePolling": true
+      },
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "env_dev": {
+        "NODE_ENV": "development",
+        "REMOTE_ADDR": "http://www.johnson77.cn/"
+      },
+      "env_test": {
+        "NODE_ENV": "test"
+      }
+    }
+  ]
 }

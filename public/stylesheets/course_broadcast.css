@@ -28,10 +28,10 @@ a {
 /* 返回大厅 */
 .return-home {
     position: fixed;
-    right: 0;
-    top: 6rem;
+    left: 0;
+    top: 3rem;
     background-color: rgba(28, 104, 151, 0.7);
-    border-right: solid 2px #e57a4a;
+    border-left: solid 2px #e57a4a;
     padding: 5px;
     color: white;
 }
@@ -96,9 +96,10 @@ a {
 
 /* 录音 */
 .record-div {
+    text-shadow: 1px 1px 1px white;
     width: 50%;
     display: inline-block;
-    color: #1ba816;
+    color: #3861b5;
     font-size: 1.5rem;
     text-align: left;
     padding-left: 10px;
@@ -106,7 +107,7 @@ a {
 
 /* 正在录制 */
 .recording {
-    color: #ce1e23;
+    color: #fa262b;
 }
 
 /* 单条消息 */

@@ -9,17 +9,16 @@
 /* 页面初始化 */
 $(function () {
 
+    // 获取测评类型
+    ManagerAction.getTestType();
+
     // 分页导航事件绑定
     ManagerAction.pageNavbarAction();
     // 导航条
-    $('#manager').parent().prop('class', 'active');
+    $('#testManager').parent().prop('class', 'active');
     // 筛选提交按钮事件绑定
     $('#allSubmit').click(ManagerAction.getAllTests);
     $('#conditionSubmit').click(ManagerAction.getConditionTests);
-    // 添加筛选条件事件绑定
-    // 绑定checkbox事件
-    $('.condition-testType-item').prop('checked', false);
-    $('.condition-testType-item').change(ManagerAction.checkboxEvent);
 
     // 得到数据列表
     ManagerAction.getList();
@@ -48,6 +47,44 @@ var ManagerAction = {
         scoreMode: 1,
         frequency: 1
     }
+};
+
+/* 获取所有测评类型 */
+ManagerAction.getTestType = function () {
+
+    var url = "/test/testType";
+    $.post(url, {}, function (JSONdata) {
+
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return ManagerAction.modalWindow("[error]: " + JSONobject.error);
+        }
+
+        // 更新页面
+        var testTypeChina = JSONobject.testTypeChina;
+        var $conditionTestType = $('.condition-testType');
+        $conditionTestType.children().remove();
+
+        for(var testType in testTypeChina){
+
+            var $testTypeLabel = $('<label class="checkbox-inline">');
+            var $testTypeCheckbox = $('<input type="checkbox" class="condition-testType-item">');
+            var $testTypeSpan = $('<span>');
+
+            $testTypeSpan.text(testTypeChina[testType]);
+            $testTypeCheckbox.prop('value', testType);
+            $testTypeLabel.append($testTypeCheckbox)
+                .append($testTypeSpan);
+
+            $conditionTestType.append($testTypeLabel);
+        }
+
+        // 添加筛选条件事件绑定
+        // 绑定checkbox事件
+        $('.condition-testType-item').prop('checked', false);
+        $('.condition-testType-item').change(ManagerAction.checkboxEvent);
+
+    }, "JSON");
 };
 
 /* checkbox事件绑定 */
@@ -123,7 +160,10 @@ ManagerAction.getConditionTests = function () {
 ManagerAction.previewWindow = function (testType, testTitle) {
 
     // 访问地址
-    var urlArray = ['/test/testView/', testType, '/', testTitle].join('');
+    var urlArray = ['/test/view/', testType, '/', testTitle].join('');
+    nojsja.ModalWindow.show("题目预览", {
+        scroll: true
+    });
     $.post(urlArray, function (JSONdata) {
 
         var JSONobject = JSON.parse(JSONdata);
@@ -161,10 +201,11 @@ ManagerAction.previewWindow = function (testType, testTitle) {
 
     }, "JSON");
 
-    $('#previewWindow').modal("show", {
+    /* bootstrap 模态弹窗 */
+    /*$('#previewWindow').modal("show", {
         backdrop : true,
         keyboard : true
-    });
+    });*/
 };
 
 /* 更新页面数据表格 */
@@ -249,7 +290,7 @@ ManagerAction.updateTable = function (JSONdata) {
 /* 模态弹窗 */
 ManagerAction.modalWindow = function(text) {
 
-    ModalWindow.show(text);
+    nojsja.ModalWindow.show(text);
 };
 
 /* 绑定分页导航事件 */

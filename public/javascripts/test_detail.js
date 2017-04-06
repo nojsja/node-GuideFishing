@@ -11,29 +11,28 @@ $(function () {
         DetailAction.modalWindow('[error]:' + DetailAction.error);
     }
 
+    // 更新标签
+    DetailAction.updateTestTags();
+
     // 初始化悬浮按钮
     nojsja.HoverButton.init();
-    //开始测试
-    $('#start').click(function () {
-        var testType = $('.detail-head-type').text();
-        var testTitle = $('.detail-head-title').text();
-        window.location.href = "/test/view/" + testType + "/" + testTitle;
-    });
+
 
     // 注意Boolean强制转化
-    // 状态初始化
-    if(DetailAction.isPurchased == "true"){
+    // 状态初始化，检测用户登录状态和购买状态
+    /*if(DetailAction.isPurchased == "true"){
         $('#start').prop('disabled', false);
         $('#purchase').prop('disabled', "disabled");
     }else {
         if(DetailAction.isPurchased == "unknown"){
+            DetailAction.modalWindow("登录后才能进行其它操作 :)");
             $('#purchase').prop('disabled', "disabled");
             $('#start').prop('disabled', "disabled");
         }else {
             $('#purchase').prop('disabled', false);
             $('#start').prop('disabled', "disabled");
         }
-    }
+    }*/
 
     // 查看课程
     $('#start').click(function () {
@@ -48,7 +47,7 @@ $(function () {
     });
 
     // 购买课程
-    $('#purchase').click(function () {
+    /*$('#purchase').click(function () {
 
         var url = '/purchase/test';
         $.post(url, {
@@ -63,7 +62,7 @@ $(function () {
             $('#start').prop('disabled', false);
             $('#purchase').prop('disabled', 'disabled');
         });
-    });
+    });*/
 
     // 获取类型图片
     DetailAction.getTypeImage();
@@ -95,6 +94,31 @@ DetailAction.getTypeImage = function () {
         });
 
     }, "JSON");
+};
+
+/* 更新标签 -- DOM 结构
+* <span class="tag-item tag-change-animation">标签1</span>
+* */
+DetailAction.updateTestTags = function () {
+
+    var $detailTagsDiv = $('.detail-tags-div');
+    // tag css动画对象 -- 除余法则
+    var tagAnimation = {
+        0: "tag-item tag-change-reverse-animation",
+        1: "tag-item tag-change-animation"
+    };
+    var index = 1;
+    // 字符串转数组
+    DetailAction.testTags = DetailAction.testTags.split(',');
+
+    DetailAction.testTags.forEach(function (tag) {
+
+        var $tagSpan = $('<span>');
+        $tagSpan.prop('class', tagAnimation[index++ % 2]);
+        $tagSpan.text(tag);
+
+        $detailTagsDiv.append($tagSpan);
+    });
 };
 
 /* 模态弹窗 */

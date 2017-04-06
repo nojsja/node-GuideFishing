@@ -23,6 +23,10 @@
  * date -- 发布日期
  * price -- 课程价格
  * clickRate -- 课程点击量
+ * examine -- 课程检查字段
+ *  pass -- 是否检查通过（类型为true则正式发表）
+ *  adminAccount -- 检查者管理员账户
+ *  date -- 检查通过的日期
  * */
 
 /* 引入mongoose */
@@ -41,6 +45,11 @@ var courseSchema = new Schema({
         type: String
     }],
     courseAbstract: String,
+    examine: {
+        pass: {type: Boolean, required: true},
+        adminAccount: {type: String},
+        date: {type: String}
+    },
     isReady: {
         type: Boolean,
         required: true

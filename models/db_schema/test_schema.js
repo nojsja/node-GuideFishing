@@ -28,12 +28,17 @@
 * scoreValue -- 单次得分的分值,用于最后累加计算得分, 必须为绝对值
 * categorySection -- 类型分段
 * categoryMode,categoryDescribe 类型和描述
+* examine -- 测评检查字段
+*  pass -- 是否检查通过（类型为true则正式发表）
+*  adminAccount -- 检查者管理员账户
+*  date -- 检查通过的日期
 */
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var testSchema = new Schema({
+
     testType: {type: String, required: true},
     testTags: [{type: String}],
     date: String,
@@ -47,6 +52,11 @@ var testSchema = new Schema({
     }],
     scoreMode: String,
     scoreValue: Number,
+    examine: {
+        pass: {type: Boolean, required: true},
+        adminAccount: {type: String},
+        date: {type: String}
+    },
     abstract: String,
     clickRate: Number,
     testTitle: {type: String, required: true, unique: true},

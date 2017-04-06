@@ -12,6 +12,23 @@ header {
     width: 100%;
 }
 
+/* 注销 */
+.signout {
+    position: fixed;
+    top: 3rem;
+    text-align: center;
+    right: 0;
+    padding: 2px;
+    width: 4rem;
+    background-color: rgba(245,128,48,0.60);
+    border: solid 1px white;
+    color: white;
+}
+.signout:hover {
+    background-color: rgba(245,128,48,0.9);
+    border: solid 1px white;
+}
+
 .header-img {
     width: 100%;
     height: auto;

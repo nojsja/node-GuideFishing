@@ -11,12 +11,28 @@ $(function () {
 
     // 获取课程数据
     ViewAction.readCourseContent();
+
     // 悬浮按钮初始化
     nojsja.HoverButton.init();
 });
 
-/* 页面全局变量 */
-var ViewAction = {};
+/* 页面全局变量
+* tagNameArray -- 课程标签组
+* tagTypeArray -- 课程标签类型组（course 和 test）
+* filter -- 用于课程推荐时的筛选信息
+* count -- 用于课程推荐时的每个每个标签的推荐的条目数
+* */
+var ViewAction = {
+    tagNameArray: [],
+    tagTypeArray: ["course"],
+    filter: {
+        filterContentType: null,
+        filterContentName: null
+    },
+    courseName: null,
+    courseType: null,
+    count: 6
+};
 
 /* 读取一个课程的内容 */
 ViewAction.readCourseContent = function () {
@@ -54,6 +70,15 @@ ViewAction.updateCoursePage = function (JSONdata) {
     var date  = JSONobject.date;
     $('#date').text(date);
 
+    // 需要缓存的数据
+    ViewAction.courseType = JSONobject.courseType;
+    ViewAction.courseName = JSONobject.courseName;
+    ViewAction.tagNameArray = JSONobject.courseTags;
+    ViewAction.filter.filterContentName = JSONobject.courseName;
+    ViewAction.filter.filterContentType = JSONobject.courseType;
+
+    // 获取推荐课程
+    ViewAction.getRecommendation();
 
     /* 对于直播类型的课程 */
     if(ViewAction.stringToBoolean(JSONobject.isBroadcast)){
@@ -250,6 +275,63 @@ ViewAction.updateCoursePage = function (JSONdata) {
         }
     }
 
+};
+
+/* 更新相关推荐课程 */
+ViewAction.getRecommendation = function () {
+
+    var url = "/course/recommendation";
+    var count = ViewAction.count;
+    // 获取1 到 tagNameArray.length的随机数
+    var randomNumber = nojsja["Tool"].GetRandomNum(1, ViewAction.tagNameArray.length);
+    var _tagNameArray = [];
+    _tagNameArray.push(ViewAction.tagNameArray[randomNumber - 1])
+
+    $.post(url, {
+        filter: ViewAction.filter,
+        count: count,
+        tagNameArray: _tagNameArray,
+        tagTypeArray: ViewAction.tagTypeArray
+
+    }, function (JSONdata) {
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return ViewAction.modalWindow("发生错误：" + JSONobject.error);
+        }
+        // 更新DOM数据
+        /* DOM 结构
+         <div class="recommendation-item">
+         <span>1</span>
+         <a href="jobFound/skill" class="recommendation-item-title">Node.js入门指导</a>
+         <div class="recommendation-item-type">职业技能</div>
+         </div>
+        */
+        var $recommendationList = $('.recommendation-list');
+        var index = 1;
+        for(var item in JSONobject.tagContentArray){
+
+            JSONobject.tagContentArray[item].forEach(function (tagContent) {
+
+                var $recommendationItem = $('<div class="recommendation-item">');
+                var $indexSpan = $('<span>');
+                $indexSpan.text(index++);
+
+                var $itemTitle = $('<a class="recommendation-item-title">');
+                $itemTitle.prop('href', ['/course/detail/', tagContent.contentType, '/', tagContent.contentName].join(''));
+                $itemTitle.text(tagContent.contentName);
+
+                var $itemType = $('<div class="recommendation-item-type">');
+                $itemType.text(tagContent.contentType);
+
+                $recommendationItem.append($indexSpan)
+                    .append($itemTitle)
+                    .append($itemTitle);
+                $recommendationList.append($recommendationItem);
+            });
+        }
+
+
+    }, "JSON");
 };
 
 /* Boolean字符串转换函数 */

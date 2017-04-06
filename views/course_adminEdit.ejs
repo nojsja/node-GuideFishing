@@ -23,11 +23,15 @@
     <script type="text/javascript" src="/javascripts/lib/jquery.iframe-transport.js"></script>
     <script type="text/javascript" src="/javascripts/lib/jquery.fileupload.js"></script>
     <!--页面脚本-->
+    <script type="text/javascript" src="/javascripts/lib/mine/nojsja.js"></script>
     <script type="text/javascript" src="/javascripts/course_adminEdit.js"></script>
 
 </head>
 
 <body>
+
+<!--admin header-->
+<%- include admin_header.ejs %>
 
 <!--上传窗口触发器-->
 <div class="self-trigger self-trigger-upload" triggerTarget="self-container-upload">
@@ -143,6 +147,24 @@
         </div>
     </div>
 
+    <!--标签-->
+    <div class="row">
+        <div class="col-md-2 col-md-offset-1 title border">标签</div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <!--添加区域-->
+            <div>
+                <input type="text" id="tagText" placeholder="标签内容..">
+                <div class="btn btn-default btn-sm" target="tagText" id="tagAdd" title="点击添加">+</div>
+            </div>
+            <!--显示区域-->
+            <div class="tag-list">
+                <!--<div class="tag-list-item" title="点击删除标签">123</div>-->
+            </div>
+        </div>
+    </div>
+
     <!--课程概述-->
     <div class="row">
         <div class="col-md-2 col-md-offset-1 border title">概述</div>
@@ -208,9 +230,9 @@
     </div>
 </div>
 
-<!--中以科创页脚-->
-<% include footer%>
 <% include modalWindow%>
+<!--admin footer -->
+<% include admin_footer.ejs%>
 
 </body>
 </html>
