@@ -4,6 +4,9 @@
  * 用于测试和查看所有页面
  */
 
+// 引入
+var Admin = require('../models/Admin');
+
 function ADMIN_TEMP(app){
 
     // 路由对象
@@ -78,23 +81,141 @@ function ADMIN_TEMP(app){
     /* 登录验证 */
     app.post('/admin/login', function (req, res) {
 
-        var account = req.body.account,
-            password = req.body.password;
+        var condition = {
+            account: req.body.account,
+            password: req.body.password
+        };
 
-        if(account == "Johnson" && password == "020154"){
-            req.session.admin = "Johnson";
+        Admin.signin(condition, function (err, pass, info) {
+
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err
+                }) );
+            }
+            if(!pass){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: new Error("登录与账户不匹配！")
+                }) );
+            }
+            // 验证成功,在session中写入管理员信息
+            req.session.admin = {
+                account: condition.account,
+                nickName: info.nickName,
+                examine: {
+                    rank: info.examine.rank,
+                    examineType: info.examine.examineType
+                }
+            };
+
+            // 向客户端返回跳转地址
             res.json( JSON.stringify({
                 isError: false,
                 pass: true,
-                redirectUrl: "/admin/routes"
+                redirectUrl: "/admin/info"
             }) );
-        }else {
+        });
+    });
+
+    /* 管理员进入个人页面 */
+    app.get('/admin/info', function (req, res, next) {
+
+        if(req.session.admin){
+            return next();
+        }
+        return res.render('error', {
+            message: "管理员信息未验证！",
+            error: {
+                status: 404
+            }
+        });
+
+    }, function (req, res) {
+
+        res.render('admin_info', {
+            account: req.session.account,
+            nickName: req.session.nickName,
+            rank: req.session.examine.rank,
+            examineType: req.session.examine.examineType
+        });
+    });
+
+    /* 管理员获取个人信息和需要被验证的信息 */
+    app.post('/admin/info', function (req, res, next) {
+
+        if(req.session.admin){
+            return next();
+        }
+        return res.render('error', {
+            message: "管理员信息未验证！",
+            error: {
+                status: 404
+            }
+        });
+        
+    }, function (req, res) {
+
+        // 获取需要被验证的信息
+        Admin.getExamineData({
+            account: req.session.admin.account
+
+        }, function (err, examineContent) {
+
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err
+                }) );
+            }
+            // 返回验证数据
             res.json( JSON.stringify({
                 isError: false,
-                pass: false
+                examineContent: examineContent
+            }) );
+        });
+    });
+
+    /* 管理员验证课程或测评数据条目 */
+    app.post('/admin/:type/examine', function (req, res, next) {
+
+    }, function (req, res) {
+
+        var condition = {
+            name: req.session.name,
+            type: req.session.type,
+            examineType: req.params.type
+        };
+        if(!condition.name || !condition.type || !condition.examineType){
+            return req.json( JSON.stringify({
+                isError: true,
+                error: new Error("验证信息有误！")
             }) );
         }
+        Admin.examinePass(condition, function (err, isPass) {
+
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err
+                }) )
+            }
+            // 返回审查情况
+            res.json( JSON.stringify({
+                isError: false,
+                isPass: isPass
+            }) );
+        });
     });
+
+    /* 大管理员（0级）分配和修改权限 */
+    app.post('/admin/permission', function (req, res, next) {
+
+    }, function (req, res) {
+
+    });
+
     
     /* 获取所有路由 */
     app.post('/admin/routes', function(req, res, next){

@@ -206,7 +206,7 @@ TestViewAction.submit = function () {
     }, function (JSONdata) {
         var JSONobject = JSON.parse(JSONdata);
         //获取结果错误
-        if(JSONobject.error){
+        if(JSONobject.isError){
             TestViewAction.modalWindow('抱歉,服务器发生错误!');
         }
 
@@ -281,7 +281,7 @@ TestViewAction.getRecommendation = function () {
                 $indexSpan.text(index++);
 
                 var $itemTitle = $('<a class="recommendation-item-title">');
-                $itemTitle.prop('href', ['/course/', tagContent.contentType, '/', tagContent.contentName].join(''));
+                $itemTitle.prop('href', ['/course/detail/', tagContent.contentType, '/', tagContent.contentName].join(''));
                 $itemTitle.text(tagContent.contentName);
 
                 var $itemType = $('<div class="recommendation-item-type">');

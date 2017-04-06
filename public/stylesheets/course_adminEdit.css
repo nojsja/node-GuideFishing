@@ -70,7 +70,7 @@ a {
 
 /* 上传编辑区域 */
 .self-container-upload {
-    top: 3rem;
+    top: 8rem;
     left: 3rem;
     z-index: 1000;
     background-color: rgba(158, 158, 158, 0.9);
@@ -78,7 +78,7 @@ a {
 
 /* 视频,图片和音频预览区域 */
 .self-container-preview {
-    top: 3rem;
+    top: 8rem;
     right: 3rem;
     z-index: 1002;
     background-color: rgba(188, 188, 188, 0.9);
@@ -86,7 +86,7 @@ a {
 
 /* 导入课程 */
 .self-container-load {
-    top: 8rem;
+    top: 12rem;
     left: 3rem;
     min-height: 200px;
     height: auto;

@@ -567,7 +567,7 @@ Course.getRecommendation = function (condition, callback) {
     Tag.getTagContent(_condition, function (err, tagContentArray) {
 
         if(err){
-            console.log('[errror]: ' + err);
+            console.log('[error]: ' + err);
             return callback(err);
         }
 
@@ -575,13 +575,44 @@ Course.getRecommendation = function (condition, callback) {
     });
 };
 
+/* 更改课程审查属性 -- 审查通过 */
+Course.examinePass = function (con, callback) {
+
+    var db = mongoose.connection;
+    var Model = mongoose.model('Course', courseSchema);
+
+    var query = Model.findOne();
+    query.where({
+        courseName: con.courseName,
+        courseType: con.courseType
+    });
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log('[error]: ' + err);
+            return callback(err);
+        }
+        // 文档存在
+        if(doc){
+            // 已经审查通过了
+            if(doc.examine.pass){
+                console.log('已经审查过了！');
+                return callback(null, false);
+            }
+            doc.examine.pass = true;
+            doc.examine.adminAccount = con.adminAccount;
+            doc.date = getDate();
+            // 审查成功
+            callback(null, true);
+        }else {
+            var error = new Error('文档为找到！');
+            callback(error);
+        }
+    });
+};
 
 
 module.exports = Course;
-
-
-
-
 
 
 

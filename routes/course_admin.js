@@ -42,7 +42,7 @@ function course_admin(app) {
         // 规定字段数组
         var elementArary = ['courseName', 'courseType', 'courseAbstract',
             'courseContent', 'courseOrigin', 'password', 'isReady', 'isBroadcast',
-            'teacher', 'price', 'courseTags'];
+            'teacher', 'price', 'courseTags', 'examine'];
         // 含有非字符串类型的数据最好先转化为JSON字符串然后再转化成JSON对象
         // 否则服务器会把Boolean类型会被处理成String类型
         var courseData = JSON.parse(req.body.courseData);

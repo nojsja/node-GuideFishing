@@ -3,6 +3,8 @@
 
 /* 引入数据库模式 */
 var AllTest = require('../models/AllTest.js');
+/* 中英转换 */
+var EnToCn = require('../models/EnToCn');
 var ReadTestType = require('../models/ReadTypeImg');
 
 function index(app) {
@@ -24,13 +26,7 @@ function index(app) {
             isError: false,
             // 转化为字符串类型
             // 测试类型对应中文
-            testTypeChina: {
-                "character": "性格测试",
-                "personality": "人格测试",
-                "emotion": "情感测试",
-                "communication": "交际测试",
-                "potential": "潜能测试"
-            }
+            testTypeChina: EnToCn.getAllPattern("testType")
         }) );
     });
 

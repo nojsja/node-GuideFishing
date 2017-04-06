@@ -69,6 +69,11 @@ var editAction = {
             courseOrigin: [],
             courseAbstract: "",
             courseTags: [],
+            examine: {
+                pass: false,
+                adminAccount: null,
+                date: null
+            },
             courseContent: "",
             teacher: "",
             password: "",
@@ -281,6 +286,7 @@ editAction.pageEventBind = function () {
         var courseData = {
             courseName: editAction.course.info.courseName,
             courseType: editAction.course.info.courseType,
+            examine: editAction.course.info.examine,
             isReady: editAction.course.info.isReady,
             courseTags: editAction.course.info.courseTags,
             isBroadcast: editAction.course.info.isBroadcast,
@@ -382,8 +388,32 @@ editAction.loadCourseData = function (JSONdata) {
         password: JSONobject.loadData.password || "",
         courseContent: JSONobject.loadData.courseContent || "",
         courseOrigin: JSONobject.loadData.courseOrigin || [],
+        courseTags: JSONobject.loadData.courseTags || [],
         isReady: JSONobject.loadData.isReady || "false"
     };
+
+    // 设置标签
+    // 更新DOM <div class="tag-list-item" title="点击删除标签">123</div>
+    var $tagList = $('.tag-list');
+    updateTag();
+    // 递归更新tag
+    function updateTag() {
+        $tagList.children().remove();
+        for(var i = 0; i < loadObject.courseTags.length; i++) {
+
+            (function (i) {
+                var tag = loadObject.courseTags[i];
+                var $tag = $('<div class="tag-list-item" title="点击删除标签">');
+                editAction.course.info.courseTags.push(tag);
+                $tag.text(tag);
+                $tag.click(function () {
+                    editAction.course.info.courseTags.splice(i, 1);
+                    updateTag();
+                });
+                $tagList.append($tag);
+            })(i);
+        }
+    }
 
     // 设置分类
     var $typeItems = $('.type > .type-item');

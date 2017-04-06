@@ -10,6 +10,9 @@ $(function () {
     DetailAction.updateCourseTags();
     // 注意Boolean强制转化
 
+    // 悬浮按钮初始化
+    nojsja.HoverButton.init();
+
     // 状态初始化
     if(DetailAction.isPurchased == "true"){
         $('#start').prop('disabled', false);

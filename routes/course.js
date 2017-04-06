@@ -5,6 +5,8 @@
 
 /* 课程模型 */
 var Course = require('../models/Course');
+/* 中英转换 */
+var EnToCn = require('../models/EnToCn');
 /* 读取磁盘图片数据形成地址 */
 var ReadCourseImg = require('../models/ReadTypeImg');
 /* 用户模型 */
@@ -33,13 +35,7 @@ function course(app){
         res.json( JSON.stringify({
             isError: false,
             // 转化为字符串类型
-            courseTypeChina:{
-                "jobFound": "求职秘籍",
-                "jobSkill": "职场技能",
-                "software": "软件技巧",
-                "english": "英语进阶",
-                "personal": "个人提升"
-            }
+            courseTypeChina: EnToCn.getAllPattern("courseType")
         }) );
     });
 
@@ -345,7 +341,7 @@ function course(app){
             if(err){
                 return res.json( JSON.stringify({
                     isError: true,
-                    error: err
+                    error: err.toString()
                 }) );
             }
             res.json( JSON.stringify({

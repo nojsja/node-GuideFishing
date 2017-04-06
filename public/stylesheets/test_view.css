@@ -83,8 +83,9 @@ a {
 #totalItems {
     margin-top: 2rem;
     margin-bottom: 2rem;
+    color: #5a5a5a;
     width: 100%;
-    background-color: #c2c6c1;
+    background-color: #d8dcd7;
     min-height: 15rem;
     height: auto;
     border-radius: 10px;
@@ -98,6 +99,8 @@ a {
     text-align: center;
     color: #f3ffff;
     font-size: 1.5rem;
+
+    text-shadow: 2px 2px 1px #000;
 }
 
 .test-type {

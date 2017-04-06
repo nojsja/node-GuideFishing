@@ -317,7 +317,7 @@ ViewAction.getRecommendation = function () {
                 $indexSpan.text(index++);
 
                 var $itemTitle = $('<a class="recommendation-item-title">');
-                $itemTitle.prop('href', ['/course/', tagContent.contentType, '/', tagContent.contentName].join(''));
+                $itemTitle.prop('href', ['/course/detail/', tagContent.contentType, '/', tagContent.contentName].join(''));
                 $itemTitle.text(tagContent.contentName);
 
                 var $itemType = $('<div class="recommendation-item-type">');
