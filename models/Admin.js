@@ -231,6 +231,33 @@ Admin.getExamineData = function (con, callback) {
     });
 };
 
+/* 获取审核进度 */
+Admin.getExamineProgress = function (con, callback) {
+
+    var db = mongoose.connection;
+    var Model = mongoose.model('Admin', adminSchema);
+
+    var query = Model.findOne();
+    query.where({
+        account: con.account
+    });
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log('[error]: ' + err);
+            return callback(err);
+        }
+        if(doc){
+            var examineType = doc.examineType;
+            // 返回审查数据
+            callback(null, doc.examineProgress[examineType]);
+        }else{
+            var error = new Error('查询信息有误！');
+            callback(error);
+        }
+    });
+};
+
 /* 大管理员获取所有管理员 */
 Admin.getAdministrator = function (con, callback) {
 
@@ -264,6 +291,26 @@ Admin.getAdministrator = function (con, callback) {
         }else {
             callback(null, []);
         }
+    });
+};
+
+/* 获取权限管理约束
+ *
+ * 用于新建和分配权限
+ * allAttributes -- 创建所需的所有属性
+ * searchableAttributes -- 可被搜索的属性
+ * changeableAttributes -- 可被改变的属性
+ * rank -- 所有子级别
+ * examineType -- 所有子审查类型
+  * */
+Admin.getPermissionConstraints = function (callback) {
+
+    callback({
+        allAttributes: ['account', 'password', 'rank', 'examineType', 'nickName'],
+        searchableAttributes: ['rank', 'examineType'],
+        changeableAttributes: ['password', 'rank', 'examineType', 'nickName'],
+        rank: [0, 1, 2],
+        examineType: ['course', 'test']
     });
 };
 

@@ -11,7 +11,10 @@
  *  所有管理级别的管理员都可以自由查看所有付费和免费内容
  * examineType -- 审查类型，本系统的主要审查类型有course和test
  * examineContent -- 审查内容，分为course和test，两个条目分别存储name/title和type主键，实际内容位于相对应的course和test表中
- *
+ * examineProgress -- 审查进度
+ *  course/test -- 审查类型
+ *  course.status/test.status -- 审查状态
+ *   审查状态: pass -- 通过，reject -- 驳回
  */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
@@ -32,6 +35,18 @@ var adminSchema = new Schema({
         test: [{
             testTitle: {type: String, required: true, unique: true},
             testType: {type: String, required: true}
+        }]
+    },
+    examineProgress: {
+        course: [{
+            courseName: {type: String, required: true, unique: true},
+            courseType: {type: String, required: true},
+            status: {type:String, required: true}
+        }],
+        test: [{
+            testTitle: {type: String, required: true, unique: true},
+            testType: {type: String, required: true},
+            status: {type:String, required: true}
         }]
     }
 }, { collection: "admin" });

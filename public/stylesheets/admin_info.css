@@ -1,0 +1,275 @@
+body {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+html {
+    font-size: 16px;
+}
+
+a {
+    color: #00B7FF;
+}
+
+/* 个人信息 */
+.fieldset-selfinfo {
+    width: 80%;
+    margin: auto;
+    border: solid 1px #dddddd;
+}
+
+fieldset legend {
+    margin-top: 2rem;
+    color: #fefefe;
+    text-shadow: 3px 3px 3px #3e555b;
+    background-color: #e7e7e7;
+    -webkit-box-shadow:  0 0 3px #6e94a2;
+    -moz-box-shadow:  0 0 3px #6e94a2;
+    box-shadow:  0 0 3px #6e94a2;
+}
+
+.selfinfo-title {
+    margin-top: 0.5rem;
+    display: inline-block;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    background-color: #7ba5b5;
+    color: white;
+    border-radius: 2px;
+
+    -webkit-box-shadow:  3px 3px 0 #668b96;
+    -moz-box-shadow:  3px 3px 0 #668b96;
+    box-shadow:  2px 2px 0 #668b96;
+}
+
+.selfinfo-wrapper {
+    background-color: #f1f1f1;
+    padding: 1rem;
+}
+
+.selfinfo-detail {
+    border-bottom: solid 1px white;
+    padding: 2px;
+    color: #60818d;
+}
+
+/* 权限管理区 */
+.manage-wrapper {
+
+}
+
+.manage-search {
+    margin: 1rem;
+}
+
+#accountText {
+    border-radius: 3px;
+}
+
+#searchAccount {
+
+}
+
+#addAdmin {
+
+}
+
+/*新建权限*/
+.admin-add-wrapper {
+    background-color: #eaeaea;
+
+    margin: 0.5rem;
+    padding: 1rem;
+}
+
+.admin-add-detail, .condition-detail {
+    display: block;
+    margin: 5px;
+}
+
+/*表示属性子项目*/
+.admin-add-detail .add-detail-item,
+.condition-detail .condition-detail-item {
+    border: solid 1px #cdcdcd;
+    color: #737373;
+    min-width: 2rem;
+    padding-left: 5px;
+    padding-right: 5px;
+    display: inline-block;
+}
+
+.admin-add-detail .add-detail-item:hover,
+.condition-detail .condition-detail-item:hover {
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+
+    background-color: #fe9746;
+    color: white;
+}
+
+/*信息筛选*/
+.manage-condition {
+    margin: 0.5rem;
+    background-color: #eaeaea;
+    padding: 1rem;
+}
+
+.manage-search-div {
+    text-align: right;
+    border-top: solid 1px white;
+    padding: 5px;
+}
+
+.manage-condition-list {
+
+}
+
+/*查找结果表格*/
+.manage-result {
+    margin: 0.5rem;
+    background-color: #eaeaea;
+    padding: 1rem;
+}
+
+.mark-title {
+    margin: 0 0 0.5rem;
+    display: inline-block;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border: solid 1px white;
+    background-color: #637db5;
+    color: white;
+    border-radius: 2px;
+
+    -webkit-box-shadow:  0 0 5px #4b666e;
+    -moz-box-shadow:  0 0 5px #4b666e;
+    box-shadow:  0 0 5px #4b666e;
+}
+
+#adminTable {
+    width: 90%;
+    margin: auto;
+}
+
+#adminTable td, #adminTable th {
+    padding-left: 5px;
+}
+
+.admin-table-head {
+    background-color: #7ba5b5;
+    color: white;
+    text-shadow: 2px 2px 2px #000;
+}
+
+.admin-table-head th {
+    border: solid 1px white;
+}
+
+.admin-table-content {
+    color: #55747d;
+}
+
+.admin-table-content:hover {
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+
+    -webkit-box-shadow:  3px 3px 3px #55747d;
+    -moz-box-shadow: 3px 3px 3px #55747d;
+    box-shadow:  3px 3px 3px #55747d;
+
+    -webkit-transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    -ms-transform: scale(1.05);
+    -o-transform: scale(1.05);
+    transform: scale(1.05);
+}
+
+.admin-table-content:nth-child(2n) {
+    background-color: white;
+}
+
+.admin-table-content:nth-child(2n+1) {
+    background-color: #dfdfdf;
+}
+
+/*** 内容审核 ***/
+.examine-wrapper {
+    margin: 0.5rem;
+    padding: 1rem;
+}
+
+/*审查内容*/
+.examine-content-list {
+    background-color: #eaeaea;
+    padding: 0.5rem;
+    margin: 0.5rem auto 0.5rem;
+
+}
+
+.examine-content-item {
+    border-bottom: solid 1px white;
+}
+
+.examine-content-item:last-child {
+    border-bottom: solid 0 white;
+}
+
+
+.examine-content-item .content-item-type {
+    border: solid 1px #c85e27;
+    font-weight: bold;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    color: #c85e27;
+}
+
+.examine-content-item .content-item-title {
+
+}
+
+
+/*审查进度*/
+.examine-progress-list {
+    background-color: #eaeaea;
+    padding: 0.5rem;
+    margin: 0.5rem auto 0.5rem;
+
+}
+
+.examine-progress-item {
+
+}
+
+.examine-progress-item .progress-item-status-pass {
+    font-weight: bold;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    background-color: #24a955;
+    color: white;
+}
+
+.examine-progress-item .progress-item-status-reject {
+    font-weight: bold;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    background-color: #d91b09;
+    color: white;
+}
+
+.examine-progress-item .progress-item-type {
+
+    border: solid 1px #c85e27;
+    font-weight: bold;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    color: #c85e27;
+}
+
+.examine-progress-item .progress-item-title {
+
+}
