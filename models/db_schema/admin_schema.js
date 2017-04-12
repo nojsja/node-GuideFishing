@@ -27,28 +27,17 @@ var adminSchema = new Schema({
     examineType: {
         type: String
     },
-    examineContent: {
-        course: [{
-            courseName: {type: String, required: true, unique: true},
-            courseType: {type: String, required: true}
-        }],
-        test: [{
-            testTitle: {type: String, required: true, unique: true},
-            testType: {type: String, required: true}
-        }]
-    },
-    examineProgress: {
-        course: [{
-            courseName: {type: String, required: true, unique: true},
-            courseType: {type: String, required: true},
-            status: {type:String, required: true}
-        }],
-        test: [{
-            testTitle: {type: String, required: true, unique: true},
-            testType: {type: String, required: true},
-            status: {type:String, required: true}
-        }]
-    }
+    examineContent: [{
+        contentName: {type: String, unique: true},
+        contentType: {type: String},
+        examineType: {type: String}
+    }],
+    examineProgress: [{
+            progressName: {type: String, unique: true},
+            progressType: {type: String},
+            examineType: {type: String},
+            status: {type:String}
+    }]
 }, { collection: "admin" });
 
 exports.adminSchema = adminSchema;

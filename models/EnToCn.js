@@ -22,6 +22,16 @@ var EnToCn = (function () {
             "software": "软件技巧",
             "english": "英语进阶",
             "personal": "个人提升"
+        },
+
+        admin: {
+            "account": "账户",
+            "password": "密码",
+            "nickName": "昵称",
+            "rank": "权限等级",
+            "examineType": "审查权限",
+            "examineProgress": "审查进度",
+            "examineContent": "审查内容"
         }
     };
 

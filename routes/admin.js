@@ -6,6 +6,7 @@
 
 // 引入
 var Admin = require('../models/Admin');
+var EntoCn = require('../models/EnToCn');
 
 function ADMIN_TEMP(app){
 
@@ -82,9 +83,9 @@ function ADMIN_TEMP(app){
     app.get('/admin/create', function (req, res) {
 
         var newAdmin = new Admin({
-            account: "yangwei13@outlook.com",
+            account: "yangwei@outlook.com",
             password: "yangwei020154",
-            nickName: "Johnson",
+            nickName: "Johnson2",
             rank: 0,
             examineType: null
         });
@@ -92,7 +93,6 @@ function ADMIN_TEMP(app){
         newAdmin.save(function (err, isPass) {
 
             if(err){
-                console.log('[error]: ' + err);
                 return res.json( JSON.stringify({
                     isError: true,
                     error: err
@@ -181,6 +181,46 @@ function ADMIN_TEMP(app){
         });
     });
 
+    /* 根据筛选条件获取所有管理员信息 */
+    app.post ('/admin/get', function (req, res, next) {
+
+        if(req.session.admin && req.session.admin.examine.rank == 0){
+            return next();
+        }
+        return res.json( JSON.stringify({
+            isError: true,
+            error: {
+                status: 404,
+                message: 'forbidden'
+            }
+        }) );
+
+    }, function (req, res) {
+
+        // 筛选
+        Admin.getAdministrator({
+            condition: req.body.condition || null,
+            filter: {
+                account: req.session.admin.account,
+            }
+        }, function (err, adminArray, adminAttrs) {
+
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err.toString()
+                }) );
+            }
+
+            // 返回数据
+            res.json( JSON.stringify({
+                isError: false,
+                adminArray: adminArray,
+                adminAttrs: adminAttrs
+            }) )
+        });
+    });
+
     /* 管理员获取个人信息和需要被验证的信息 */
     app.post('/admin/info', function (req, res, next) {
 
@@ -206,7 +246,8 @@ function ADMIN_TEMP(app){
 
                 return res.json( JSON.stringify({
                     isError: false,
-                    permissionConstraints: constraints
+                    permissionConstraints: constraints,
+                    EnToCn: EntoCn.getAllPattern("admin")
                 }) );
             });
 
@@ -257,7 +298,9 @@ function ADMIN_TEMP(app){
 
     /* 0级管理员权限管理 */
     app.post('/admin/permission/:action', function (req, res, next) {
-        if(req.session.admin.examine.rank === 0){
+
+        // 权限级别为0
+        if(req.session.admin && req.session.admin.examine.rank === 0){
             return next();
         }
         return res.json( JSON.stringify({

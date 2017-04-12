@@ -74,20 +74,29 @@ fieldset legend {
 }
 
 /*新建权限*/
-.admin-add-wrapper {
+.admin-add-wrapper,
+.admin-edit-wrapper {
     background-color: #eaeaea;
-
     margin: 0.5rem;
     padding: 1rem;
+
+    text-align: left;
 }
 
-.admin-add-detail, .condition-detail {
+.admin-add-detail,
+.admin-edit-detail,
+.condition-detail {
     display: block;
     margin: 5px;
 }
 
+input.admin-add-detail {
+    width: 100%;
+}
+
 /*表示属性子项目*/
 .admin-add-detail .add-detail-item,
+.admin-edit-detail .edit-detail-item,
 .condition-detail .condition-detail-item {
     border: solid 1px #cdcdcd;
     color: #737373;
@@ -95,10 +104,15 @@ fieldset legend {
     padding-left: 5px;
     padding-right: 5px;
     display: inline-block;
+    margin: 0 5px 0;
 }
 
 .admin-add-detail .add-detail-item:hover,
-.condition-detail .condition-detail-item:hover {
+.admin-edit-detail .edit-detail-item:hover,
+.condition-detail .condition-detail-item:hover,
+.add-detail-item-click,
+.edit-detail-item-click,
+.condition-detail-item-click {
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     -ms-transition: all 0.3s;
@@ -109,6 +123,12 @@ fieldset legend {
     color: white;
 }
 
+
+.admin-add-div,
+.admin-edit-div {
+    text-align: left;
+}
+
 /*信息筛选*/
 .manage-condition {
     margin: 0.5rem;
@@ -117,7 +137,7 @@ fieldset legend {
 }
 
 .manage-search-div {
-    text-align: right;
+    text-align: left;
     border-top: solid 1px white;
     padding: 5px;
 }
