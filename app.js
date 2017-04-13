@@ -31,6 +31,7 @@ var course_admin = require('./routes/course_admin');
 var course_broadcast = require('./routes/course_broadcast');
 var user = require('./routes/user');
 var admin = require('./routes/admin');
+var GuideFishing_index = require('./routes/GuideFishing_index');
 
 var app = express();
 
@@ -50,6 +51,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 MongoSession(app);
 
 //建立路由规则
+GuideFishing_index(app);
 user(app);
 test_index(app);
 test(app);

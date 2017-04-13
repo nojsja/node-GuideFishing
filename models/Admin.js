@@ -17,13 +17,11 @@ function Admin(data) {
         password: data.password,
         nickName: data.nickName,
         rank: data.rank,
-        examineType: data.examineType,
-        examineContent: {
-            course: [],
-            test: []
-        }
+        examineType: data.examineType
     };
 }
+
+
 
 /* 存储一个用户数据 */
 Admin.prototype.save = function (callback) {
@@ -231,16 +229,87 @@ Admin.getExamineData = function (con, callback) {
     });
 };
 
+/* 获取审核进度 */
+Admin.getExamineProgress = function (con, callback) {
+
+    var db = mongoose.connection;
+    var Model = mongoose.model('Admin', adminSchema);
+
+    var query = Model.findOne();
+    query.where({
+        account: con.account
+    });
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log('[error]: ' + err);
+            return callback(err);
+        }
+        if(doc){
+            var examineType = doc.examineType;
+            // 返回审查数据
+            callback(null, doc.examineProgress[examineType]);
+        }else{
+            var error = new Error('查询信息有误！');
+            callback(error);
+        }
+    });
+};
+
 /* 大管理员获取所有管理员 */
 Admin.getAdministrator = function (con, callback) {
 
     var db = mongoose.connection;
     var Model = mongoose.model('Admin', adminSchema);
 
+    // 所有查询操作
+    var queryAction  = ["condition", "filter", "select", "limit"];
+    // 所有默认可选属性
+    var select = ["account", "nickName", "password", "rank", "examineType"];
+
     var query = Model.find();
-    query.where({
-        account: {$not: con.account}
-    });
+
+    console.log(con);
+    // 确定查询条件
+    for(let item in con){
+
+        if(con[item]){
+            // 属性存在
+            let index = queryAction.indexOf(item);
+            if(index >= 0){
+
+                if(item == "filter"){
+                    for(let item2 in con[item]){
+                        query.ne(item2, con[item][item2]);
+                    }
+                    continue;
+                }
+                if(item == "select"){
+
+                    // 覆写select
+                    select = [];
+                    for(let j in con[item]){
+                        select.push(j);
+                    }
+                    query.select(con[item]);
+                    continue;
+                }
+
+                if(item == "limit"){
+                    query.limit(con[item]);
+                    continue;
+                }
+
+                if(item == "condition"){
+                    query.where(con[item]);
+                }
+
+            }
+        }
+
+    }
+
+    // 执行查询
     query.exec(function (err, docs) {
 
         if(err){
@@ -248,22 +317,55 @@ Admin.getAdministrator = function (con, callback) {
             return callback(err);
         }
         if(docs && docs.length > 0){
+
             var adminArray = [];
             for(let i = 0; i < docs.length; i++){
 
-                adminArray.push({
-                    account: docs[i].account,
-                    password: docs[i].password,
-                    nickName: docs[i].nickName,
-                    examineType: docs[i].examineType,
-                    rank: docs[i].rank
+                var data = {};
+                select.forEach(function (item) {
+                    data[item] = docs[i][item];
                 });
+                adminArray.push(data);
             }
             // 成功后返回所有管理员的信息（除了自己）
-            callback(null, adminArray);
+            callback(null, adminArray, select);
         }else {
-            callback(null, []);
+            callback(null, [], select);
         }
+    });
+};
+
+/* 获取权限管理约束
+ *
+ * 用于新建和分配权限
+ * allAttributes -- 创建所需的所有属性
+ * searchableAttributes -- 可被搜索的属性
+ * changeableAttributes -- 可被改变的属性
+ * rank -- 所有子级别
+ * examineType -- 所有子审查类型
+  * */
+Admin.getPermissionConstraints = function (callback) {
+
+    callback({
+        allAttributes: {
+            'account': '账户',
+            'password': '密码',
+            'rank': '权限级别',
+            'examineType': '审查类型',
+            'nickName': '昵称'
+        },
+        searchableAttributes: {
+            'rank': '权限级别',
+            'examineType': '审查类型'
+        },
+        changeableAttributes: {
+            'password': '密码',
+            'rank': '权限级别',
+            'examineType': '审查类型',
+            'nickName': '昵称'
+        },
+        rank: [0, 1, 2],
+        examineType: ['course', 'test']
     });
 };
 

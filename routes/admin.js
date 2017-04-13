@@ -6,6 +6,7 @@
 
 // 引入
 var Admin = require('../models/Admin');
+var EntoCn = require('../models/EnToCn');
 
 function ADMIN_TEMP(app){
 
@@ -78,6 +79,41 @@ function ADMIN_TEMP(app){
         });
     });
 
+    /* 新建管理员账号 */
+    app.get('/admin/create', function (req, res) {
+
+        var newAdmin = new Admin({
+            account: "yangwei@outlook.com",
+            password: "yangwei020154",
+            nickName: "Johnson2",
+            rank: 0,
+            examineType: null
+        });
+
+        newAdmin.save(function (err, isPass) {
+
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err
+                }) );
+            }
+            if(isPass){
+                console.log('0级管理员创建成功！');
+                res.json( JSON.stringify({
+                    isError: false,
+                    isPass: true
+                }) );
+            }else {
+                console.log('0级管理员创建失败！');
+                res.json( JSON.stringify({
+                    isError: true,
+                    isPass: false
+                }) );
+            }
+        });
+    });
+
     /* 登录验证 */
     app.post('/admin/login', function (req, res) {
 
@@ -97,7 +133,7 @@ function ADMIN_TEMP(app){
             if(!pass){
                 return res.json( JSON.stringify({
                     isError: true,
-                    error: new Error("登录与账户不匹配！")
+                    error: "密码与账户不匹配！"
                 }) );
             }
             // 验证成功,在session中写入管理员信息
@@ -106,14 +142,15 @@ function ADMIN_TEMP(app){
                 nickName: info.nickName,
                 examine: {
                     rank: info.examine.rank,
-                    examineType: info.examine.examineType
+                    examineType: info.examine.rank == 0 ?
+                         "无" : info.examine.examineType
                 }
             };
 
             // 向客户端返回跳转地址
             res.json( JSON.stringify({
                 isError: false,
-                pass: true,
+                isPass: true,
                 redirectUrl: "/admin/info"
             }) );
         });
@@ -134,11 +171,53 @@ function ADMIN_TEMP(app){
 
     }, function (req, res) {
 
+        console.log(req.session.admin.examine.examineType);
         res.render('admin_info', {
-            account: req.session.account,
-            nickName: req.session.nickName,
-            rank: req.session.examine.rank,
-            examineType: req.session.examine.examineType
+            title: "管理员中心",
+            account: req.session.admin.account,
+            nickName: req.session.admin.nickName,
+            rank: req.session.admin.examine.rank,
+            examineType: req.session.admin.examine.examineType
+        });
+    });
+
+    /* 根据筛选条件获取所有管理员信息 */
+    app.post ('/admin/get', function (req, res, next) {
+
+        if(req.session.admin && req.session.admin.examine.rank == 0){
+            return next();
+        }
+        return res.json( JSON.stringify({
+            isError: true,
+            error: {
+                status: 404,
+                message: 'forbidden'
+            }
+        }) );
+
+    }, function (req, res) {
+
+        // 筛选
+        Admin.getAdministrator({
+            condition: req.body.condition || null,
+            filter: {
+                account: req.session.admin.account,
+            }
+        }, function (err, adminArray, adminAttrs) {
+
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err.toString()
+                }) );
+            }
+
+            // 返回数据
+            res.json( JSON.stringify({
+                isError: false,
+                adminArray: adminArray,
+                adminAttrs: adminAttrs
+            }) )
         });
     });
 
@@ -148,33 +227,93 @@ function ADMIN_TEMP(app){
         if(req.session.admin){
             return next();
         }
-        return res.render('error', {
-            message: "管理员信息未验证！",
+        return res.json( JSON.stringify({
+            isError: true,
             error: {
-                status: 404
+                status: 404,
+                message: '未验证权限'
             }
-        });
+        }));
         
     }, function (req, res) {
 
-        // 获取需要被验证的信息
-        Admin.getExamineData({
-            account: req.session.admin.account
+        var rank = req.session.admin.examine.rank;
+        var account = req.session.admin.account;
+        // 检查管理员权限
+        if(rank == 0){
+            // 获取权限约束
+            Admin.getPermissionConstraints(function (constraints) {
 
-        }, function (err, examineContent) {
-
-            if(err){
                 return res.json( JSON.stringify({
-                    isError: true,
-                    error: err
+                    isError: false,
+                    permissionConstraints: constraints,
+                    EnToCn: EntoCn.getAllPattern("admin")
                 }) );
-            }
-            // 返回验证数据
+            });
+
+        }else if(rank == 1){
+
+            Admin.getExamineData({account: account}, function (err, examineContent) {
+
+                if(err){
+                    return res.json( JSON.stringify({
+                        isError: true,
+                        error: err
+                    }) );
+                }
+                return res.json( JSON.stringify({
+                    isError: false,
+                    examineContent: examineContent
+                }) );
+
+            });
+        }else if(rank == 2){
+
+            Admin.getExamineProgress({account: account}, function (err, examineProgress) {
+
+                if(err){
+                    return res.json( JSON.stringify({
+                        isError: true,
+                        error: err
+                    }) );
+                }
+                return res.json( JSON.stringify({
+                    isError: false,
+                    examineContent: examineProgress
+                }) );
+            });
+
+        }else {
+
             res.json( JSON.stringify({
-                isError: false,
-                examineContent: examineContent
+                isError: true,
+                error: {
+                    status: 404,
+                    message: '账户信息有误'
+                }
             }) );
-        });
+        }
+
+    });
+
+    /* 0级管理员权限管理 */
+    app.post('/admin/permission/:action', function (req, res, next) {
+
+        // 权限级别为0
+        if(req.session.admin && req.session.admin.examine.rank === 0){
+            return next();
+        }
+        return res.json( JSON.stringify({
+            isError: true,
+            error: {
+                status: 404,
+                message: "forbidden!"
+            }
+        }) );
+
+    }, function (req, res) {
+
+
     });
 
     /* 管理员验证课程或测评数据条目 */

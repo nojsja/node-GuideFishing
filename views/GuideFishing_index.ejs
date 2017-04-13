@@ -1,0 +1,117 @@
+<!--课程呈现主页-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="description" content="带渔课程教学系统" />
+    <meta name="keywords" content="course of GuideFishing" />
+
+    <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/lib/font-awesome.min.css">
+    <link rel='stylesheet' href='/stylesheets/GuideFishing_index.css' />
+
+    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
+    <!--自己的框架-->
+    <script type="text/javascript" src="/javascripts/lib/mine/nojsja.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/javascripts/GuideFishing_index.js"></script>
+</head>
+<body>
+
+<!--通用首部-->
+<div class="header-div">
+    <%- include GuideFishing_header.ejs%>
+</div>
+
+<div class="slide-div">
+    <%- include slideView.ejs%>
+</div>
+
+<!--热门课程列表-->
+<div class="hot-container">
+    <!--标题-->
+    <div class="hot-title">热门课程</div>
+    <!--热门列表-->
+    <div class="hot-item-list" id="hotCourseList">
+        <li><a class="hot-item">这是一个热门</a></li>
+        <li><a class="hot-item">这是一个热门</a></li>
+    </div>
+</div>
+
+<!--课程学习标志-->
+<div class="mark-title">
+    <i class="icon-book"></i>
+    <span>课程学习</span>
+    <span id="courseMore">
+        更多
+        <i class="icon-double-angle-right"></i>
+    </span>
+</div>
+<!--课程内容展示主要区域-->
+<div id="totalCourse" class="container">
+
+</div>
+
+<!--课程讨论组-->
+<div class="mark-title">
+    <i class="icon-comment"></i>
+    <span>课程讨论组</span>
+    <span id="broadcastMore">
+        更多
+        <i class="icon-double-angle-right"></i>
+    </span>
+</div>
+<div id="totalBroadcast" class="container">
+
+</div>
+
+<!--热门测评标志-->
+<div class="mark-title">
+    <i class="icon-bar-chart"></i>
+    <span>热门测评</span>
+    <span id="testMore">
+        更多
+        <i class="icon-double-angle-right"></i>
+    </span>
+</div>
+<!--热门列表-->
+<div class="hot-item-list" id="hotTestList">
+    <li><a class="hot-item">这是一个热门</a></li>
+    <li><a class="hot-item">这是一个热门</a></li>
+</div>
+
+<!--招聘信息-->
+<div class="mark-title">
+    <i class="icon-group"></i>
+    <span>招聘信息</span>
+    <span id="recruitmentMore">
+        更多
+        <i class="icon-double-angle-right"></i>
+    </span>
+</div>
+
+<!--招聘公司信息展示-->
+<div id="totalRecruitment" class="container">
+
+</div>
+
+
+<!--数据加载loading信息-->
+<!--<div class="loading-info">-->
+    <!--<input id="loadMore" type="button" class="btn btn-success" value="加载更多..."></input>-->
+<!--</div>-->
+
+<!--底部导航-->
+<%- include footer.ejs%>
+<!--模态弹窗-->
+<%- include modalWindow.ejs%>
+<!--页面悬浮按钮-->
+<%- include hoverButton.ejs%>
+
+</body>
+</html>
+
+

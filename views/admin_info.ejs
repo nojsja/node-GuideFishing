@@ -1,3 +1,217 @@
 <!--管理员的个人信息页面
 管理员可以查看个人信息和运用管理权限进行验证、申请和发布
 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/lib/font-awesome.min.css">
+    <link rel='stylesheet' href='/stylesheets/admin_info.css' />
+
+    <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.js"></script>
+    <script type="text/javascript" src="/javascripts/lib/mine/nojsja.js"></script>
+    <script type="text/javascript" src="/javascripts/admin_info.js"></script>
+
+</head>
+
+<body>
+
+<%- include admin_header.ejs %>
+
+<!--内容部分-->
+<div>
+
+    <fieldset class="fieldset-selfinfo">
+        <legend>个人资料</legend>
+        <!--个人信息-->
+        <div class="selfinfo-wrapper">
+            <!--昵称-->
+            <div class="selfinfo-title">昵称</div>
+            <div class="selfinfo-detail"><%= nickName %></div>
+            <div class="selfinfo-title">账户</div>
+            <!--账户-->
+            <div class="selfinfo-detail"><%= account %></div>
+            <div class="selfinfo-title">级别</div>
+            <!--级别-->
+            <div class="selfinfo-detail"><%= rank %></div>
+            <div class="selfinfo-title">审查类型</div>
+            <!--审查类型-->
+            <div class="selfinfo-detail"><%= examineType %></div>
+        </div>
+    </fieldset>
+
+    <% if (rank == 0) { %>
+
+    <fieldset class="fieldset-selfinfo" id="permissionFieldset">
+        <legend>权限管理</legend>
+        <!--权限管理-->
+        <div class="manage-wrapper">
+            <!--搜索-->
+            <div class="manage-search">
+                <input type="text" id="accountText" placeholder="输入账户名...">
+                <input type="button" class="btn btn-success btn-sm" value="账户搜索" id="searchAccount" target="accountText">
+                <input type="button" class="btn btn-default btn-sm" value="账户新建" id="addAdmin">
+            </div>
+
+            <!--temp-->
+            <!--<div class="admin-add-wrapper">-->
+                <!--<div class="selfinfo-title">账户</div>-->
+                <!--<input class="admin-add-detail" attr="account" placeholder="请输入账号...">-->
+                <!--<div class="selfinfo-title">密码</div>-->
+                <!--<input class="admin-add-detail" attr="password" placeholder="请输入密码...">-->
+                <!--<div class="selfinfo-title">昵称</div>-->
+                <!--<input class="admin-add-detail" attr="nickName" placeholder="请输入昵称...">-->
+                <!--<div class="selfinfo-title">权限级别</div>-->
+                <!--<div class="admin-add-detail">-->
+                    <!--<div class="add-detail-item" attr="rank">0</div>-->
+                    <!--<div class="add-detail-item" attr="rank">1</div>-->
+                    <!--<div class="add-detail-item" attr="rank">2</div>-->
+                <!--</div>-->
+                <!--<div class="selfinfo-title">审查类型</div>-->
+                <!--<div class="admin-add-detail">-->
+                    <!--<div class="add-detail-item">test</div>-->
+                    <!--<div class="add-detail-item">course</div>-->
+                <!--</div>-->
+
+                <!--&lt;!&ndash;创建按钮&ndash;&gt;-->
+                <!--<div class="admin-add-div">-->
+                    <!--<input type="button" value="创建" class="btn btn-success btn-sm" id="adminAddButton">-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--信息筛选-->
+            <div class="manage-condition">
+                <!--可筛选列表-->
+                <div class="manage-condition-list">
+                    <!--级别筛选-->
+                    <!--<div class="selfinfo-title">权限级别</div>
+                    <div class="condition-detail">
+                        <div class="condition-detail-item" attr="rank">0</div>
+                        <div class="condition-detail-item" attr="rank">1</div>
+                        <div class="condition-detail-item" attr="rank">2</div>
+                    </div>
+                    &lt;!&ndash;审查类型&ndash;&gt;
+                    <div class="selfinfo-title">审查类型</div>
+                    <div class="condition-detail">
+                        <div class="condition-detail-item" attr="examineType">course</div>
+                        <div class="condition-detail-item" attr="examineType">test</div>
+                    </div>-->
+                </div>
+                <div class="manage-search-div">
+                    <input type="button" class="btn btn-default btn-sm" value="清除条件" id="searchCondtionClear">
+                    <input type="button" class="btn btn-default btn-sm" value="筛选查找" id="searchCondtion">
+                </div>
+
+            </div>
+
+            <!--查询结果-->
+            <div class="manage-result">
+                <div class="mark-title">筛选结果</div>
+                <table class="" id="adminTable">
+                    <tr class="admin-table-head">
+                        <th>账户名</th>
+                        <th>昵称</th>
+                        <th>密码</th>
+                        <th>级别</th>
+                        <th>审查类型</th>
+                        <th>编辑</th>
+                        <th>删除</th>
+                    </tr>
+
+                    <!--<tr class="admin-table-content">-->
+                        <!--<td>item</td>-->
+                        <!--<td>item</td>-->
+                        <!--<td>item</td>-->
+                        <!--<td>item</td>-->
+                        <!--<td>item</td>-->
+                        <!--<td>编辑</td>-->
+                        <!--<td>删除</td>-->
+                    <!--</tr>-->
+
+                </table>
+            </div>
+
+        </div>
+    </fieldset>
+    <% } %>
+
+
+    <% if(rank !== 0) { %>
+    <!--内容审核-->
+    <fieldset class="fieldset-selfinfo" id="examineFieldset">
+        <legend>内容审核</legend>
+
+        <div class="examine-wrapper">
+
+            <div class="mark-title">待审核内容</div>
+            <!--待审核内容-->
+            <div class="examine-content-list">
+
+                <div class="examine-content-item">
+                    <span class="content-item-type">test</span>
+                    <a href="/course/sdfsd/" class="content-item-title">sdfsdf是的发送到</a>
+                </div>
+
+                <div class="examine-content-item">
+                    <span class="content-item-type">test</span>
+                    <a href="/course/sdfsd/" class="content-item-title">sdfsdf是的发送到</a>
+                </div>
+
+                <div class="examine-content-item">
+                    <span class="content-item-type">test</span>
+                    <a href="/course/sdfsd/" class="content-item-title">sdfsdf是的发送到</a>
+                </div>
+            </div>
+
+            <div class="mark-title">审核进度</div>
+            <!--已提交审核审查进度-->
+            <div class="examine-progress-list">
+
+                <div class="examine-progress-item">
+                    <span class="progress-item-status-pass">reject</span>
+                    <span class="progress-item-type">test</span>
+                    <a href="/sdfj/sdf" class="progress-item-title">sdfsd</a>
+                </div>
+
+                <div class="examine-progress-item">
+                    <span class="progress-item-status-reject">reject</span>
+                    <span class="progress-item-type">test</span>
+                    <a href="/sdfj/sdf" class="progress-item-title">sdfsd</a>
+                </div>
+
+                <div class="examine-progress-item">
+                    <span class="progress-item-status-reject">reject</span>
+                    <span class="progress-item-type">test</span>
+                    <a href="/sdfj/sdf" class="progress-item-title">sdfsd</a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </fieldset>
+
+    <% } %>
+</div>
+
+<%- include admin_footer.ejs %>
+<%- include modalWindow.ejs %>
+
+</body>
+
+<!--业内脚本-->
+<script>
+
+    AdminInfoAction.admin = {};
+    /* 绑定属性 */
+    AdminInfoAction.admin["account"] = '<%= account %>';
+    AdminInfoAction.admin["nickName"] = '<%= nickName %>';
+    AdminInfoAction.admin["rank"] = '<%= rank %>';
+    AdminInfoAction.admin["examineType"] = '<%= examineType %>';
+
+</script>
+</html>

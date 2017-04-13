@@ -269,7 +269,7 @@ TestIndexAction.updateHot = function () {
             var $li = $('<li>');
             var $a = $('<a>');
             // 课程url由前缀、课程类型和课程名字组成
-            $a.text(popular.testTitle)
+            $a.text((Number(index) + 1) + ' . ' + popular.testTitle)
                 .prop({
                     href: [popular.preDress, popular.testType, '/', popular.testTitle].join('')
                 });

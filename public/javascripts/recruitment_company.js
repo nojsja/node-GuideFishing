@@ -8,6 +8,7 @@ $(function () {
 
     // 公司名称动画
     $('.company').fadeIn();
+    nojsja["HoverButton"].init();
     // 获取详细信息
     RecruitCompanyAction.getDetail();
 });

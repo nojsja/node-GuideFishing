@@ -60,10 +60,10 @@ AdminLogin.loginCheck = function () {
         }
 
         // 登录验证标志和跳转地址
-        var pass = JSONobject.pass;
+        var isPass = JSONobject.isPass;
 
         // 验证通过
-        if(pass){
+        if(isPass){
             window.location.href = JSONobject.redirectUrl;
         }else {
             AdminLogin.modalWindow('用户验证信息有误, 请重试...');
