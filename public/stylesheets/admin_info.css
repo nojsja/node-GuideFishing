@@ -120,7 +120,8 @@ input.admin-add-detail {
     transition: all 0.3s;
 
     background-color: #fe9746;
-    color: white;
+    /* 覆盖原来的颜色 */
+    color: white !important;
 }
 
 
@@ -171,6 +172,17 @@ input.admin-add-detail {
 #adminTable {
     width: 90%;
     margin: auto;
+}
+
+.edit-td,
+.delete-td {
+    text-align: center;
+}
+
+td.edit-td:hover,
+td.delete-td:hover {
+    background-color: #668b96;
+    color: white;
 }
 
 #adminTable td, #adminTable th {

@@ -24,6 +24,11 @@ var AdminInfoAction = {
 /* 页面事件绑定 */
 AdminInfoAction.pageEventBand = function () {
 
+    // 清除筛选条件
+    $('#searchCondtionClear').click(function () {
+        $('.condition-detail-item').prop('class', 'condition-detail-item');
+        AdminInfoAction.adminSearchCondition = {};
+    });
     // 筛选权限信息
     $('#searchCondtion').click(function () {
 
@@ -141,45 +146,63 @@ AdminInfoAction.updatePermissionPage = function (JSONdata) {
     }
     // 添加新权限时需要的输入属性
     for(var attr in allAttributes){
-        var $selfinfoTitle = $('<div class="selfinfo-title">');
-        $selfinfoTitle.text(allAttributes[attr]);
-        $adminAddWrapper.append($selfinfoTitle);
 
-        // 存在的话是数组
-        if(permissionConstraints[attr]){
+        (function (attr) {
 
-            var $adminAddDetail = $('<div class="admin-add-detail">');
-            permissionConstraints[attr].forEach(function (item) {
+            var $selfinfoTitle = $('<div class="selfinfo-title">');
+            $selfinfoTitle.text(allAttributes[attr]);
+            $adminAddWrapper.append($selfinfoTitle);
 
-                var $addDetailItem = $('<div class="add-detail-item">');
-                $addDetailItem.attr('attr', attr)
-                    .text(item);
-                $addDetailItem.click(function () {
-                    $('.add-detail-item').prop('class', 'add-detail-item');
-                    $(this).prop('class', 'add-detail-item add-detail-item-click');
-                    // 筛选权限账户条件对象
-                    AdminInfoAction.adminAddCondition[attr] = item;
+            // 存在的话是数组
+            if(permissionConstraints[attr]){
+
+                var $adminAddDetail = $('<div class="admin-add-detail">');
+                permissionConstraints[attr].forEach(function (item) {
+
+                    var $addDetailItem = $('<div class="add-detail-item">');
+                    $addDetailItem.attr('attr', attr)
+                        .text(item);
+                    $addDetailItem.click(function () {
+                        $('.add-detail-item.add-detail-item-click[attr='+ attr +']')
+                            .prop('class', 'add-detail-item');
+
+                        $(this).prop('class', 'add-detail-item add-detail-item-click');
+                        // 筛选权限账户条件对象
+                        AdminInfoAction.adminAddCondition[attr] = item;
+                    });
+                    $adminAddDetail.append($addDetailItem);
                 });
-                $adminAddDetail.append($addDetailItem);
-            });
 
-            $adminAddWrapper.append($adminAddDetail);
-        }else {
+                $adminAddWrapper.append($adminAddDetail);
+            }else {
 
-            var $adminAddDetail = $('<input class="admin-add-detail">');
-            $adminAddDetail.prop('placeholder', attr)
-                .attr('attr', attr);
+                var $adminAddDetail = $('<input class="admin-add-detail">');
+                $adminAddDetail.prop('placeholder', attr)
+                    .attr('attr', attr);
 
-            $adminAddWrapper.append($adminAddDetail);
-        }
+                $adminAddWrapper.append($adminAddDetail);
+            }
+        })(attr);
+
     }
     // 添加确认创建按钮
     var $adminAddDiv = $('<div class="admin-add-div">');
     var $adminAddButton = $('<input type="button" value="创建" class="btn btn-default btn-sm" id="adminAddButton">');
-    // $adminAddButton.click(function () {
-    //     // 添加一个权限账户
-    //     AdminInfoAction.permissionAssign('add');
-    // });
+    $adminAddButton.click(function () {
+        // 添加一个权限账户
+
+        $.post('/admin/permission/add',
+            AdminInfoAction.adminAddCondition, function (JSONdata) {
+
+                var JSONobject = JSON.parse(JSONdata);
+                if(JSONobject.isError){
+                    return nojsja["ModelWindow"].show("添加出错！[error]: " + JSONobject.error);
+                }
+                nojsja["ModelWindow"].show("添加成功！");
+            },
+            "JSON"
+        );
+    });
     $adminAddDiv.append($adminAddButton);
     $adminAddWrapper.append($adminAddDiv);
 
@@ -227,7 +250,8 @@ AdminInfoAction.updatePermissionPage = function (JSONdata) {
                     $conditionDetailItem.text(item);
                     $conditionDetailItem.click(function () {
 
-                        $(".condition-detail-item").prop('class', 'condition-detail-item');
+                        $(".condition-detail-item.condition-detail-item-click[attr=" + attr + "]")
+                            .prop('class', 'condition-detail-item');
                         $(this).prop('class', 'condition-detail-item condition-detail-item-click');
                         AdminInfoAction.adminSearchCondition[attr] = item;
                     });
@@ -279,8 +303,8 @@ AdminInfoAction.updateAdministrator = function (JSONdata) {
         $tableHeadTh.text(adminAttrs[i]);
         $adminTableHead.append($tableHeadTh);
     }
-    $adminTableHead.append($('<th>edit</th>'))
-        .append($('<th>delete</th>'));
+    $adminTableHead.append($('<th class="edit-td">edit</th>'))
+        .append($('<th class="delete-td">delete</th>'));
     $adminTable.append($adminTableHead);
 
     // 更新DOM -- content
@@ -296,13 +320,13 @@ AdminInfoAction.updateAdministrator = function (JSONdata) {
                 $adminTableContent.append($tableContentTd);
             }
             // 添加编辑按钮
-            var $edit = $('<td>编辑</td>');
+            var $edit = $('<td class="edit-td" title="编辑条目"><i class="icon-edit"></i></td>');
             $edit.click(function () {
                 AdminInfoAction.adminTableEdit(adminArray[i]);
             });
 
             // 添加删除按钮
-            var $delete = $('<td>删除</td>')
+            var $delete = $('<td class="delete-td" title="删除条目"><i class="icon-trash"></i></td>')
             $delete.click(function () {
                 $adminTableContent.parent().remove($adminTableContent);
                 AdminInfoAction.adminTableDelete(adminArray[i]);
@@ -334,58 +358,73 @@ AdminInfoAction.adminTableEdit = function(){
         var permissionConstranints = AdminInfoAction.permissionConstraints;
 
         for(var attr in changeableAttr){
-            var $selfinfoTitle = $('<div class="selfinfo-title">');
-            $selfinfoTitle.text(changeableAttr[attr]);
-            $adminEditWrapper.append($selfinfoTitle);
 
-            // 存在的话是数组
-            if(permissionConstranints[attr]){
+            (function (attr) {
 
-                var $adminEditDetail = $('<div class="admin-edit-detail">');
-                permissionConstranints[attr].forEach(function (item) {
+                var $selfinfoTitle = $('<div class="selfinfo-title">');
+                $selfinfoTitle.text(changeableAttr[attr]);
+                $adminEditWrapper.append($selfinfoTitle);
 
-                    var $editDetailItem = $('<div class="edit-detail-item">');
-                    $editDetailItem.attr('attr', attr)
-                        .text(item);
-                    $editDetailItem.click(function () {
-                        $('.add-detail-item').prop('class', 'edit-detail-item');
-                        $(this).prop('class', 'edit-detail-item edit-detail-item-click');
-                        // 筛选权限账户条件对象
-                        AdminInfoAction.adminEditCondition[attr] = item;
+                // 存在的话是数组
+                if(permissionConstranints[attr]){
+
+                    var $adminEditDetail = $('<div class="admin-edit-detail">');
+                    permissionConstranints[attr].forEach(function (item) {
+
+                        var $editDetailItem = $('<div class="edit-detail-item">');
+                        $editDetailItem.attr('attr', attr)
+                            .text(item);
+                        $editDetailItem.click(function () {
+                            $('.add-detail-item.add-detail-item-click[attr=' + attr + ']')
+                                .prop('class', 'edit-detail-item');
+                            $(this).prop('class', 'edit-detail-item edit-detail-item-click');
+                            // 筛选权限账户条件对象
+                            AdminInfoAction.adminEditCondition[attr] = item;
+                        });
+                        $adminEditDetail.append($editDetailItem);
                     });
-                    $adminEditDetail.append($editDetailItem);
-                });
 
-                $adminEditWrapper.append($adminEditDetail);
-            }else {
+                    $adminEditWrapper.append($adminEditDetail);
+                }else {
 
-                var $adminEditDetail = $('<input class="admin-edit-detail">');
-                $adminEditDetail.prop('placeholder', attr)
-                    .attr('attr', attr);
+                    var $adminEditDetail = $('<input class="admin-edit-detail">');
+                    $adminEditDetail.prop('placeholder', attr)
+                        .attr('attr', attr);
 
-                $adminEditWrapper.append($adminEditDetail);
-            }
+                    $adminEditWrapper.append($adminEditDetail);
+                }
+            })(attr);
+
         }
         // 添加确认创建按钮
         var $adminEditDiv = $('<div class="admin-edit-div">');
-        var $adminEditButton = $('<input type="button" value="创建" class="btn btn-success btn-sm" id="adminEditButton">');
+        var $adminEditButton = $('<input type="button" value="修改" class="btn btn-default btn-sm" id="adminEditButton">');
         $adminEditButton.click(function () {
 
+            // 置空
+            AdminInfoAction.adminEditCondition = {};
             // 遍历选取属性
-            $('input.admin-edit-div').each(function () {
+            $('input.admin-edit-detail').each(function () {
                 var attr = $(this).attr('attr');
                 var value = $(this).val().trim();
                 if(!value || value == ''){
                     return nojsja['ModalWindow'].show('请完善' + attr);
                 }
                 AdminInfoAction.adminEditCondition[attr] = value;
+                console.log(AdminInfoAction.adminEditCondition);
             });
-            alert('ok');
-            // 添加一个权限账户
-            // $.post('/admin/permission/add', {
-            //
-            // })
-        });
+
+            //修改一个权限账户
+            $.post('/admin/permission/edit',
+                AdminInfoAction.adminEditCondition,
+                function (JSONdata) {
+                    var JSONobject = JSON.parse(JSONdata);
+                    if(JSONobject.isError){
+                        return nojsja["ModelWindow"].show('编辑失败！[error]:' + JSONobject.error);
+                    }
+                    nojsja["ModelWindow"].show("编辑成功！");
+                }, "JSON");
+            });
         $adminEditDiv.append($adminEditButton);
         $adminEditWrapper.append($adminEditDiv);
 
@@ -397,7 +436,10 @@ AdminInfoAction.adminTableEdit = function(){
     }
 
     nojsja["ModalWindow"].define(AdminInfoAction.DOM['adminEditWrapper']);
-    nojsja["ModalWindow"].show('编辑');
+    nojsja["ModalWindow"].show('编辑', {
+        scroll: false,
+        selfDefineKeep: true
+    });
 };
 
 /* 增加权限条目 */
@@ -418,10 +460,12 @@ AdminInfoAction.addAdministrator = function () {
 AdminInfoAction.adminTableDelete = function (adminData) {
 
     $.post('/admin/permission/delete',
-        {account: adminData.account}, function (err) {
+        {account: adminData.account}, function (JSONdata) {
 
-        if(err){
-            nojsja["ModalWindow"].show('删除失败!');
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            nojsja["ModalWindow"].show('删除失败![error]:' + JSONobject.error);
+
         }else {
             nojsja["ModalWindow"].show('删除成功！');
         }

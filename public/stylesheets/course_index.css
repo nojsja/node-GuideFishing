@@ -89,6 +89,7 @@ a {
 }
 
 .hot-item-list > li {
+    list-style: none;
     margin-left: 5px;
     color: #79b0cf;
 }

@@ -16,7 +16,7 @@ $(function () {
     // 更新热门内容
     CourseAction.updateHot();
     // 滑动图片初始化
-    CourseAction.buildSlideView();
+    // CourseAction.buildSlideView();
     // 悬浮按钮初始化
     njj.HoverButton.init();
 });
@@ -41,73 +41,6 @@ var CourseAction = {
     courseTypeChina: {}
 };
 
-/* 享元模式
- * 这儿只做一个演示不具有参考价值
-  * */
-CourseAction.flyWeightPattern = (function () {
-
-    // 共享对象（存储共享的内部状态,可作为构造函数创建对象）
-    var courseData = function (type) {
-        this.courseType = type;
-    };
-    
-    // 构建工厂
-    var courseFactory = (function () {
-
-        // 共享对象工厂对象池内的对象个数由内部共享状态的组合数决定，可能存在
-        // 没有内部共享状态或是外部共享状态的情况
-        var courseObject = {};
-
-        // 调用接口
-        return {
-            // 添加一个课程DOM元素
-            create: function (type, callback) {
-                if(!courseObject[type]){
-                    courseObject[type] = [];
-                }
-                if(courseObject[type].length == 0){
-                    var newCourseData = new courseData(type);
-                    // 执行回调
-                    callback(newCourseData);
-                    courseObject[type].push(newCourseData);
-                }else {
-                    var courseObjectData = courseObject[type].shift();
-                    callback(courseObjectData);
-                    courseObjectData[type].push(courseObjectData);
-                }
-
-            }
-        };
-    })();
-
-    // 外部状态管理模块
-    var courseManager = (function () {
-
-        // 存储共享对象的多个外部共享属性
-        var externalAttributes= [];
-
-        // 从模块外部设置模块内部属性
-        var setExternalAttribute = function (attributes) {
-            externalAttributes = attributes;
-        };
-
-        // 添加DOM元素
-        var add = function () {
-
-        };
-        return {
-            setExternalAttribute: setExternalAttribute,
-            add: add,
-
-        };
-    })();
-
-    // 返回外部调用接口
-    return {
-        courseFactory: courseFactory,
-        courseManager: courseManager
-    };
-})();
 
 /* 页面主要事件绑定 */
 CourseAction.pageEventBind = function () {
@@ -338,7 +271,7 @@ CourseAction.updateHot = function () {
             var $li = $('<li>');
             var $a = $('<a>');
             // 课程url由前缀、课程类型和课程名字组成
-            $a.text(popular.courseName)
+            $a.text((Number(index) + 1) + ' . ' + popular.courseName)
                 .prop({
                     href: [popular.preDress, popular.courseType, '/', popular.courseName].join('')
                 });
