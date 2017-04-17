@@ -7,59 +7,10 @@
 // 引入
 var Admin = require('../models/Admin');
 var EntoCn = require('../models/EnToCn');
+var Routes = require('../models/Routes').routes;
 
 function ADMIN_TEMP(app){
 
-    // 路由对象
-    // isVariable -- 是否是可输入类型的变量
-    var routes = {
-
-        course: [{
-            text: "[移动端查看] 正式课程列表页面",
-            url: '/course/index',
-            isVariable: false
-        }, {
-            text: "[移动端查看] 直播课程列表页面",
-            url: '/course/broadcast/index',
-            isVariable: false
-        }, {
-            text: "[桌面端查看] 管理员直播课程编辑页面",
-            url: '/course/admin/edit',
-            isVariable: false
-        }, {
-            text: "[移动端查看] 管理员直播课程登录页面",
-            url: '/course/broadcast/room/adminCheck/:roomID',
-            isVariable: true
-        }, {
-            text: "[移动端查看] 以用户身份进入某个课程直播间",
-            url: '/course/broadcast/room/user/:roomID',
-            isVariable: true
-        }, {
-            text: "[移动端查看] 以管理员身份进入某个课程直播间",
-            url: '/course/broadcast/room/admin/:roomID',
-            isVariable: true
-        }],
-
-        test:[{
-            text: "[移动端查看] 所有测评列表页面",
-            url: '/test/index',
-            isVariable: false
-        }, {
-            text: "[桌面端查看] 管理员管理所有测评题目页面",
-            url: '/test/admin/manager',
-            isVariable: false
-        }, {
-            text: "[桌面端查看] 管理员编辑测评题目页面",
-            url: '/test/admin/create',
-            isVariable: false
-        }],
-
-        recruitment: [{
-            text: "[移动端查看] 带渔入口页面",
-            url: '/recruitment/index',
-            isVariable: false
-        }]
-    };
 
     /* 获取页面 */
     app.get('/admin/routes', function (req, res, next) {
@@ -75,7 +26,7 @@ function ADMIN_TEMP(app){
     app.get('/admin/login', function (req, res) {
 
         res.render('admin_login', {
-            title: "带渔管理员登录"
+            title: "启航管理员登录"
         });
     });
 
@@ -200,9 +151,7 @@ function ADMIN_TEMP(app){
         // 筛选
         Admin.getAdministrator({
             condition: req.body.condition || null,
-            filter: {
-                account: req.session.admin.account,
-            }
+
         }, function (err, adminArray, adminAttrs) {
 
             if(err){
@@ -274,12 +223,12 @@ function ADMIN_TEMP(app){
                 if(err){
                     return res.json( JSON.stringify({
                         isError: true,
-                        error: err
+                        error: err.toString()
                     }) );
                 }
                 return res.json( JSON.stringify({
                     isError: false,
-                    examineContent: examineProgress
+                    examineProgress: examineProgress
                 }) );
             });
 
@@ -287,10 +236,7 @@ function ADMIN_TEMP(app){
 
             res.json( JSON.stringify({
                 isError: true,
-                error: {
-                    status: 404,
-                    message: '账户信息有误'
-                }
+                error: '账户信息有误'
             }) );
         }
 
@@ -303,7 +249,7 @@ function ADMIN_TEMP(app){
         if(req.session.admin && req.session.admin.examine.rank === 0){
             return next();
         }
-        return res.json( JSON.stringify({
+        return res.json( JSON.stringify( {
             isError: true,
             error: {
                 status: 404,
@@ -313,7 +259,122 @@ function ADMIN_TEMP(app){
 
     }, function (req, res) {
 
+        // 携带的管理员权限信息
+        var condition = req.body.condition;
+        var permissionConstraints;
+        // 权限信息
+        Admin.getPermissionConstraints(function (constraints) {
+            permissionConstraints = constraints;
+        })
 
+        if(req.params.action == "add"){
+
+            // 检查必要创建属性完整性
+            for(let constraints in permissionConstraints.allAttributes){
+                if(!condition[constraints]){
+                    return res.json( JSON.stringify({
+                        isError: true,
+                        error: new Error('没有完整的属性信息！').toString()
+                    }) );
+                }
+            }
+            var newAdmin = new Admin(condition);
+            newAdmin.save(function (err, isPass) {
+
+                if(err){
+                    return res.json( JSON.stringify({
+                        isError: true,
+                        error: err.toString()
+                    }) );
+                }
+                // 存储成功
+                if(isPass){
+                    console.log('存储成功！');
+                    res.json( JSON.stringify({
+                        isError: false,
+                        isPass: true
+                    }) );
+                }else {
+                    console.log('存储失败！');
+                    res.json( JSON.stringify({
+                        isError: false,
+                        isPass: false
+                    }) );
+                }
+            });
+        }
+
+        // 编辑权限
+        if(req.params.action == "edit"){
+
+            // 检查属性完整性
+            for(let constraints in permissionConstraints.changeableAttributes){
+                if(!condition[constraints]){
+                    return res.json( JSON.stringify({
+                        isError: true,
+                        error: new Error('没有完整的属性信息！').toString()
+                    }) );
+                }
+            }
+
+            // 更改全新
+            Admin.permissionAssign(condition, function (err, isPass) {
+
+                if(err){
+                    return res.json( JSON.stringify({
+                        isError: true,
+                        error: err.toString()
+                    }) );
+                }
+                if(isPass){
+                    console.log('修改成功！');
+                    res.json( JSON.stringify({
+                        isError: false,
+                        isPass: true
+                    }) );
+                }else {
+                    console.log('修改失败！');
+                    res.json( JSON.stringify({
+                        isError: false,
+                        isPass: false
+                    }) );
+                }
+            });
+        }
+
+        if(req.params.action == "delete"){
+
+            if(!condition.account){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: new Error('没有完整的属性信息！').toString()
+                }) );
+            }
+            // 移除权限信息
+            Admin.removePermission(condition, function (err, isPass) {
+
+                if(err){
+                    return res.json( JSON.stringify({
+                        isError: true,
+                        error: err.toString()
+                    }) );
+                }
+                // 删除成功
+                if(isPass){
+                    console.log('删除成功!');
+                    res.json( JSON.stringify({
+                        isError: false,
+                        isPass: true
+                    }) )
+                }else {
+                    console.log('删除失败!');
+                    res.json( JSON.stringify({
+                        isError: false,
+                        isPass: false
+                    }) );
+                }
+            });
+        }
     });
 
     /* 管理员验证课程或测评数据条目 */
@@ -363,7 +424,7 @@ function ADMIN_TEMP(app){
 
         // 向客户端发送数据
         res.json(JSON.stringify( {
-            routes: routes
+            routes: Routes
         }) );
     });
 

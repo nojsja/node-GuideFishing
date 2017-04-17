@@ -279,9 +279,7 @@ Admin.getAdministrator = function (con, callback) {
             if(index >= 0){
 
                 if(item == "filter"){
-                    for(let item2 in con[item]){
-                        query.ne(item2, con[item][item2]);
-                    }
+
                     continue;
                 }
                 if(item == "select"){
@@ -388,7 +386,13 @@ Admin.permissionAssign = function (con, callback) {
         if(doc){
 
             var query2 = doc.update({
-                $set: { rank: con.rank, examineType: con.examineType, examineContent: {course: [], test: []} }
+                $set: {
+                    rank: con.rank,
+                    examineType: con.examineType,
+                    examineContent: [],
+                    password: con.password,
+                    nickName: con.nickName
+                }
             });
             query2.exec(function (err, results) {
                 if(err){
