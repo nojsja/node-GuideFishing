@@ -35,6 +35,13 @@ $(function () {
  * password -- 讲师登录密码
  * price -- 课程价格
  * tags -- 课程标签
+ * examine -- 课程审查对象
+ *  pass -- 审查是否通过
+ *  adminAccount -- 提交人
+ *  examineAccount -- 审批者
+ *  examineText -- 审批结果文字
+ *  date -- 审批日期
+ *
  * */
 var editAction = {
 
@@ -72,7 +79,7 @@ var editAction = {
             examine: {
                 pass: false,
                 adminAccount: null,
-                date: null
+                examineAccount: null
             },
             courseContent: "",
             teacher: "",

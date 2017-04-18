@@ -354,7 +354,7 @@ AllTest.deleteSomeDoc = function (docsCondition, callback) {
 };
 
 /* 更改测评审查属性 -- 审查通过 */
-AllTest.examinePass = function (con, callback) {
+AllTest.examine = function (status, con, callback) {
 
     var db = mongoose.connection;
     var Model = mongoose.model('Test', testSchema);
@@ -373,15 +373,27 @@ AllTest.examinePass = function (con, callback) {
         // 文档存在
         if(doc){
             // 已经审查通过了
-            if(doc.examine.pass){
+            if(doc.examine.status == "pass" ){
                 console.log('已经审查过了！');
                 return callback(null, false);
             }
-            doc.examine.pass = true;
-            doc.examine.adminAccount = con.adminAccount;
-            doc.date = getDate();
-            // 审查成功
-            callback(null, true);
+            var query2 = doc.update({
+                $set: {
+                    examine: {
+                        status: status,
+                        examineAccount: con.examineAccount,
+                    }
+                }
+            });
+
+            query2.exec(function (err, doc) {
+
+                if(err){
+                    console.log(err);
+                    return callback(err);
+                }
+                callback(null, true)
+            });
         }else {
             var error = new Error('文档为找到！');
             callback(error);

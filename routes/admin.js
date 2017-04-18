@@ -7,6 +7,7 @@
 // 引入
 var Admin = require('../models/Admin');
 var EntoCn = require('../models/EnToCn');
+var getDate = require('../models/tools/GetDate');
 var Routes = require('../models/Routes').routes;
 
 function ADMIN_TEMP(app){
@@ -380,25 +381,46 @@ function ADMIN_TEMP(app){
     /* 管理员验证课程或测评数据条目 */
     app.post('/admin/:type/examine', function (req, res, next) {
 
+        if(req.session.admin && req.session.admin.examine.rank == 1){
+            return next();
+        }
+        return res.json( JSON.stringify({
+            isError: true,
+            error: new Error('权限验证未通过！').toString()
+        }) );
+
     }, function (req, res) {
 
         var condition = {
-            name: req.session.name,
-            type: req.session.type,
-            examineType: req.params.type
+            contentName: req.body.contentName,
+            contentType: req.body.contentType,
+            examineText: req.body.examineText,
+            examineAccount: req.session.admin.account,
+            adminAccount: req.body.adminAccount,
+            examineType: req.params.type,
+            status: req.body.status,
+            date: getDate()
         };
-        if(!condition.name || !condition.type || !condition.examineType){
-            return req.json( JSON.stringify({
-                isError: true,
-                error: new Error("验证信息有误！")
-            }) );
+
+        console.log(condition);
+
+        // 验证信息完整性
+        for( let attr in condition){
+            if(!attr){
+                return req.json( JSON.stringify({
+                    isError: true,
+                    error: new Error("验证信息不全！")
+                }) );
+            }
         }
-        Admin.examinePass(condition, function (err, isPass) {
+
+        // 审查逻辑
+        Admin.examine(condition.status, condition, function (err, isPass) {
 
             if(err){
                 return res.json( JSON.stringify({
                     isError: true,
-                    error: err
+                    error: err.toString()
                 }) )
             }
             // 返回审查情况
@@ -408,14 +430,6 @@ function ADMIN_TEMP(app){
             }) );
         });
     });
-
-    /* 大管理员（0级）分配和修改权限 */
-    app.post('/admin/permission', function (req, res, next) {
-
-    }, function (req, res) {
-
-    });
-
     
     /* 获取所有路由 */
     app.post('/admin/routes', function(req, res, next){

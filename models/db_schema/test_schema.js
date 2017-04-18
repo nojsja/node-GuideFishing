@@ -53,9 +53,9 @@ var testSchema = new Schema({
     scoreMode: String,
     scoreValue: Number,
     examine: {
-        pass: {type: Boolean, required: true},
-        adminAccount: {type: String},
-        date: {type: String}
+        status: {type: String, required: true},
+        adminAccount: {type: String, required: true},
+        examineAccount: {type: String}
     },
     abstract: String,
     clickRate: Number,
