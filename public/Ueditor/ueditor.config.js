@@ -48,8 +48,8 @@
         ]]*/
         , toolbars: [[
             "fullscreen","source","undo","redo","insertunorderedlist",
-            "insertorderedlist","link","unlink","simpleupload",
-            "insertimage","emotion","pagebreak","date","bold","italic","fontfamily",
+            "insertorderedlist","link","unlink",
+            "emotion","pagebreak","date","bold","italic","fontfamily",
             "removeformat", "formatmatch",
             "fontborder","strikethrough","underline","forecolor","backcolor",
             "justifyleft","justifycenter","justifyright","justifyjustify",

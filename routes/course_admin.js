@@ -78,7 +78,8 @@ function course_admin(app) {
             newCourse.save(function (err, isPass) {
                 if(err){
                     res.json( JSON.stringify({
-                        error: err
+                        isError: true,
+                        error: err.toString()
                     }) );
 
                 }else {
@@ -113,7 +114,7 @@ function course_admin(app) {
 
                         // 成功后返回数据
                         res.json( JSON.stringify({
-                            error: null
+                            isError: false
                         }) );
                     }
                 }

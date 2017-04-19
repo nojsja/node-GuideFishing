@@ -7,10 +7,18 @@
  * 区分关键字 isBroadcast
  */
 
+/*
+* $(document).ready()是在DOM结构建立好后触发的
+* body.onload 是页面的所有数据都加载后触发的
+* 包括图片什么的
+* */
 $(function () {
 
     // 获取课程数据
     ViewAction.readCourseContent();
+
+    // 事件绑定
+    ViewAction.pageEventBand();
 
     // 悬浮按钮初始化
     nojsja.HoverButton.init();
@@ -21,6 +29,7 @@ $(function () {
 * tagTypeArray -- 课程标签类型组（course 和 test）
 * filter -- 用于课程推荐时的筛选信息
 * count -- 用于课程推荐时的每个每个标签的推荐的条目数
+* action -- 页面操作，审查(examine)和查看(view)
 * */
 var ViewAction = {
     tagNameArray: [],
@@ -31,7 +40,24 @@ var ViewAction = {
     },
     courseName: null,
     courseType: null,
-    count: 6
+    count: 6,
+    action: 'view',
+};
+
+/* 事件绑定 */
+ViewAction.pageEventBand = function () {
+
+    //审核提交
+    $('#examineReject, #examinePass').click(function () {
+
+        var status = $(this).attr('status');
+        var exaineText = $('#examineText').val().trim();
+        if(exaineText === '' || exaineText == null){
+            return nojsja['ModalWindow'].show('请完善审核备注');
+        }
+
+        ViewAction.examine(status, exaineText);
+    });
 };
 
 /* 读取一个课程的内容 */
@@ -76,9 +102,12 @@ ViewAction.updateCoursePage = function (JSONdata) {
     ViewAction.tagNameArray = JSONobject.courseTags;
     ViewAction.filter.filterContentName = JSONobject.courseName;
     ViewAction.filter.filterContentType = JSONobject.courseType;
+    ViewAction.adminAccount = JSONobject.examine.adminAccount;
 
     // 获取推荐课程
-    ViewAction.getRecommendation();
+    if(ViewAction.action == 'view'){
+        ViewAction.getRecommendation();
+    }
 
     /* 对于直播类型的课程 */
     if(ViewAction.stringToBoolean(JSONobject.isBroadcast)){
@@ -329,6 +358,25 @@ ViewAction.getRecommendation = function () {
                 $recommendationList.append($recommendationItem);
             });
         }
+
+
+    }, "JSON");
+};
+
+/* 提交审核情况 */
+ViewAction.examine= function (status, examineText) {
+
+    var url = '/admin/course/examine';
+    // 提交的信息
+    var condition = {
+        contentName: ViewAction.courseName,
+        contentType: ViewAction.courseType,
+        examineText: examineText,
+        adminAccount: ViewAction.adminAccount,
+        status: status
+    };
+
+    $.post(url, condition, function (JSONdata) {
 
 
     }, "JSON");

@@ -231,3 +231,12 @@ a {
     margin-left: 0.5rem;
     font-size: 1rem;
 }
+
+/* 审查 */
+.course-examine-div {
+    margin: 0.5rem;
+    padding: 0.5rem;
+    -webkit-box-shadow: 0 0 3px grey;
+    -moz-box-shadow:  0 0 3px grey;
+    box-shadow:  0 0 3px grey;
+}

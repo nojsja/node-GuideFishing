@@ -202,7 +202,7 @@
     nojsja["ModalWindow"] = (function () {
         // 初始化标志
         var isInit = false;
-        var modal, modalContent, acceptButton, contentP, selfDefineDiv;
+        var modal, modalContent, acceptButton, contentP, selfDefineDiv, closeButton;
 
         // 组件初始化事件
         function modalInit() {
@@ -211,7 +211,8 @@
             modal = document.getElementById('ModalWindow');
             // 显示的主要内容
             modalContent = document.getElementById('ModalContent');
-            acceptButton = document.getElementById('accept');
+            acceptButton = document.getElementById('modalAccept');
+            closeButton = document.getElementById('modalClose');
             // 显示的文字信息
             contentP = document.getElementById('contentText');
             // 自定义组件的父级div
@@ -220,6 +221,9 @@
             // 绑定点击关闭事件
             acceptButton.onclick = function () {
                 modalHidden();
+            };
+            closeButton.onclick = function () {
+              modalHidden();
             };
         }
 

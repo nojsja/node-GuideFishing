@@ -116,29 +116,6 @@ Admin.signin = function (con, callback) {
     });
 };
 
-/* 提交审查数据 */
-Admin.ExamineCommit = function (con, callback) {
-
-    var db = mongoose.connection;
-    var Model = mongoose.model('Admin', adminSchema);
-
-    // 审查类型Course 和 Test
-    var examineType = con.examineType;
-
-    var query = Model.find();
-    query.where({
-       rank: 1,
-        examineType: examineType
-    });
-    query.exec(function (err, docs) {
-
-        // 更新数据
-        for(let i = 0; i < docs.length; i++){
-
-        }
-    });
-};
-
 /* 审查课程和测评 */
 Admin.examine = function (status, con, callback) {
 
@@ -166,35 +143,73 @@ Admin.examine = function (status, con, callback) {
                 }
                 if(doc){
 
-                    var examineProgress = doc.examineProgress;
-                    var updateProgress = [];
-                    for(let i = 0; i < examineProgress.length; i++){
+                    // 存储审查进度
+                    function examineProgressSave() {
 
-                        updateProgress.push(examineProgress[i]);
+                        var query2 = doc.update({
+                            $push: {
+                                examineProgress: {
+                                    contentName: con.contentName,
+                                    contentType: con.contentType,
+                                    examineAccount: con.examineAccount,
+                                    status: con.status,
+                                    date: con.date,
+                                    examineText: con.examineText
+                                }
+                            }
+                        });
+                        query2.exec(function (err, doc) {
 
-                        if(examineProgress[i].contentName == con.contentName &&
+                            if(err){
+                                console.log(err);
+                                return callback(err);
+                            }
+                            // 成功更新
+                            callback(null, true);
+                        });
+                    }
+
+                    // 更新审查进度
+                    function examineProgressUpdate() {
+
+                        var examineProgress = doc.examineProgress;
+                        var updateProgress = [];
+                        for(let i = 0; i < examineProgress.length; i++){
+
+                            updateProgress.push(examineProgress[i]);
+
+                            if(examineProgress[i].contentName == con.contentName &&
                                 examineProgress[i].contentType == con.contentType){
 
-                            updateProgress[i].examineAccount = con.examineAccount;
-                            updateProgress[i].status = con.status;
-                            updateProgress[i].date = con.date;
-                            updateProgress[i].examineText = con.examineText;
+                                updateProgress[i].examineAccount = con.examineAccount;
+                                updateProgress[i].status = con.status;
+                                updateProgress[i].date = con.date;
+                                updateProgress[i].examineText = con.examineText;
+                            }
                         }
-                    }
-                    var query2 = doc.update({
-                        $set: {
-                            examineProgress: updateProgress
-                        }
-                    });
-                    query2.exec(function (err, doc) {
+                        var query2 = doc.update({
+                            $set: {
+                                examineProgress: updateProgress
+                            }
+                        });
+                        query2.exec(function (err, doc) {
 
-                        if(err){
-                            console.log(err);
-                            return callback(err);
-                        }
-                        // 成功更新
-                        callback(null, true);
-                    });
+                            if(err){
+                                console.log(err);
+                                return callback(err);
+                            }
+                            // 成功更新
+                            callback(null, true);
+                        });
+                    }
+
+                    // 更新进度信息
+                    if(status == 'isExaming'){
+
+                        examineProgressSave();
+                    }else {
+                        examineProgressUpdate();
+                    }
                 }
             });
 

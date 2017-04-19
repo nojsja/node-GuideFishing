@@ -80,13 +80,14 @@ Course.prototype.save = function (callback) {
     var courseData = this.courseData;
     // 标签数据
     var tagArray = this.tagArray;
-    // 审查数据
+
+    // 需要记录的审查数据
     var examineData = {
         contentName: this.courseData.courseName,
         contentType: this.courseData.courseType,
         examineType: "course",
         examineText: null,
-        adminAccount: this.courseData.examine.examineAccount,
+        adminAccount: this.courseData.examine.adminAccount,
         examineAccount: null,
         status: "isExaming",
         date: getDate()
@@ -668,6 +669,7 @@ Course.examine = function (status, con, callback) {
                 console.log('已经审查过了！');
                 return callback(null, false);
             }
+
             var query2 = doc.update({
                $set: {
                    examine: {

@@ -74,8 +74,10 @@ a {
     margin-bottom: 1em;
     font-size: 1.5rem;
     padding: 2px;
-    background-color: #929292;
-    color: #e0e5df;
+    background-color: #d1d1d1;
+    border: solid 1px #f67e3a;
+    color: #ffffff;
+    text-shadow: 1px 1px 1px #2488c3;
     text-align: center;
 }
 
@@ -100,12 +102,9 @@ a {
     text-align: center;
     margin-bottom: 2rem;
     font-size: 2rem;
-    background-color: #acacac;
+    background-color: #d0d0d0;
     color: #ffffff;
-
-    -webkit-box-shadow:  2px 2px 0 #cb5730;
-    -moz-box-shadow:  2px 2px 0 #cb5730;
-    box-shadow:  2px 2px 0 #cb5730;
+    text-shadow: 2px 2px 2px #547ed8;
 }
 
 
@@ -121,7 +120,7 @@ a {
     margin-top: 2rem;
     margin-bottom: 2rem;
     width: 100%;
-    background-color: #c2c6c1;
+    background-color: #e2e2e2;
     min-height: 10rem;
     height: auto;
     border-radius: 10px;
@@ -131,14 +130,15 @@ a {
 /* 编号 */
 .item-number {
     text-align: center;
-    color: white;
-    text-shadow: 0 0 10px black;
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: bold;
 }
 
 /* 标题 */
 .item-title {
-    font-weight: bold;
     font-size: 1.5rem;
+    color: #596f9b;
 }
 
 /* 所有选项 */
@@ -150,6 +150,7 @@ a {
 .choise {
     background-color: white;
     border-radius: 5px;
+    color: #737373;
     box-sizing: border-box;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;

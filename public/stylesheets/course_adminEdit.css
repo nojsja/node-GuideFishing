@@ -18,8 +18,8 @@ a {
     font-family: 黑体;
     font-weight: bold;
     font-size: 2.5rem;
-    text-shadow: 0 0 10px #395980;
-    color: #fdfbf6;
+    text-shadow: 3px 3px 3px #737373;
+    color: #ffffff;
 }
 
 .type {
@@ -274,10 +274,10 @@ a {
     margin-bottom: 1.5rem;
     margin-top: 2rem;
     font-size: 2rem;
-    font-weight: bold;
-    background-color: #1c6897;
+    background-color: #2488c3;
     color: #c5eedd;
     text-align: center;
+    border: solid 1px white;
     -moz-box-shadow: 5px 5px #8287a7;
     -webkit-box-shadow: 5px 5px #8287a7;
     box-shadow: 5px 5px #8287a7;
@@ -355,7 +355,8 @@ a {
 
 /* 点击效果 */
 .type-item_click {
-    background-color: #e1ebfd;
+    background-color: #547ed8;
+    color: white;
 }
 
 .type > div:hover {
@@ -365,6 +366,7 @@ a {
     -o-transition: all 0.3s;
     transition: all 0.3s;
     background-color: #e1ebfd;
+    color: #668b96;
 }
 
 /*消除inline-block的间隙*/

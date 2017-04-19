@@ -77,7 +77,7 @@ var editAction = {
             courseAbstract: "",
             courseTags: [],
             examine: {
-                pass: false,
+                status: 'isExaming',
                 adminAccount: null,
                 examineAccount: null
             },
@@ -313,8 +313,8 @@ editAction.pageEventBind = function () {
         $.post(url, postData, function (JSONdata) {
 
             var JSONobject = JSON.parse(JSONdata);
-            if(JSONobject.error){
-                return editAction.modalWindow('Sorry,发生错误: ' + err);
+            if(JSONobject.isError){
+                return editAction.modalWindow('Sorry,发生错误: ' + JSONobject.error);
             }
             editAction.modalWindow('发布成功!');
         }, "JSON");

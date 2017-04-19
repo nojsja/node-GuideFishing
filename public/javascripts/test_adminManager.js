@@ -161,15 +161,15 @@ ManagerAction.previewWindow = function (testType, testTitle) {
 
     // 访问地址
     var urlArray = ['/test/view/', testType, '/', testTitle].join('');
-    nojsja.ModalWindow.show("题目预览", {
-        scroll: true
-    });
+
     $.post(urlArray, function (JSONdata) {
 
         var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return nojsja["ModalWindow"].show('发生错误：' + JSONobject.error);
+        }
         // 列表
-        var $previewList = $('.preview-list');
-        $previewList.children().remove();
+        var $previewList = $('<div class="preview-list">');
 
         // 遍历添加DOM
         for(var index in JSONobject.testGroup){
@@ -197,7 +197,15 @@ ManagerAction.previewWindow = function (testType, testTitle) {
 
                 $previewList.append($previewItem);
             })(index);
+
         }
+
+        // 模态弹出
+        nojsja["ModalWindow"].define($previewList[0]);
+        nojsja["ModalWindow"].show(testTitle, {
+            scroll: true,
+            selfDefineKeep: true
+        });
 
     }, "JSON");
 

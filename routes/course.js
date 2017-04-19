@@ -1,6 +1,6 @@
 /**
  * Created by yangw on 2016/11/8.
- * 带渔课程路由管理
+ * 启航课程路由管理
  */
 
 /* 课程模型 */
@@ -24,7 +24,7 @@ function course(app){
 
         res.render('course_index', {
             title: "课程主页",
-            slogan: "带渔",
+            slogan: "启航",
             other: "课程"
         });
     });
@@ -174,7 +174,35 @@ function course(app){
         res.render('course_view', {
 
             title: "课程学习",
-            slogan: "带渔",
+            slogan: "启航",
+            action: 'view',
+            other: "课程",
+            courseType: req.params.courseType,
+            courseName: req.params.courseName
+        });
+    });
+
+    /* 获取课程审查页面 */
+    app.get('/course/examine/:courseType/:courseName', function (req, res, next) {
+
+        if(req.session.admin && req.session.admin.examine.rank == 1){
+
+            return next();
+        }
+        return res.render('error', {
+            message: '404',
+            error: {
+                status: '禁止访问'
+            }
+        });
+
+    }, function (req, res) {
+
+        res.render('course_view', {
+
+            title: "课程审查",
+            slogan: "启航",
+            action: 'examine',
             other: "课程",
             courseType: req.params.courseType,
             courseName: req.params.courseName
@@ -224,7 +252,8 @@ function course(app){
             isBroadcast: 1,
             courseOrigin: 1,
             teacher: 1,
-            date: 1
+            date: 1,
+            examine: 1,
         };
 
         Course.readOne(totalCondition, function (err, data) {
@@ -362,7 +391,7 @@ function course(app){
 
             return res.render('user_login', {
                 title: "用户登录",
-                slogan: "带渔",
+                slogan: "启航",
                 other: "登录"
             });
         }

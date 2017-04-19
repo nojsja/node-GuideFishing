@@ -19,9 +19,11 @@ $(function () {
         $('#purchase').prop('disabled', "disabled");
     }else {
         if(DetailAction.isPurchased == "unknown"){
-            DetailAction.modalWindow("登录后才能进行其它操作 :)");
             $('#purchase').prop('disabled', "disabled");
             $('#start').prop('disabled', "disabled");
+
+            // 弹出登录窗口
+            DetailAction.userLogin();
         }else {
             $('#purchase').prop('disabled', false);
             $('#start').prop('disabled', "disabled");
@@ -75,6 +77,12 @@ var DetailAction = {
     isPurchased: false,
     initialError: false,
     error: null*/
+};
+
+/* 弹出登录窗口 */
+DetailAction.userLogin = function () {
+
+
 };
 
 /* 获取类型图片 */

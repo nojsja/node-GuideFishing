@@ -94,12 +94,8 @@ Examine.examine = function (status, con, callback) {
             course: "courseName"
         },
         examineType: {
-            test: "testType",
-            course: "courseType"
-        },
-        examineAction: {
-            course: Course,
-            test: Test
+            test: "test",
+            course: "course"
         },
         course: {
             courseName: con.contentName,
@@ -113,52 +109,104 @@ Examine.examine = function (status, con, callback) {
         }
     };
 
-    // 函数调用
-    examineData.examineAction[examineType]
-        .examine(status, examineData[examineType], function (err, isPass) {
+    // 初次进行存储
+    if(status == "isExaming"){
 
-            if(err){
-                return callback(err);
-            }
+        examineSave();
+    }else {
 
-            var query = Model.findOne();
-            query.where(examineData[examineType]);
-            query.exec(function (err, doc) {
+        if(examineType == 'course'){
+
+            Course.examine(status, examineData[examineType], function (err, isPass) {
 
                 if(err){
-                    console.log(err);
                     return callback(err);
                 }
-                if(doc){
-                    var query2 = doc.update({
-                       $set: {
-                           contentName: con.contentName,
-                           contentType: con.contentType,
-                           examineType: con.examineType,
-                           examineText: con.examineText,
-                           adminAccount: con.adminAccount,
-                           examineAccount: con.examineAccount,
-                           status: con.status,
-                           date: con.date
-                       }
-                    });
-                    
-                    query2.exec(function (err, doc) {
 
-                        if(err){
-                            console.log(err);
-                            return callback(err);
-                        }
-                        callback(null, true)
-                    });
-
-                }else {
-
-                    // 更新失败
-                    callback(null, false);
-                }
+                examineUpdate();
             });
+        }else if( examineType == 'test'){
+
+            Test.examine(status, examineData[examineType], function (err, isPass) {
+
+                if(err){
+                    return callback(err);
+                }
+
+                examineUpdate();
+            });
+        }
+
+
+    }
+
+    // 审查存储操作
+    function examineSave() {
+
+        var newExamine = new Model({
+            contentName: con.contentName,
+            contentType: con.contentType,
+            examineType: con.examineType,
+            examineText: con.examineText,
+            adminAccount: con.adminAccount,
+            examineAccount: con.examineAccount,
+            status: con.status,
+            date: con.date
         });
+
+        newExamine.save(function (err, doc) {
+
+            if(err){
+                console.log(err);
+                return callback(err);
+            }
+            callback(null, true);
+        });
+    }
+    
+    // 审查更新操作
+    function examineUpdate() {
+
+        var query = Model.findOne();
+        query.where(examineData[examineType]);
+        query.exec(function (err, doc) {
+
+            if(err){
+                console.log(err);
+                return callback(err);
+            }
+            if(doc){
+                var query2 = doc.update({
+                    $set: {
+                        contentName: con.contentName,
+                        contentType: con.contentType,
+                        examineType: con.examineType,
+                        examineText: con.examineText,
+                        adminAccount: con.adminAccount,
+                        examineAccount: con.examineAccount,
+                        status: con.status,
+                        date: con.date
+                    }
+                });
+
+                query2.exec(function (err, doc) {
+
+                    if(err){
+                        console.log(err);
+                        return callback(err);
+                    }
+                    console.log('examine true.');
+                    callback(null, true)
+                });
+
+            }else {
+
+                // 更新失败
+                callback(null, false);
+            }
+        });
+    }
+
 };
 
 /* 获取指定的审查数据 */
