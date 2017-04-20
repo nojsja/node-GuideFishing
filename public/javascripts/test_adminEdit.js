@@ -45,6 +45,14 @@ var EditAction = {
     // 题目类型和标题
     testType: null,
     testTitle: null,
+    // 测评标签
+    testTags: [],
+    // 审查数据
+    examine: {
+        status: 'isExaming',
+        adminAccount: null,
+        examineAccount: null
+    },
     // 题目集合,包含观察者模式的相关方法,group存储题目集合
     testGroup: {
         group: [], listen: null, trigger: null, remove: null, watcherList: []
@@ -106,6 +114,46 @@ EditAction.pageEventBind = function () {
         $(this).prop('class', 'type-item test-type test-type_click');
         EditAction.testType = $(this).prop('id');
     });
+
+    // 标签输入事件绑定
+    $('#tagAdd').click(function () {
+
+        var targetId = $(this).attr('target');
+        var tagText = $('#' + targetId).val().trim();
+        if(!tagText || tagText == ''){
+            return EditAction.modalWindow('请在左侧输入标签名');
+        }
+        if(EditAction.testTags.length == 3){
+            return EditAction.modalWindow('标签最多能添加三个');
+        }
+        if(EditAction.testTags.indexOf(tagText) >= 0){
+            return EditAction.modalWindow('标签重复');
+        }
+        EditAction.testTags.push(tagText);
+        // 更新DOM <div class="tag-list-item" title="点击删除标签">123</div>
+        var $tagList = $('.tag-list');
+
+        updateTag();
+        // 递归更新tag
+        function updateTag() {
+            $tagList.children().remove();
+            for(var i = 0; i < EditAction.testTags.length; i++) {
+
+                (function (i) {
+                    var tag = EditAction.testTags[i];
+                    var $tag = $('<div class="tag-list-item" title="点击删除标签">');
+                    $tag.text(tag);
+                    $tag.click(function () {
+                        EditAction.testTags.splice(i, 1);
+                        updateTag();
+                    });
+                    $tagList.append($tag);
+                })(i);
+            }
+        }
+
+    });
+
     // 选择得分类型
     $('.score-mode').click(function () {
         //效果改变
@@ -663,6 +711,12 @@ EditAction.submitCheck = function () {
         return EditAction.modalWindow("请输入测评类型!");
     }
 
+    // 测评标签
+    submitData.testTags = EditAction.testTags;
+    if(submitData.testTags.length == 0) {
+        return EditAction.modalWindow("请至少输入一个测评标签！");
+    }
+
     // 测评单个得分分值
     submitData.scoreValue = $('#scoreValue').val().trim();
     if(!submitData.scoreValue) {
@@ -697,6 +751,10 @@ EditAction.submitCheck = function () {
         return EditAction.modalWindow("请至少添加一道题目!");
     }
     submitData.testGroup = EditAction.testGroup.group;
+
+    // 审查数据
+    submitData.examine = EditAction.examine;
+
     console.log(submitData);
 
     /* 请求后台存储创建的题目对象数据 */

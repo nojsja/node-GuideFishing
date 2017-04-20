@@ -1,4 +1,4 @@
-body {
+ body {
     font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -13,18 +13,20 @@ a {
 /* 个人信息 */
 .fieldset-selfinfo {
     width: 80%;
-    margin: auto;
-    border: solid 1px #dddddd;
+    margin: 2rem auto 0;
+    border: solid 1px #d1d1d1;
 }
 
 fieldset legend {
     margin-top: 2rem;
+    margin-bottom: 1rem;
+    border: solid 2px white;
     color: #fefefe;
-    text-shadow: 3px 3px 3px #3e555b;
+    text-shadow: 2px 2px 2px #2e3f44;
     background-color: #e7e7e7;
-    -webkit-box-shadow:  0 0 3px #6e94a2;
-    -moz-box-shadow:  0 0 3px #6e94a2;
-    box-shadow:  0 0 3px #6e94a2;
+    -webkit-box-shadow:  0 0 5px #6e94a2;
+    -moz-box-shadow:  0 0 5px #6e94a2;
+    box-shadow:  0 0 5px #6e94a2;
 }
 
 .selfinfo-title {
@@ -44,6 +46,7 @@ fieldset legend {
 .selfinfo-wrapper {
     background-color: #f1f1f1;
     padding: 1rem;
+    margin: 0.5rem;
 }
 
 .selfinfo-detail {
@@ -232,7 +235,7 @@ td.delete-td:hover {
 /*** 内容审核 ***/
 .examine-wrapper {
     margin: 0.5rem;
-    padding: 1rem;
+    padding: 0.5rem;
 }
 
 /*审查内容*/
@@ -261,7 +264,10 @@ td.delete-td:hover {
 }
 
 .examine-content-item .content-item-title {
-
+    margin: 0 1rem 0;
+    padding: 5px;
+    font-weight: bold;
+    color: #4c74ee;
 }
 
 
@@ -274,7 +280,7 @@ td.delete-td:hover {
 }
 
 .examine-progress-item {
-
+    border-bottom: solid 1px white;
 }
 
 .examine-progress-item .progress-item-status-pass {
@@ -303,5 +309,16 @@ td.delete-td:hover {
 }
 
 .examine-progress-item .progress-item-title {
+    margin: 0 1rem 0;
+    padding: 5px;
+    font-weight: bold;
+    color: #4c74ee;
+}
 
+.examine-text {
+    width: 90%;
+    margin: auto;
+    color: #4c74ee;
+    background-color: #f5f5f5;
+    padding: 5px;
 }

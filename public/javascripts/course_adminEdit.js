@@ -234,7 +234,7 @@ editAction.pageEventBind = function () {
         editAction.uploadEventBind();
     });
 
-    // 标签输入时间绑定
+    // 标签输入事件绑定
     $('#tagAdd').click(function () {
 
         var targetId = $(this).attr('target');

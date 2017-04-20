@@ -489,6 +489,9 @@ Course.readList = function (docCondition, callback) {
         }
 
         var query = Course.find().where(condition);
+        // 排除未审核的数据
+        query.ne('examine.status', 'isExaming');
+        query.ne('examine.status', 'reject');
 
         if(courseTypeArray.length > 0){
             query.in('courseType', courseTypeArray);
@@ -673,6 +676,7 @@ Course.examine = function (status, con, callback) {
             var query2 = doc.update({
                $set: {
                    examine: {
+                       adminAccount: con.adminAccount,
                        status: status,
                        examineAccount: con.examineAccount,
                    }
@@ -698,12 +702,5 @@ Course.examine = function (status, con, callback) {
 
 
 module.exports = Course;
-
-
-
-
-
-
-
 
 

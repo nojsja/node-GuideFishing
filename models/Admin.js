@@ -5,10 +5,7 @@
 
 var mongoose = require('./tools/Mongoose');
 var adminSchema = require('./db_schema/admin_schema').adminSchema;
-// 课程模式
-var Course = require('./Course');
-// 测评模式
-var Test = require('./AllTest');
+
 // 审查模式
 var Examine = require('./Examine');
 
@@ -151,7 +148,9 @@ Admin.examine = function (status, con, callback) {
                                 examineProgress: {
                                     contentName: con.contentName,
                                     contentType: con.contentType,
+                                    examineType: con.examineType,
                                     examineAccount: con.examineAccount,
+                                    adminAccount: con.adminAccount,
                                     status: con.status,
                                     date: con.date,
                                     examineText: con.examineText
@@ -225,10 +224,12 @@ Admin.examine = function (status, con, callback) {
 /* 获取需要审查的数据course and test */
 Admin.getExamineData = function (con, callback) {
 
-    Examine.get({
+    Examine.get(con, function (err, examineData) {
 
-    }, function (err, examineData) {
-
+        if(err){
+            return callback(err);
+        }
+        callback(null, examineData);
     });
 };
 

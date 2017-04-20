@@ -114,7 +114,11 @@ function test(app) {
     /* 获取测试视图主页 */
     app.get('/test/view/:testType/:testTitle', function (req, res, next) {
 
+        if(req.session.admin){
+            return next();
+        }
         testRoute.purchaseCheck(req, res, next);
+
         }, function (req, res) {
 
         //评测类型
@@ -138,7 +142,89 @@ function test(app) {
             }
         };
 
-        // 读取一个课程数据
+        // 读取一个测评数据
+        AllTest.getDetail(totalCondition, function (err, data) {
+
+            // 返回的课程数据
+            var testData = {
+                title: "测评页面",
+                testType: testType,
+                testTitle: testTitle,
+                testTags: [],
+                abstract: null,
+                clickRate: null,
+                date: null,
+                isError: false,
+                error: null
+            };
+
+            if(err) {
+                var info = {
+                    message: "查询出错",
+                    error: {
+                        status: "500"
+                    }
+                }
+                return res.render('error', info);
+            }
+
+            if(data){
+                testData.abstract = data["abstract"];
+                testData.clickRate = data["clickRate"];
+                testData.date = data["date"];
+                testData.testTags = data["testTags"];
+                res.render('test_view', testData);
+
+            }else {
+                var info = {
+                    message: "没有查询到相关测评信息！",
+                    error: {
+                        status: "500"
+                    }
+                }
+                res.render('error', info);
+            }
+        });
+    });
+
+    /* 获取测评审查页面 */
+    app.get('/test/examine/:testType/:testTitle', function (req, res, next) {
+
+        if(req.session.admin && req.session.admin.examine.rank == 1){
+
+            return next();
+        }
+        return res.render('error', {
+            message: '404',
+            error: {
+                status: '禁止访问'
+            }
+        });
+
+    }, function (req, res) {
+
+        //评测类型
+        var testType = req.params.testType,
+            testTitle = req.params.testTitle;
+
+        // 读取详情条件
+        // select 确定选定区间
+        // condition 确定筛选条件
+
+        var totalCondition = {
+            select: {
+                abstract: 1,
+                clickRate: 1,
+                date: 1,
+                testTags: 1
+            },
+            condition: {
+                testTitle: testTitle,
+                testType: testType
+            }
+        };
+
+        // 读取一个测评数据
         AllTest.getDetail(totalCondition, function (err, data) {
 
             // 返回的课程数据
@@ -184,7 +270,14 @@ function test(app) {
     });
 
     /* 获取一组测试题目 */
-    app.post('/test/view/:testType/:testTitle', function (req, res) {
+    app.post('/test/view/:testType/:testTitle', function(req, res, next){
+
+        if(req.session.admin){
+            return next();
+        }
+        testRoute.purchaseCheck(req, res, next);
+
+    }, function (req, res) {
 
         //筛选条件
         var condition = {
@@ -264,7 +357,7 @@ function test(app) {
 
             return res.render('user_login', {
                 title: "用户登录",
-                slogan: "带渔",
+                slogan: "启航",
                 other: "登录"
             });
         }

@@ -10,30 +10,126 @@ var getDate = require('./tools/GetDate');
 var testSchema = require('./db_schema/test_schema.js').testSchema;
 // 受欢迎的测试模式
 var popularTestSchema = require('./db_schema/popularTest_schema').popularTestSchema;
-
-/* promise 控制流程 */
+// Tag 模型
+var Tag = require('./Tag');
+// Admin 模型
+var Admin = require('./Admin');
+// promise 控制流程
 var Q = require('q');
 
 /* 构造函数 */
 function AllTest(testGroup) {
     //一组题目
     this.testGroup = testGroup;
+
+    // 课程标签(数组)
+    if(testGroup.testTags instanceof Array){
+
+        // 创建新数组的迭代器方法
+        this.tagArray = testGroup.courseTags.map(function (item) {
+
+            return {
+                tagName: item,
+                tagType: "test",
+                contentName: testGroup.testTitle,
+                contentType: testGroup.testType
+            }
+        });
+    }else {
+        this.tagArray = [];
+    }
 }
 
 /* 存储一组题目数据 */
 AllTest.prototype.save = function (callback) {
 
-    var testGroup = this.testGroup;
     var db = mongoose.connection;
     var Test = mongoose.model('Test', testSchema);
+    var Q = require('q');
 
-    var newTestMode = new Test(testGroup);
+    // 课程数据
+    var testGroup = this.testGroup;
+    // 标签数据
+    var tagArray = this.tagArray;
+
+    // 需要记录的审查数据
+    var examineData = {
+        contentName: this.testGroup.testTitle,
+        contentType: this.testGroup.testType,
+        examineType: "test",
+        examineText: null,
+        adminAccount: this.testGroup.examine.adminAccount,
+        examineAccount: null,
+        status: "isExaming",
+        date: getDate()
+    };
+
+    var newTestMode = new Test(this.testGroup);
     newTestMode.save(function (err, doc) {
         if(err) {
             console.log(err);
             return callback(true);
         }
-        callback(false);
+
+        var defer = Q.defer();
+        defer.promise
+            .then(function (info) {
+
+                var defer = Q.defer();
+
+                var newTag = new Tag(tagArray);
+                newTag.save(function (err) {
+                    if(err){
+                        console.log("[error]: " + err );
+                        info.isError = true;
+                        info.error = err;
+                        defer.reject(info);
+                    }else {
+                        defer.resolve(info);
+                    }
+                });
+
+                return defer.promise;
+            })
+            .then(function success(info) {
+
+                var defer = Q.defer();
+                // 提交给审查人
+                Admin.examine('isExaming', examineData, function (err, isPass) {
+
+                    if(err){
+                        console.log(err);
+                        info.isError = true;
+                        info.error = err;
+                    }
+                    defer.resolve(info);
+                });
+
+                return defer.promise;
+
+            }, function fail(info) {
+
+                var defer = Q.defer();
+
+                console.log(info.error);
+                defer.resolve(info);
+
+                return defer.promise;
+            })
+            .done(function (info) {
+
+                console.log('test save done.');
+                if(info.isError){
+                    return callback(info.err);
+                }
+                callback(null, true);
+            });
+
+        // 开始
+        defer.resolve({
+            isError: false,
+            error: null
+        });
     });
 };
 
@@ -169,6 +265,10 @@ AllTest.readList = function (docCondition, callback) {
                     console.log('query condition: ' + JSON.stringify(info.condition));
 
                     var query = Test.find().where(info.condition);
+                    // 不读正在审查的数据
+                    query.ne('examine.status', 'isExaming');
+                    query.ne('examine.status', 'reject');
+
                     if(info.testTypeArray.length > 0){
                         query.in('testType', info.testTypeArray);
                     }
@@ -380,6 +480,7 @@ AllTest.examine = function (status, con, callback) {
             var query2 = doc.update({
                 $set: {
                     examine: {
+                        adminAccount: con.adminAccount,
                         status: status,
                         examineAccount: con.examineAccount,
                     }

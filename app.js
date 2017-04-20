@@ -32,6 +32,8 @@ var course_broadcast = require('./routes/course_broadcast');
 var user = require('./routes/user');
 var admin = require('./routes/admin');
 var GuideFishing_index = require('./routes/GuideFishing_index');
+// 测试路由
+var TEMP = require('./routes/TEMP');
 
 var app = express();
 
@@ -40,7 +42,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+//app.use(favicon(path.join(__dirname, 'public', 'favicon3.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json({limit: "50mb"}));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
@@ -61,6 +63,7 @@ course(app);
 course_admin(app);
 course_broadcast(app);
 admin(app);
+TEMP(app);
 
 //node-schedule定时执行任务,更新popolar表,每天的凌晨零点
 var rule = new schedule.RecurrenceRule()

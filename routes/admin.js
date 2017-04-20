@@ -10,12 +10,16 @@ var EntoCn = require('../models/EnToCn');
 var getDate = require('../models/tools/GetDate');
 var Routes = require('../models/Routes').routes;
 
-function ADMIN_TEMP(app){
+// 权限验证
+var permissionCheck = require('../models/permissionCheck').permissionCheck;
 
+function admin(app){
 
     /* 获取页面 */
     app.get('/admin/routes', function (req, res, next) {
-        adminCheck(req, res, next);
+
+        permissionCheck.admin(req, res, next);
+
     } , function (req, res) {
 
         res.render('admin_routes', {
@@ -31,38 +35,12 @@ function ADMIN_TEMP(app){
         });
     });
 
-    /* 新建管理员账号 */
-    app.get('/admin/create', function (req, res) {
+    /* 管理员注销 */
+    app.get('/admin/logout', function (req, res) {
 
-        var newAdmin = new Admin({
-            account: "yangwei@outlook.com",
-            password: "yangwei020154",
-            nickName: "Johnson2",
-            rank: 0,
-            examineType: null
-        });
-
-        newAdmin.save(function (err, isPass) {
-
-            if(err){
-                return res.json( JSON.stringify({
-                    isError: true,
-                    error: err
-                }) );
-            }
-            if(isPass){
-                console.log('0级管理员创建成功！');
-                res.json( JSON.stringify({
-                    isError: false,
-                    isPass: true
-                }) );
-            }else {
-                console.log('0级管理员创建失败！');
-                res.json( JSON.stringify({
-                    isError: true,
-                    isPass: false
-                }) );
-            }
+        req.session.admin = null;
+        res.render('admin_login', {
+            title: "启航管理员登录"
         });
     });
 
@@ -111,15 +89,7 @@ function ADMIN_TEMP(app){
     /* 管理员进入个人页面 */
     app.get('/admin/info', function (req, res, next) {
 
-        if(req.session.admin){
-            return next();
-        }
-        return res.render('error', {
-            message: "管理员信息未验证！",
-            error: {
-                status: 404
-            }
-        });
+        permissionCheck.admin(req, res, next);
 
     }, function (req, res) {
 
@@ -136,16 +106,7 @@ function ADMIN_TEMP(app){
     /* 根据筛选条件获取所有管理员信息 */
     app.post ('/admin/get', function (req, res, next) {
 
-        if(req.session.admin && req.session.admin.examine.rank == 0){
-            return next();
-        }
-        return res.json( JSON.stringify({
-            isError: true,
-            error: {
-                status: 404,
-                message: 'forbidden'
-            }
-        }) );
+        permissionCheck.rank0(req, res, next);
 
     }, function (req, res) {
 
@@ -174,21 +135,14 @@ function ADMIN_TEMP(app){
     /* 管理员获取个人信息和需要被验证的信息 */
     app.post('/admin/info', function (req, res, next) {
 
-        if(req.session.admin){
-            return next();
-        }
-        return res.json( JSON.stringify({
-            isError: true,
-            error: {
-                status: 404,
-                message: '未验证权限'
-            }
-        }));
+        permissionCheck.admin(req, res, next);
         
     }, function (req, res) {
 
         var rank = req.session.admin.examine.rank;
         var account = req.session.admin.account;
+        var examineType = req.session.admin.examine.examineType;
+
         // 检查管理员权限
         if(rank == 0){
             // 获取权限约束
@@ -203,12 +157,15 @@ function ADMIN_TEMP(app){
 
         }else if(rank == 1){
 
-            Admin.getExamineData({account: account}, function (err, examineContent) {
+            Admin.getExamineData({
+                examineType: examineType,
+                status: 'isExaming'
+            }, function (err, examineContent) {
 
                 if(err){
                     return res.json( JSON.stringify({
                         isError: true,
-                        error: err
+                        error: err.toString()
                     }) );
                 }
                 return res.json( JSON.stringify({
@@ -247,16 +204,7 @@ function ADMIN_TEMP(app){
     app.post('/admin/permission/:action', function (req, res, next) {
 
         // 权限级别为0
-        if(req.session.admin && req.session.admin.examine.rank === 0){
-            return next();
-        }
-        return res.json( JSON.stringify( {
-            isError: true,
-            error: {
-                status: 404,
-                message: "forbidden!"
-            }
-        }) );
+        permissionCheck.rank0(req, res, next);
 
     }, function (req, res) {
 
@@ -266,7 +214,7 @@ function ADMIN_TEMP(app){
         // 权限信息
         Admin.getPermissionConstraints(function (constraints) {
             permissionConstraints = constraints;
-        })
+        });
 
         if(req.params.action == "add"){
 
@@ -381,13 +329,7 @@ function ADMIN_TEMP(app){
     /* 管理员验证课程或测评数据条目 */
     app.post('/admin/:type/examine', function (req, res, next) {
 
-        if(req.session.admin && req.session.admin.examine.rank == 1){
-            return next();
-        }
-        return res.json( JSON.stringify({
-            isError: true,
-            error: new Error('权限验证未通过！').toString()
-        }) );
+        permissionCheck.rank1(req, res, next);
 
     }, function (req, res) {
 
@@ -423,6 +365,7 @@ function ADMIN_TEMP(app){
                     error: err.toString()
                 }) )
             }
+            console.log('admin');
             // 返回审查情况
             res.json( JSON.stringify({
                 isError: false,
@@ -433,7 +376,9 @@ function ADMIN_TEMP(app){
     
     /* 获取所有路由 */
     app.post('/admin/routes', function(req, res, next){
-        adminCheck(req, res, next);
+
+        permissionCheck.admin(req, res, next);
+
     }, function (req, res) {
 
         // 向客户端发送数据
@@ -450,19 +395,6 @@ function ADMIN_TEMP(app){
             content: req.param("type")
         });
     });
-
-    /* 权限验证中间件 */
-    var adminCheck = function (req, res, next) {
-
-        // 验证用户
-        if(req.session.admin){
-            return next();
-        }else {
-            res.render('admin_login', {
-                title: "管理员登录"
-            });
-        }
-    };
 }
 
-module.exports = ADMIN_TEMP;
+module.exports = admin;

@@ -378,7 +378,16 @@ ViewAction.examine= function (status, examineText) {
 
     $.post(url, condition, function (JSONdata) {
 
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return nojsja["ModalWindow"].show('发生错误：' + JSONobject.error);
+        }
+        if(JSONobject.isPass){
 
+            window.location.href = '/admin/info';
+        }else {
+            nojsja["ModalWindow"].show('更新失败!');
+        }
     }, "JSON");
 };
 

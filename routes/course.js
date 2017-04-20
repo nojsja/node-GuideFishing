@@ -167,6 +167,10 @@ function course(app){
     
     /* 获取课程学习页面 */
     app.get('/course/view/:courseType/:courseName', function (req, res, next) {
+
+        if(req.session.admin){
+            return next();
+        }
         courseRoute.purchaseCheck(req, res, next);
 
     }, function (req, res) {

@@ -7,10 +7,6 @@ var mongoose = require('./tools/Mongoose');
 var examineSchema = require('./db_schema/examine_schema').examineSchema;
 // 获取当前日期
 var getDate = require('./tools/GetDate');
-// Course模式和Test模式
-var Course = require('./Course');
-var Test = require('./AllTest');
-
 
 function Examine(examineData) {
 
@@ -82,6 +78,10 @@ Examine.deleteOne = function (con, callback) {
 /* 审查 */
 Examine.examine = function (status, con, callback) {
 
+    // Course模式和Test模式
+    var Course = require('./Course');
+    var Test = require('./AllTest');
+
     var db = mongoose.connection;
     var Model = mongoose.model('Examine', examineSchema);
 
@@ -89,20 +89,18 @@ Examine.examine = function (status, con, callback) {
     var examineType = con.examineType;
     // 审查调用映射
     var examineData = {
-        examineName: {
-            test: "testTitle",
-            course: "courseName"
-        },
-        examineType: {
-            test: "test",
-            course: "course"
+        examineAction: {
+            course: Course,
+            test: Test
         },
         course: {
+            adminAccount: con.adminAccount,
             courseName: con.contentName,
             courseType: con.contentType,
             examineAccount: con.examineAccount,
         },
         test: {
+            adminAccount: con.adminAccount,
             testTitle: con.contentName,
             testType: con.contentType,
             examineAccount: con.examineAccount,
@@ -115,28 +113,15 @@ Examine.examine = function (status, con, callback) {
         examineSave();
     }else {
 
-        if(examineType == 'course'){
+        examineData.examineAction[examineType]
+            .examine(status, examineData[examineType], function (err, isPass) {
 
-            Course.examine(status, examineData[examineType], function (err, isPass) {
+            if(err){
+                return callback(err);
+            }
 
-                if(err){
-                    return callback(err);
-                }
-
-                examineUpdate();
-            });
-        }else if( examineType == 'test'){
-
-            Test.examine(status, examineData[examineType], function (err, isPass) {
-
-                if(err){
-                    return callback(err);
-                }
-
-                examineUpdate();
-            });
-        }
-
+            examineUpdate();
+        });
 
     }
 
@@ -168,7 +153,10 @@ Examine.examine = function (status, con, callback) {
     function examineUpdate() {
 
         var query = Model.findOne();
-        query.where(examineData[examineType]);
+        query.where({
+            contentName: con.contentName,
+            contentType: con.contentType
+        });
         query.exec(function (err, doc) {
 
             if(err){
@@ -212,6 +200,37 @@ Examine.examine = function (status, con, callback) {
 /* 获取指定的审查数据 */
 Examine.get = function (con, callback) {
 
+    var db = mongoose.connection;
+    var Model = mongoose.model('Examine', examineSchema);
+
+    var query = Model.find();
+    query.where(con);
+    query.select({
+        'adminAccount': 1,
+        'contentName': 1,
+        'contentType': 1,
+        'examineType': 1,
+        'status': 1
+    });
+    query.exec(function (err, docs) {
+
+        if(err){
+            console.log(err);
+            callback(err);
+        }
+        if(docs){
+
+            var examineData = [];
+            for(let i = 0; i < docs.length; i++){
+
+                examineData.push(docs[i]);
+            }
+
+            callback(null, examineData);
+        }else {
+            callback(null, false);
+        }
+    });
 };
 
 module.exports = Examine;

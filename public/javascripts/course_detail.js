@@ -57,6 +57,7 @@ $(function () {
             }
             $('#start').prop('disabled', false);
             $('#purchase').prop('disabled', 'disabled');
+            DetailAction.isPurchased = true;
         });
     });
 
@@ -70,19 +71,84 @@ $(function () {
 /* 页面action对象
  * isPurchased -- 当前课程的购买状态
   * initialError -- 页面初始化错误状态
+  * DOM -- 需要缓存的DOM对象
   * */
 var DetailAction = {
-    /*courseType:　"",
+    courseType:　"",
     courseName: "",
     isPurchased: false,
     initialError: false,
-    error: null*/
+    error: null,
+    DOM: {}
 };
 
-/* 弹出登录窗口 */
+/* 弹出登录窗口
+ * <div class="detail-login-div">
+ <input type="text" class="login-account" id="loginAccount" placeholder="请输入账户...">
+ <input type="text" class="login-password" id="loginPassword" placeholder="请输入密码...">
+ <div class="button login-button" id="loginButton">登录</div>
+ <div class="button signup-button" id="signupButton">注册</div>
+ </div>
+  * */
 DetailAction.userLogin = function () {
 
+    if(!DetailAction.DOM.userLogin){
 
+        var $detailLoginDiv = $('<div class="detail-login-div">');
+        var $loginAccount = $('<input type="text" class="login-account" id="loginAccount" placeholder="请输入账户...">');
+        var $loginPassword = $(' <input type="text" class="login-password" id="loginPassword" placeholder="请输入密码...">');
+        var $loginButton = $(' <div class="button login-button" id="loginButton">登录</div>');
+        var $signupButton = $(' <div class="button signup-button" id="signupButton">注册</div>');
+        // 绑定事件
+        $loginButton.click(function () {
+
+            var account = $loginAccount.val().trim();
+            var password = $loginPassword.val().trim();
+            var url = '/user/login';
+
+            if(account == '' || password == ''){
+                return alert('请填入完整的登录信息~');
+            }
+
+            $.post('/login', {
+                account: account,
+                password: password
+            }, function (JSONdata) {
+
+                var JSONobject = JSON.parse(JSONdata);
+                if(JSONobject.isError){
+                    return alert('发生错误：' + JSONobject.error);
+                }
+                if(JSONobject.pass){
+                    // 重载页面
+                    window.location.reload();
+                }else {
+                    alert('登录失败！密码与账户不匹配');
+                }
+            }, "JSON");
+
+        });
+
+        $signupButton.click(function () {
+
+            window.location.href = '/login';
+        });
+
+        // 添加DOM
+        $detailLoginDiv.append($loginAccount)
+            .append($loginPassword)
+            .append($loginButton)
+            .append($signupButton);
+
+        // 缓存DOM
+        DetailAction.DOM.userLogin = $detailLoginDiv[0];
+    }
+
+    nojsja["ModalWindow"].define(DetailAction.DOM.userLogin);
+    nojsja["ModalWindow"].show('验证账户', {
+        scroll: true,
+        selfDefineKeep: true
+    });
 };
 
 /* 获取类型图片 */

@@ -13,12 +13,16 @@ var Course = require('../models/Course');
 var getDate = require('../models/tools/GetDate');
 // 发布直播课程数据
 var CourseBroadcastData = require('../models/CourseBroadcastData');
+// 权限验证中间件
+var permissionCheck = require('../models/permissionCheck').permissionCheck;
 
 function course_admin(app) {
     
     // 进入所有课程管理后台
     app.get('/course/admin/manager', function (req, res, next) {
-        adminCheck(req, res, next);
+
+        permissionCheck.rank1(req, res, next);
+
     }, function (req, res) {
 
         res.render('course_adminManager', {
@@ -28,7 +32,9 @@ function course_admin(app) {
 
     // 进入课程编辑后台
     app.get('/course/admin/edit', function (req, res, next) {
-        adminCheck(req, res, next);
+
+        permissionCheck.rank2(req, res, next);
+
     }, function (req, res) {
 
         res.render('course_adminEdit', {
@@ -39,15 +45,7 @@ function course_admin(app) {
     // 单个课程数据存储
     app.post('/course/admin/save', function (req, res, next){
 
-        // 权限检测
-         if(req.session.admin && req.session.admin.examine.rank != 2){
-
-             return res.json( JSON.stringify({
-                 isError: true,
-                 error: new Error('没有操作权限！').toString()
-             }) );
-         }
-         return next();
+         permissionCheck.rank2(req, res, next);
 
     } , function (req, res) {
 
@@ -133,7 +131,11 @@ function course_admin(app) {
     });
     
     // 获取需要导入的课程数据
-    app.post('/course/admin/load/:courseName', function (req, res) {
+    app.post('/course/admin/load/:courseName', function(req, res, next){
+
+        permissionCheck.rank2(req, res, next);
+
+    }, function (req, res) {
 
         // 筛选条件
         var condition = {
@@ -163,7 +165,11 @@ function course_admin(app) {
     });
 
     // 指定类型的上传文件预览
-    app.post('/course/data/preview/:courseName', function (req,res) {
+    app.post('/course/data/preview/:courseName', function(req, res, next){
+
+        permissionCheck.rank2(req, res, next);
+
+    }, function (req,res) {
 
         // 预览数据的类型和所属课程
         var type = req.body.type;
@@ -192,18 +198,6 @@ function course_admin(app) {
 
     });
 
-    /* 权限验证中间件 */
-    var adminCheck = function (req, res, next) {
-
-        // 验证用户
-        if(req.session.admin){
-            return next();
-        }else {
-            res.render('admin_login', {
-                title: "管理员登录"
-            });
-        }
-    };
 }
 
 module.exports = course_admin;

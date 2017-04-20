@@ -360,8 +360,6 @@ AdminInfoAction.updateAdministrator = function (JSONdata) {
                 if(confirm('确认删除' + adminArray[i].account)){
 
                     AdminInfoAction.adminTableDelete(adminArray[i]);
-                }else {
-                    return alert('no');
                 }
             });
 
@@ -569,26 +567,136 @@ AdminInfoAction.adminTableDelete = function (adminData) {
 
 /*****  内容审查区  *****/
 
-/* 获取审查内容 */
+/* 获取审查内容
+ *
+ <div class="examine-content-item">
+ <span class="content-item-type">test</span>
+ <a href="/course/sdfsd/" class="content-item-title">sdfsdf是的发送到</a>
+ </div>
+  * */
 AdminInfoAction.updateExamineContent = function () {
+
+    var url = '/admin/info';
+    $.post(url, {}, function (JSONdata) {
+
+        var JSONobject = JSON.parse(JSONdata);
+        console.log(JSONobject);
+        if(JSONobject.isError){
+            return nojsja["ModalWindow"].show('发生错误：' + JSONobject.error);
+
+        }
+        // 审查内容
+        var examineContent = JSONobject.examineContent;
+        // 父组件
+        var $examineContentList = $('.examine-content-list');
+        $examineContentList.children().remove();
+
+        // 更新页面
+        for(var i = 0; i < examineContent.length; i++){
+
+            (function (i) {
+
+                var $examineContentItem = $(' <div class="examine-content-item">');
+                var $contentitemType = $(' <span class="content-item-type">');
+                var $contentItemTitle = $(' <a class="content-item-title">');
+
+                var href = ['/', examineContent[i].examineType,'/examine/' ,
+                    examineContent[i].contentType, '/', examineContent[i].contentName].join('');
+
+                $contentitemType.text(examineContent[i].examineType);
+                $contentItemTitle.text(examineContent[i].contentName)
+                    .prop('href', href);
+
+                // 添加dom
+                $examineContentItem.append($contentitemType)
+                    .append($contentItemTitle);
+
+                $examineContentList.append($examineContentItem);
+            })(i);
+        }
+
+    }, "JSON");
 
 };
 
 /*****  内容审查进度区  *****/
 
-/* 获取审查进度 */
+/* 获取审查进度
+*
+* <div class="examine-progress-item">
+ <input type="button" class="btn btn-default btn-sm" value="审核情况">
+ <span class="progress-item-type">test</span>
+ <a href="/sdfj/sdf" class="progress-item-title">sdfsd</a>
+ </div>
+*
+* */
 AdminInfoAction.updateExamineProgress = function () {
 
-    // 查询url
     var url = '/admin/info';
     $.post(url, {}, function (JSONdata) {
 
         var JSONobject = JSON.parse(JSONdata);
+        console.log(JSONobject);
         if(JSONobject.isError){
             return nojsja["ModalWindow"].show('发生错误：' + JSONobject.error);
+
         }
+        // 审查内容
+        var examineProgress = JSONobject.examineProgress;
+        // 父组件
+        var $examineProgressList = $('.examine-progress-list');
+        $examineProgressList.children().remove();
+
+        // 审核结果modal弹窗
+        var $examineText = $('<div class="examine-text">');
+
         // 更新页面
+        for(var i = 0; i < examineProgress.length; i++){
 
+            (function (i) {
 
-    }, "JSON");
+                var $examineProgressItem = $(' <div class="examine-progress-item">');
+                var $progressButton = $(' <input type="button" class="btn btn-default btn-sm" value="审核情况">');
+                var $progressItemType = $(' <span class="progress-item-type">');
+                var $progressItemTitle = $(' <a class="progress-item-title">');
+
+                // 审核状态
+                if(examineProgress[i].status == 'pass'){
+                    $progressButton.prop('class', 'btn btn-success btn-sm');
+
+                }else if(examineProgress[i].status == 'reject'){
+                    $progressButton.prop('class', 'btn btn-danger btn-sm');
+                }
+
+                $progressButton.click(function () {
+
+                    if(examineProgress[i].status == 'isExaming'){
+                        $examineText.text('还未被审查..');
+                    }else {
+                        $examineText.text(examineProgress[i].examineText);
+                    }
+                    nojsja["ModalWindow"].define($examineText[0]);
+                    nojsja["ModalWindow"].show(examineProgress[i].status, {
+                        selfDefineKeep: true
+                    });
+                });
+
+                var href = ['/', examineProgress[i].examineType,'/view/' ,
+                    examineProgress[i].contentType, '/', examineProgress[i].contentName].join('');
+
+                $progressItemType.text(examineProgress[i].examineType);
+                $progressItemTitle.text(examineProgress[i].contentName)
+                    .prop('href', href);
+
+                $examineProgressList.append($examineProgressItem);
+
+                // 添加dom
+                $examineProgressItem
+                    .append($progressItemType)
+                    .append($progressItemTitle)
+                    .append($progressButton);
+            })(i);
+        }
+
+    }, "JSON")
 };

@@ -1,7 +1,75 @@
 <!--error-->
 <!--错误页面-->
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<% if(error.stack) { %>
-    <pre><%= error.stack %></pre>
-<% } %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>出错啦！</title>
+    <meta charset="UTF-8">
+
+    <style type="text/css">
+
+        body {
+
+        }
+
+        html {
+            font-size: 16px;
+            background-image: url("/images/error/error_bg.jpg");
+            -webkit-background-origin: border-box;
+            background-origin: border-box;
+            background-size: cover;
+            -webkit-background-clip: padding-box;
+            -moz-background-clip: padding-box;
+            background-clip: padding-box;
+
+        }
+
+        .total {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(75, 75, 75, 0.9);
+        }
+
+        .error-border {
+            width: 80%;
+            padding: 1rem;
+            margin: 2rem auto 0;
+            background-color: rgba(109, 109, 109, 0.7);
+            overflow-x: auto;
+        }
+
+        .message {
+            font-size: 1.8rem;
+            color: #f44e2c;
+            text-shadow: 3px 3px 3px #000000;
+        }
+
+        .status {
+            font-size: 1.5rem;
+            color: #4990f9;
+
+        }
+
+        .pre {
+            color: white;
+        }
+
+    </style>
+
+</head>
+
+<body>
+<div class="total">
+    <div class="error-border">
+        <div class="message"><%= message %> : (</div>
+        <div class="status"><%= error.status %></div>
+        <% if(error.stack) { %>
+        <pre class="pre"><%= error.stack %></pre>
+        <% } %>
+    </div>
+</div>
+
+
+</body>
+</html>
