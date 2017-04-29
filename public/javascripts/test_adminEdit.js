@@ -13,6 +13,7 @@ $(function () {
     nojsja.ObserverPattern.init(EditAction.scoreMode);
     nojsja.ObserverPattern.init(EditAction.scoreSection);
     nojsja.ObserverPattern.init(EditAction.categorySection);
+    nojsja.ObserverPattern.init(EditAction.testTags);
     // 获取得分模式信息
     EditAction.getScoreMode();
     // 注册观察者函数
@@ -45,6 +46,16 @@ var EditAction = {
     // 题目类型和标题
     testType: null,
     testTitle: null,
+    // 测评标签
+    testTags: {
+        tags: [], watcherList: [], trigger: null, listen: null, remove: null
+    },
+    // 审查数据
+    examine: {
+        status: 'isExaming',
+        adminAccount: null,
+        examineAccount: null
+    },
     // 题目集合,包含观察者模式的相关方法,group存储题目集合
     testGroup: {
         group: [], listen: null, trigger: null, remove: null, watcherList: []
@@ -106,6 +117,13 @@ EditAction.pageEventBind = function () {
         $(this).prop('class', 'type-item test-type test-type_click');
         EditAction.testType = $(this).prop('id');
     });
+
+    // 标签输入事件绑定
+    $('#tagAdd').click(function () {
+
+        EditAction.testTags.trigger('add');
+    });
+
     // 选择得分类型
     $('.score-mode').click(function () {
         //效果改变
@@ -148,37 +166,26 @@ EditAction.pageEventBind = function () {
 
     });
 
+    if(EditAction.loadData){
+
+        var url = '/test/admin/load/' + EditAction.loadData.testType +
+            '/' + EditAction.loadData.testTitle;
+
+        $.post(url, {}, function (JSONdata) {
+
+            console.log(JSON.parse(JSONdata));
+
+            EditAction.loadTestData(JSONdata);
+        }, "JSON");
+
+    }
+
     //刷新事件绑定
     // window.addEventListener("beforeunload", function(event) {
     //     event.returnValue = "警告";
     // });
 };
 
-/* 分数模式的简单观察者 */
-nojsja.ObserverPattern.init = function (object) {
-
-    // 定义分数模式的观察者回调函数
-    object.watcherList = [];
-    // 为分数模式注册新的观察者
-    object.listen = function (fn) {
-        object.watcherList.push(fn);
-    };
-    // 被观察者事件触发
-    object.trigger = function () {
-        for(var index in object.watcherList){
-            object.watcherList[index].apply(object);
-        }
-    };
-    // 解绑观察者事件监听
-    object.remove = function (fn) {
-        var length = object.watcherList.length;
-        for(var i = length - 1; i >= 0; i-- ){
-            if(fn === object.watcherList[i]){
-                object.watcherList.splice(i, 1);
-            }
-        }
-    };
-};
 
 /* 注册观察者 */
 EditAction.activeWatcher = function () {
@@ -429,6 +436,73 @@ EditAction.activeWatcher = function () {
         });
     });
 
+    /*
+    * 测评标签组
+    * 添加事件
+    * */
+    EditAction.testTags.listen(function () {
+
+        var tagText = $('#tagText').val().trim();
+        if(!tagText || tagText == ''){
+            return EditAction.modalWindow('请在左侧输入标签名');
+        }
+        if(EditAction.testTags.tags.length == 3){
+            return EditAction.modalWindow('标签最多能添加三个');
+        }
+        if(EditAction.testTags.tags.indexOf(tagText) >= 0){
+            return EditAction.modalWindow('标签重复');
+        }
+        EditAction.testTags.tags.push(tagText);
+
+        updateTag();
+        // 递归更新tag
+        function updateTag() {
+
+            // 更新DOM <div class="tag-list-item" title="点击删除标签">123</div>
+            var $tagList = $('.tag-list');
+            $tagList.children().remove();
+            for(var i = 0; i < EditAction.testTags.tags.length; i++) {
+
+                (function (i) {
+                    var tag = EditAction.testTags.tags[i];
+                    var $tag = $('<div class="tag-list-item" title="点击删除标签">');
+                    $tag.text(tag);
+                    $tag.click(function () {
+                        EditAction.testTags.tags.splice(i, 1);
+                        updateTag();
+                    });
+                    $tagList.append($tag);
+                })(i);
+            }
+        }
+    }, 'add');
+
+    EditAction.testTags.listen(function () {
+
+        updateTag();
+        // 递归更新tag
+        function updateTag() {
+
+            // 更新DOM <div class="tag-list-item" title="点击删除标签">123</div>
+            var $tagList = $('.tag-list');
+            $tagList.children().remove();
+            for(var i = 0; i < EditAction.testTags.tags.length; i++) {
+
+                (function (i) {
+                    var tag = EditAction.testTags.tags[i];
+                    var $tag = $('<div class="tag-list-item" title="点击删除标签">');
+                    $tag.text(tag);
+                    $tag.click(function () {
+                        EditAction.testTags.tags.splice(i, 1);
+                        updateTag();
+                    });
+                    $tagList.append($tag);
+                })(i);
+            }
+        }
+
+    }, 'load');
+
 };
 
 /**
@@ -645,6 +719,101 @@ EditAction.choiseNumberSet = function () {
     $choises.fadeIn();
 };
 
+/* 导入测评数据 */
+EditAction.loadTestData = function (JSONdata) {
+
+    var JSONobject = typeof JSONdata == 'string' ? JSON.parse(JSONdata) : JSONdata;
+
+    // 错误
+    if(JSONobject.isError){
+        return EditAction.modalWindow('服务器发生错误,错误码: ' + JSONobject.error);
+    }
+
+    // 即将被导入的对象
+    var loadObject = {
+
+        testTitle: JSONobject.loadData.testTitle,
+        testType: JSONobject.loadData.testType || "",
+        testTags: JSONobject.loadData.testTags || [],
+        abstract: JSONobject.loadData.abstract || "",
+        scoreMode: JSONobject.loadData.scoreMode,
+        scoreValue: JSONobject.loadData.scoreValue,
+        scoreSection: JSONobject.loadData.scoreSection,
+        categorySection: JSONobject.loadData.categorySection,
+        testGroup: JSONobject.loadData.testGroup || [],
+    };
+
+    // 设置标题
+    $('#testTitle').val(loadObject.testTitle);
+
+    // 设置标签
+    // 更新DOM <div class="tag-list-item" title="点击删除标签">123</div>
+    EditAction.testTags.tags = loadObject.testTags;
+    EditAction.testTags.trigger('load');
+    // updateTag();
+    // // 递归更新tag
+    // function updateTag() {
+    //     var $tagList = $('.tag-list');
+    //     $tagList.children().remove();
+    //
+    //     for(var i = 0; i < EditAction.testTags.length; i++) {
+    //
+    //         (function (i) {
+    //             var tag = EditAction.testTags[i];
+    //             var $tag = $('<div class="tag-list-item" title="点击删除标签">');
+    //             $tag.text(tag);
+    //             $tag.click(function () {
+    //                 EditAction.testTags.splice(i, 1);
+    //                 updateTag();
+    //             });
+    //             $tagList.append($tag);
+    //         })(i);
+    //     }
+    // }
+
+    // 设置分类
+    $('.test-type').each(function () {
+        if($(this).prop('id') === loadObject.testType){
+            // 触发点击事件
+            $(this).click();
+        }
+    });
+
+    // 设置得分分值
+    $('#scoreValue').val(loadObject.scoreValue);
+
+    // 设置简介
+    $('#abstract').val(loadObject.abstract);
+
+    // 设置得分模式
+    $('.score-mode').each(function () {
+
+        var scoreMode = $(this).prop('id');
+        if(scoreMode === loadObject.scoreMode){
+
+            $(this).click();
+
+            if(scoreMode == "Category"){
+                // 更新数据依赖, 子类型组放入一个子类型对象
+                EditAction.categorySection.section.push({
+                    categoryMode: loadObject.categorySection.categoryMode,
+                    categoryDescribe: loadObject.categorySection.categoryDescribe
+                });
+                // 触发观察者事件
+                EditAction.categorySection.trigger();
+            }else {
+                // 设置scoreSection
+                EditAction.scoreSection.value = loadObject.scoreSection;
+                EditAction.scoreSection.trigger();
+            }
+        }
+    });
+
+    // 设置所有题目
+    EditAction.testGroup.group = loadObject.testGroup;
+    EditAction.testGroup.trigger();
+};
+
 /* 创建完成后进行提交检查 */
 EditAction.submitCheck = function () {
 
@@ -661,6 +830,12 @@ EditAction.submitCheck = function () {
     submitData.testType = EditAction.testType;
     if(!submitData.testType){
         return EditAction.modalWindow("请输入测评类型!");
+    }
+
+    // 测评标签
+    submitData.testTags = EditAction.testTags;
+    if(submitData.testTags.length == 0) {
+        return EditAction.modalWindow("请至少输入一个测评标签！");
     }
 
     // 测评单个得分分值
@@ -697,6 +872,10 @@ EditAction.submitCheck = function () {
         return EditAction.modalWindow("请至少添加一道题目!");
     }
     submitData.testGroup = EditAction.testGroup.group;
+
+    // 审查数据
+    submitData.examine = EditAction.examine;
+
     console.log(submitData);
 
     /* 请求后台存储创建的题目对象数据 */
@@ -771,6 +950,13 @@ var singleTon = (function () {
         hiddenHoverLabel: hoverLabel.hidden
     };
 })();
+
+// 常用符号解码
+EditAction.SymbolDecode = function(str) {
+
+    return nojsja["Tool"].SymbolDecode(str);
+
+};
 
 /*** 测试脚本 ***/
 function autoFillTest() {

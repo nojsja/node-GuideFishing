@@ -7,14 +7,15 @@
 $(function () {
 
     // 初始化编辑器
-    editAction.ueditorInit();
+    EditAction.ueditorInit();
     // 绑定页面事件
-    editAction.pageEventBind();
+    EditAction.pageEventBind();
     // 声明观察者
-    editAction.watcherInit();
+    EditAction.watcherInit();
     // 注入观察者
-    editAction.watcherActive();
+    EditAction.watcherActive();
 
+    setTimeout(EditAction.getEditData, 4000);
     // 离开警告
     // window.addEventListener('beforeunload', function (event) {
     //     event.returnValue = "警告";
@@ -35,11 +36,20 @@ $(function () {
  * password -- 讲师登录密码
  * price -- 课程价格
  * tags -- 课程标签
+ * examine -- 课程审查对象
+ *  pass -- 审查是否通过
+ *  adminAccount -- 提交人
+ *  examineAccount -- 审批者
+ *  examineText -- 审批结果文字
+ *  date -- 审批日期
+ *
  * */
-var editAction = {
+var EditAction = {
 
     // 目前上传的组件
     currentType: "imgUpload",
+    // 是否需要预先载入课程数据编辑
+    loadData: false,
     // 目前的预览类型
     currentPreviewType: "",
     // 指定文件上传组件的映射关系
@@ -70,9 +80,9 @@ var editAction = {
             courseAbstract: "",
             courseTags: [],
             examine: {
-                pass: false,
+                status: 'isExaming',
                 adminAccount: null,
-                date: null
+                examineAccount: null
             },
             courseContent: "",
             teacher: "",
@@ -90,8 +100,24 @@ var editAction = {
     }
 };
 
+// 课程预载入
+EditAction.getEditData = function () {
+
+    if(EditAction.loadData){
+
+        var url = '/course/admin/load/' + EditAction.loadData.courseName;
+
+        $.post(url, { }, function (JSONdata) {
+
+            console.log(JSON.parse(JSONdata));
+            EditAction.loadCourseData(JSONdata);
+
+        }, "JSON");
+    }
+};
+
 /* 初始化观察者 */
-editAction.watcherInit = function () {
+EditAction.watcherInit = function () {
 
     // 注册课程数据的观察者
     this.course.watch.watcherList = [];
@@ -113,16 +139,16 @@ editAction.watcherInit = function () {
 };
 
 /* 注册观察者 */
-editAction.watcherActive = function () {
+EditAction.watcherActive = function () {
 
     // 课程观察者
     this.course.watch.listen(function () {
 
         // 课程概述
-        if(!editAction.ueAbstract.hasContents()){
-            return editAction.modalWindow('课程概述需要填写完整!');
+        if(!EditAction.ueAbstract.hasContents()){
+            return EditAction.modalWindow('课程概述需要填写完整!');
         }
-        editAction.course.info.courseAbstract = editAction.ueAbstract.getContent();
+        EditAction.course.info.courseAbstract = EditAction.ueAbstract.getContent();
 
     }).listen(function () {
 
@@ -130,9 +156,9 @@ editAction.watcherActive = function () {
         var teacher = $('#teacher').val().trim();
 
         if( !teacher ){
-            return editAction.modalWindow('课程讲师需要填写完整!');
+            return EditAction.modalWindow('课程讲师需要填写完整!');
         }
-        editAction.course.info.teacher = teacher;
+        EditAction.course.info.teacher = teacher;
 
     }).listen(function () {
 
@@ -140,21 +166,21 @@ editAction.watcherActive = function () {
         var price = $('#price').val().trim();
 
         if( !price ){
-            return editAction.modalWindow('课程价格需要填写完整!');
+            return EditAction.modalWindow('课程价格需要填写完整!');
         }
-        editAction.course.info.price = price;
+        EditAction.course.info.price = price;
 
     }).listen(function () {
 
         // 课程内容
-        if(!editAction.ueContent.hasContents()){
-            return editAction.modalWindow('课程内容需要填写完整!');
+        if(!EditAction.ueContent.hasContents()){
+            return EditAction.modalWindow('课程内容需要填写完整!');
         }
-        editAction.course.info.courseContent = editAction.ueContent.getContent();
+        EditAction.course.info.courseContent = EditAction.ueContent.getContent();
     }).listen(function () {
 
-        if(!editAction.course.info.courseType){
-            return editAction.modalWindow('课程类型需要填写完整!');
+        if(!EditAction.course.info.courseType){
+            return EditAction.modalWindow('课程类型需要填写完整!');
         }
     }).listen(function () {
 
@@ -162,21 +188,21 @@ editAction.watcherActive = function () {
         var password = $('#password').val().trim();
 
         if(!password){
-            return editAction.modalWindow('讲师登录密码需要填写完整!');
+            return EditAction.modalWindow('讲师登录密码需要填写完整!');
         }
-        editAction.course.info.password = password;
+        EditAction.course.info.password = password;
     }).listen(function () {
 
         //标签
-        var courseTags = editAction.course.info.courseTags;
+        var courseTags = EditAction.course.info.courseTags;
         if(courseTags.length == 0){
-            return editAction.modalWindow('请至少输入一个自定义标签!');
+            return EditAction.modalWindow('请至少输入一个自定义标签!');
         }
     });
 };
 
 /* 初始化UEeditor */
-editAction.ueditorInit = function() {
+EditAction.ueditorInit = function() {
 
     //课程内容编辑器
     this.ueContent = UE.getEditor('editorContent', {
@@ -202,7 +228,7 @@ editAction.ueditorInit = function() {
 };
 
 /* 页面事件绑定,DOM操作 */
-editAction.pageEventBind = function () {
+EditAction.pageEventBind = function () {
 
     // 导航条
     $('#courseCreate').parent().prop('class', 'active');
@@ -216,32 +242,32 @@ editAction.pageEventBind = function () {
         $('.type-item').prop('class', 'type-item');
         $(this).prop('class', 'type-item type-item_click');
         var type = $(this).attr('type');
-        editAction.course.info.courseType = type;
+        EditAction.course.info.courseType = type;
     });
 
     // 获取课程名字
     $('#courseName').bind('input propertychange', function() {
 
-        editAction.course.info.courseName = $(this).val();
+        EditAction.course.info.courseName = $(this).val();
         // 上传事件绑定
-        editAction.uploadEventBind();
+        EditAction.uploadEventBind();
     });
 
-    // 标签输入时间绑定
+    // 标签输入事件绑定
     $('#tagAdd').click(function () {
 
         var targetId = $(this).attr('target');
         var tagText = $('#' + targetId).val().trim();
         if(!tagText || tagText == ''){
-            return editAction.modalWindow('请在左侧输入标签名');
+            return EditAction.modalWindow('请在左侧输入标签名');
         }
-        if(editAction.course.info.courseTags.length == 3){
-            return editAction.modalWindow('标签最多能添加三个');
+        if(EditAction.course.info.courseTags.length == 3){
+            return EditAction.modalWindow('标签最多能添加三个');
         }
-        if(editAction.course.info.courseTags.indexOf(tagText) >= 0){
-            return editAction.modalWindow('标签重复');
+        if(EditAction.course.info.courseTags.indexOf(tagText) >= 0){
+            return EditAction.modalWindow('标签重复');
         }
-        editAction.course.info.courseTags.push(tagText);
+        EditAction.course.info.courseTags.push(tagText);
         // 更新DOM <div class="tag-list-item" title="点击删除标签">123</div>
         var $tagList = $('.tag-list');
 
@@ -249,14 +275,14 @@ editAction.pageEventBind = function () {
         // 递归更新tag
         function updateTag() {
             $tagList.children().remove();
-            for(var i = 0; i < editAction.course.info.courseTags.length; i++) {
+            for(var i = 0; i < EditAction.course.info.courseTags.length; i++) {
 
                 (function (i) {
-                    var tag = editAction.course.info.courseTags[i];
+                    var tag = EditAction.course.info.courseTags[i];
                     var $tag = $('<div class="tag-list-item" title="点击删除标签">');
                     $tag.text(tag);
                     $tag.click(function () {
-                        editAction.course.info.courseTags.splice(i, 1);
+                        EditAction.course.info.courseTags.splice(i, 1);
                         updateTag();
                     });
                     $tagList.append($tag);
@@ -269,33 +295,33 @@ editAction.pageEventBind = function () {
     // 提交课程数据或是直播数据
     $('#sendCourse, #sendBroadcast').click(function () {
         // 触发观察者回调函数
-        editAction.course.watch.trigger();
+        EditAction.course.watch.trigger();
         // 检测发布直播课程还是
         if($(this).attr('isReady') == 'true'){
-            editAction.course.info.isReady = true;
+            EditAction.course.info.isReady = true;
             // 当前课程是作为正式课程发布的
-            editAction.course.info.isBroadcast = false;
+            EditAction.course.info.isBroadcast = false;
         }else {
-            editAction.course.info.isReady = false;
-            editAction.course.info.isBroadcast = true;
+            EditAction.course.info.isReady = false;
+            EditAction.course.info.isBroadcast = true;
         }
 
         // 课程数据
         // 含有除字符串类型的数据外还有其它类型的话需要JSON转化,
         // nodejs默认传递的req.body数据是字符串
         var courseData = {
-            courseName: editAction.course.info.courseName,
-            courseType: editAction.course.info.courseType,
-            examine: editAction.course.info.examine,
-            isReady: editAction.course.info.isReady,
-            courseTags: editAction.course.info.courseTags,
-            isBroadcast: editAction.course.info.isBroadcast,
-            courseOrigin: editAction.course.info.courseOrigin,
-            courseAbstract: editAction.course.info.courseAbstract,
-            courseContent: editAction.course.info.courseContent,
-            teacher: editAction.course.info.teacher,
-            password: editAction.course.info.password,
-            price: editAction.course.info.price
+            courseName: EditAction.course.info.courseName,
+            courseType: EditAction.course.info.courseType,
+            examine: EditAction.course.info.examine,
+            isReady: EditAction.course.info.isReady,
+            courseTags: EditAction.course.info.courseTags,
+            isBroadcast: EditAction.course.info.isBroadcast,
+            courseOrigin: EditAction.course.info.courseOrigin,
+            courseAbstract: EditAction.course.info.courseAbstract,
+            courseContent: EditAction.course.info.courseContent,
+            teacher: EditAction.course.info.teacher,
+            password: EditAction.course.info.password,
+            price: EditAction.course.info.price
         };
 
         var url = '/course/admin/save';
@@ -306,10 +332,10 @@ editAction.pageEventBind = function () {
         $.post(url, postData, function (JSONdata) {
 
             var JSONobject = JSON.parse(JSONdata);
-            if(JSONobject.error){
-                return editAction.modalWindow('Sorry,发生错误: ' + err);
+            if(JSONobject.isError){
+                return EditAction.modalWindow('Sorry,发生错误: ' + JSONobject.error);
             }
-            editAction.modalWindow('发布成功!');
+            EditAction.modalWindow('发布成功!');
         }, "JSON");
 
     });
@@ -317,9 +343,9 @@ editAction.pageEventBind = function () {
     // 编辑和预览窗口的显示和隐藏
     $('.self-trigger').click(function () {
 
-        if(!editAction.course.info.courseName){
+        if(!EditAction.course.info.courseName){
 
-            return editAction.modalWindow('在填写课程标题信息后才能进行上传数据和预览数据操作');
+            return EditAction.modalWindow('在填写课程标题信息后才能进行上传数据和预览数据操作');
         }
 
         // 触发的窗口
@@ -338,13 +364,13 @@ editAction.pageEventBind = function () {
         // 需要导入的课程名字
         var courseNameLoad = $('#courseNameLoad').val().trim();
         if(!courseNameLoad){
-            return editAction.modalWindow('请输入需要导入的课程名字!');
+            return EditAction.modalWindow('请输入需要导入的课程名字!');
         }
 
         var url = '/course/admin/load/' + courseNameLoad;
         $.post(url, { courseName: courseNameLoad }, function (JSONdata) {
 
-            editAction.loadCourseData(JSONdata);
+            EditAction.loadCourseData(JSONdata);
         }, "JSON");
     });
 
@@ -357,24 +383,24 @@ editAction.pageEventBind = function () {
 
         // 获取预览数据
         var previewType = $(this).attr('preview');
-        editAction.currentPreviewType = previewType;
-        var url = '/course/data/preview/' + editAction.course.info.courseName;
+        EditAction.currentPreviewType = previewType;
+        var url = '/course/data/preview/' + EditAction.course.info.courseName;
 
         $.post(url, { type: previewType }, function (JSONdata) {
 
-            editAction.updatePreview(JSONdata);
+            EditAction.updatePreview(JSONdata);
         }, "JSON");
     });
 
 };
 
 /* 导入课程数据 */
-editAction.loadCourseData = function (JSONdata) {
+EditAction.loadCourseData = function (JSONdata) {
 
     var JSONobject = JSON.parse(JSONdata);
     // 错误
     if(JSONobject.isError){
-        return editAction.modalWindow('服务器发生错误,错误码: ' + JSONobject.error);
+        return EditAction.modalWindow('服务器发生错误,错误码: ' + JSONobject.error);
     }
 
     // 即将被导入的对象
@@ -392,6 +418,9 @@ editAction.loadCourseData = function (JSONdata) {
         isReady: JSONobject.loadData.isReady || "false"
     };
 
+    // 设置标题
+    $('#courseName').val(loadObject.courseName);
+
     // 设置标签
     // 更新DOM <div class="tag-list-item" title="点击删除标签">123</div>
     var $tagList = $('.tag-list');
@@ -404,10 +433,10 @@ editAction.loadCourseData = function (JSONdata) {
             (function (i) {
                 var tag = loadObject.courseTags[i];
                 var $tag = $('<div class="tag-list-item" title="点击删除标签">');
-                editAction.course.info.courseTags.push(tag);
+                EditAction.course.info.courseTags.push(tag);
                 $tag.text(tag);
                 $tag.click(function () {
-                    editAction.course.info.courseTags.splice(i, 1);
+                    EditAction.course.info.courseTags.splice(i, 1);
                     updateTag();
                 });
                 $tagList.append($tag);
@@ -424,8 +453,8 @@ editAction.loadCourseData = function (JSONdata) {
         }
     });
     // 设置课程概述
-    editAction.ueAbstract.setContent('');
-    editAction.ueAbstract.setContent( $(loadObject.courseAbstract).html(), true );
+    EditAction.ueAbstract.setContent('');
+    EditAction.ueAbstract.setContent( loadObject.courseAbstract, true );
     //设置课程讲师
     $('#teacher').val(loadObject.teacher);
     // 设置讲师密码
@@ -433,27 +462,27 @@ editAction.loadCourseData = function (JSONdata) {
     // 设置课程价格
     $('#price').val(loadObject.price);
     // 设置课程内容
-    editAction.ueContent.setContent('');
-    editAction.ueContent.setContent( $(loadObject.courseContent).html(), true );
+    EditAction.ueContent.setContent('');
+    EditAction.ueContent.setContent( loadObject.courseContent, true );
 };
 
 /* 更新页面的预览窗口 */
-editAction.updatePreview = function (JSONdata) {
+EditAction.updatePreview = function (JSONdata) {
 
     var JSONobject = JSON.parse(JSONdata);
     if(JSONobject.error){
-        return editAction.modalWindow('Sorry,发生错误: ' + JSONobject.error);
+        return EditAction.modalWindow('Sorry,发生错误: ' + JSONobject.error);
     }
 
     // 确定当前预览类型
-    if(JSONobject.type != editAction.currentPreviewType){
-        editAction.currentPreviewType = JSONobject.type;
+    if(JSONobject.type != EditAction.currentPreviewType){
+        EditAction.currentPreviewType = JSONobject.type;
     }
     // 更新页面
-    editAction.updatePreview[editAction.currentPreviewType](JSONobject);
+    EditAction.updatePreview[EditAction.currentPreviewType](JSONobject);
 };
 
-editAction.updatePreview.audio = function (JSONobject) {
+EditAction.updatePreview.audio = function (JSONobject) {
 
     // 清除子节点数据
     var $previewList = $('.preview-list');
@@ -474,7 +503,10 @@ editAction.updatePreview.audio = function (JSONobject) {
             // 播放控件
             var $audio = $('<audio controls="controls">');
             $audio.prop('title', name)
-                .prop('src', url);
+                .prop('src', url)
+                .css({
+                    display: 'none'
+                })
 
             // 提示文字
             var $audioText = $('<div class="audio-text">');
@@ -493,12 +525,18 @@ editAction.updatePreview.audio = function (JSONobject) {
                     var $$content = $('<p></p>')
                         .append(
                             $('<audio controls="controls">')
-                                .prop('title', name)
-                                .prop('src', url)
+                                .prop({
+                                    title: name,
+                                    src: url
+                                })
+                                .css({
+                                    display: 'block',
+                                    margin: 'auto'
+                                })
                         )
                         .append($('<br/>'))
                         .html();
-                    editAction.ueContent.setContent($$content, true);
+                    EditAction.ueContent.setContent($$content, true);
                 }else {
                     $(this).prop('class', 'audio-text');
                 }
@@ -517,7 +555,7 @@ editAction.updatePreview.audio = function (JSONobject) {
 // <div class="list-item-video">
 //     <video src="/temp/test.mp4" title="视频"></video>
 // </div>
-editAction.updatePreview.video = function (JSONobject) {
+EditAction.updatePreview.video = function (JSONobject) {
 
     // 清除子节点数据
     var $previewList = $('.preview-list');
@@ -552,12 +590,19 @@ editAction.updatePreview.video = function (JSONobject) {
                     var $$content = $('<p></p>')
                         .append(
                             $('<video controls="controls">')
-                                .prop('title', name)
-                                .prop('src', url)
+                                .prop({
+                                    title: name,
+                                    src: url
+                                })
+                                .css({
+                                    width: '80%',
+                                    margin: 'auto',
+                                    display: 'block'
+                                })
                         )
                         .append($('<br/>'))
                         .html();
-                    editAction.ueContent.setContent($$content, true);
+                    EditAction.ueContent.setContent($$content, true);
 
                 }else {
                     $(this).prop('class', '');
@@ -576,7 +621,7 @@ editAction.updatePreview.video = function (JSONobject) {
 // <div class="list-item-image">
 //     <img src="/temp/test.png" title="图片">
 // </div>
-editAction.updatePreview.image = function (JSONobject) {
+EditAction.updatePreview.image = function (JSONobject) {
 
     // 清除子节点数据
     var $previewList = $('.preview-list');
@@ -610,12 +655,19 @@ editAction.updatePreview.image = function (JSONobject) {
                     var $$content = $('<p></p>')
                         .append(
                             $('<img>')
-                                .prop('title', name)
-                                .prop('src', url)
+                                .prop({
+                                    title: name,
+                                    src: url
+                                })
+                                .css({
+                                    width: '80%',
+                                    display: 'block',
+                                    margin: 'auto'
+                                })
                         )
                         .append($('<br/>'))
                         .html();
-                    editAction.ueContent.setContent($$content, true);
+                    EditAction.ueContent.setContent($$content, true);
                 }else {
                     $(this).prop('class', '');
                     $listItemImage.prop('class', 'list-item-image list-item-image_click');
@@ -632,7 +684,7 @@ editAction.updatePreview.image = function (JSONobject) {
 
 
 /* jQuery上传插件事件绑定和回调函数指定 */
-editAction.uploadEventBind = function () {
+EditAction.uploadEventBind = function () {
 
     // 重新创建节点, 绑定事件, jQuery fileupload中只能传入静态参数
     $('#imgUpload, #videoUpload, #audioUpload').each(function (index, element) {
@@ -643,7 +695,7 @@ editAction.uploadEventBind = function () {
         $newChild.prop('id', id);
 
         $newChild.click(function () {
-            editAction.currentType = $(this).prop('id');
+            EditAction.currentType = $(this).prop('id');
         });
 
         $(element).remove();
@@ -655,7 +707,7 @@ editAction.uploadEventBind = function () {
     // 只能传入静态参数
     var $jqXHR = $('#imgUpload, #videoUpload, #audioUpload').fileupload({
 
-        url : '/course/data/upload/' + editAction.course.info.courseName,
+        url : '/course/data/upload/' + EditAction.course.info.courseName,
         dataType : 'json',
         //autoUpload: false,
         //acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
@@ -672,9 +724,9 @@ editAction.uploadEventBind = function () {
         //文件加载
     }).on('fileuploadadd', function (e, data) {
 
-        var progress = editAction.fileUpload[editAction.currentType].progressDiv;
+        var progress = EditAction.fileUpload[EditAction.currentType].progressDiv;
         // fileListDiv
-        var $fileListDiv = $('#' + editAction.fileUpload[editAction.currentType].fileListDiv);
+        var $fileListDiv = $('#' + EditAction.fileUpload[EditAction.currentType].fileListDiv);
 
         $('#' + progress + ' > .progress-bar').css('width', '0%');
         data.context = $('<div></div>').appendTo($fileListDiv);
@@ -707,7 +759,7 @@ editAction.uploadEventBind = function () {
     }).on('fileuploadprogressall', function(e, data) {
 
         // progressDiv 的id
-        var progress = editAction.fileUpload[editAction.currentType].progressDiv;
+        var progress = EditAction.fileUpload[EditAction.currentType].progressDiv;
 
         var progressValue = parseInt(data.loaded / data.total * 100, 10);
         console.log(progressValue);
@@ -754,8 +806,15 @@ editAction.uploadEventBind = function () {
     });
 };
 
+// 常用符号解码
+EditAction.SymbolDecode = function(str) {
+
+    return nojsja["Tool"].SymbolDecode(str);
+
+};
+
 /* 模态弹窗 */
-editAction.modalWindow = function(text) {
+EditAction.modalWindow = function(text) {
 
     nojsja.ModalWindow.show(text);
 };

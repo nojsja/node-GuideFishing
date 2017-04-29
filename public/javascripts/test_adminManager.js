@@ -161,15 +161,15 @@ ManagerAction.previewWindow = function (testType, testTitle) {
 
     // 访问地址
     var urlArray = ['/test/view/', testType, '/', testTitle].join('');
-    nojsja.ModalWindow.show("题目预览", {
-        scroll: true
-    });
+
     $.post(urlArray, function (JSONdata) {
 
         var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return nojsja["ModalWindow"].show('发生错误：' + JSONobject.error);
+        }
         // 列表
-        var $previewList = $('.preview-list');
-        $previewList.children().remove();
+        var $previewList = $('<div class="preview-list">');
 
         // 遍历添加DOM
         for(var index in JSONobject.testGroup){
@@ -197,7 +197,15 @@ ManagerAction.previewWindow = function (testType, testTitle) {
 
                 $previewList.append($previewItem);
             })(index);
+
         }
+
+        // 模态弹出
+        nojsja["ModalWindow"].define($previewList[0]);
+        nojsja["ModalWindow"].show(testTitle, {
+            scroll: true,
+            selfDefineKeep: true
+        });
 
     }, "JSON");
 
@@ -239,34 +247,43 @@ ManagerAction.updateTable = function (JSONdata) {
                 $frequencyTd.text(test.frequency);
 
                 /* 删除 */
-                var $deleteTd = $('<td></td>');
-                var $deleteSpan = $('<span class="glyphicon glyphicon-trash delete"></span>');
+                var $deleteTd = $('<td class="delete-td"></td>');
+                var $deleteSpan = $('<span class="glyphicon glyphicon-trash"></span>');
                 /* 删除事件绑定 */
                 $deleteSpan.click(function () {
+
                     var that = this;
-                    $.post('/test/deleteOne', {
-                        testTitle: test.testTitle,
-                        testType: test.testType
-                    }, function (JSONdata) {
-                        var JSONobject = JSON.parse(JSONdata);
-                        if(JSONobject.error){
-                            return ManagerAction.modalWindow("删除错误,请重试!");
-                        }
-                        $(that).parent().parent().remove();
-                    }, "JSON");
+                    if(confirm('确定删除: [ ' + test.testTitle + ' ]?')){
+
+                        $.post('/test/deleteOne', {
+                            testTitle: test.testTitle,
+                            testType: test.testType
+
+                        }, function (JSONdata) {
+                            var JSONobject = JSON.parse(JSONdata);
+                            if(JSONobject.error){
+                                return ManagerAction.modalWindow("删除错误,请重试!");
+                            }
+                            $(that).parent().parent().remove();
+
+                        }, "JSON");
+                    }
+
                 }).appendTo($deleteTd);
 
                 /* 编辑 */
-                var $editTd = $('<td></td>');
-                var $editSpan = $('<span class="glyphicon glyphicon-edit edit"></span>');
-                /* 编辑事件绑定 */
-                $editSpan.click(function () {
-                    var that = this;
-                }).appendTo($editTd);
+                // var $editTd = $('<td class="edit-td"></td>');
+                // var $editSpan = $('<span class="glyphicon glyphicon-edit"></span>');
+                // /* 编辑事件绑定 */
+                // $editSpan.click(function () {
+                //
+                //     window.open('/test/admin/edit/' + test.testType + '/' + test.testTitle);
+                //
+                // }).appendTo($editTd);
 
                 /* 预览 */
-                var $previewTd = $('<td>');
-                var $previewSpan = $('<span class="glyphicon glyphicon-eye-open preview">');
+                var $previewTd = $('<td class="preview-td">');
+                var $previewSpan = $('<span class="glyphicon glyphicon-eye-open">');
                 /* 预览事件绑定 */
                 $previewSpan.click(function () {
                     // 触发预览事件
@@ -277,7 +294,7 @@ ManagerAction.updateTable = function (JSONdata) {
                 $tr.append($titleTd).append($typeTd)
                     .append($dateTd).append($scoreModeTd)
                     .append($frequencyTd).append($previewTd)
-                    .append($editTd).append($deleteTd);
+                    .append($deleteTd);
 
                 // 表格添加
                 $testTable.append($tr);

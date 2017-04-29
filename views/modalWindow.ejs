@@ -47,12 +47,24 @@
             margin-bottom: 4px;
         }
 
+        .modal-content-close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 1.8rem;
+            display: inline-block;
+        }
+        .modal-content-close:hover {
+            color: white;
+            background-color: #596f9b;
+        }
+
         .modal-content-text {
             padding: 0.5rem;
             width: 80%;
             margin: auto;
             font-size: 1.7rem;
-            color: #41545f;
+            color: #587191;
         }
 
         .modal-content-text-outter {
@@ -61,7 +73,7 @@
             min-height: 10rem;
             margin-bottom: 4rem;
         }
-        #accept {
+        #modalAccept {
             position: absolute;
             bottom: 1rem;
             right: 1rem;
@@ -72,19 +84,13 @@
             border-radius: 4px;
             color: white;
         }
-        #accept:hover, #accept:active {
+        #modalAccept:hover, #modalAccept:active {
             background-color: #008500;
             transition: 0.3s background-color linear;
         }
 
         .self-define-div {
             text-align: left;
-        }
-
-        #contentText {
-            color: #dfdfdf;
-            font-size: 2rem;
-            text-shadow: 1px 1px 1px #000;
         }
 
         /*
@@ -107,7 +113,7 @@
                 width: 80%;
                 margin: auto;
                 font-size: 1.2rem;
-                color: #41545f;
+                color: #587191;
             }
             .modal-content-text-outter {
                 border-top: solid 1px #577280;
@@ -115,7 +121,17 @@
                 min-height: 5rem;
                 margin-bottom: 2rem;
             }
-            #accept {
+
+            .modal-content-close {
+                position: absolute;
+                right: 0.5rem;
+                top: 0.2rem;
+                color: #5a5a5a;
+                font-size: 1.2rem;
+                display: inline-block;
+            }
+
+            #modalAccept {
                 position: absolute;
                 bottom: 0.5rem;
                 right: 0.5rem;
@@ -130,11 +146,6 @@
                 text-align: left;
             }
 
-            #contentText {
-                color: #dfdfdf;
-                font-size: 1.2rem;
-                text-shadow: 1px 1px 1px #000;
-            }
         }
     </style>
 
@@ -142,8 +153,13 @@
     <div class="modal-wrapper" id="ModalWindow">
         <div class="modal-content-wrapper">
             <div class="modal-content" id="ModalContent">
+
                 <div class="modal-content-tip">
                     小提示
+                </div>
+
+                <div class="modal-content-close" id="modalClose">
+                    X
                 </div>
 
                 <div class="modal-content-text-outter">
@@ -157,7 +173,7 @@
                     </div>
                 </div>
 
-                <div id="accept">确定</div>
+                <div id="modalAccept">确定</div>
             </div>
         </div>
     </div>

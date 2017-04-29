@@ -1,187 +1,150 @@
+@charset "UTF-8";
 body {
-    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-    background-color: #f8ffff;
-}
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #f8ffff; }
 
 html {
-    font-size: 16px;
-}
+  font-size: 16px; }
 
 /* 页首 */
 header {
-    width: 100%;
-}
+  width: 100%; }
 
 /* 注销 */
 .signout {
-    position: fixed;
-    top: 3rem;
-    text-align: center;
-    right: 0;
-    padding: 2px;
-    width: 4rem;
-    background-color: rgba(245,128,48,0.60);
-    border: solid 1px white;
-    color: white;
-}
+  position: fixed;
+  top: 3rem;
+  text-align: center;
+  right: 0;
+  padding: 2px;
+  width: 4rem;
+  background-color: rgba(245, 128, 48, 0.6);
+  border: solid 1px white;
+  color: white; }
+
 .signout:hover {
-    background-color: rgba(245,128,48,0.9);
-    border: solid 1px white;
-}
+  background-color: rgba(245, 128, 48, 0.9);
+  border: solid 1px white; }
 
 .header-img {
-    width: 100%;
-    height: auto;
-}
+  width: 100%;
+  height: auto; }
 
 .header-img > img {
-    width: 100%;
-    height: auto;
-}
+  width: 100%;
+  height: auto; }
 
 .header-tab {
-    position: relative;
-    top: -1rem;
-    font-size: 0;
-    width: 90%;
-    margin: auto;
-    border: solid 1px white;
-    border-radius: 2px;
-    background-color: rgba(87, 115, 128, 0.86);
-
-    -webkit-box-shadow:  0 0 5px #577380;
-    -moz-box-shadow:  0 0 5px #577380;
-    box-shadow:  0 0 5px #577380;
-}
+  /*position: relative;*/
+  /*top: -1rem;*/
+  font-size: 0;
+  width: 90%;
+  margin: auto;
+  border: solid 1px white;
+  border-radius: 2px;
+  background-color: rgba(87, 115, 128, 0.86);
+  -webkit-transform: translateY(-1rem);
+  -moz-transform: translateY(-1rem);
+  -ms-transform: translateY(-1rem);
+  -o-transform: translateY(-1rem);
+  transform: translateY(-1rem);
+  -webkit-box-shadow: 0 0 5px #577380;
+  -moz-box-shadow: 0 0 5px #577380;
+  box-shadow: 0 0 5px #577380; }
 
 .tab-title {
-    border-left: solid 1px #98ccdf;
-    border-right: solid 1px #98ccdf;
-    font-size: 1rem;
-    color: white;
-    display: inline-block;
-    min-width: 4rem;
-    width: auto;
-    height: auto;
-    padding: 3px;
-    text-align: center;
-}
+  border-left: solid 1px #98ccdf;
+  border-right: solid 1px #98ccdf;
+  font-size: 1rem;
+  color: white;
+  display: inline-block;
+  min-width: 4rem;
+  width: auto;
+  height: auto;
+  padding: 3px;
+  text-align: center; }
 
 .tab-click {
-    border-left: solid 1px #98ccdf;
-    border-right: solid 1px #98ccdf;
-    background-color: #98ccdf;
-    font-size: 1rem;
-    color: white;
-    display: inline-block;
-    min-width: 4rem;
-    width: auto;
-    height: auto;
-    padding: 3px;
-    text-align: center;
-}
+  border-left: solid 1px #98ccdf;
+  border-right: solid 1px #98ccdf;
+  background-color: #98ccdf;
+  font-size: 1rem;
+  color: white;
+  display: inline-block;
+  min-width: 4rem;
+  width: auto;
+  height: auto;
+  padding: 3px;
+  text-align: center; }
+
 /* 内容显示区域 */
 .tab-content {
-    width: 95%;
-    margin: auto;
-}
+  width: 95%;
+  margin: auto; }
 
 /* 个人资料 */
 .tab-content-info {
-    background-color: rgba(152,204,223,0.86);
-    min-height: 10rem;
-    padding: 5px;
-}
-
-.content-info-list {
-
-}
+  background-color: rgba(152, 204, 223, 0.86);
+  min-height: 10rem;
+  padding: 5px; }
 
 .info-item {
-    padding: 5px;
-    border-bottom: solid 1px white;
-    margin-top: 0.5rem;
-}
+  padding: 5px;
+  border-bottom: solid 1px white;
+  margin-top: 0.5rem; }
 
 .info-item:last-child {
-    border: 0;
-}
+  border: 0; }
 
 .info-item-title {
-    text-align: center;
-    width: 4rem;
-    color: #e2e2e2;
-    padding: 2px;
-    border-radius: 5px;
-    background-color: rgb(88,138,198);
-}
+  text-align: center;
+  width: 4rem;
+  color: #e2e2e2;
+  padding: 2px;
+  border-radius: 5px;
+  background-color: #588ac6; }
 
 .info-item-content {
-    margin-left: 5px;
-    padding: 2px;
-    color: #ffffff;
-    text-shadow: 2px 2px 1px #607d8d;
-}
+  margin-left: 5px;
+  padding: 2px;
+  color: #ffffff;
+  text-shadow: 2px 2px 1px #607d8d; }
 
 /* 已购项目 */
 .tab-content-purchased {
-    background-color: rgba(224, 224, 224, 0.86);
-    min-height: 10rem;
-    display: none;
-}
+  background-color: rgba(224, 224, 224, 0.86);
+  min-height: 10rem;
+  display: none; }
 
 .hidden {
-    display: none;
-}
+  display: none; }
 
 .show {
-    display: block;
-}
+  display: block; }
 
 .purchased-item-list {
-    border: solid 1px white;
-}
+  border: solid 1px white; }
 
 .purchased-item {
-    font-size: 0;
-    padding: 5px;
-    border-bottom: solid 1px white;
-}
+  font-size: 0;
+  padding: 5px;
+  border-bottom: solid 1px white; }
+
 .purchased-item:last-child {
-    border: 0;
-}
+  border: 0; }
 
 .purchased-item-type {
-    font-size: 1rem;
-    display: inline-block;
-    padding: 3px;
-    background-color: #f0962a;
-    color: white;
-    border-radius: 4px;
-}
+  font-size: 1rem;
+  display: inline-block;
+  padding: 3px;
+  background-color: #f0962a;
+  color: white;
+  border-radius: 4px; }
 
 .purchased-item-title {
-    font-size: 1rem;
-    display: inline-block;
-    padding: 3px;
-    margin-left: 5px;
-}
+  font-size: 1rem;
+  display: inline-block;
+  padding: 3px;
+  margin-left: 5px; }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*# sourceMappingURL=user_info.css.map */

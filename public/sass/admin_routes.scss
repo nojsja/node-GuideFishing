@@ -1,0 +1,70 @@
+@charset "UTF-8";
+
+/* 页面几种查询和测试 */
+
+body {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+html {
+    font-size: 16px;
+}
+
+a {
+    color: #00B7FF;
+}
+
+/* 每个域 */
+.route-fieldset {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding: 5px;
+    background-color: #e7e7e7;
+}
+
+/* 路由legend */
+.legend {
+    text-shadow: 3px 3px 2px #5a8cc9;
+    color: #727272;
+}
+
+/* 各个路由 */
+.route-div{
+    margin: 5px;
+    font-weight: bold;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-all;
+}
+
+/* 路由文字 */
+.route-div-text{
+    border-radius: 5px;
+    display: inline-block;
+    font-size: 1.5rem;
+    background-color: #577280;
+    color: white;
+    font-weight: bold;
+    padding: 5px;
+}
+
+/* 路由地址 */
+.route-div-url{
+    margin-left: 1rem;
+    display: inline-block;
+    color: #e5691d;
+    text-shadow: 0 0 5px #74c2b9;
+    font-size: 1.5rem;
+}
+
+.route-div-tips {
+    display: inline-block;
+}
+
+.route-div-input {
+    display:  inline-block;
+}
+
+.route-div-redirect {
+    display: inline-block;
+}

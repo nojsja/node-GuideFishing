@@ -93,8 +93,6 @@ AdminInfoAction.updatePermissionPage = function (JSONdata) {
         return nojsja["ModalWindow"].show(JSONobject.err);
     }
 
-    console.log(JSONobject);
-
     AdminInfoAction.EnToCn = JSONobject.EnToCn;
     var permissionConstraints  = AdminInfoAction.permissionConstraints =
         JSONobject["permissionConstraints"];
@@ -191,14 +189,42 @@ AdminInfoAction.updatePermissionPage = function (JSONdata) {
     $adminAddButton.click(function () {
         // 添加一个权限账户
 
+        var allAttributes = permissionConstraints["allAttributes"];
+        // 检查信息完整性
+        // 属性完整性标志位
+        var addConditionBool = true;
+        // 遍历选取属性
+        $('input.admin-add-detail').each(function () {
+            var attr = $(this).attr('attr');
+            var value = $(this).val().trim();
+            if(!value || value == ''){
+                addConditionBool = false;
+                return alert('请完善' + attr);
+            }
+            AdminInfoAction.adminAddCondition[attr] = value;
+        });
+        if(!addConditionBool){
+            return;
+        }
+        for(var attr in allAttributes){
+            if(!AdminInfoAction.adminAddCondition[attr]){
+                return alert('请完善：' + attr);
+            }
+        }
+
         $.post('/admin/permission/add',
-            AdminInfoAction.adminAddCondition, function (JSONdata) {
+            {condition: AdminInfoAction.adminAddCondition}, function (JSONdata) {
 
                 var JSONobject = JSON.parse(JSONdata);
                 if(JSONobject.isError){
-                    return nojsja["ModelWindow"].show("添加出错！[error]: " + JSONobject.error);
+                    return alert("添加出错！[error]: " + JSONobject.error);
                 }
-                nojsja["ModelWindow"].show("添加成功！");
+                if(JSONobject.isPass){
+                    alert("添加成功！");
+                    $('#searchCondtion').click();
+                }else {
+                    alert("添加失败！可能账户已经存在！");
+                }
             },
             "JSON"
         );
@@ -281,7 +307,6 @@ AdminInfoAction.updateAdministrator = function (JSONdata) {
 
     var JSONobject = JSON.parse(JSONdata);
 
-    console.log(JSONobject);
     // 更新页面
     // 所有管理员列表
     var adminArray = JSONobject.adminArray;
@@ -321,15 +346,21 @@ AdminInfoAction.updateAdministrator = function (JSONdata) {
             }
             // 添加编辑按钮
             var $edit = $('<td class="edit-td" title="编辑条目"><i class="icon-edit"></i></td>');
+
+            // 绑定编辑事件
             $edit.click(function () {
+
                 AdminInfoAction.adminTableEdit(adminArray[i]);
             });
 
             // 添加删除按钮
             var $delete = $('<td class="delete-td" title="删除条目"><i class="icon-trash"></i></td>')
             $delete.click(function () {
-                $adminTableContent.parent().remove($adminTableContent);
-                AdminInfoAction.adminTableDelete(adminArray[i]);
+
+                if(confirm('确认删除' + adminArray[i].account)){
+
+                    AdminInfoAction.adminTableDelete(adminArray[i]);
+                }
             });
 
             $adminTableContent.append($edit)
@@ -342,8 +373,11 @@ AdminInfoAction.updateAdministrator = function (JSONdata) {
 
 
 /* 编辑权限条目 */
-AdminInfoAction.adminTableEdit = function(){
+AdminInfoAction.adminTableEdit = function(adminData){
 
+    // 添加新权限时需要的输入属性
+    var changeableAttr = AdminInfoAction.changeableAttributes;
+    var permissionConstranints = AdminInfoAction.permissionConstraints;
     // 缓存DOM
     if(!AdminInfoAction.DOM.adminEditWrapper){
 
@@ -353,9 +387,6 @@ AdminInfoAction.adminTableEdit = function(){
         if(!AdminInfoAction.adminEditCondition){
             AdminInfoAction.adminEditCondition = {};
         }
-        // 添加新权限时需要的输入属性
-        var changeableAttr = AdminInfoAction.changeableAttributes;
-        var permissionConstranints = AdminInfoAction.permissionConstraints;
 
         for(var attr in changeableAttr){
 
@@ -369,18 +400,26 @@ AdminInfoAction.adminTableEdit = function(){
                 if(permissionConstranints[attr]){
 
                     var $adminEditDetail = $('<div class="admin-edit-detail">');
+                    $adminEditDetail.attr('attr', attr);
                     permissionConstranints[attr].forEach(function (item) {
 
                         var $editDetailItem = $('<div class="edit-detail-item">');
                         $editDetailItem.attr('attr', attr)
-                            .text(item);
+                            .text(item)
+                            .attr('value', item);
                         $editDetailItem.click(function () {
-                            $('.add-detail-item.add-detail-item-click[attr=' + attr + ']')
+                            $('.edit-detail-item.edit-detail-item-click[attr=' + attr + ']')
                                 .prop('class', 'edit-detail-item');
                             $(this).prop('class', 'edit-detail-item edit-detail-item-click');
+                            console.log(attr);
                             // 筛选权限账户条件对象
                             AdminInfoAction.adminEditCondition[attr] = item;
                         });
+                        // 数据初始化
+                        if(adminData[attr] == item){
+                            $editDetailItem.click();
+                        }
+
                         $adminEditDetail.append($editDetailItem);
                     });
 
@@ -391,40 +430,69 @@ AdminInfoAction.adminTableEdit = function(){
                     $adminEditDetail.prop('placeholder', attr)
                         .attr('attr', attr);
 
+                    $adminEditDetail.val(adminData[attr]);
+                    
                     $adminEditWrapper.append($adminEditDetail);
                 }
             })(attr);
 
         }
+
+
         // 添加确认创建按钮
         var $adminEditDiv = $('<div class="admin-edit-div">');
         var $adminEditButton = $('<input type="button" value="修改" class="btn btn-default btn-sm" id="adminEditButton">');
+
         $adminEditButton.click(function () {
 
             // 置空
-            AdminInfoAction.adminEditCondition = {};
+            if(!AdminInfoAction.adminEditCondition){
+
+                AdminInfoAction.adminEditCondition = {};
+            }
+
+            // 属性完整性标志位
+            var editConditionBool = true;
             // 遍历选取属性
             $('input.admin-edit-detail').each(function () {
                 var attr = $(this).attr('attr');
                 var value = $(this).val().trim();
                 if(!value || value == ''){
-                    return nojsja['ModalWindow'].show('请完善' + attr);
+                    editConditionBool = false;
+                    return alert('请完善' + attr);
                 }
                 AdminInfoAction.adminEditCondition[attr] = value;
-                console.log(AdminInfoAction.adminEditCondition);
             });
+            if(!editConditionBool){
+                return;
+            }
+            for(var attr in changeableAttr){
+                if(!AdminInfoAction.adminEditCondition[attr] && AdminInfoAction.adminEditCondition[attr] !== 0){
+                    return alert('请完善' + attr);
+                }
+            }
+
 
             //修改一个权限账户
+            // 注意此处的闭包效应，变量adminData只会取到循环最后的值
+            if(!AdminInfoAction.adminEditCondition.account){
+
+                AdminInfoAction.adminEditCondition.account = adminData.account;
+            }
+            console.log(AdminInfoAction.adminEditCondition);
             $.post('/admin/permission/edit',
-                AdminInfoAction.adminEditCondition,
+                {condition: AdminInfoAction.adminEditCondition},
                 function (JSONdata) {
                     var JSONobject = JSON.parse(JSONdata);
                     if(JSONobject.isError){
-                        return nojsja["ModelWindow"].show('编辑失败！[error]:' + JSONobject.error);
+                        return alert('编辑失败！[error]:' + JSONobject.error);
                     }
-                    nojsja["ModelWindow"].show("编辑成功！");
+                    $('#searchCondtion').click();
+                    alert("编辑成功！");
+
                 }, "JSON");
-            });
+        });
+
         $adminEditDiv.append($adminEditButton);
         $adminEditWrapper.append($adminEditDiv);
 
@@ -439,6 +507,22 @@ AdminInfoAction.adminTableEdit = function(){
     nojsja["ModalWindow"].show('编辑', {
         scroll: false,
         selfDefineKeep: true
+    });
+
+    //修改一个权限账户
+    AdminInfoAction.adminEditCondition.account = adminData.account;
+
+    // 进行数据初始化
+    $('.admin-edit-detail').each(function () {
+
+        // 判断是否是数组
+        var attr = $(this).attr('attr');
+        if(permissionConstranints[attr]){
+
+            $('.edit-detail-item[value=' + adminData[attr]+ ']').click();
+        }else{
+            $(this).val(adminData[attr]);
+        }
     });
 };
 
@@ -460,14 +544,21 @@ AdminInfoAction.addAdministrator = function () {
 AdminInfoAction.adminTableDelete = function (adminData) {
 
     $.post('/admin/permission/delete',
-        {account: adminData.account}, function (JSONdata) {
+        {condition: adminData}, function (JSONdata) {
 
         var JSONobject = JSON.parse(JSONdata);
         if(JSONobject.isError){
-            nojsja["ModalWindow"].show('删除失败![error]:' + JSONobject.error);
+            return nojsja["ModalWindow"].show('删除失败![error]:' + JSONobject.error);
 
+        }
+        // 删除成功
+        if(JSONobject.isPass){
+
+            nojsja["ModalWindow"].show('删除失败！请重试');
         }else {
             nojsja["ModalWindow"].show('删除成功！');
+            // 更新列表
+            $('#searchCondtion').click();
         }
     }, "JSON");
 };
@@ -476,14 +567,179 @@ AdminInfoAction.adminTableDelete = function (adminData) {
 
 /*****  内容审查区  *****/
 
-/* 获取审查内容 */
+/* 获取审查内容
+ *
+ <div class="examine-content-item">
+ <span class="content-item-type">test</span>
+ <a href="/course/sdfsd/" class="content-item-title">sdfsdf是的发送到</a>
+ </div>
+  * */
 AdminInfoAction.updateExamineContent = function () {
+
+    var url = '/admin/info';
+    $.post(url, {}, function (JSONdata) {
+
+        var JSONobject = JSON.parse(JSONdata);
+        console.log(JSONobject);
+        if(JSONobject.isError){
+            return nojsja["ModalWindow"].show('发生错误：' + JSONobject.error);
+
+        }
+        // 审查内容
+        var examineContent = JSONobject.examineContent;
+        // 父组件
+        var $examineContentList = $('.examine-content-list');
+        $examineContentList.children().remove();
+
+        // 更新页面
+        for(var i = 0; i < examineContent.length; i++){
+
+            (function (i) {
+
+                var $examineContentItem = $(' <div class="examine-content-item">');
+                var $contentitemType = $(' <span class="content-item-type">');
+                var $contentItemTitle = $(' <a class="content-item-title">');
+
+                var href = ['/', examineContent[i].examineType,'/examine/' ,
+                    examineContent[i].contentType, '/', examineContent[i].contentName].join('');
+
+                $contentitemType.text(examineContent[i].examineType);
+                $contentItemTitle.text(examineContent[i].contentName)
+                    .prop('href', href);
+
+                // 添加dom
+                $examineContentItem.append($contentitemType)
+                    .append($contentItemTitle);
+
+                $examineContentList.append($examineContentItem);
+            })(i);
+        }
+
+    }, "JSON");
 
 };
 
 /*****  内容审查进度区  *****/
 
-/* 获取审查进度 */
+/* 获取审查进度
+*
+* <div class="examine-progress-item">
+ <input type="button" class="btn btn-default btn-sm" value="审核情况">
+ <span class="progress-item-type">test</span>
+ <a href="/sdfj/sdf" class="progress-item-title">sdfsd</a>
+ </div>
+*
+* */
 AdminInfoAction.updateExamineProgress = function () {
 
+    var url = '/admin/info';
+    $.post(url, {}, function (JSONdata) {
+
+        var JSONobject = JSON.parse(JSONdata);
+        console.log(JSONobject);
+        if(JSONobject.isError){
+            return nojsja["ModalWindow"].show('发生错误：' + JSONobject.error);
+
+        }
+        // 审查内容
+        var examineProgress = JSONobject.examineProgress;
+        // 父组件
+        var $examineProgressList = $('.examine-progress-list');
+        $examineProgressList.children().remove();
+
+        // 审核结果modal弹窗
+        var $examineText = $('<div class="examine-text">');
+
+        // href 对象
+        var Href = {
+
+            course: {
+                isExaming: function (courseType, courseName) {
+
+                    return ['/course/admin/edit/', courseType, '/',
+                        courseName].join('');
+                },
+                reject: function (courseType, courseName) {
+
+                    return ['/course/admin/edit/', courseType, '/',
+                        courseName].join('');
+                },
+                pass: function (courseType, courseName) {
+
+                    return ['/course/view/' ,
+                        courseType, '/', courseName].join('');
+                },
+            },
+
+            test: {
+                isExaming: function (testType, testTitle) {
+
+                    return ['/test/admin/edit/' ,
+                        testType, '/', testTitle].join('');
+                },
+                reject: function (testType, testTitle) {
+
+                    return ['/test/admin/edit/' ,
+                        testType, '/', testTitle].join('');
+                },
+                pass: function (testType, testTitle) {
+
+                    return ['/test/view/' ,
+                        testType, '/', testTitle].join('');
+                },
+            }
+        };
+
+        // 更新页面
+        for(var i = 0; i < examineProgress.length; i++){
+
+            (function (i) {
+
+                var $examineProgressItem = $(' <div class="examine-progress-item">');
+                var $progressButton = $(' <input type="button" class="btn btn-default btn-sm" value="审核情况">');
+                var $progressItemType = $(' <span class="progress-item-type">');
+                var $progressItemTitle = $(' <a class="progress-item-title">');
+
+                var href = Href[ examineProgress[i].examineType ]
+                    [ examineProgress[i].status ] ( examineProgress[i].contentType, examineProgress[i].contentName );
+
+                // 审核状态
+                if(examineProgress[i].status == 'pass'){
+                    $progressButton.prop('class', 'btn btn-success btn-sm');
+
+
+                }else if(examineProgress[i].status == 'reject'){
+
+                    $progressButton.prop('class', 'btn btn-danger btn-sm');
+                }
+
+                $progressButton.click(function () {
+
+                    if(examineProgress[i].status == 'isExaming'){
+                        $examineText.text('还未被审查..');
+                    }else {
+                        $examineText.text(examineProgress[i].examineText);
+                    }
+                    nojsja["ModalWindow"].define($examineText[0]);
+                    nojsja["ModalWindow"].show(examineProgress[i].status, {
+                        selfDefineKeep: true
+                    });
+                });
+
+
+                $progressItemType.text(examineProgress[i].examineType);
+                $progressItemTitle.text(examineProgress[i].contentName)
+                    .prop('href', href);
+
+                $examineProgressList.append($examineProgressItem);
+
+                // 添加dom
+                $examineProgressItem
+                    .append($progressItemType)
+                    .append($progressItemTitle)
+                    .append($progressButton);
+            })(i);
+        }
+
+    }, "JSON")
 };

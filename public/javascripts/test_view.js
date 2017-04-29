@@ -70,6 +70,8 @@ TestViewAction.pageInit = function () {
         TestViewAction.testType = $('.test-type').text().trim();
         TestViewAction.testTitle = $('.test-title').text().trim();
         TestViewAction.tagNameArray = JSONobject.testTags;
+        TestViewAction.adminAccount = JSONobject.examine.adminAccount;
+
         if(TestViewAction.testGroup.length == 0){
             return TestViewAction.modalWindow("抱歉没有任何数据!");
         }
@@ -79,6 +81,18 @@ TestViewAction.pageInit = function () {
         nojsja.HoverButton.init();
 
     }, "JSON");
+
+    //审核提交
+    $('#examineReject, #examinePass').click(function () {
+
+        var status = $(this).attr('status');
+        var exaineText = $('#examineText').val().trim();
+        if(exaineText === '' || exaineText == null){
+            return nojsja['ModalWindow'].show('请完善审核备注');
+        }
+
+        TestViewAction.examine(status, exaineText);
+    });
 };
 
 /* 共有的更新页面函数 */
@@ -207,7 +221,7 @@ TestViewAction.submit = function () {
         var JSONobject = JSON.parse(JSONdata);
         //获取结果错误
         if(JSONobject.isError){
-            TestViewAction.modalWindow('抱歉,服务器发生错误!');
+            return TestViewAction.modalWindow('抱歉,服务器发生错误!');
         }
 
         // 构建结果缓存DOM
@@ -237,8 +251,40 @@ TestViewAction.submit = function () {
         //返回评测结果,更新页面
         $('.test-result').text(JSONobject.result);
 
-        // 获取推荐课程
-        TestViewAction.getRecommendation();
+        if(TestViewAction.action == 'view'){
+
+            // 获取推荐课程
+            TestViewAction.getRecommendation();
+        }
+
+    }, "JSON");
+};
+
+/* 提交审核情况 */
+TestViewAction.examine= function (status, examineText) {
+
+    var url = '/admin/test/examine';
+    // 提交的信息
+    var condition = {
+        contentName: TestViewAction.testTitle,
+        contentType: TestViewAction.testType,
+        examineText: examineText,
+        adminAccount: TestViewAction.adminAccount,
+        status: status
+    };
+
+    $.post(url, condition, function (JSONdata) {
+
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return nojsja["ModalWindow"].show('发生错误：' + JSONobject.error);
+        }
+        if(JSONobject.isPass){
+
+            window.location.href = '/admin/info';
+        }else {
+            nojsja["ModalWindow"].show('更新失败!');
+        }
     }, "JSON");
 };
 
@@ -260,7 +306,7 @@ TestViewAction.getRecommendation = function () {
     }, function (JSONdata) {
         var JSONobject = JSON.parse(JSONdata);
         if(JSONobject.isError){
-            return TestViewAction.modalWindow("发生错误：" + JSONobject.error);
+            return alert("发生错误：" + JSONobject.error);
         }
         // 更新DOM数据
         /* DOM 结构
@@ -271,6 +317,8 @@ TestViewAction.getRecommendation = function () {
          </div>
          */
         var $recommendationList = $('.recommendation-list');
+        $recommendationList.children().remove();
+
         var index = 1;
         for(var item in JSONobject.tagContentArray){
 

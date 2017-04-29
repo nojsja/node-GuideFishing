@@ -1,0 +1,270 @@
+@charset "UTF-8";
+
+body {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background: #577280;
+}
+
+html {
+    font-size: 16px;
+}
+
+a {
+    color: #00B7FF;
+}
+
+/*首部 header*/
+.header {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    padding: 5px;
+    width: 100%;
+    min-height: 1.5rem;
+    height: auto;
+    font-size: 0;
+    background-color: #588ac6;
+    border-bottom: solid 1px white;
+}
+
+.header-label {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+    color: white;
+    text-shadow: 0px 0px 10px #456d9c;
+    line-height: 1.5rem;
+    font-weight: bold;
+}
+
+.header-label span {
+    text-shadow: 0 0 0;
+}
+
+.return-home {
+    position: absolute;
+    right: 1rem;
+    color: #8bcaed;
+    font-size: 1.5rem;
+}
+
+/* footer */
+.footer {
+    margin-bottom: 5px;
+    padding: 0.5rem;
+    text-align: center;
+    min-height: 2rem;
+    bottom: 0;
+    border-top: solid 1px #6095d8;
+    background-color: white;
+}
+
+.footer-img {
+    display: inline-block;
+    background: url("/images/icons/Ciitec.jpg") no-repeat;
+    background-size: cover;
+    width: 5rem;
+    height: 2rem;
+    margin: 0 auto;
+}
+
+.footer-text {
+    display: inline-block;
+    text-align: center;
+    font-size: 1.5rem;
+    color: #3b3d3b;
+}
+
+/* 答题框 */
+.total {
+    margin-top: 4rem;
+}
+
+/* 测评区域 */
+#totalItems {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    color: #5a5a5a;
+    width: 100%;
+    background-color: #d8dcd7;
+    min-height: 15rem;
+    height: auto;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+/* 标题和类型 */
+.test-title {
+    position: relative;
+    margin-top: 1rem;
+    text-align: center;
+    color: #f3ffff;
+    font-size: 1.5rem;
+
+    text-shadow: 2px 2px 1px #000;
+}
+
+.test-type {
+    text-align: center;
+    color: #e3ffff;
+    margin-top: 1rem;
+}
+
+/* 某一道题目 */
+.item-title {
+    font-size: 1.2rem;
+}
+
+/* 题号 */
+.item-number {
+    text-align: center;
+    color: white;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px black;
+}
+
+/* 题目选项 */
+.item-choises {
+    margin-top: 0.5rem;
+}
+
+/* 各个选项 */
+.choise {
+    background-color: white;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding: 5px;
+}
+
+/* 选项被点击的效果 */
+.choise_click {
+    background-color: #7f948c;
+    color: white;
+}
+
+/* 选项原始的效果 */
+.choise_origin {
+    background-color: white;
+    color: #7f948c;
+}
+
+/* 选题 */
+#nextDiv {
+    text-align: center;
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+}
+
+#submitDiv {
+    text-align: center;
+    margin-bottom: 2rem;
+    display: none;
+    margin-top: 1rem;
+}
+
+#submit {
+    display: inline-block;
+    background-color: #ef7a2c;
+    border-radius: 5px;
+    color: white;
+    font-size: 1.3rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    border: solid 1px white;
+}
+
+#submit:hover {
+    background-color: #cb6924;
+}
+
+.test-result {
+    width: 100%;
+    border-radius: 5px;
+    text-align: left;
+    min-height: 8rem;
+    height: auto;
+    margin-bottom: 1rem;
+
+    padding: 0.5rem;
+    background-color: #d2d6d1;
+    color: white;
+    text-shadow: 0 0 10px #b40000;
+}
+
+/* 相关课程推荐 */
+.course-recommendation-div {
+    display: none;
+    padding: 0.5rem;
+    border: solid 1px #dcdcdc;
+    background-color: rgba(185,185,185,0.51);
+    min-height: 5rem;
+}
+
+.course-recommendation-div-show {
+    display: block;
+}
+
+.recommendation-title {
+    text-align: center;
+    color: #dcdcdc;
+}
+
+.recommendation-list {
+    background-color: #e9e9e9;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.recommendation-item {
+    font-size: 0;
+    border-bottom: solid 1px white;
+    margin-top: 0.5rem;
+}
+.recommendation-item > span:nth-child(1){
+    font-size: 1rem;
+    color: #3861b5;
+}
+.recommendation-item:first-child {
+    margin-top: 0;
+}
+.recommendation-item:last-child {
+    border-bottom: 0;
+}
+
+.recommendation-item-type {
+    padding: 2px;
+    font-size: 0.8rem;
+    display: inline-block;
+    color: #dc8e3e;
+    border-radius: 5px;
+    border: solid 1px #dc8e3e;
+}
+
+.recommendation-item-title {
+    color: #56737f;
+    padding: 3px;
+    margin-left: 0.5rem;
+    font-size: 1rem;
+}
+
+/* 审查 */
+.course-examine-div {
+    margin: 0.5rem;
+    padding: 0.5rem;
+
+    border: solid 2px white;
+}
+
+/*文字特效*/
+.box1 {
+    text-shadow:
+            0 0 0 rgb(188,178,188),1px 0 0 rgb(173,163,173),
+            2px 0 0 rgb(157,147,157),3px 0 0 rgb(142,132,142),
+            4px 0 0 rgb(126,116,126),5px 0 0 rgb(111,101,111),
+            6px 0 0 rgb(95,85,95), 7px 0 0 rgb(79,69,79),
+            8px 0 7px rgba(0,0,0,0.35),8px 0 1px rgba(0,0,0,0.5),
+            0 0 7px rgba(0,0,0,.2);
+}

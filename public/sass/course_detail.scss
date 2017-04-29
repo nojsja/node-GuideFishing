@@ -1,0 +1,238 @@
+@charset "UTF-8";
+
+@import "public";
+
+/* 课程详情页面 */
+
+body {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: #f8ffff;
+}
+
+html {
+    font-size: 16px;
+}
+
+a {
+    color: $blue_light;
+}
+
+/* 首部 header */
+.header {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    padding: 5px;
+    width: 100%;
+    min-height: 2rem;
+    height: auto;
+    background-color: $grey;
+    font-size: 0;
+
+    @include boxShadowRound(8px, $grey_dark);
+}
+
+.header-label {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+    color: $blue;
+    text-shadow: 2px 2px 0 white;
+    line-height: 1.5rem;
+}
+
+.header-label span {
+    text-shadow: 0 0 0;
+}
+
+/* 返回主页按钮 */
+.return-home {
+    position: absolute;
+    right: 10px;
+    color: $green;
+    font-size: 1.5rem;
+}
+.return-home:active {
+    color: $green_dark;
+}
+
+/* 评测介绍主体部分 */
+.detail-head {
+    min-height: 8rem;
+    padding-top: 5px;
+    height: auto;
+    background-color: $blue;
+    width: 90%;
+    margin: 3rem auto 0.5rem;
+}
+
+.detail-head-img {
+    border: solid 1px white;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    margin: 0.5rem auto 0.5rem;
+    background: url("/images/courseType/english.jpg") no-repeat;
+    background-size: cover;
+
+    @include boxShadowRound(10px, white);
+}
+
+.detail-head-type {
+    text-align: center;
+    color: $grey;
+}
+
+.detail-head-title {
+    text-align: center;
+    color: $grey_light;
+    font-size: 1.3rem;
+    text-shadow: 2px 2px 1px $grey_dark;
+}
+
+.detail-head-other {
+    text-align: center;
+}
+
+/* 首部其它信息 */
+.other-date {
+    height: 1.5rem;
+    line-height: 1.5rem;
+    color: $grey_dark;
+    background-color: $black_light;
+    text-align: center;
+    width: 100%;
+}
+
+/* 详细介绍 */
+.detail-body {
+    height: auto;
+    min-height: 10rem;
+    margin: 0.5rem auto 2rem;
+    background-color: $grey_dark_light;
+}
+
+.detail-body-abstract {
+    width: 90%;
+    margin: auto;
+    background-color: $grey_light;
+}
+
+.abstract {
+    padding: 5px;
+    font-size: 1rem;
+    word-spacing: 1px;
+    letter-spacing: 1px;
+    min-height: 10rem;
+    font-weight: bold;
+    color: $grey_dark;
+}
+
+/* 开始按钮 */
+#startDiv {
+    text-align: center;
+    margin: 0.5rem auto 0.5rem;
+}
+
+/* 购买区域 */
+#purchaseDiv {
+    text-align: center;
+}
+
+/* 弹幕输入 */
+#commentInput {
+    width: 100%;
+}
+
+#commentSend {
+    margin: 0.5rem 0 0.5rem;
+}
+
+/* 标签区域 */
+.detail-tags-div {
+    text-align: center;
+    font-size: 0;
+}
+
+.tag-item {
+    position: relative;
+    font-size: 1rem;
+    margin: 5px;
+    display: inline-block;
+    padding: 3px;
+    color: #009c00;
+    font-weight: bold;
+    border: solid 2px #009c00;
+    border-radius: 5px;
+
+    @include transform(rotate(7deg));
+
+}
+
+.tag-item:hover, .tag-item:active {
+
+    @include transform(scale(1.3));
+
+    -webkit-animation-play-state: paused;
+    -moz-animation-play-state: paused;
+    -o-animation-play-state: paused;
+    animation-play-state: paused;
+}
+
+.tag-change-animation {
+
+    @include rainBow();
+}
+
+.tag-change-reverse-animation {
+
+    @include  rainBow(reverse);
+}
+
+/* 登录 */
+.detail-login-div {
+    text-align: center;
+}
+
+.login-account, .login-password {
+    width: 90%;
+    margin-top: 0.5rem;
+    display: inline-block;
+}
+
+.button {
+    border: solid 1px #858585;
+    border-radius: 5px;
+    color: #5a5a5a;
+    background-color: #FFFFFF;
+    display: inline-block;
+    padding-left: 0.5rem;
+    margin: 5px;
+    padding-right: 0.5rem;
+
+    @include transition(all, 0.2s);
+}
+
+.button:hover {
+    background-color: $grey_light;
+}
+
+.login-button {
+    border: solid 1px $green;
+    color: $green;
+}
+.login-button:hover {
+    border: solid 1px $green_dark;
+    background-color: $green_dark;
+    color: white;
+}
+
+.signup-button {
+
+}
+
+/*文字特效*/
+.box1 {
+    @include fontMultiOverlay();
+}

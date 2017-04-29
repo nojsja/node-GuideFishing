@@ -32,6 +32,8 @@
 var AllTest = require('../models/AllTest.js');
 var color = require('colors-cli');
 var getDate = require('../models/tools/GetDate.js');
+// 权限验证
+var permissionCheck = require('../models/permissionCheck').permissionCheck;
 
 /**
  * console.log(color.cyan_bt('颜色测试'));
@@ -43,64 +45,134 @@ function admin(app) {
 
     /* 获取管理员创建页面 */
     app.get('/test/admin/create', function (req, res, next) {
-        adminCheck(req, res, next);
+
+        permissionCheck.rank2(req, res, next);
+
     }, function (req, res) {
         res.render('test_adminEdit', {
-            title: '创建新的评测'
+            title: '测评创建',
+            loadData: false
         });
     });
 
-    /* 获取管理员管理页面 */
+    /* 管理员编辑测评 */
+    app.get('/test/admin/edit/:testType/:testTitle', function (req, res, next) {
+
+        permissionCheck.rank2(req, res, next);
+
+    }, function (req, res) {
+
+        var loadData = JSON.stringify({
+            testTitle: req.params.testTitle,
+            testType: req.params.testType
+        });
+        res.render('test_adminEdit', {
+
+           title: '测评编辑',
+            loadData: loadData
+        });
+    });
+
+    /* 获取测评管理页面 */
     app.get('/test/admin/manager', function (req, res, next) {
-        adminCheck(req, res, next);
+
+        permissionCheck.rank1(req, res, next);
+
     }, function (req, res) {
         res.render('test_adminManager', {
-            title: '管理所有评测'
+            title: '测评管理'
+        });
+    });
+
+    // 获取需要导入的课程数据
+    app.post('/test/admin/load/:testType/:testTitle', function(req, res, next){
+
+        permissionCheck.rank2(req, res, next);
+
+    }, function (req, res) {
+
+        // 筛选条件
+        var condition = {
+            testTitle: req.params.testTitle,
+            testType: req.params.testType
+        };
+
+        console.log(condition);
+
+        AllTest.getLoadData(condition, function (err, testData) {
+
+            if(err){
+                console.log('获取导入课程的数据出错!');
+                return res.json(JSON.stringify({
+                    isError: true,
+                    error: err
+                }));
+            }
+            // 向客户端发回数据
+            res.json(JSON.stringify({
+                isError: false,
+                loadData: testData
+            }));
         });
     });
 
     /* 存储一个文档 */
-    app.post('/test/save', function (req, res) {
+    app.post('/test/save', function(req, res, next){
 
-        //文档对象
-        var test = {};
-        test.testType = req.body.testType;
-        test.date = getDate();
-        test.scoreMode = req.body.scoreMode;
-        test.abstract = req.body.abstract;
-        test.testTitle = req.body.testTitle;
-        test.frequency = 0;
-        test.scoreValue = req.body.scoreValue;
-        if(req.body.scoreSection){
-            test.scoreSection = req.body.scoreSection;
-        }
-        if(req.body.categorySection){
-            test.categorySection = req.body.categorySection;
-        }
-        test.testGroup = req.body.testGroup;
+        permissionCheck.rank2(req, res, next);
 
-        //创建数据库模式对象
-        var newTest = new AllTest(test);
-        newTest.save(function (err) {
-            if(err){
-                console.log("it's error!");
-                res.json(JSON.stringify({
-                    error: true
-                }));
-            }else {
-                console.log('存储成功!');
-                /* 成功后返回跳转需要的数据 */
-                res.json(JSON.stringify({
-                    error: false,
-                    courseType: test.courseType,
-                    testTitle: test.testTitle
-                }));
+    } , function (req, res) {
+
+            //文档对象
+            var test = {
+                testType: req.body.testType,
+                date: getDate(),
+                examine: req.body.examine,
+                scoreMode: req.body.scoreMode,
+                abstract: req.body.abstract,
+                testTitle: req.body.testTitle,
+                frequency: 0,
+                testTags: req.body.testTags,
+                scoreValue: req.body.scoreValue,
+                testGroup: req.body.testGroup
+            };
+
+            // 注入管理员信息
+            test.examine.adminAccount = req.session.admin.account;
+
+            if(req.body.scoreSection){
+                test.scoreSection = req.body.scoreSection;
             }
-        });
+            if(req.body.categorySection){
+                test.categorySection = req.body.categorySection;
+            }
+
+            //创建数据库模式对象
+            var newTest = new AllTest(test);
+            newTest.save(function (err) {
+                if(err){
+                    console.log("it's error!");
+                    res.json(JSON.stringify({
+                        error: true
+                    }));
+                }else {
+                    console.log('存储成功!');
+                    /* 成功后返回跳转需要的数据 */
+                    res.json(JSON.stringify({
+                        error: false,
+                        courseType: test.courseType,
+                        testTitle: test.testTitle
+                    }));
+                }
+            });
     });
 
     /* 删除一个文档 */
-    app.post('/test/deleteOne', function (req, res) {
+    app.post('/test/deleteOne', function(req, res, next){
+
+        permissionCheck.rank1(req, res, next);
+
+    }, function (req, res) {
 
         //必须要获取的文档主键,数据模拟
         var testType = req.body.testType;
@@ -123,7 +195,11 @@ function admin(app) {
     });
 
     /* 删除多个文档 */
-    app.post('/test/deleteSome', function (req, res) {
+    app.post('/test/deleteSome', function(req, res, next){
+
+        permissionCheck.rank1(req, res, next);
+
+    }, function (req, res) {
 
         //必须要获取的文档主键,数据模拟
         var testType = "character";
@@ -142,19 +218,6 @@ function admin(app) {
             } ));
         });
     });
-
-    /* 权限验证中间件 */
-    var adminCheck = function (req, res, next) {
-
-        // 验证用户
-        if(req.session.admin){
-            return next();
-        }else {
-            res.render('admin_login', {
-                title: "管理员登录"
-            });
-        }
-    };
 
 }
 

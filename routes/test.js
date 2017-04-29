@@ -16,11 +16,14 @@
 /* 引入工厂模式 */
 var scoreFactory = require('../models/ScoreFactory.js');
 var AllTest = require('../models/AllTest.js');
-var MongoSchedule = require('../models/MongoSchedule.js');
+/* 权限检查 */
+var permissionCheck = require('../models/permissionCheck').permissionCheck;
 /* 读取磁盘图片数据形成地址 */
 var ReadTestImg = require('../models/ReadTypeImg');
 /* 获取根目录 */
 var locateFromRoot = require('../models/tools/LocateFromRoot');
+/* 获取当前日期 */
+var getDate = require('../models/tools/GetDate');
 /* 用户模型 */
 var User = require('../models/User');
 
@@ -114,7 +117,11 @@ function test(app) {
     /* 获取测试视图主页 */
     app.get('/test/view/:testType/:testTitle', function (req, res, next) {
 
+        if(req.session.admin){
+            return next();
+        }
         testRoute.purchaseCheck(req, res, next);
+
         }, function (req, res) {
 
         //评测类型
@@ -138,7 +145,7 @@ function test(app) {
             }
         };
 
-        // 读取一个课程数据
+        // 读取一个测评数据
         AllTest.getDetail(totalCondition, function (err, data) {
 
             // 返回的课程数据
@@ -169,6 +176,96 @@ function test(app) {
                 testData.clickRate = data["clickRate"];
                 testData.date = data["date"];
                 testData.testTags = data["testTags"];
+
+                // 加入审核信息
+                testData.action = "view";
+
+                res.render('test_view', testData);
+
+            }else {
+                var info = {
+                    message: "没有查询到相关测评信息！",
+                    error: {
+                        status: "500"
+                    }
+                }
+                res.render('error', info);
+            }
+        });
+    });
+
+    /* 获取测评审查页面 */
+    app.get('/test/examine/:testType/:testTitle', function (req, res, next) {
+
+        if(req.session.admin && req.session.admin.examine.rank == 1){
+
+            return next();
+        }
+        return res.render('error', {
+            message: '404',
+            error: {
+                status: '禁止访问'
+            }
+        });
+
+    }, function (req, res) {
+
+        //评测类型
+        var testType = req.params.testType,
+            testTitle = req.params.testTitle;
+
+        // 读取详情条件
+        // select 确定选定区间
+        // condition 确定筛选条件
+
+        var totalCondition = {
+            select: {
+                abstract: 1,
+                clickRate: 1,
+                date: 1,
+                testTags: 1
+            },
+            condition: {
+                testTitle: testTitle,
+                testType: testType
+            }
+        };
+
+        // 读取一个测评数据
+        AllTest.getDetail(totalCondition, function (err, data) {
+
+            // 返回的课程数据
+            var testData = {
+                title: "测评页面",
+                testType: testType,
+                testTitle: testTitle,
+                testTags: [],
+                abstract: null,
+                clickRate: null,
+                date: null,
+                isError: false,
+                error: null
+            };
+
+            if(err) {
+                var info = {
+                    message: "查询出错",
+                    error: {
+                        status: "500"
+                    }
+                }
+                return res.render('error', info);
+            }
+
+            if(data){
+                testData.abstract = data["abstract"];
+                testData.clickRate = data["clickRate"];
+                testData.date = data["date"];
+                testData.testTags = data["testTags"];
+
+                // 加入审核信息
+                testData.action = "examine";
+
                 res.render('test_view', testData);
 
             }else {
@@ -184,7 +281,14 @@ function test(app) {
     });
 
     /* 获取一组测试题目 */
-    app.post('/test/view/:testType/:testTitle', function (req, res) {
+    app.post('/test/view/:testType/:testTitle', function(req, res, next){
+
+        if(req.session.admin){
+            return next();
+        }
+        testRoute.purchaseCheck(req, res, next);
+
+    }, function (req, res) {
 
         //筛选条件
         var condition = {
@@ -195,7 +299,8 @@ function test(app) {
         AllTest.getDetail({
             select: {
                 testGroup: 1,
-                testTags: 1
+                testTags: 1,
+                examine: 1,
             },
             condition: condition
         }, function (err, doc) {
@@ -203,14 +308,17 @@ function test(app) {
                 return res.json( JSON.stringify({
                     isError: true,
                     error: err,
-                    testGroup: []
+                    testGroup: [],
+                    testTags: [],
+                    examine: {}
                 }) );
             }
             //成功读取到后返回本组题目
             return res.json( JSON.stringify({
                 isError: false,
                 testGroup: doc.testGroup,
-                testTags: doc.testTags
+                testTags: doc.testTags,
+                examine: doc.examine
             }) );
         });
     });
@@ -250,9 +358,100 @@ function test(app) {
         });
     });
 
-    // 测试更新热门数据
-    app.post('/test/updateHot', function (req, res) {
-        MongoSchedule();
+    /* 存储某个测评的弹幕 */
+    app.post('/test/danmu/:testType/:testTitle', function (req, res, next) {
+
+        permissionCheck.userLogin(req, res, next);
+
+    }, function (req, res) {
+
+        var testType = req.params.testType;
+        var testTitle = req.params.testTitle;
+        var danmu = req.body.danmu;
+
+        if(!testType || !testTitle || !danmu){
+
+            return res.json( JSON.stringify({
+                isError: true,
+                error: new Error('数据不完整！').toString()
+            }) );
+        }
+
+        // 添加用户信息
+        danmu.user = req.session.account;
+        danmu.date = getDate();
+
+        AllTest.danmuSave({
+            testTitle: testTitle,
+            testType: testType,
+            danmu: danmu
+
+        }, function (err, isPass) {
+
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err.toString()
+                }) );
+            }
+            if(isPass){
+
+                res.json( JSON.stringify({
+                    isError: false
+                }) );
+
+            }else {
+
+                res.json( JSON.stringify({
+                    isError: true,
+                    error: new Error('没有相关测评信息!').toString()
+                }) );
+            }
+
+        });
+    });
+
+    /* 读取某个测评的弹幕 */
+    app.get('/test/danmu/:testType/:testTitle', function (req, res) {
+
+        var testType = req.params.testType;
+        var testTitle = req.params.testTitle;
+
+        if(!testType || !testTitle){
+
+            return res.json( JSON.stringify({
+                isError: true,
+                error: new Error('查询信息不全！').toString()
+            }) );
+        }
+        AllTest.danmuRead({
+            testTitle: testTitle,
+            testType: testType
+
+        }, function (err, danmuArray) {
+
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err.toString()
+                }) );
+            }
+
+            if(danmuArray){
+                // 发送弹幕json信息
+                res.json( JSON.stringify({
+                    isError: false,
+                    danmuArray: danmuArray
+                }) );
+            }else {
+                // 发送弹幕json信息
+                res.json( JSON.stringify({
+                    isError: true,
+                    error: new Error('没有相关数据！').toString()
+                }) );
+            }
+
+        });
     });
 
     // 课程购买检测中间件
@@ -264,7 +463,7 @@ function test(app) {
 
             return res.render('user_login', {
                 title: "用户登录",
-                slogan: "带渔",
+                slogan: "启航",
                 other: "登录"
             });
         }

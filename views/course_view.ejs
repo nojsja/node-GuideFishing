@@ -57,6 +57,18 @@
 
 </div>
 
+<!--页内脚本放在body之后
+course_view.js执行完毕后页面才解析
+body和内联script
+-->
+<script type="text/javascript">
+
+    ViewAction.action = '<%= action %>';
+</script>
+
+<!--查阅状态下显示-->
+<% if(action == 'view') { %>
+
 <!--相关课程推荐-->
 <div class="course-recommendation-div">
     <div class="recommendation-title">
@@ -74,7 +86,17 @@
     </div>
 </div>
 
-</body>
+<% } %>
+
+<!--审查状态下显示-->
+<% if(action == 'examine') { %>
+
+<div class="course-examine-div">
+    <input type="text" class="form-control" id="examineText" placeholder="请填入审核备注">
+    <input type="button" class="btn btn-default btn-sm" id="examineReject" status="reject" value="审核失败">
+    <input type="button" class="btn btn-success btn-sm" id="examinePass" status="pass" value="审核通过">
+</div>
+<% } %>
 
 <!--中以科创页脚-->
 <%- include footer.ejs%>
@@ -83,4 +105,6 @@
 <!--模态弹窗-->
 <%- include modalWindow.ejs%>
 </body>
+
+
 </html>

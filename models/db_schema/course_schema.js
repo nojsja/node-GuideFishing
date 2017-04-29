@@ -18,15 +18,21 @@
  *  可编辑状态(用户不可见,非正式课程)和完成状态(用户可见, 正式发布的课程)
  * isBroadcast -- 普通的课程和直播课程(呈现形式不一样)
  * courseContent -- 课程内容(富文本格式)
+ * danmu -- 每个课程包含的弹幕内容
+ *  text -- 弹幕文字
+ *  color -- 弹幕颜色
+ *  user -- 发送者
+ *  date -- 发送日期
  * teacher -- 课程讲师
  * passworsd -- 讲师登录密码
  * date -- 发布日期
  * price -- 课程价格
  * clickRate -- 课程点击量
  * examine -- 课程检查字段
- *  pass -- 是否检查通过（类型为true则正式发表）
+ *  status -- 审查状态
+ *   isExaming -- 审查中，pass -- 审查通过， reject -- 审查未通过
  *  adminAccount -- 检查者管理员账户
- *  date -- 检查通过的日期
+ *  examineAccount -- 审查者账户
  * */
 
 /* 引入mongoose */
@@ -46,9 +52,9 @@ var courseSchema = new Schema({
     }],
     courseAbstract: String,
     examine: {
-        pass: {type: Boolean, required: true},
-        adminAccount: {type: String},
-        date: {type: String}
+        status: {type: String, required: true},
+        adminAccount: {type: String, required: true},
+        examineAccount: {type: String}
     },
     isReady: {
         type: Boolean,
@@ -65,7 +71,12 @@ var courseSchema = new Schema({
         msg: String,
         url: String
     }],
-
+    danmu: [{
+        text: {type: String, required: true},
+        user: {type: String, required: true},
+        color: String,
+        date: String,
+    }],
     courseContent: String,
     teacher: String,
     password: String,

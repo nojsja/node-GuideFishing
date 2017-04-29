@@ -164,7 +164,7 @@ var Common = function (choiseArray, scoreModeInfo) {
     }
     //根据分数段得出统计结果
     var testResult = {
-        error: false,
+        isError: false,
         totalScore: 0,
         result: "no info."
     };
@@ -225,7 +225,7 @@ var NegaPasitive = function (choiseArray, scoreModeInfo) {
     }
     //根据分数段得出统计结果
     var testResult = {
-        error: false,
+        isError: false,
         totalScore: 0,
         result: "no info."
     };
@@ -331,7 +331,7 @@ var Category = function (choiseArray, scoreModeInfo) {
 
     //根据分数段得出统计结果
     var testResult = {
-        error: false,
+        isError: false,
         totalScore: 0,
         result: "no info."
     };

@@ -14,9 +14,61 @@ $(function () {
     // 更新标签
     DetailAction.updateTestTags();
 
+    // 弹幕组件初始化
+    nojsja["DanmuColor"].init();
+
+    // 弹幕加载
+    DetailAction.getDanmu();
+
     // 初始化悬浮按钮
     nojsja.HoverButton.init();
 
+    $('#comment').click(function () {
+
+        // dom缓存
+        // if(!DetailAction.DOM['comment']){
+        //
+        //     var $commentDiv = $('<div class="comment-div">');
+        //     var $comment = $('<input type="text" id="commentInput" placeholder="请输入弹幕内容...">');
+        //     var $commentSend = $('<input type="button" id="commentSend" value="发送">');
+        //
+        //     // 绑定事件
+        //     $commentSend.click(function () {
+        //        var comment = $comment.val().trim();
+        //        if(comment === '' || comment === null){
+        //            return alert('请输入吐槽内容..');
+        //        }
+        //        DetailAction.sendDanmu({
+        //           text: comment,
+        //            border: 'red'
+        //        });
+        //        nojsja["ModalWindow"].hidden();
+        //     });
+        //
+        //     $commentDiv.append($comment)
+        //         .append($commentSend);
+        //
+        //     DetailAction.DOM["comment"] = $commentDiv[0];
+        // }
+
+        // nojsja["ModalWindow"].define(DetailAction.DOM["comment"]);
+        // nojsja["ModalWindow"].show("弹幕", {
+        //     scroll: true,
+        //     selfDefineKeep: true
+        // });
+
+        // 回调函数
+        nojsja["DanmuColor"].show(function (danmuObject) {
+
+            if(danmuObject['text']){
+
+                DetailAction.sendDanmu(danmuObject, function () {
+                    nojsja["DanmuColor"].hidden();
+                });
+            }
+        });
+
+    });
 
     // 注意Boolean强制转化
     // 状态初始化，检测用户登录状态和购买状态
@@ -126,4 +178,69 @@ DetailAction.modalWindow = function(text) {
     njj.ModalWindow.show(text);
 };
 
+/*  发送弹幕 */
+DetailAction.sendDanmu = function (danmuInfo, callback) {
 
+    var url = ['/test/','danmu/', DetailAction.testType, '/', DetailAction.testTitle].join('');
+
+    var danmu = nojsja.DanmuPool.get();
+
+    danmuInfo.border = 'red';
+    // 弹幕移动
+    danmu.move(danmuInfo);
+
+    $.post(url, { danmu: danmuInfo }, function (JSONdata) {
+
+        callback();
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return nojsja["ModalWindow"].show('加载弹幕错误: ' + JSONobject.error);
+        }
+
+    }, "JSON");
+};
+
+/* 发送加载弹幕请求 */
+DetailAction.getDanmu = function () {
+
+    var url = ['/test/','danmu/', DetailAction.testType, '/', DetailAction.testTitle].join('');
+    $.get(url, function (JSONdata) {
+
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return nojsja["ModalWindow"].show('加载弹幕错误: ' + JSONobject.error);
+        }
+        DetailAction.loadDanmu(JSONobject.danmuArray);
+    }, "JSON");
+};
+
+/* 加载弹幕*/
+DetailAction.loadDanmu = function (danmuArray) {
+
+    if(danmuArray.length == 0){
+        return;
+    }
+    // 弹幕测试
+    var index = 0;
+    var colorArray  = [
+        '#eaeaea', '#ff3939',
+        '#98f3ff', '#febc54',
+        '#2ed66b', '#f2f93a'
+    ];
+
+    function danm() {
+
+        var danmu = nojsja.DanmuPool.get();
+        // 随机颜色
+        danmu.move({
+            text: danmuArray[index].text,
+            color: danmuArray[index].color || colorArray[nojsja["Tool"].GetRandomNum(0, colorArray.length - 1)]
+        });
+
+        index ++;
+        if(index < danmuArray.length){
+            setTimeout(danm, 500);
+        }
+    }
+    setTimeout(danm, 500);
+};

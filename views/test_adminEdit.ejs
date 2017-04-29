@@ -6,9 +6,10 @@
 <head>
     <title><%= title %></title>
     <meta http-equiv="X-UA-COMPATIBLE" content="IE=Edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
     <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <!--font-awesome图标-->
+    <link rel="stylesheet" href="/stylesheets/lib/font-awesome.min.css">
     <link rel='stylesheet' href='/stylesheets/test_adminEdit.css' />
 
     <script type="text/javascript" src="/javascripts/lib/jquery-3.1.0.min.js"></script>
@@ -28,8 +29,17 @@
 <!--添加和编辑主体部分-->
 <div class="container total">
 
+    <div class="col-md-12 total-title">
+        <i class="icon-edit"></i><%= title %>
+    </div>
+
     <!--这套题的主要介绍信息,包括标题,分类,得分类型,单次得分值,内容简介-->
     <div class="col-md-12 total-info">
+
+        <!--提示信息-->
+        <div class="total-marker">
+            测评基础信息
+        </div>
 
         <!--标题-->
         <div class="form-group col-md-12">
@@ -55,10 +65,25 @@
             </div>
         </div>
 
+        <!--标签-->
+        <div class="col-md-12">
+            <label class="info-title">测评标签</label>
+            <div>
+                <div>
+                    <input type="text" id="tagText" placeholder="标签内容..">
+                    <div class="btn btn-default btn-sm" target="tagText" id="tagAdd" title="点击添加">+</div>
+                </div>
+                <!--显示区域-->
+                <div class="tag-list">
+                    <!--<div class="tag-list-item" title="点击删除标签">123</div>-->
+                </div>
+            </div>
+        </div>
+
         <!--得分类型-->
         <div class="col-md-12">
             <label class="info-title">得分类型</label>
-            <div>
+            <div id="scoreModeList">
                 <div class="type-item score-mode" id="Common"
                      describe="说明:包含CA,CB,CC子类型,CA表示A得正分,B不得分,C得负分,CB,CC以此类推.">Common</div>
                 <div class="type-item score-mode" id="NegaPositive"
@@ -76,11 +101,11 @@
                 <textarea class="form-control category-describe" rows="2" placeholder="请输入子类型的描述..."></textarea>
 
                 <div id="scoreConfirmDiv">
-                    <input type="button" id="categoryConfirm" class="btn btn-success" value="子类 + " title="添加一个子类型"></input>
-                    <input type="button" id="categoryCancel" class="btn btn-default" value="子类 - " title="删除一个子类型"></input>
+                    <input type="button" id="categoryConfirm" class="btn btn-success" value="子类 + " title="添加一个子类型">
+                    <input type="button" id="categoryCancel" class="btn btn-default" value="子类 - " title="删除一个子类型">
                     <!--已经存在的分段列表-->
                     <div class="category-list">
-                        <span class="glyphicon glyphicon-pushpin"></span>
+
                     </div>
                 </div>
             </div>
@@ -106,11 +131,10 @@
                 </div>
 
                 <div id="scoreConfirmDiv">
-                    <input type="button" id="scoreConfirm" class="btn btn-success" value="分段 + " title="添加一个分段"></input>
-                    <input type="button" id="scoreCancel" class="btn btn-default" value="分段 - " title="删除一个分段"></input>
+                    <input type="button" id="scoreConfirm" class="btn btn-success" value="分段 + " title="添加一个分段">
+                    <input type="button" id="scoreCancel" class="btn btn-default" value="分段 - " title="删除一个分段">
                     <!--已经存在的分段列表-->
                     <div class="info-list">
-                        <span class="glyphicon glyphicon-pushpin"></span>
                         <!--<div class="info-list-item">
                             <div class="item-label">分数段0-30: </div>
                             <div class="item-text">这是分段在0-30分的统计结果</div>
@@ -127,10 +151,21 @@
         </div>
     </div>
 
+    <!--衔接-->
+    <div class="col-md-12 total-link">
+        <i class="icon-arrow-down"></i>
+        <i class="icon-arrow-down"></i>
+    </div>
 
 
     <!--下面的题目编辑区域-->
     <div class="col-md-12 total-content">
+
+        <!--提示信息-->
+        <div class="total-marker">
+            测评题目信息
+        </div>
+
         <!--编辑区域-->
         <div class="col-md-3 total-edit">
 
@@ -188,8 +223,8 @@
 
                 <!--确认修改-->
                 <div class="nextPara">
-                    <input class="btn btn-success" type="button" id="editConfirm" value="确认修改">
-                    <input class="btn btn-default" type="button" id="editCancel" value="删除本题">
+                    <input class="btn btn-success btn-sm" type="button" id="editConfirm" value="确认修改">
+                    <input class="btn btn-default btn-sm" type="button" id="editCancel" value="删除本题">
                 </div>
             </div>
 
@@ -221,9 +256,24 @@
 
     <!--创建完成-->
     <div class="submit-div">
-        <input class="btn btn-danger" value="创建完成" id="submit">
+        <input class="btn btn-danger btn-sm" value="提交审核" id="submit">
     </div>
 </div>
+
+<script type="text/javascript">
+
+    if('<%= loadData %>' !== 'false'){
+
+        // " 解码
+        var loadDataString = EditAction.SymbolDecode('<%= loadData %>');
+
+        EditAction.loadData = JSON.parse(loadDataString);
+
+    }else {
+        EditAction.loadData = false;
+    }
+
+</script>
 
 <!-- 模态弹窗 -->
 <% include modalWindow.ejs %>
@@ -231,3 +281,5 @@
 <% include admin_footer.ejs %>
 
 </body>
+
+</html>

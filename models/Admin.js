@@ -5,10 +5,9 @@
 
 var mongoose = require('./tools/Mongoose');
 var adminSchema = require('./db_schema/admin_schema').adminSchema;
-// 课程模式
-var Course = require('./Course');
-// 测评模式
-var Test = require('./AllTest');
+
+// 审查模式
+var Examine = require('./Examine');
 
 function Admin(data) {
 
@@ -20,8 +19,6 @@ function Admin(data) {
         examineType: data.examineType
     };
 }
-
-
 
 /* 存储一个用户数据 */
 Admin.prototype.save = function (callback) {
@@ -116,116 +113,141 @@ Admin.signin = function (con, callback) {
     });
 };
 
-/* 审查通过课程和测评 */
-Admin.examinePass = function (con, callback) {
+/* 审查课程和测评 */
+Admin.examine = function (status, con, callback) {
 
     var db = mongoose.connection;
     var Model = mongoose.model('Admin', adminSchema);
+    
+    Examine.examine(status, con, function (err, isPass) {
 
-    // 审查类型Course 和 Test
-    var examineType = con.examineType;
-    // 审查调用映射
-    var examineData = {
-        examineName: {
-            test: "testTitle",
-            course: "courseName"
-        },
-        examineType: {
-            test: "testType",
-            course: "courseType"
-        },
-        examineAction: {
-            course: Course,
-            test: Test
-        },
-        course: {
-            courseName: con.name,
-            courseType: con.type,
-            adminAccount: con.adminAccount
-        },
-        test: {
-            testTitle: con.name,
-            testType: con.type,
-            adminAccount: con.adminAccount
+        if(err){
+            return callback(err);
         }
-    };
 
-    // 函数调用
-    examineData.examineAction[examineType]
-        .examinePass(examineData[examineType], function (err, isPass) {
+        // 已经成功执行审查
+        if(isPass){
+            // 更改admin表中提交申请者的审查情况
+            var query = Model.findOne();
+            query.where({
+                account: con.adminAccount
+            });
+            query.exec(function (err, doc) {
 
-            if(err){
-                return callback(err);
-            }
-            // 已经被当前管理员进行审查
-            if(isPass){
-                // 删除遗留在1级管理员中的数据
-                var query = Model.find();
-                query.where({
-                    rank: 1,
-                    examineType: con.examineType
-                });
-                query.exec(function (err, docs) {
+                if(err){
+                    console.log(err);
+                    return callback(err);
+                }
+                if(doc){
 
-                    if(err){
-                        console.log('[error]: ' + err);
-                        return callback(err);
-                    }
-                    if(docs && docs.length > 0){
-                        for(let i = 0; i < docs.length; i++){
+                    // 存储审查进度
+                    function examineProgressSave() {
 
-                            var examineContent = docs[i][con.examineType];
-                            for(let j = 0; j < examineContent.length; j++){
-                                if( examineContent[j] [examineData.examineName[con.examineType] ] == con.name &&
-                                    examineContent[j] [examineData.examineType[con.examineType] ] == con.type ){
+                        // 更新以前的记录
+                        var flag = true;
+                        for(let i = 0; i < doc.examineProgress.length; i++){
 
-                                    // 删除一个数据
-                                    examineContent.splice(j, 1);
-                                }
+                            if(doc.examineProgress[i].contentName == con.contentName
+                                && doc.examineProgress[i].contentType == con.contentType){
 
+                                flag = false;
+                                return examineProgressUpdate();
                             }
 
                         }
+                        if(flag){
 
-                        // 审查成功
-                        callback(null, true);
-                    }else {
-                        // 审查无效
-                        callback(null, false);
+                            var query2 = doc.update({
+                                $push: {
+                                    examineProgress: {
+                                        contentName: con.contentName,
+                                        contentType: con.contentType,
+                                        examineType: con.examineType,
+                                        examineAccount: con.examineAccount,
+                                        adminAccount: con.adminAccount,
+                                        status: con.status,
+                                        date: con.date,
+                                        examineText: con.examineText
+                                    }
+                                }
+                            });
+                            query2.exec(function (err, doc) {
+
+                                if(err){
+                                    console.log(err);
+                                    return callback(err);
+                                }
+                                // 成功更新
+                                callback(null, true);
+                            });
+                        }
                     }
-                });
-            }else {
-                // 当前审查无效
-                callback(null, false);
-            }
-        });
+
+                    // 更新审查进度
+                    function examineProgressUpdate() {
+
+                        var examineProgress = doc.examineProgress;
+                        var updateProgress = [];
+                        for(let i = 0; i < examineProgress.length; i++){
+
+                            updateProgress.push(examineProgress[i]);
+
+                            if(examineProgress[i].contentName == con.contentName &&
+                                examineProgress[i].contentType == con.contentType){
+
+                                updateProgress[i].examineAccount = con.examineAccount;
+                                updateProgress[i].status = con.status;
+                                updateProgress[i].date = con.date;
+                                updateProgress[i].examineText = con.examineText;
+                            }
+                        }
+                        var query2 = doc.update({
+                            $set: {
+                                examineProgress: updateProgress
+                            }
+                        });
+                        query2.exec(function (err, doc) {
+
+                            if(err){
+                                console.log(err);
+                                return callback(err);
+                            }
+                            // 成功更新
+                            callback(null, true);
+                        });
+                    }
+
+                    // 更新进度信息
+                    if(status == 'isExaming'){
+
+                        examineProgressSave();
+                    }else {
+                        examineProgressUpdate();
+                    }
+
+                }else {
+                    callback(null, false);
+                }
+            });
+
+        }else {
+
+            callback(null, false);
+        }
+
+    });
 
 };
 
 /* 获取需要审查的数据course and test */
 Admin.getExamineData = function (con, callback) {
 
-    var db = mongoose.connection;
-    var Model = mongoose.model('Admin', adminSchema);
-
-    var query = Model.findOne();
-    query.where({
-        account: con.account
-    });
-    query.exec(function (err, doc) {
+    Examine.get(con, function (err, examineData) {
 
         if(err){
-            console.log('[error]: ' + err);
             return callback(err);
         }
-        if(doc){
-            var examineType = doc.examineType;
-            // 返回审查数据
-            callback(null, doc.examineContent[examineType]);
-        }else{
-            var error = new Error('查询信息有误！');
-            callback(error);
-        }
+        callback(null, examineData);
     });
 };
 
@@ -246,9 +268,9 @@ Admin.getExamineProgress = function (con, callback) {
             return callback(err);
         }
         if(doc){
-            var examineType = doc.examineType;
+
             // 返回审查数据
-            callback(null, doc.examineProgress[examineType]);
+            callback(null, doc.examineProgress);
         }else{
             var error = new Error('查询信息有误！');
             callback(error);
@@ -279,9 +301,7 @@ Admin.getAdministrator = function (con, callback) {
             if(index >= 0){
 
                 if(item == "filter"){
-                    for(let item2 in con[item]){
-                        query.ne(item2, con[item][item2]);
-                    }
+
                     continue;
                 }
                 if(item == "select"){
@@ -388,7 +408,13 @@ Admin.permissionAssign = function (con, callback) {
         if(doc){
 
             var query2 = doc.update({
-                $set: { rank: con.rank, examineType: con.examineType, examineContent: {course: [], test: []} }
+                $set: {
+                    rank: con.rank,
+                    examineType: con.examineType,
+                    examineContent: [],
+                    password: con.password,
+                    nickName: con.nickName
+                }
             });
             query2.exec(function (err, results) {
                 if(err){
