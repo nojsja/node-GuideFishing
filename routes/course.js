@@ -11,8 +11,12 @@ var EnToCn = require('../models/EnToCn');
 var ReadCourseImg = require('../models/ReadTypeImg');
 /* 用户模型 */
 var User = require('../models/User');
+/* 权限验证 */
+var permissionCheck = require('../models/permissionCheck').permissionCheck;
 /* 获取根目录 */
 var locateFromRoot = require('../models/tools/LocateFromRoot');
+/* 获取日期 */
+var getDate = require('../models/tools/GetDate');
 
 function course(app){
 
@@ -83,42 +87,53 @@ function course(app){
                 return res.render('course_detail', courseData);
             }
 
-            courseData.courseAbstract = data["courseAbstract"];
-            courseData.clickRate = data["clickRate"];
-            courseData.date = data["date"];
-            courseData.courseTags = data["courseTags"];
+            if(data){
+                courseData.courseAbstract = data["courseAbstract"];
+                courseData.clickRate = data["clickRate"];
+                courseData.date = data["date"];
+                courseData.courseTags = data["courseTags"];
 
-            // 当前登录账户
-            var account = req.session.account;
-            if(!account){
-                courseData.isPurchased = "unknown";
-                return res.render('course_detail', courseData);
-            }
-
-            // 看是否购买
-            User.purchaseCheck({
-                account: account,
-                data: {
-                    itemName: courseData.courseName,
-                    itemType: courseData.courseType
-                }
-            }, function (err, pass) {
-
-                if(err){
-                    courseData.isError = true;
-                    courseData.error = err;
+                // 当前登录账户
+                var account = req.session.account;
+                if(!account){
+                    courseData.isPurchased = "unknown";
                     return res.render('course_detail', courseData);
                 }
 
-                if(pass){
-                    courseData.isPurchased = true;
-                }else {
-                    courseData.isPurchased = false;
-                }
+                // 看是否购买
+                User.purchaseCheck({
+                    account: account,
+                    data: {
+                        itemName: courseData.courseName,
+                        itemType: courseData.courseType
+                    }
+                }, function (err, pass) {
 
-                // 返回页面
-                res.render('course_detail', courseData);
-            });
+                    if(err){
+                        courseData.isError = true;
+                        courseData.error = err;
+                        return res.render('course_detail', courseData);
+                    }
+
+                    if(pass){
+                        courseData.isPurchased = true;
+                    }else {
+                        courseData.isPurchased = false;
+                    }
+
+                    // 返回页面
+                    res.render('course_detail', courseData);
+                });
+
+            }else {
+                res.render('error', {
+                    message: "Not Found",
+                    error: {
+                        status: 404
+                    }
+                });
+            }
+
         });
     });
 
@@ -381,6 +396,101 @@ function course(app){
                 isError: false,
                 tagContentArray: tagContentArray
             }) );
+        });
+    });
+
+    /* 存储某个课程的弹幕 */
+    app.post('/course/danmu/:courseType/:courseName', function (req, res, next) {
+
+        permissionCheck.userLogin(req, res, next);
+
+    }, function (req, res) {
+
+        var courseType = req.params.courseType;
+        var courseName = req.params.courseName;
+        var danmu = req.body.danmu;
+
+        if(!courseType || !courseName || !danmu){
+
+            return res.json( JSON.stringify({
+                isError: true,
+                error: new Error('数据不完整！').toString()
+            }) );
+        }
+
+        // 添加用户信息
+        danmu.user = req.session.account;
+        danmu.date = getDate();
+
+        Course.danmuSave({
+            courseName: courseName,
+            courseType: courseType,
+            danmu: danmu
+
+        }, function (err, isPass) {
+
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err.toString()
+                }) );
+            }
+            if(isPass){
+
+                res.json( JSON.stringify({
+                    isError: false
+                }) );
+
+            }else {
+
+                res.json( JSON.stringify({
+                    isError: true,
+                    error: new Error('没有相关课程信息!').toString()
+                }) );
+            }
+
+        });
+    });
+
+    /* 读取某个课程的弹幕 */
+    app.get('/course/danmu/:courseType/:courseName', function (req, res) {
+
+        var courseType = req.params.courseType;
+        var courseName = req.params.courseName;
+
+        if(!courseType || !courseName){
+
+            return res.json( JSON.stringify({
+                isError: true,
+                error: new Error('查询信息不全！').toString()
+            }) );
+        }
+        Course.danmuRead({
+            courseType: courseType,
+            courseName: courseName
+        }, function (err, danmuArray) {
+
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err.toString()
+                }) );
+            }
+
+            if(danmuArray){
+                // 发送弹幕json信息
+                res.json( JSON.stringify({
+                    isError: false,
+                    danmuArray: danmuArray
+                }) );
+            }else {
+                // 发送弹幕json信息
+                res.json( JSON.stringify({
+                    isError: true,
+                    error: new Error('没有相关数据！').toString()
+                }) );
+            }
+
         });
     });
 

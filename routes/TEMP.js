@@ -2,6 +2,8 @@
  * Created by yangw on 2017/4/21.
  */
 
+var MongoSchedule = require('../models/MongoSchedule');
+
 function TEMP(app) {
 
     /* 新建管理员账号 */
@@ -37,6 +39,11 @@ function TEMP(app) {
                 }) );
             }
         });
+    });
+
+    // 测试更新热门数据
+    app.get('/admin/updateHot', function (req, res) {
+        MongoSchedule();
     });
 }
 

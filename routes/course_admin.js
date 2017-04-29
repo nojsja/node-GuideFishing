@@ -38,7 +38,26 @@ function course_admin(app) {
     }, function (req, res) {
 
         res.render('course_adminEdit', {
-            title: "课程编辑"
+            title: "课程编辑",
+            loadData: false
+        });
+    });
+
+    // 编辑已有课程数据
+    app.get('/course/admin/edit/:courseType/:courseName', function (req, res, next) {
+
+        permissionCheck.rank2(req, res, next);
+
+    }, function (req, res) {
+
+        var loadData = JSON.stringify({
+            courseType: req.params.courseType,
+            courseName: req.params.courseName
+        });
+
+        res.render('course_adminEdit', {
+            title: "课程编辑",
+            loadData: loadData,
         });
     });
     

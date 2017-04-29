@@ -109,8 +109,9 @@ infoAction.updateInfo = function (JSONdata) {
             .prop( 'href', ['/course/detail/', purchasedArray[index].itemType, '/',
                 purchasedArray[index].itemName].join('') );
 
-        $purchasedItem.append($purchasedItemType)
-            .append($purchasedItemTitle);
+        $purchasedItem
+            .append($purchasedItemTitle)
+            .append($purchasedItemType);
 
         $purchasedItemList.append($purchasedItem);
     }

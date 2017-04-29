@@ -491,7 +491,7 @@ Course.readList = function (docCondition, callback) {
         var query = Course.find().where(condition);
         // 排除未审核的数据
         query.ne('examine.status', 'isExaming');
-        query.ne('examine.status', 'reject');
+        // query.ne('examine.status', 'reject');
 
         if(courseTypeArray.length > 0){
             query.in('courseType', courseTypeArray);
@@ -697,6 +697,88 @@ Course.examine = function (status, con, callback) {
             callback(error);
         }
     });
+};
+
+/* 弹幕存储 */
+Course.danmuSave = function (con, callback) {
+
+    var db = mongoose.connection;
+    var Model = mongoose.model('Course', courseSchema);
+
+    // 可存储的属性
+    var selectAttr = ['color', 'text', 'user', 'date'];
+    var danmuData = {};
+
+    selectAttr.forEach(function (attr) {
+
+        if(con.danmu[attr]){
+            danmuData[attr] = con.danmu[attr];
+        }
+    });
+
+    var query = Model.findOne();
+    query.where({
+        courseName: con.courseName,
+        courseType: con.courseType
+    });
+
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+        if(doc){
+
+            query = doc.update({
+               $push: {
+                   danmu: danmuData
+               }
+            });
+            query.exec(function (err) {
+
+                if(err){
+                    console.log(err);
+                    return callback(err);
+                }
+                callback(null, true);
+            });
+        }else {
+            callback(null, null);
+        }
+    });
+};
+
+/* 弹幕读取 */
+Course.danmuRead = function (con, callback) {
+
+    var db = mongoose.connection;
+    var Model = mongoose.model('Course', courseSchema);
+
+    var query = Model.findOne();
+    query.where({
+        courseName: con.courseName,
+        courseType: con.courseType
+    });
+    query.select({
+        danmu: 1
+    });
+
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+        if(doc){
+
+            callback(null, doc.danmu);
+
+        }else {
+            callback(null, null);
+        }
+    });
+
 };
 
 

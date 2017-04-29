@@ -1,114 +1,122 @@
- body {
-    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
+@charset "UTF-8";
+/* 变量声明 */
+/* 宏 */
+@keyframes rotate {
+  0% {
+    -webkit-transform: translateY(0deg);
+    -moz-transform: translateY(0deg);
+    -ms-transform: translateY(0deg);
+    -o-transform: translateY(0deg);
+    transform: translateY(0deg); }
+  100% {
+    -webkit-transform: rotateY(360deg);
+    -moz-transform: rotateY(360deg);
+    -ms-transform: rotateY(360deg);
+    -o-transform: rotateY(360deg);
+    transform: rotateY(360deg); } }
+@keyframes rainBow {
+  0% {
+    color: #009c00;
+    border: solid 1px #009c00;
+    top: 0; }
+  25% {
+    color: #54b7bc;
+    border: solid 1px #54b7bc; }
+  50% {
+    color: #755cbc;
+    border: solid 1px #755cbc;
+    top: -2px; }
+  75% {
+    color: #d07233;
+    border: solid 1px #d07233; }
+  100% {
+    color: #009c00;
+    border: solid 1px #009c00;
+    top: 0; } }
+/* 函数 */
+body {
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif; }
 
 html {
-    font-size: 16px;
-}
+  font-size: 16px; }
 
 a {
-    color: #00B7FF;
-}
+  color: #00B7FF; }
 
 /* 个人信息 */
 .fieldset-selfinfo {
-    width: 80%;
-    margin: 2rem auto 0;
-    border: solid 1px #d1d1d1;
-}
+  width: 80%;
+  margin: 2rem auto 0;
+  border: solid 2px #eaeaea; }
 
 fieldset legend {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    border: solid 2px white;
-    color: #fefefe;
-    text-shadow: 2px 2px 2px #2e3f44;
-    background-color: #e7e7e7;
-    -webkit-box-shadow:  0 0 5px #6e94a2;
-    -moz-box-shadow:  0 0 5px #6e94a2;
-    box-shadow:  0 0 5px #6e94a2;
-}
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  border: solid 2px white;
+  color: white;
+  text-shadow: 2px 2px 2px #2e3f44;
+  background-color: #eaeaea;
+  -webkit-box-shadow: 0 0 5px #668b96;
+  -moz-box-shadow: 0 0 5px #668b96;
+  box-shadow: 0 0 5px #668b96; }
 
 .selfinfo-title {
-    margin-top: 0.5rem;
-    display: inline-block;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    background-color: #7ba5b5;
-    color: white;
-    border-radius: 2px;
-
-    -webkit-box-shadow:  3px 3px 0 #668b96;
-    -moz-box-shadow:  3px 3px 0 #668b96;
-    box-shadow:  2px 2px 0 #668b96;
-}
+  margin-top: 0.5rem;
+  display: inline-block;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  background-color: #637db5;
+  color: white;
+  -webkit-box-shadow: 2px 2px 0 #668b96;
+  -moz-box-shadow: 2px 2px 0 #668b96;
+  box-shadow: 2px 2px 0 #668b96; }
 
 .selfinfo-wrapper {
-    background-color: #f1f1f1;
-    padding: 1rem;
-    margin: 0.5rem;
-}
+  background-color: #f1f1f1;
+  padding: 1rem;
+  margin: 0.5rem; }
 
 .selfinfo-detail {
-    border-bottom: solid 1px white;
-    padding: 2px;
-    color: #60818d;
-}
+  border-bottom: solid 1px white;
+  padding: 2px;
+  color: #668b96; }
 
 /* 权限管理区 */
-.manage-wrapper {
-
-}
-
 .manage-search {
-    margin: 1rem;
-}
+  margin: 1rem; }
 
 #accountText {
-    border-radius: 3px;
-}
-
-#searchAccount {
-
-}
-
-#addAdmin {
-
-}
+  border-radius: 3px; }
 
 /*新建权限*/
 .admin-add-wrapper,
 .admin-edit-wrapper {
-    background-color: #eaeaea;
-    margin: 0.5rem;
-    padding: 1rem;
-
-    text-align: left;
-}
+  background-color: #f1f1f1;
+  margin: 0.5rem;
+  padding: 1rem;
+  text-align: left; }
 
 .admin-add-detail,
 .admin-edit-detail,
 .condition-detail {
-    display: block;
-    margin: 5px;
-}
+  display: block;
+  margin: 5px; }
 
 input.admin-add-detail {
-    width: 100%;
-}
+  width: 100%; }
 
 /*表示属性子项目*/
 .admin-add-detail .add-detail-item,
 .admin-edit-detail .edit-detail-item,
 .condition-detail .condition-detail-item {
-    border: solid 1px #cdcdcd;
-    color: #737373;
-    min-width: 2rem;
-    padding-left: 5px;
-    padding-right: 5px;
-    display: inline-block;
-    margin: 0 5px 0;
-}
+  border: solid 1px #637db5;
+  border-radius: 3px;
+  color: #737373;
+  min-width: 2rem;
+  padding-left: 5px;
+  padding-right: 5px;
+  display: inline-block;
+  margin: 0 5px 0; }
 
 .admin-add-detail .add-detail-item:hover,
 .admin-edit-detail .edit-detail-item:hover,
@@ -116,209 +124,171 @@ input.admin-add-detail {
 .add-detail-item-click,
 .edit-detail-item-click,
 .condition-detail-item-click {
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -ms-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
-
-    background-color: #fe9746;
-    /* 覆盖原来的颜色 */
-    color: white !important;
-}
-
+  background-color: #fe9746;
+  /* 覆盖原来的颜色 */
+  color: white !important;
+  -webkit-transition: call 0.3s linear;
+  -moz-transition: call 0.3s linear;
+  -ms-transition: call 0.3s linear;
+  -o-transition: call 0.3s linear;
+  transition: call 0.3s linear; }
 
 .admin-add-div,
 .admin-edit-div {
-    text-align: left;
-}
+  text-align: left; }
 
 /*信息筛选*/
 .manage-condition {
-    margin: 0.5rem;
-    background-color: #eaeaea;
-    padding: 1rem;
-}
+  margin: 0.5rem;
+  background-color: #f1f1f1;
+  padding: 1rem; }
 
 .manage-search-div {
-    text-align: left;
-    border-top: solid 1px white;
-    padding: 5px;
-}
-
-.manage-condition-list {
-
-}
+  text-align: left;
+  border-top: solid 1px white;
+  padding: 5px; }
 
 /*查找结果表格*/
 .manage-result {
-    margin: 0.5rem;
-    background-color: #eaeaea;
-    padding: 1rem;
-}
+  margin: 0.5rem;
+  background-color: #f1f1f1;
+  padding: 1rem; }
 
 .mark-title {
-    margin: 0 0 0.5rem;
-    display: inline-block;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    border: solid 1px white;
-    background-color: #637db5;
-    color: white;
-    border-radius: 2px;
-
-    -webkit-box-shadow:  0 0 5px #4b666e;
-    -moz-box-shadow:  0 0 5px #4b666e;
-    box-shadow:  0 0 5px #4b666e;
-}
+  margin: 0 0 0.5rem;
+  display: inline-block;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border: solid 1px white;
+  background-color: #637db5;
+  color: white;
+  border-radius: 2px;
+  -webkit-box-shadow: 0 0 5px #4b666e;
+  -moz-box-shadow: 0 0 5px #4b666e;
+  box-shadow: 0 0 5px #4b666e; }
 
 #adminTable {
-    width: 90%;
-    margin: auto;
-}
+  width: 90%;
+  margin: auto; }
 
 .edit-td,
 .delete-td {
-    text-align: center;
-}
+  text-align: center; }
 
-td.edit-td:hover,
+td.edit-td:hover {
+  background-color: #4c74ee;
+  color: white; }
+
 td.delete-td:hover {
-    background-color: #668b96;
-    color: white;
-}
+  background-color: #d91b09;
+  color: white; }
 
 #adminTable td, #adminTable th {
-    padding-left: 5px;
-}
+  padding-left: 5px; }
 
 .admin-table-head {
-    background-color: #7ba5b5;
-    color: white;
-    text-shadow: 2px 2px 2px #000;
-}
+  background-color: #668b96;
+  color: white;
+  text-shadow: 2px 2px 2px #000; }
 
 .admin-table-head th {
-    border: solid 1px white;
-}
+  border: solid 1px white; }
 
 .admin-table-content {
-    color: #55747d;
-}
+  color: #668b96; }
 
 .admin-table-content:hover {
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -ms-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
-
-    -webkit-box-shadow:  3px 3px 3px #55747d;
-    -moz-box-shadow: 3px 3px 3px #55747d;
-    box-shadow:  3px 3px 3px #55747d;
-
-    -webkit-transform: scale(1.05);
-    -moz-transform: scale(1.05);
-    -ms-transform: scale(1.05);
-    -o-transform: scale(1.05);
-    transform: scale(1.05);
-}
+  -webkit-transform: scale(1.05);
+  -moz-transform: scale(1.05);
+  -ms-transform: scale(1.05);
+  -o-transform: scale(1.05);
+  transform: scale(1.05);
+  -webkit-transition: all 0.3s linear;
+  -moz-transition: all 0.3s linear;
+  -ms-transition: all 0.3s linear;
+  -o-transition: all 0.3s linear;
+  transition: all 0.3s linear;
+  -webkit-box-shadow: 3px 3px 3px #668b96;
+  -moz-box-shadow: 3px 3px 3px #668b96;
+  box-shadow: 3px 3px 3px #668b96; }
 
 .admin-table-content:nth-child(2n) {
-    background-color: white;
-}
+  background-color: white; }
 
 .admin-table-content:nth-child(2n+1) {
-    background-color: #dfdfdf;
-}
+  background-color: #eaeaea; }
 
 /*** 内容审核 ***/
 .examine-wrapper {
-    margin: 0.5rem;
-    padding: 0.5rem;
-}
+  margin: 0.5rem;
+  padding: 0.5rem; }
 
 /*审查内容*/
 .examine-content-list {
-    background-color: #eaeaea;
-    padding: 0.5rem;
-    margin: 0.5rem auto 0.5rem;
-
-}
+  background-color: #f1f1f1;
+  padding: 0.5rem;
+  margin: 0.5rem auto 0.5rem; }
 
 .examine-content-item {
-    border-bottom: solid 1px white;
-}
+  border-bottom: solid 1px white; }
 
 .examine-content-item:last-child {
-    border-bottom: solid 0 white;
-}
-
+  border-bottom: solid 0 white; }
 
 .examine-content-item .content-item-type {
-    border: solid 1px #c85e27;
-    font-weight: bold;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    color: #c85e27;
-}
+  border: solid 1px #c85e27;
+  font-weight: bold;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  color: #c85e27; }
 
 .examine-content-item .content-item-title {
-    margin: 0 1rem 0;
-    padding: 5px;
-    font-weight: bold;
-    color: #4c74ee;
-}
-
+  margin: 0 1rem 0;
+  padding: 5px;
+  font-weight: bold;
+  color: #4c74ee; }
 
 /*审查进度*/
 .examine-progress-list {
-    background-color: #eaeaea;
-    padding: 0.5rem;
-    margin: 0.5rem auto 0.5rem;
-
-}
+  background-color: #f1f1f1;
+  padding: 0.5rem;
+  margin: 0.5rem auto 0.5rem; }
 
 .examine-progress-item {
-    border-bottom: solid 1px white;
-}
+  border-bottom: solid 1px white; }
 
 .examine-progress-item .progress-item-status-pass {
-    font-weight: bold;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    background-color: #24a955;
-    color: white;
-}
+  font-weight: bold;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  background-color: #24a955;
+  color: white; }
 
 .examine-progress-item .progress-item-status-reject {
-    font-weight: bold;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    background-color: #d91b09;
-    color: white;
-}
+  font-weight: bold;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  background-color: #d91b09;
+  color: white; }
 
 .examine-progress-item .progress-item-type {
-
-    border: solid 1px #c85e27;
-    font-weight: bold;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    color: #c85e27;
-}
+  border: solid 1px #c85e27;
+  font-weight: bold;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  color: #c85e27; }
 
 .examine-progress-item .progress-item-title {
-    margin: 0 1rem 0;
-    padding: 5px;
-    font-weight: bold;
-    color: #4c74ee;
-}
+  margin: 0 1rem 0;
+  padding: 5px;
+  font-weight: bold;
+  color: #4c74ee; }
 
 .examine-text {
-    width: 90%;
-    margin: auto;
-    color: #4c74ee;
-    background-color: #f5f5f5;
-    padding: 5px;
-}
+  width: 90%;
+  margin: auto;
+  color: #4c74ee;
+  background-color: #f1f1f1;
+  padding: 5px; }
+
+/*# sourceMappingURL=admin_info.css.map */

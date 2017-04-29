@@ -138,7 +138,7 @@ GuideFishing.buildSlideView = function () {
         if(jsonObject.isError){
             return GuideFishing.modalWindow(jsonObject.error);
         }
-        nojsja.SlideView.init(jsonObject.slideImageArray);
+        nojsja["SlideViewCss3"].init(jsonObject.slideImageArray);
     });
 };
 

@@ -1,0 +1,215 @@
+@charset "UTF-8";
+
+@import 'public';
+
+body {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: #eaeaea;
+}
+
+html {
+    font-size: 16px;
+}
+
+a {
+    color: white;
+}
+a:hover {
+    color: white;
+}
+
+/* 总体布局 */
+.total {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    @include boxShadowRound(10px, #676767);
+}
+
+/* 公司简介 */
+.company {
+    display: none;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 4px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    background-color: #1b6b9c;
+    border-left: solid 2px #e57a4a;
+    border-right: solid 2px #e57a4a;
+    color: #d9e6d9;
+}
+
+/* 获取所有在招职位 */
+.get-recruitments {
+    position: fixed;
+    left: 0;
+    top: 3rem;
+    background-color: rgba(28, 104, 151, 0.7);
+    border-left: solid 2px #e57a4a;
+    padding: 5px;
+}
+
+/* 返回大厅 */
+.return-home {
+    position: fixed;
+    left: 0;
+    bottom: 2rem;
+    background-color: rgba(28, 104, 151, 0.7);
+    border-left: solid 2px #e57a4a;
+    padding: 5px;
+}
+
+.get-recruitments > a,
+.return-home > a{
+    color: #ffffff;
+}
+
+.introduction {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 5px;
+    word-spacing: 1px;
+    letter-spacing: 1px;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-all;
+}
+
+.introduction-main {
+    color: $grey-dark;
+    background-color: $grey;
+    border-radius: 10px;
+    padding: 5px;
+
+    @include boxShadowRound(10px, #d1dbee);
+}
+
+.introduction-position {
+    color: #e57a4a;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+/* 环境介绍 */
+.introduction-environment {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* 环境图片 */
+.environment-image {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+/* 视频介绍 */
+.video {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+
+    -webkit-box-shadow:  0 0 5px #207fbb;
+    -moz-box-shadow:  0 0 5px #207fbb;
+    box-shadow:  0 0 5px #207fbb;
+}
+
+/* 职位介绍 */
+.recruitment-item {
+    border: dotted 1px grey;
+    padding: 5px;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.recruitment-item > span.glyphicon {
+    position: absolute;
+    top: 0.1rem;
+    right: 0.1rem;
+    font-size: 1.5rem;
+    color: #e57a4a;
+}
+
+/* 标题 */
+.item-title {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    width: 6rem;
+    height: 2rem;
+    line-height: 2rem;
+    background-color: #668b99;
+    color: #efefef;
+    font-weight: bold;
+
+    @include boxShadowSide(4px, #7c7c7c);
+}
+
+.item-job,
+.item-duty,
+.item-skill,
+.item-treatment,
+.item-other{
+    background-color: #ffffff;
+    color: #5f5f5f;
+    padding: 5px;
+}
+
+.item-job:hover,
+.item-duty:hover,
+.item-skill:hover,
+.item-treatment:hover,
+.item-other:hover {
+    border-left: solid 4px #e57a4a;
+}
+
+/* 动画绑定 */
+.translate {
+    @include transition(all, 0.3s,ease-in-out);
+}
+
+.translate:hover{
+
+    @include transform(translate(-10px, 0));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

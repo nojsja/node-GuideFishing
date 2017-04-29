@@ -18,7 +18,7 @@
 <header class="header">
     <div class="header-label">
         课程介绍
-        <a href="/course/index"><span class="glyphicon glyphicon-home return-home"></span></a>
+        <a href="/index"><span class="glyphicon glyphicon-home return-home"></span></a>
     </div>
 </header>
 
@@ -54,15 +54,19 @@
     </div>
 </div>
 
-<!--进入课程页面按钮-->
-<div id="startDiv">
+<!--购买吐槽-->
+<div id="purchaseDiv">
     <input type="button" disabled="disabled"  class="btn btn-danger" value="购买" id="purchase">
+    <input type="button" disabled="disabled" class="btn btn-default" value="吐槽" id="comment">
+</div>
+
+<!--进入学习-->
+<div id="startDiv">
     <input type="button" disabled="disabled" class="btn btn-success" value="开始学习-->" id="start">
 </div>
 
 <!--页内脚本-->
 <script type="text/javascript">
-
 
         /* 注意ejs模板中可以用%-获取非转义字符 */
         // 设置描述内容
@@ -82,32 +86,8 @@
 <%- include footer.ejs %>
 <%- include hoverButton.ejs %>
 <%- include modalWindow.ejs %>
+<!--弹幕-->
+<%- include danmu.ejs %>
 </body>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</html>

@@ -1,297 +1,255 @@
+@charset "UTF-8";
+/* 变量声明 */
+/* 宏 */
+@keyframes rotate {
+  0% {
+    -webkit-transform: translateY(0deg);
+    -moz-transform: translateY(0deg);
+    -ms-transform: translateY(0deg);
+    -o-transform: translateY(0deg);
+    transform: translateY(0deg); }
+  100% {
+    -webkit-transform: rotateY(360deg);
+    -moz-transform: rotateY(360deg);
+    -ms-transform: rotateY(360deg);
+    -o-transform: rotateY(360deg);
+    transform: rotateY(360deg); } }
+@keyframes rainBow {
+  0% {
+    color: #009c00;
+    border: solid 1px #009c00;
+    top: 0; }
+  25% {
+    color: #54b7bc;
+    border: solid 1px #54b7bc; }
+  50% {
+    color: #755cbc;
+    border: solid 1px #755cbc;
+    top: -2px; }
+  75% {
+    color: #d07233;
+    border: solid 1px #d07233; }
+  100% {
+    color: #009c00;
+    border: solid 1px #009c00;
+    top: 0; } }
+/* 函数 */
 /* 课程详情页面 */
-
 body {
-    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-    background-color: #f8ffff;
-}
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #f8ffff; }
 
 html {
-    font-size: 16px;
-}
+  font-size: 16px; }
 
 a {
-    color: #00B7FF;
-}
+  color: #00B7FF; }
 
-/*首部 header*/
+/* 首部 header */
 .header {
-    position: fixed;
-    z-index: 100;
-    top: 0;
-    padding: 5px;
-    width: 100%;
-    min-height: 2rem;
-    height: auto;
-    background-color: #e3e6df;
-    font-size: 0;
-    -webkit-box-shadow: 0px 0px 10px #a2a5a2;
-    -moz-box-shadow:  0px 0px 10px #a2a5a2;
-    box-shadow:  0px 0px 10px #a2a5a2;
-}
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  padding: 5px;
+  width: 100%;
+  min-height: 2rem;
+  height: auto;
+  background-color: #eaeaea;
+  font-size: 0;
+  -webkit-box-shadow: 0 0 8px #737373;
+  -moz-box-shadow: 0 0 8px #737373;
+  box-shadow: 0 0 8px #737373; }
 
 .header-label {
-    position: relative;
-    width: 100%;
-    text-align: center;
-    font-size: 1.5rem;
-    color: #5a8ecb;
-    text-shadow: 2px 2px 0 white;
-    line-height: 1.5rem;
-    font-weight: bold;
-}
+  position: relative;
+  width: 100%;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #4c74ee;
+  text-shadow: 2px 2px 0 white;
+  line-height: 1.5rem; }
 
 .header-label span {
-    text-shadow: 0 0 0;
-}
+  text-shadow: 0 0 0; }
 
 /* 返回主页按钮 */
 .return-home {
-    position: absolute;
-    right: 10px;
-    color: #1aa646;
-    font-size: 1.5rem;
-}
+  position: absolute;
+  right: 10px;
+  color: #24a955;
+  font-size: 1.5rem; }
+
 .return-home:active {
-    color: #85cd6d;
-}
+  color: #219d4f; }
 
 /* 评测介绍主体部分 */
 .detail-head {
-    min-height: 8rem;
-    padding-top: 5px;
-    height: auto;
-    background-color: #588ac6;
-    width: 90%;
-    margin: 3rem auto 0.5rem;
-}
+  min-height: 8rem;
+  padding-top: 5px;
+  height: auto;
+  background-color: #4c74ee;
+  width: 90%;
+  margin: 3rem auto 0.5rem; }
 
 .detail-head-img {
-    border: solid 1px white;
-    width: 5rem;
-    height: 5rem;
-    border-radius: 50%;
-    margin: 0.5rem auto 0.5rem;
-    background: url("/images/courseType/english.jpg") no-repeat;
-    background-size: cover;
-
-    -webkit-box-shadow: 0px 0px 10px white;
-    -moz-box-shadow: 0px 0px 10px white;
-    box-shadow:  0px 0px 10px white;
-}
+  border: solid 1px white;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  margin: 0.5rem auto 0.5rem;
+  background: url("/images/courseType/english.jpg") no-repeat;
+  background-size: cover;
+  -webkit-box-shadow: 0 0 10px white;
+  -moz-box-shadow: 0 0 10px white;
+  box-shadow: 0 0 10px white; }
 
 .detail-head-type {
-    text-align: center;
-    color: #d8d8d8;
-}
+  text-align: center;
+  color: #eaeaea; }
 
 .detail-head-title {
-    text-align: center;
-    color: #f3ffff;
-    font-size: 1.3rem;
-    text-shadow: 2px 2px 1px #676767;
-}
+  text-align: center;
+  color: #f1f1f1;
+  font-size: 1.3rem;
+  text-shadow: 2px 2px 1px #737373; }
 
 .detail-head-other {
-    text-align: center;
-}
+  text-align: center; }
 
 /* 首部其它信息 */
 .other-date {
-    height: 1.5rem;
-    line-height: 1.5rem;
-    color: #969696;
-    background-color: #3b3d3b;
-    text-align: center;
-    width: 100%;
-}
+  height: 1.5rem;
+  line-height: 1.5rem;
+  color: #737373;
+  background-color: #3b3d3b;
+  text-align: center;
+  width: 100%; }
 
 /* 详细介绍 */
 .detail-body {
-    height: auto;
-    min-height: 10rem;
-    margin: 0.5rem auto 2rem;
-    background-color: #bfbfbf;
-}
+  height: auto;
+  min-height: 10rem;
+  margin: 0.5rem auto 2rem;
+  background-color: #aaaaaa; }
 
 .detail-body-abstract {
-    width: 90%;
-    margin: auto;
-    background-color: #f4f7f4;
-}
+  width: 90%;
+  margin: auto;
+  background-color: #f1f1f1; }
 
 .abstract {
-    padding: 5px;
-    font-size: 1rem;
-    word-spacing: 1px;
-    letter-spacing: 1px;
-    min-height: 10rem;
-    font-weight: bold;
-    color: #676e67;
-}
+  padding: 5px;
+  font-size: 1rem;
+  word-spacing: 1px;
+  letter-spacing: 1px;
+  min-height: 10rem;
+  font-weight: bold;
+  color: #737373; }
 
 /* 开始按钮 */
 #startDiv {
-    text-align: center;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-}
+  text-align: center;
+  margin: 0.5rem auto 0.5rem; }
+
+/* 购买区域 */
+#purchaseDiv {
+  text-align: center; }
+
+/* 弹幕输入 */
+#commentInput {
+  width: 100%; }
+
+#commentSend {
+  margin: 0.5rem 0 0.5rem; }
 
 /* 标签区域 */
 .detail-tags-div {
-    text-align: center;
-    font-size: 0;
-}
+  text-align: center;
+  font-size: 0; }
 
 .tag-item {
-    position: relative;
-    font-size: 1rem;
-    margin: 5px;
-    display: inline-block;
-    padding: 3px;
-    color: #009c00;
-    font-weight: bold;
-    border: solid 2px #009c00;
-    border-radius: 5px;
-
-    -webkit-transform: rotate(7deg);
-    -moz-transform: rotate(7deg);
-    -ms-transform: rotate(7deg);
-    -o-transform: rotate(7deg);
-    transform: rotate(7deg);
-
-}
+  position: relative;
+  font-size: 1rem;
+  margin: 5px;
+  display: inline-block;
+  padding: 3px;
+  color: #009c00;
+  font-weight: bold;
+  border: solid 2px #009c00;
+  border-radius: 5px;
+  -webkit-transform: rotate(7deg);
+  -moz-transform: rotate(7deg);
+  -ms-transform: rotate(7deg);
+  -o-transform: rotate(7deg);
+  transform: rotate(7deg); }
 
 .tag-item:hover, .tag-item:active {
-
-    -webkit-transform: scale(1.3);
-    -moz-transform: scale(1.3);
-    -ms-transform: scale(1.3);
-    -o-transform: scale(1.3);
-    transform: scale(1.3);
-
-    -webkit-animation-play-state: paused;
-    -moz-animation-play-state: paused;
-    -o-animation-play-state: paused;
-    animation-play-state: paused;
-}
+  -webkit-transform: scale(1.3);
+  -moz-transform: scale(1.3);
+  -ms-transform: scale(1.3);
+  -o-transform: scale(1.3);
+  transform: scale(1.3);
+  -webkit-animation-play-state: paused;
+  -moz-animation-play-state: paused;
+  -o-animation-play-state: paused;
+  animation-play-state: paused; }
 
 .tag-change-animation {
-    -webkit-animation: tag-change 2s linear 0s infinite forwards;
-    -o-animation: tag-change 2s linear 0s infinite forwards;
-    animation: tag-change 2s linear 0s infinite forwards;
-}
+  -webkit-animation: rainBow 2s linear 0s infinite normal;
+  -o-animation: rainBow 2s linear 0s infinite normal;
+  animation: rainBow 2s linear 0s infinite normal;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  -o-animation-fill-mode: forwards;
+  animation-fill-mode: forwards; }
 
 .tag-change-reverse-animation {
-    -webkit-animation: tag-change-reverse 2s linear 0s infinite forwards;
-    -o-animation: tag-change-reverse 2s linear 0s infinite forwards;
-    animation: tag-change-reverse 2s linear 0s infinite forwards;
-}
-
-@keyframes tag-change {
-    0% {
-        color: #009c00;
-        border: solid 1px #009c00;
-        top: 0;
-    }
-    25% {
-        color: #54b7bc;
-        border: solid 1px #54b7bc;
-    }
-    50% {
-        color: #755cbc;
-        border: solid 1px #755cbc;
-        top: -2px;
-    }
-    75% {
-        color: #d07233;
-        border: solid 1px #d07233;
-    }
-    100% {
-        color: #009c00;
-        border: solid 1px #009c00;
-        top: 0;
-    }
-}
-
-@keyframes tag-change-reverse {
-    0% {
-        color: #009c00;
-        border: solid 1px #009c00;
-        bottom: 0;
-    }
-    25% {
-        color: #d07233;
-        border: solid 1px #d07233;
-    }
-    50% {
-        color: #755cbc;
-        border: solid 1px #755cbc;
-        bottom: -2px;
-    }
-    75% {
-        color: #54b7bc;
-        border: solid 1px #54b7bc;
-    }
-    100% {
-        color: #009c00;
-        border: solid 1px #009c00;
-        bottom: 0;
-    }
-}
+  -webkit-animation: rainBow 2s linear 0s infinite reverse;
+  -o-animation: rainBow 2s linear 0s infinite reverse;
+  animation: rainBow 2s linear 0s infinite reverse;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation-fill-mode: forwards;
+  -o-animation-fill-mode: forwards;
+  animation-fill-mode: forwards; }
 
 /* 登录 */
 .detail-login-div {
-    text-align: center;
-}
+  text-align: center; }
 
 .login-account, .login-password {
-    width: 90%;
-    margin-top: 0.5rem;
-    display: inline-block;
-}
+  width: 90%;
+  margin-top: 0.5rem;
+  display: inline-block; }
 
 .button {
-    border: solid 1px #858585;
-    border-radius: 5px;
-    color: #5a5a5a;
-    background-color: #FFFFFF;
-    display: inline-block;
-    padding-left: 0.5rem;
-    margin: 5px;
-    padding-right: 0.5rem;
-
-    -webkit-transition: all 0.2s;
-    -moz-transition: all 0.2s;
-    -ms-transition: all 0.2s;
-    -o-transition: all 0.2s;
-    transition: all 0.2s;
-}
+  border: solid 1px #858585;
+  border-radius: 5px;
+  color: #5a5a5a;
+  background-color: #FFFFFF;
+  display: inline-block;
+  padding-left: 0.5rem;
+  margin: 5px;
+  padding-right: 0.5rem;
+  -webkit-transition: all 0.2s linear;
+  -moz-transition: all 0.2s linear;
+  -ms-transition: all 0.2s linear;
+  -o-transition: all 0.2s linear;
+  transition: all 0.2s linear; }
 
 .button:hover {
-    background-color: #eeeeee;
-}
+  background-color: #f1f1f1; }
 
 .login-button {
-    border: solid 1px #5fb859;
-    color: #5fb859;
-}
+  border: solid 1px #24a955;
+  color: #24a955; }
+
 .login-button:hover {
-    border: solid 1px #5fb859;
-    background-color: #5fb859;
-    color: white;
-}
-
-.signup-button {
-
-}
+  border: solid 1px #219d4f;
+  background-color: #219d4f;
+  color: white; }
 
 /*文字特效*/
 .box1 {
-    text-shadow:
-            0 0 0 rgb(188,178,188),1px 0 0 rgb(173,163,173),
-            2px 0 0 rgb(157,147,157),3px 0 0 rgb(142,132,142),
-            4px 0 0 rgb(126,116,126),5px 0 0 rgb(111,101,111),
-            6px 0 0 rgb(95,85,95), 7px 0 0 rgb(79,69,79),
-            8px 0 7px rgba(0,0,0,0.35),8px 0 1px rgba(0,0,0,0.5),
-            0 0 7px rgba(0,0,0,.2);
-}
+  text-shadow: 0 0 0 #bcb2bc, 1px 0 0 #ada3ad, 2px 0 0 #9d939d, 3px 0 0 #8e848e, 4px 0 0 #7e747e, 5px 0 0 #6f656f, 6px 0 0 #5f555f, 7px 0 0 #4f454f, 8px 0 7px rgba(0, 0, 0, 0.35), 8px 0 1px rgba(0, 0, 0, 0.5), 0 0 7px rgba(0, 0, 0, 0.2); }
+
+/*# sourceMappingURL=course_detail.css.map */

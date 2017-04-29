@@ -1,0 +1,178 @@
+@charset "UTF-8";
+
+body {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+html {
+    font-size: 16px;
+}
+
+a {
+    color: #00B7FF;
+}
+
+/* 主要内容部分 */
+.total {
+    min-height: 20rem;
+    height: auto;
+}
+
+/* 筛选域 */
+.total-condition {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+
+    -webkit-box-shadow:  0 0px 6px #60606a;
+    -moz-box-shadow:  0 0px 6px #60606a;
+    box-shadow:  0 0px 6px #60606a;
+}
+
+.condition-testType,
+.condition-testTitle,
+.condition-number {
+    marin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.condition-testTitle > input{
+    width: 50%;
+    font-size: 1.5rem;
+}
+
+.condition-testType {
+    font-size: 1.6rem;
+}
+
+.condition-number {
+    fon-size: 1.6rem;
+}
+
+/* 所有数据 */
+.total-tests {
+    margin-top: 4rem;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+
+    -webkit-box-shadow: 0 0px 6px #626262;
+    -moz-box-shadow: 0 0px 6px #626262;
+    box-shadow: 0 0px 6px #626262;
+}
+
+.delete-td,
+.preview-td,
+.edit-td {
+    text-align: center;
+}
+
+.delete-th,
+.preview-th,
+.edit-th {
+    text-align: center;
+}
+
+.delete-td:hover {
+    background-color: #b40000;
+    color: white;
+}
+
+.edit-td:hover {
+    background-color: #3e4abb;
+    color: white;
+}
+
+.preview-td:hover {
+    background-color: #17a843;
+    color: white;
+}
+
+/* 测试类型 */
+.title {
+    margin-top: 1.2rem;
+    margin-bottom: 1em;
+    font-size: 1.5rem;
+    padding: 2px;
+    background-color: #d1d1d1;
+    border-bottom: solid 1px #f67e3a;
+    color: #ffffff;
+    text-shadow: 1px 1px 1px #2488c3;
+    text-align: center;
+}
+
+/* 提交区域 */
+.submit-div {
+    text-align: right;
+}
+
+/* testTitle输入框 */
+#testTitle {
+}
+
+/* number输入框 */
+#number {
+}
+
+/* 标题指引 */
+.legend {
+    padding: 5px;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    background-color: #d0d0d0;
+    color: #ffffff;
+    text-shadow: 2px 2px 2px #547ed8;
+}
+
+
+/** 模态弹窗数据预览 **/
+
+/* 某道题目预览列表 */
+.preview-list {
+
+}
+
+/* 列表里面的一道题目 */
+.preview-item {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    background-color: #e2e2e2;
+    min-height: 10rem;
+    height: auto;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+/* 编号 */
+.item-number {
+    text-align: center;
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+/* 标题 */
+.item-title {
+    font-size: 1.5rem;
+    color: #596f9b;
+}
+
+/* 所有选项 */
+.item-choises {
+    margin-top: 0.5rem;
+}
+
+/* 其中一个选项 */
+.choise {
+    background-color: white;
+    border-radius: 5px;
+    color: #737373;
+    box-sizing: border-box;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding: 5px;
+}
+

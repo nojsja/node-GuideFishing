@@ -1,440 +1,383 @@
+@charset "UTF-8";
 /* 课程编辑页面 */
 body {
-    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif; }
 
 html {
-    font-size: 16px;
-}
+  font-size: 16px; }
 
 a {
-    color: #00B7FF;
-}
+  color: #00B7FF; }
 
 .total-title {
-    text-align: center;
-    margin-top: .5rem;
-    margin-bottom: 1rem;
-    font-family: 黑体;
-    font-weight: bold;
-    font-size: 2.5rem;
-    text-shadow: 3px 3px 3px #737373;
-    color: #ffffff;
-}
+  text-align: center;
+  margin-top: .5rem;
+  margin-bottom: 1rem;
+  font-family: 黑体;
+  font-weight: bold;
+  font-size: 2.5rem;
+  text-shadow: 3px 3px 3px #737373;
+  color: #ffffff; }
 
 .type {
-    margin-bottom: 1em;
-    /*消除inline-box缝隙*/
-    font-size: 0;
-}
+  margin-bottom: 1em;
+  /*消除inline-box缝隙*/
+  font-size: 0; }
 
 /* 自定义上传和预览窗口 */
 .self-container {
-    padding: 1rem;
-    display: none;
-    position: fixed;
-    width: 50%;
-    min-height: 400px;
-    max-height: 800px;
-    overflow-y: scroll;
-    height: auto;
-    color: #FFFFFF;
-
-    -webkit-box-shadow:  0 0 10px #1c6897;
-    -moz-box-shadow:  0 0 10px #1c6897;
-    box-shadow:  0 0 10px #1c6897;
-}
+  padding: 1rem;
+  display: none;
+  position: fixed;
+  width: 50%;
+  min-height: 400px;
+  max-height: 800px;
+  overflow-y: auto;
+  height: auto;
+  color: #FFFFFF;
+  -webkit-box-shadow: 0 0 10px #1c6897;
+  -moz-box-shadow: 0 0 10px #1c6897;
+  box-shadow: 0 0 10px #1c6897; }
 
 #uploadImgProgress,
 #uploadVideoProgress,
-#uploadAudioProgress{
-    margin-top: 1em;
-    height: 1.5em;
-    width: 20em;
-    border: solid 1px #ffffff;
-}
+#uploadAudioProgress {
+  margin-top: 1em;
+  height: 1.5em;
+  width: 20em;
+  border: solid 1px #ffffff; }
 
 .progress-bar {
-    height: 100%;
-    background-color: #238eae;
-}
+  height: 100%;
+  background-color: #238eae; }
 
 /* 标题 */
 .upload-title {
-    margin: 1rem;
-    color: rgb(197, 238, 221);
-    font-weight: bold;
-
-    text-shadow: 3px 3px #1c6897;
-}
+  margin: 1rem;
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+  text-shadow: 3px 3px 3px #000000; }
 
 /* 上传编辑区域 */
 .self-container-upload {
-    top: 8rem;
-    left: 3rem;
-    z-index: 1000;
-    background-color: rgba(158, 158, 158, 0.9);
-}
+  top: 8rem;
+  left: 3rem;
+  z-index: 1000;
+  background-color: rgba(72, 102, 162, 0.9); }
 
 /* 视频,图片和音频预览区域 */
 .self-container-preview {
-    top: 8rem;
-    right: 3rem;
-    z-index: 1002;
-    background-color: rgba(188, 188, 188, 0.9);
-}
+  top: 8rem;
+  right: 3rem;
+  z-index: 1002;
+  background-color: rgba(209, 209, 209, 0.9); }
 
 /* 导入课程 */
 .self-container-load {
-    top: 12rem;
-    left: 3rem;
-    min-height: 200px;
-    height: auto;
-    z-index: 1001;
-    background-color: rgba(87, 114, 128, 0.9);
-}
+  top: 12rem;
+  left: 3rem;
+  min-height: 200px;
+  height: auto;
+  z-index: 1001;
+  background-color: rgba(58, 62, 128, 0.9); }
 
 /* 预览选择 */
 .preview-type-div {
-    position: absolute;
-    bottom: 1rem;
-    left: 0;
-}
+  position: absolute;
+  bottom: 1rem;
+  left: 0; }
 
 /* 选项以及它的交互效果 */
 .preview-type {
-    text-align: center;
-    width: 5rem;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    border: solid 1px white;
-    padding: 5px;
-    background-color: rgba(63, 75, 129, 0.6);
-    z-index: 100;
-}
+  text-align: center;
+  width: 5rem;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: solid 1px white;
+  padding: 5px;
+  background-color: rgba(71, 139, 241, 0.6);
+  z-index: 100; }
 
 .preview-type:hover {
-    background-color: rgba(255, 255, 255, 0.61);
-    color: rgb(63, 75, 129);
-
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -ms-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
-}
+  background-color: rgba(255, 255, 255, 0.61);
+  color: #3f4b81;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s; }
 
 /* 点击后 */
 .preview-type_click {
-    background-color: rgba(255, 255, 255, 0.61);
-    color: rgb(63, 75, 129);
-}
+  background-color: rgba(255, 255, 255, 0.61);
+  color: #3f4b81; }
 
 /* 预览数据列表 */
 /* 预览图片 */
 .list-item-image {
-    padding: 5px;
-    float: left;
-    width: 50%;
-    height: 300px;
-    overflow: scroll;
-    border: solid 1px white;
-
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-
-    -webkit-box-shadow: inset 0 0 10px #1c6897;
-    -moz-box-shadow: inset 0 0 10px  #1c6897;
-    box-shadow: inset 0 0 10px  #1c6897;
-}
+  text-align: center;
+  padding: 5px;
+  float: left;
+  width: 50%;
+  height: 200px;
+  border: solid 1px white;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-box-shadow: inset 0 0 10px #1c6897;
+  -moz-box-shadow: inset 0 0 10px  #1c6897;
+  box-shadow: inset 0 0 10px  #1c6897; }
 
 /* 点击效果 */
 .list-item-image_click {
-    background-color: #b87434;
-}
+  background-color: #b87434; }
 
 .list-item-image > img {
-    height: 100%;
-    width: auto;
-}
+  height: auto;
+  width: 100%; }
 
 /* 图片点击效果 */
 .img_click {
-    opacity: 0.5;
-}
+  opacity: 0.5; }
 
 /* 预览视频 */
 .list-item-video {
-    padding: 5px;
-    float: left;
-    width: 50%;
-    height: 300px;
-    overflow: scroll;
-    border: solid 1px white;
-
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-
-    -webkit-box-shadow: inset 0 0 10px #1c6897;
-    -moz-box-shadow: inset 0 0 10px  #1c6897;
-    box-shadow: inset 0 0 10px  #1c6897;
-}
+  padding: 5px;
+  float: left;
+  width: 50%;
+  height: 300px;
+  overflow: scroll;
+  border: solid 1px white;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-box-shadow: inset 0 0 10px #1c6897;
+  -moz-box-shadow: inset 0 0 10px  #1c6897;
+  box-shadow: inset 0 0 10px  #1c6897; }
 
 .list-item-video_click {
-    background-color: #b87434;
-}
+  background-color: #b87434; }
 
 .list-item-video > video {
-    height: 100%;
-    width: auto;
-}
+  height: 100%;
+  width: auto; }
 
 /* 视频点击添加事件 */
 .video_click {
-    opacity: 0.5;
-}
+  opacity: 0.5; }
 
 /* 预览音频 */
-.list-item-audio{
-    margin-top: 1rem;
-    width: 100%;
-    height: 2rem;
-}
+.list-item-audio {
+  margin-top: 1rem;
+  width: 100%;
+  height: 2rem; }
 
 .list-item-audio > audio {
-    width: 50%;
-    height: auto;
-    float: left;
-}
+  width: 50%;
+  height: auto;
+  float: left; }
 
 .audio-text {
-    text-align: center;
-    font-weight: bold;
-    color: #192f7a;
-    width: 50%;
-    float: left;
-}
+  text-align: center;
+  font-weight: bold;
+  color: #192f7a;
+  border: solid 1px #192f7a;
+  width: 80%;
+  margin: 0.5rem auto 0.5rem; }
 
 /* audio-text点击事件 */
 .audio-text_click {
-    background-color: #192f7a;
-    color: #FFFFFF;
-}
-
+  background-color: #192f7a;
+  color: #FFFFFF; }
 
 /* 触发按钮 */
 .self-trigger {
-    border-radius: 50%;
-    text-align: center;
-    background-color: #1c6897;
-    color: #FFFFFF;
-    font-size: 2rem;
-    line-height: 3rem;
-    position: fixed;
-    width: 3rem;
-    height: 3rem;
-}
+  border-radius: 50%;
+  text-align: center;
+  background-color: #1c6897;
+  color: #FFFFFF;
+  font-size: 2rem;
+  line-height: 3rem;
+  position: fixed;
+  width: 3rem;
+  height: 3rem; }
 
 .self-trigger:hover {
-    color: #1c6897;
-    background-color: #FFFFFF;
-}
+  color: #1c6897;
+  background-color: #FFFFFF; }
 
 /* 上传区域触发 */
 .self-trigger-upload {
-    left: 1rem;
-    top: 6rem;
-}
+  left: 1rem;
+  top: 6rem; }
 
 /* 预览区域触发 */
 .self-trigger-preview {
-    right: 1rem;
-    top: 6rem;
-}
+  right: 1rem;
+  top: 6rem; }
 
 /* 载入课程 */
 .self-trigger-load {
-    left: 1rem;
-    top: 11rem;
-}
+  left: 1rem;
+  top: 11rem; }
 
 /* 页面主体部分 */
 #total {
-    background-color: #F3F3F3;
-    border: solid 1px #577280;
-    margin-bottom: 2rem;
-    margin-top: 2rem;
-    padding: 1.3rem;
-}
+  background-color: #F3F3F3;
+  border-radius: 5px;
+  border: solid 1px #577280;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  padding: 1.3rem; }
 
 /* 编辑标题 */
 .title {
-    margin-bottom: 1.5rem;
-    margin-top: 2rem;
-    font-size: 2rem;
-    background-color: #2488c3;
-    color: #c5eedd;
-    text-align: center;
-    border: solid 1px white;
-    -moz-box-shadow: 5px 5px #8287a7;
-    -webkit-box-shadow: 5px 5px #8287a7;
-    box-shadow: 5px 5px #8287a7;
-}
+  margin-bottom: 1.5rem;
+  margin-top: 2rem;
+  font-size: 2rem;
+  background-color: #2488c3;
+  color: #c5eedd;
+  text-align: center;
+  border: solid 1px white;
+  -moz-box-shadow: 5px 5px #8287a7;
+  -webkit-box-shadow: 5px 5px #8287a7;
+  box-shadow: 5px 5px #8287a7; }
 
 /* 组件阴影 */
 .shadow {
-    -webkit-box-shadow:0 0 10px #353846;
-    -moz-box-shadow:0 0 10px #353846;
-    box-shadow:0 0 10px #353846;
-}
+  -webkit-box-shadow: 0 0 10px #353846;
+  -moz-box-shadow: 0 0 10px #353846;
+  box-shadow: 0 0 10px #353846; }
 
 #editorContent {
-    margin-top: 1rem;
-    margin-bottom: 1.5rem;
-}
+  margin-top: 1rem;
+  margin-bottom: 1.5rem; }
 
 .tags-row {
-    margin-bottom: 1em;
-}
+  margin-bottom: 1em; }
 
 /* 标签 */
 #tagText {
-    width: 8rem;
-}
+  width: 8rem; }
 
 .tag-list {
-    font-size: 0;
-    margin-top: 5px;
-    height: 4.5rem;
-    background-color: #cecece;
-}
+  font-size: 0;
+  margin-top: 5px;
+  height: 4.5rem;
+  background-color: #dadada; }
 
 .tag-list-item {
-    font-size: 1.5rem;
-    padding: 3px;
-    margin: 1rem;
-    display: inline-block;
-    background-color: #f58030;
-    border-radius: 5px;
-    border: solid 1px white;
-    color: white;
-    font-weight: bold;
-}
+  font-size: 1.5rem;
+  padding: 3px;
+  margin: 1rem;
+  display: inline-block;
+  background-color: #f58030;
+  border-radius: 5px;
+  border: solid 1px white;
+  color: white;
+  font-weight: bold; }
+
 .tag-list-item:hover {
-    border: solid 1px #f58030;
-    background-color: transparent;
-    color: #f58030;
-}
+  border: solid 1px #f58030;
+  background-color: transparent;
+  color: #f58030; }
 
 /* 类型描述 */
 .type-item {
-    font-size: 1.5rem;
-    width: 25%;
-    word-spacing: 2px;
-    letter-spacing: 2px;
-    display: inline-block;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    padding: 0.5rem;
-    font-family: 华文中宋;
-    color: #1c6897;
-    border: solid 1px #1c6897;
-    border-radius: 10px;
-    text-align: center;
-
-    box-shadow:0px 0px 10px #ffffff inset;
-    -moz-box-shadow:0px 0px 10px #ffffff inset;
-    -o-box-shadow:0px 0px 10px #ffffff inset;
-    -webkit-box-shadow: 0px 0px 10px #ffffff inset;
-}
+  font-size: 1.5rem;
+  width: 25%;
+  word-spacing: 2px;
+  letter-spacing: 2px;
+  display: inline-block;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0.5rem;
+  font-family: 华文中宋;
+  color: #1c6897;
+  border: solid 1px #1c6897;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0px 0px 10px #ffffff inset;
+  -moz-box-shadow: 0px 0px 10px #ffffff inset;
+  -o-box-shadow: 0px 0px 10px #ffffff inset;
+  -webkit-box-shadow: 0px 0px 10px #ffffff inset; }
 
 /* 点击效果 */
 .type-item_click {
-    background-color: #547ed8;
-    color: white;
-}
+  background-color: #547ed8;
+  color: white; }
 
 .type > div:hover {
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -ms-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
-    background-color: #e1ebfd;
-    color: #668b96;
-}
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+  background-color: #e1ebfd;
+  color: #668b96; }
 
 /*消除inline-block的间隙*/
 .tag-father {
-font-size: 0;
-}
+  font-size: 0; }
 
-.tag-div{
-font-size: 1rem;
-display: inline-block;
-width: 25%;
-text-align: center;
-
--webkit-box-sizing: border-box;
--moz-box-sizing: border-box;
-box-sizing: border-box;
-border: double 1px #238eae;
-padding: 0.5em;
-font-family: 微软雅黑;
-color: #238eae;
-}
-
+.tag-div {
+  font-size: 1rem;
+  display: inline-block;
+  width: 25%;
+  text-align: center;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: double 1px #238eae;
+  padding: 0.5em;
+  font-family: 微软雅黑;
+  color: #238eae; }
 
 #sendDiv {
-    text-align: center;
-}
+  text-align: center; }
 
 /* 上传课程 */
 #sendCourse {
-    border: solid 1px;
-    margin-bottom: 1em;
-    margin-top: 1em;
-}
+  border: solid 1px;
+  margin-bottom: 1em;
+  margin-top: 1em; }
 
 .tips {
-    font-family: 微软雅黑;
-    font-size: 1.3em;
-    word-spacing: 8px;
-    letter-spacing: 1px;
-}
+  font-family: 微软雅黑;
+  font-size: 1.3em;
+  word-spacing: 8px;
+  letter-spacing: 1px; }
+
 .spacing {
-    word-spacing: 8px;
-    letter-spacing: 1px;
-}
+  word-spacing: 8px;
+  letter-spacing: 1px; }
 
 /* footer页脚 */
 .footer {
-    margin-bottom: 5px;
-    padding: 0.5rem;
-    text-align: center;
-    min-height: 2rem;
-    bottom: 0;
-    border-top: solid 1px #6095d8;
-    background-color: white;
-}
+  margin-bottom: 5px;
+  padding: 0.5rem;
+  text-align: center;
+  min-height: 2rem;
+  bottom: 0;
+  border-top: solid 1px #6095d8;
+  background-color: white; }
 
 .footer-img {
-    display: inline-block;
-    background: url("/images/icons/Ciitec.jpg") no-repeat;
-    background-size: cover;
-    width: 5rem;
-    height: 2rem;
-    margin: 0 auto;
-}
+  display: inline-block;
+  background: url("/images/icons/Ciitec.jpg") no-repeat;
+  background-size: cover;
+  width: 5rem;
+  height: 2rem;
+  margin: 0 auto; }
 
 .footer-text {
-    display: inline-block;
-    text-align: center;
-    font-size: 1.5rem;
-    color: #3b3d3b;
-}
+  display: inline-block;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #3b3d3b; }
+
+/*# sourceMappingURL=course_adminEdit.css.map */

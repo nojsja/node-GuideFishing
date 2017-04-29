@@ -26,6 +26,11 @@
 * scoreHead -- 该分段起始处, scoreTail -- 该分段结束处, result -- 该分段的评测结果
 * date -- 创建题目的日期
 * scoreValue -- 单次得分的分值,用于最后累加计算得分, 必须为绝对值
+* danmu -- 每个课程包含的弹幕内容
+*  text -- 弹幕文字
+*  color -- 弹幕颜色
+*  user -- 发送者
+*  date -- 发送日期
 * categorySection -- 类型分段
 * categoryMode,categoryDescribe 类型和描述
 * examine -- 测评检查字段
@@ -61,6 +66,12 @@ var testSchema = new Schema({
     clickRate: Number,
     testTitle: {type: String, required: true, unique: true},
     frequency: Number,
+    danmu: [{
+        text: {type: String, required: true},
+        user: {type: String, required: true},
+        color: String,
+        date: String,
+    }],
     scoreSection: [{
         scoreHead: Number,
         scoreTail: Number,
@@ -70,6 +81,7 @@ var testSchema = new Schema({
         categoryMode: String,
         categoryDescribe: String
     }]
+
 }, {collection: 'test'});
 
 exports.testSchema = testSchema;

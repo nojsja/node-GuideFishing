@@ -128,25 +128,38 @@ Examine.examine = function (status, con, callback) {
     // 审查存储操作
     function examineSave() {
 
-        var newExamine = new Model({
+        Examine.deleteIfExit({
             contentName: con.contentName,
-            contentType: con.contentType,
-            examineType: con.examineType,
-            examineText: con.examineText,
-            adminAccount: con.adminAccount,
-            examineAccount: con.examineAccount,
-            status: con.status,
-            date: con.date
-        });
+            contentType: con.contentType
 
-        newExamine.save(function (err, doc) {
+        }, function (err) {
 
             if(err){
                 console.log(err);
                 return callback(err);
             }
-            callback(null, true);
+
+            var newExamine = new Model({
+                contentName: con.contentName,
+                contentType: con.contentType,
+                examineType: con.examineType,
+                examineText: con.examineText,
+                adminAccount: con.adminAccount,
+                examineAccount: con.examineAccount,
+                status: con.status,
+                date: con.date
+            });
+
+            newExamine.save(function (err, doc) {
+
+                if(err){
+                    console.log(err);
+                    return callback(err);
+                }
+                callback(null, true);
+            });
         });
+
     }
     
     // 审查更新操作
@@ -194,6 +207,39 @@ Examine.examine = function (status, con, callback) {
             }
         });
     }
+
+};
+
+/* 检查数据是否存在,如果存在的话先删除数据 */
+Examine.deleteIfExit = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Examine = mongoose.model('Examine', examineSchema);
+
+    var query = Examine.findOne();
+    query.where(condition);
+
+    // 执行搜索删除
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log('[deleteIfExit error]: ' + err);
+            return callback(err);
+        }
+        // 文档存在
+        if(doc){
+            // 删除本条数据
+            doc.remove(function (err, deletedDoc) {
+                if(err){
+                    console.log('[deleteIfExit error]: ' + err);
+                    return callback(err);
+                }
+                callback(null);
+            });
+        }else {
+            callback(null);
+        }
+    });
 
 };
 

@@ -26,7 +26,7 @@ function AllTest(testGroup) {
     if(testGroup.testTags instanceof Array){
 
         // 创建新数组的迭代器方法
-        this.tagArray = testGroup.courseTags.map(function (item) {
+        this.tagArray = testGroup.testTags.map(function (item) {
 
             return {
                 tagName: item,
@@ -64,72 +64,177 @@ AllTest.prototype.save = function (callback) {
         date: getDate()
     };
 
-    var newTestMode = new Test(this.testGroup);
-    newTestMode.save(function (err, doc) {
-        if(err) {
+    // 删除以前的数据
+    AllTest.deleteIfExit({
+        testTitle: testGroup.testTitle,
+        testType: testGroup.testType
+    }, function (err) {
+
+        if(err){
             console.log(err);
-            return callback(true);
+            return callback(err);
         }
 
-        var defer = Q.defer();
-        defer.promise
-            .then(function (info) {
+        var newTestMode = new Test(testGroup);
+        newTestMode.save(function (err, doc) {
+            if(err) {
+                console.log(err);
+                return callback(true);
+            }
 
-                var defer = Q.defer();
+            var defer = Q.defer();
+            defer.promise
+                .then(function (info) {
 
-                var newTag = new Tag(tagArray);
-                newTag.save(function (err) {
-                    if(err){
-                        console.log("[error]: " + err );
-                        info.isError = true;
-                        info.error = err;
-                        defer.reject(info);
-                    }else {
+                    var defer = Q.defer();
+
+                    var newTag = new Tag(tagArray);
+                    newTag.save(function (err) {
+                        if(err){
+                            console.log("[error]: " + err );
+                            info.isError = true;
+                            info.error = err;
+                            defer.reject(info);
+                        }else {
+                            defer.resolve(info);
+                        }
+                    });
+
+                    return defer.promise;
+                })
+                .then(function success(info) {
+
+                    var defer = Q.defer();
+                    // 提交给审查人
+                    Admin.examine('isExaming', examineData, function (err, isPass) {
+
+                        if(err){
+                            console.log(err);
+                            info.isError = true;
+                            info.error = err;
+                        }
                         defer.resolve(info);
-                    }
-                });
+                    });
 
-                return defer.promise;
-            })
-            .then(function success(info) {
+                    return defer.promise;
 
-                var defer = Q.defer();
-                // 提交给审查人
-                Admin.examine('isExaming', examineData, function (err, isPass) {
+                }, function fail(info) {
 
-                    if(err){
-                        console.log(err);
-                        info.isError = true;
-                        info.error = err;
-                    }
+                    var defer = Q.defer();
+
+                    console.log(info.error);
                     defer.resolve(info);
+
+                    return defer.promise;
+                })
+                .done(function (info) {
+
+                    console.log('test save done.');
+                    if(info.isError){
+                        return callback(info.err);
+                    }
+                    callback(null, true);
                 });
 
-                return defer.promise;
-
-            }, function fail(info) {
-
-                var defer = Q.defer();
-
-                console.log(info.error);
-                defer.resolve(info);
-
-                return defer.promise;
-            })
-            .done(function (info) {
-
-                console.log('test save done.');
-                if(info.isError){
-                    return callback(info.err);
-                }
-                callback(null, true);
+            // 开始
+            defer.resolve({
+                isError: false,
+                error: null
             });
-
-        // 开始
-        defer.resolve({
-            isError: false,
-            error: null
         });
+
+    });
+
+};
+
+/* 检查数据是否存在,如果存在的话先删除数据 */
+AllTest.deleteIfExit = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Test', testSchema);
+
+    var query = Course.findOne();
+    query.where(condition);
+
+    // 执行搜索删除
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log('[deleteIfExit error]: ' + err);
+            return callback(err);
+        }
+        // 文档存在
+        if(doc){
+            // 删除本条数据
+            doc.remove(function (err, deletedDoc) {
+                if(err){
+                    console.log('[deleteIfExit error]: ' + err);
+                    return callback(err);
+                }
+                callback(null);
+            });
+        }else {
+            callback(null);
+        }
+    });
+
+};
+
+/* 获取当前直播课程的数据 */
+AllTest.getLoadData = function (condition, callback) {
+
+    var db = mongoose.connection;
+    var Test = mongoose.model('Test', testSchema);
+
+    var query = Test.findOne().where({
+        testTitle: condition.testTitle,
+        testType: condition.testType
+    });
+    // 筛选条件映射对象
+    var conditionObject = {
+
+        select: function (selectArray) {
+            // 确定筛选条件
+            var _select = {};
+            for(let sel in selectArray){
+                _select[sel] = 1;
+            }
+            query.select(_select);
+        },
+        limit: function (lim) {
+            query.limit(lim);
+        },
+        sort: function (sor) {
+            query.sort(sor);
+        },
+        skip: function (num) {
+            query.skip(num);
+        }
+    };
+
+    // 确定查询对象
+    for(var attr in condition){
+
+        if(conditionObject[attr]){
+            // 执行筛选方法
+            conditionObject[attr]( condition[attr] );
+        }
+    }
+
+    // 执行筛选查询
+    query.exec(function (err, doc) {
+        if(err){
+            console.log('[getData error]: ' + err);
+            return callback(err);
+        }
+        // 回调返回获取的原始数据
+        if(doc){
+
+            callback(null, doc);
+        }else {
+
+            callback(null, null);
+        }
     });
 };
 
@@ -267,7 +372,7 @@ AllTest.readList = function (docCondition, callback) {
                     var query = Test.find().where(info.condition);
                     // 不读正在审查的数据
                     query.ne('examine.status', 'isExaming');
-                    query.ne('examine.status', 'reject');
+                    // query.ne('examine.status', 'reject');
 
                     if(info.testTypeArray.length > 0){
                         query.in('testType', info.testTypeArray);
@@ -461,7 +566,7 @@ AllTest.examine = function (status, con, callback) {
 
     var query = Model.findOne();
     query.where({
-        testTotle: con.testTitle,
+        testTitle: con.testTitle,
         testType: con.testType
     });
     query.exec(function (err, doc) {
@@ -496,10 +601,93 @@ AllTest.examine = function (status, con, callback) {
                 callback(null, true)
             });
         }else {
-            var error = new Error('文档为找到！');
+            var error = new Error('文档未找到！');
             callback(error);
         }
     });
 };
+
+/* 弹幕存储 */
+AllTest.danmuSave = function (con, callback) {
+
+    var db = mongoose.connection;
+    var Model = mongoose.model('Test', testSchema);
+
+    // 可存储的属性
+    var selectAttr = ['color', 'text', 'user', 'date'];
+    var danmuData = {};
+
+    selectAttr.forEach(function (attr) {
+
+        if(con.danmu[attr]){
+            danmuData[attr] = con.danmu[attr];
+        }
+    });
+
+    var query = Model.findOne();
+    query.where({
+        testTitle: con.testTitle,
+        testType: con.testType
+    });
+
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+        if(doc){
+
+            query = doc.update({
+                $push: {
+                    danmu: danmuData
+                }
+            });
+            query.exec(function (err) {
+
+                if(err){
+                    console.log(err);
+                    return callback(err);
+                }
+                callback(null, true);
+            });
+        }else {
+            callback(null, null);
+        }
+    });
+};
+
+/* 弹幕读取 */
+AllTest.danmuRead = function (con, callback) {
+
+    var db = mongoose.connection;
+    var Model = mongoose.model('Test', testSchema);
+
+    var query = Model.findOne();
+    query.where({
+        testTitle: con.testTitle,
+        testType: con.testType
+    });
+    query.select({
+        danmu: 1
+    });
+
+    query.exec(function (err, doc) {
+
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+        if(doc){
+
+            callback(null, doc.danmu);
+
+        }else {
+            callback(null, null);
+        }
+    });
+
+};
+
 
 module.exports = AllTest;

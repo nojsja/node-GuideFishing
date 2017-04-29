@@ -143,29 +143,44 @@ Admin.examine = function (status, con, callback) {
                     // 存储审查进度
                     function examineProgressSave() {
 
-                        var query2 = doc.update({
-                            $push: {
-                                examineProgress: {
-                                    contentName: con.contentName,
-                                    contentType: con.contentType,
-                                    examineType: con.examineType,
-                                    examineAccount: con.examineAccount,
-                                    adminAccount: con.adminAccount,
-                                    status: con.status,
-                                    date: con.date,
-                                    examineText: con.examineText
-                                }
-                            }
-                        });
-                        query2.exec(function (err, doc) {
+                        // 更新以前的记录
+                        var flag = true;
+                        for(let i = 0; i < doc.examineProgress.length; i++){
 
-                            if(err){
-                                console.log(err);
-                                return callback(err);
+                            if(doc.examineProgress[i].contentName == con.contentName
+                                && doc.examineProgress[i].contentType == con.contentType){
+
+                                flag = false;
+                                return examineProgressUpdate();
                             }
-                            // 成功更新
-                            callback(null, true);
-                        });
+
+                        }
+                        if(flag){
+
+                            var query2 = doc.update({
+                                $push: {
+                                    examineProgress: {
+                                        contentName: con.contentName,
+                                        contentType: con.contentType,
+                                        examineType: con.examineType,
+                                        examineAccount: con.examineAccount,
+                                        adminAccount: con.adminAccount,
+                                        status: con.status,
+                                        date: con.date,
+                                        examineText: con.examineText
+                                    }
+                                }
+                            });
+                            query2.exec(function (err, doc) {
+
+                                if(err){
+                                    console.log(err);
+                                    return callback(err);
+                                }
+                                // 成功更新
+                                callback(null, true);
+                            });
+                        }
                     }
 
                     // 更新审查进度
@@ -209,6 +224,9 @@ Admin.examine = function (status, con, callback) {
                     }else {
                         examineProgressUpdate();
                     }
+
+                }else {
+                    callback(null, false);
                 }
             });
 

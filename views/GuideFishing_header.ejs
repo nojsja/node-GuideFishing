@@ -4,7 +4,7 @@
         /* 首部 */
         #head {
             font-size: 0;
-            height: 2rem;
+            height: 3rem;
             background: #7ca2b6;
             background: -webkit-linear-gradient(to bottom, #4f6774, #7ca2b6);
             background: linear-gradient(to bottom, #4f6774, #7ca2b6);
@@ -24,12 +24,15 @@
         .company-div {
             box-sizing: border-box;
             width: 2rem;
-            height: 2rem;
+            height: 3rem;
             background: url("/images/icons/Ciitec_origin.jpg") no-repeat center;
             -webkit-background-size: contain;
             background-size: contain;
             display: inline-block;
 
+            -webkit-animation: rotate 4s infinite linear;
+            -o-animation: rotate 4s infinite linear;
+            animation: rotate 4s infinite linear;
         }
 
         /* 公司标语 */
@@ -39,9 +42,9 @@
             padding-left: 10px;
             padding-right: 10px;
             vertical-align: top;
-            height: 2rem;
+            height: 3rem;
             overflow: hidden;
-            line-height: 2rem;
+            line-height: 3rem;
             display: inline-block;
             color: #98ccdf;
             text-shadow: 2px 2px 1px #41555f;
@@ -54,6 +57,9 @@
 
         .slogan-div ul li {
             list-style: none;
+            display: block;
+            height: 2rem;
+            line-height: 2rem;
         }
 
         .slogan-div ul li a {
@@ -91,7 +97,7 @@
             padding-left: 10px;
             padding-right: 10px;
             vertical-align: top;
-            line-height: 2rem;
+            line-height: 3rem;
             display: inline-block;
             color: #ffffff;
             float: right;
@@ -105,114 +111,114 @@
         /* 展播文字 */
         .slide-text-div {
             display: inline-block;
-            height: 2rem;
+            height: 3rem;
             text-align: center;
             vertical-align: top;
             overflow: hidden;
+            font-size: 0;
+        }
+        .slide-text-div > div {
+            display: inline-block;
+            line-height: 3rem;
+            position: relative;
+            font-size: 1rem;
+            color: #ffffff;
+            padding-left: 3px;
+            padding-right: 3px;
         }
         .slide-text-top {
-            position: relative;
-            padding: 3px;
-            font-size: 1rem;
-            line-height: 2rem;
-            color: #ffffff;
 
             -webkit-animation: slideTextTop;
             -o-animation: slideTextTop;
             animation: slideTextTop;
 
-            -webkit-animation-delay: 1s;
-            -moz-animation-delay: 1s;
-            -o-animation-delay: 1s;
-            animation-delay: 1s;
-            
-            -webkit-animation-duration: 4s;
-            -moz-animation-duration: 4s;
-            -o-animation-duration: 4s;
-            animation-duration: 4s;
-
-            -webkit-animation-iteration-count: infinite;
-            -moz-animation-iteration-count: infinite;
-            -o-animation-iteration-count: infinite;
-            animation-iteration-count: infinite;
-
-            -webkit-animation-timing-function: ease-in-out;
-            -moz-animation-timing-function: ease-in-out;
-            -o-animation-timing-function: ease-in-out;
-            animation-timing-function: ease-in-out;
+            -webkit-animation: slideTextTop 4s 1s infinite ease-in-out;
+            -o-animation: slideTextTop 4s 1s infinite ease-in-out;
+            animation: slideTextTop 4s 1s infinite ease-in-out;
         }
 
         .slide-text-bottom {
-            position: relative;
-            padding: 3px;
-            font-size: 1rem;
-            line-height: 2rem;
-            color: #ffffff;
 
-            -webkit-animation: slideTextBottom;
-            -o-animation: slideTextBottom;
-            animation: slideTextBottom;
+            -webkit-animation: slideTextBottom 4s 1s infinite ease-in-out;
+            -o-animation: slideTextBottom 4s 1s infinite ease-in-out;
+            animation: slideTextBottom 4s 1s infinite ease-in-out;
 
-            -webkit-animation-delay: 1s;
-            -moz-animation-delay: 1s;
-            -o-animation-delay: 1s;
-            animation-delay: 1s;
-
-            -webkit-animation-duration: 4s;
-            -moz-animation-duration: 4s;
-            -o-animation-duration: 4s;
-            animation-duration: 4s;
-
-            -webkit-animation-iteration-count: infinite;
-            -moz-animation-iteration-count: infinite;
-            -o-animation-iteration-count: infinite;
-            animation-iteration-count: infinite;
-
-            -webkit-animation-timing-function: ease-in-out;
-            -moz-animation-timing-function: ease-in-out;
-            -o-animation-timing-function: ease-in-out;
-            animation-timing-function: ease-in-out;
         }
         
         /* 展播文字动画 */
         @keyframes slideTextTop {
             0% {
-                top: -2rem;
-                font-size: 1rem;
                 color: #909090;
+                -webkit-transform: translateY(-2rem);
+                -moz-transform: translateY(-2rem);
+                -ms-transform: translateY(-2rem);
+                -o-transform: translateY(-2rem);
+                transform: translateY(-2rem);
             }
 
             50% {
-                top: 0rem;
-                font-size: 0.8rem;
+                -webkit-transform: translateY(0);
+                -moz-transform: translateY(0);
+                -ms-transform: translateY(0);
+                -o-transform: translateY(0);
+                transform: translateY(0);
                 color: #FFFFFF;
             }
 
             100% {
-                top: -2rem;
-                font-size: 1rem;
+                -webkit-transform: translateY(-2rem);
+                -moz-transform: translateY(-2rem);
+                -ms-transform: translateY(-2rem);
+                -o-transform: translateY(-2rem);
+                transform: translateY(-2rem);
                 color: #909090
             }
         }
         @keyframes slideTextBottom {
             0% {
-                bottom: -2rem;
-                font-size: 0.8rem;
+                -webkit-transform: translateY(2rem);
+                -moz-transform: translateY(2rem);
+                -ms-transform: translateY(2rem);
+                -o-transform: translateY(2rem);
+                transform: translateY(2rem);
                 color: #909090;
             }
 
             50% {
-                bottom: 0rem;
-                font-size: 1rem;
+                -webkit-transform: translateY(0);
+                -moz-transform: translateY(0);
+                -ms-transform: translateY(0);
+                -o-transform: translateY(0);
+                transform: translateY(0);
                 color: #FFFFFF;
             }
 
             100% {
-                bottom: -2rem;
-                font-size: 0.8rem;
+                -webkit-transform: translateY(2rem);
+                -moz-transform: translateY(2rem);
+                -ms-transform: translateY(2rem);
+                -o-transform: translateY(2rem);
+                transform: translateY(2rem);
                 color: #909090;
             }
         }
+    
+    @keyframes rotate {
+        0% {
+            -webkit-transform: translateY(0deg);
+            -moz-transform: translateY(0deg);
+            -ms-transform: translateY(0deg);
+            -o-transform: translateY(0deg);
+            transform: translateY(0deg);
+        }
+        100% {
+            -webkit-transform: rotateY(360deg);
+            -moz-transform: rotateY(360deg);
+            -ms-transform: rotateY(360deg);
+            -o-transform: rotateY(360deg);
+            transform: rotateY(360deg);
+        }
+    }
 
 
 </style>
@@ -236,9 +242,9 @@
         </div>
         <!--展示文字-->
         <div class="slide-text-div">
-            <span class="slide-text-top">测评</span>
-            <span class="slide-text-bottom">课程</span>
-            <span class="slide-text-top">招聘</span>
+            <div class="slide-text-top">测评</div>
+            <div class="slide-text-bottom">课程</div>
+            <div class="slide-text-top">招聘</div>
         </div>
         <!--其它信息-->
         <div class="other-div"><a href="/userInfo"><i class="icon-user"></i></a></div>

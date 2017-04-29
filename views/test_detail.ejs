@@ -19,7 +19,7 @@
 <header class="header">
     <div class="header-label">
         测试介绍
-        <a href="/test/index"><span class="glyphicon glyphicon-home return-home"></span></a>
+        <a href="/index"><span class="glyphicon glyphicon-home return-home"></span></a>
     </div>
 </header>
 
@@ -55,10 +55,10 @@
     </div>
 </div>
 
-<!--进入测试页面按钮-->
+<!--进入学习-->
 <div id="startDiv">
-    <!--<input type="button" class="btn btn-danger" value="购买" id="purchase">-->
-    <input type="button" class="btn btn-success" value="开始测试-->" id="start">
+    <input type="button" class="btn btn-default" value="吐槽" id="comment">
+    <input type="button" class="btn btn-success" value="开始学习-->" id="start">
 </div>
 
 <!--底部导航-->
@@ -67,6 +67,8 @@
 <%- include modalWindow.ejs %>
 <!--悬浮按钮-->
 <%- include hoverButton.ejs %>
+<!--弹幕墙-->
+<%- include danmu.ejs %>
 
 <!--页内脚本-->
 <script type="text/javascript">

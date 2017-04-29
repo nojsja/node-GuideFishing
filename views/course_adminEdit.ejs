@@ -7,6 +7,8 @@
 
     <!--bootstrap样式-->
     <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
+    <!--font-awesome图标-->
+    <link rel="stylesheet" href="/stylesheets/lib/font-awesome.min.css">
     <!--页面样式-->
     <link rel='stylesheet' href='/stylesheets/course_adminEdit.css' />
 
@@ -96,9 +98,9 @@
 
     <!--可选预览类型-->
     <div class="preview-type-div">
-        <div class="preview-type" preview="audio">音频</div>
-        <div class="preview-type" preview="video">视频</div>
-        <div class="preview-type" preview="image">图片</div>
+        <div class="preview-type" preview="audio"><i class="icon-headphones"></i></div>
+        <div class="preview-type" preview="video"><i class="icon-film"></i></div>
+        <div class="preview-type" preview="image"><i class="icon-picture"></i></div>
     </div>
     <div class="preview-list">
 
@@ -121,10 +123,14 @@
 <!--正文-->
 <div class="container" id="total">
     <div class="row">
-        <div class="col-md-2 col-md-offset-5 total-title"><%= title %></div>
+        <div class="col-md-2 col-md-offset-5 total-title">
+            <i class="icon-edit"></i><%= title %>
+        </div>
     </div>
     <div class="row">
-        <div class="col-md-2 col-md-offset-1 title border">标题</div>
+        <div class="col-md-2 col-md-offset-1 title border">
+            <i class="icon-quote-left"></i> 标题 <i class="icon-quote-right"></i>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
@@ -134,7 +140,10 @@
 
     <!--分类-->
     <div class="row">
-        <div class="col-md-2 col-md-offset-1 title border">分类</div>
+        <div class="col-md-2 col-md-offset-1 title border">
+            <i class="icon-quote-left"></i> 分类 <i class="icon-quote-right"></i>
+
+        </div>
     </div>
     <div class="row">
         <div class="col-md-10 col-md-offset-1 type">
@@ -149,7 +158,9 @@
 
     <!--标签-->
     <div class="row">
-        <div class="col-md-2 col-md-offset-1 title border">标签</div>
+        <div class="col-md-2 col-md-offset-1 title border">
+            <i class="icon-quote-left"></i> 标签 <i class="icon-quote-right"></i>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
@@ -167,7 +178,9 @@
 
     <!--课程概述-->
     <div class="row">
-        <div class="col-md-2 col-md-offset-1 border title">概述</div>
+        <div class="col-md-2 col-md-offset-1 border title">
+            <i class="icon-quote-left"></i> 概述 <i class="icon-quote-right"></i>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-10 col-md-offset-1 input-group">
@@ -177,7 +190,9 @@
 
     <!--课程讲师-->
     <div class="row">
-        <div class="col-md-2 col-md-offset-1 border title">讲师</div>
+        <div class="col-md-2 col-md-offset-1 border title">
+            <i class="icon-quote-left"></i> 讲师 <i class="icon-quote-right"></i>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
@@ -186,7 +201,9 @@
     </div>
     <!--讲师登录密码-->
     <div class="row">
-        <div class="col-md-2 col-md-offset-1 border title">密码</div>
+        <div class="col-md-2 col-md-offset-1 border title">
+            <i class="icon-quote-left"></i> 密码 <i class="icon-quote-right"></i>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
@@ -196,7 +213,9 @@
 
     <!--课程价格-->
     <div class="row">
-        <div class="col-md-2 col-md-offset-1 border title">价格</div>
+        <div class="col-md-2 col-md-offset-1 border title">
+            <i class="icon-quote-left"></i> 价格 <i class="icon-quote-right"></i>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
@@ -206,7 +225,9 @@
 
     <!--主要内容-->
     <div class="row">
-        <div class="col-md-2 col-md-offset-1 border title">内容</div>
+        <div class="col-md-2 col-md-offset-1 border title">
+            <i class="icon-quote-left"></i> 内容 <i class="icon-quote-right"></i>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-10 col-md-offset-1 input-group">
@@ -219,16 +240,30 @@
         <div class="col-md-12" id="sendDiv">
 
             <button type="button" class="btn btn-default" id="sendBroadcast" isReady="false">
-                <span class="glyphicon glyphicon-export"></span> 发布直播
+                <i class="icon-comments-alt"></i> 讨论组<i class="icon-plus"></i>
             </button>
 
             <button type="button" class="btn btn-success" id="sendCourse" isReady="true">
-                发布课程 <span class="glyphicon glyphicon-send"></span>
+                 提交审核 <span class="glyphicon glyphicon-send"></span>
             </button>
 
         </div>
     </div>
+
 </div>
+
+<script type="text/javascript">
+
+    if('<%= loadData %>' !== 'false'){
+
+        // " 解码
+        var loadDataString = EditAction.SymbolDecode('<%= loadData %>');
+
+        EditAction.loadData = JSON.parse(loadDataString);
+
+    }
+
+</script>
 
 <% include modalWindow%>
 <!--admin footer -->

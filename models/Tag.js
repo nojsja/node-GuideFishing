@@ -241,7 +241,7 @@ Tag.getTagContent = function (condition, callback) {
              callback(null, responseData);
 
          }else {
-             callback(new Error("查询信息有误!"), null);
+             callback(null, []);
          }
      });
 

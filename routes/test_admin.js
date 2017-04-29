@@ -50,7 +50,26 @@ function admin(app) {
 
     }, function (req, res) {
         res.render('test_adminEdit', {
-            title: '创建新的评测'
+            title: '测评创建',
+            loadData: false
+        });
+    });
+
+    /* 管理员编辑测评 */
+    app.get('/test/admin/edit/:testType/:testTitle', function (req, res, next) {
+
+        permissionCheck.rank2(req, res, next);
+
+    }, function (req, res) {
+
+        var loadData = JSON.stringify({
+            testTitle: req.params.testTitle,
+            testType: req.params.testType
+        });
+        res.render('test_adminEdit', {
+
+           title: '测评编辑',
+            loadData: loadData
         });
     });
 
@@ -61,7 +80,39 @@ function admin(app) {
 
     }, function (req, res) {
         res.render('test_adminManager', {
-            title: '管理所有评测'
+            title: '测评管理'
+        });
+    });
+
+    // 获取需要导入的课程数据
+    app.post('/test/admin/load/:testType/:testTitle', function(req, res, next){
+
+        permissionCheck.rank2(req, res, next);
+
+    }, function (req, res) {
+
+        // 筛选条件
+        var condition = {
+            testTitle: req.params.testTitle,
+            testType: req.params.testType
+        };
+
+        console.log(condition);
+
+        AllTest.getLoadData(condition, function (err, testData) {
+
+            if(err){
+                console.log('获取导入课程的数据出错!');
+                return res.json(JSON.stringify({
+                    isError: true,
+                    error: err
+                }));
+            }
+            // 向客户端发回数据
+            res.json(JSON.stringify({
+                isError: false,
+                loadData: testData
+            }));
         });
     });
 

@@ -16,7 +16,7 @@ var permissionCheck = {
             res.render('error', {
                 message: '需要管理员权限',
                 error: {
-                    status: '404'
+                    status: '401'
                 }
             });
         }else {
@@ -39,7 +39,7 @@ var permissionCheck = {
             res.render('error', {
                 message: '需要0级管理员权限',
                 error: {
-                    status: '404'
+                    status: '401'
                 }
             });
         }else {
@@ -62,7 +62,7 @@ var permissionCheck = {
             res.render('error', {
                 message: '需要1级管理员权限',
                 error: {
-                    status: '404'
+                    status: '401'
                 }
             });
         }else {
@@ -85,7 +85,7 @@ var permissionCheck = {
             res.render('error', {
                 message: '需要2级管理员权限',
                 error: {
-                    status: '404'
+                    status: '401'
                 }
             });
         }else {

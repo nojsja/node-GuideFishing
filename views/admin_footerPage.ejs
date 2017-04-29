@@ -4,7 +4,6 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title><%= title %></title>
     <link rel="stylesheet" href="/stylesheets/lib/bootstrap.min.css">
     <!--<script type="text/javascript" src="./public/javascript/libs/jquery-3.1.0.min.js"></script>
@@ -14,18 +13,36 @@
     <style type="text/css">
         #total {
             min-height: 600px;
-            margin-top: 1em;
-            margin-bottom: 2em;
-            background-color: rgba(57, 89, 128, 0.52);
+            background-color: #4D6DAD;
+            background: -webkit-linear-gradient(to bottom, #4D6DAD, #214d80);
+            background: linear-gradient(to bottom, #4D6DAD, #214d80);
             color: rgb(236, 236, 236);
             height: auto;
-            -webkit-box-shadow: 0 5px 8px #464646;
-            -moz-box-shadow: 0 5px 8px #464646;
-            box-shadow: 0 5px 8px #464646;
+
+            -webkit-transform: scale(1.03);
+            -moz-transform: scale(1.03);
+            -ms-transform: scale(1.03);
+            -o-transform: scale(1.03);
+            transform: scale(1.03);
 
             -ms-word-wrap: break-word;
             word-wrap: break-word;
             word-break: break-all;
+        }
+
+        .total-border {
+            background-color: #d2d2d2;
+            background: -webkit-linear-gradient(to bottom, #aaaaaa, #214d80);
+            background: linear-gradient(to bottom, #efefef, #c8c8c8);
+
+            border-bottom: solid 2px #e86930;
+        }
+
+        .content a {
+            color: #d2d2d2;
+        }
+        .content a:hover {
+            color: #8cb5ff;
         }
 
         /* 标题 */
@@ -41,29 +58,8 @@
             font-size: 1.5em;
         }
 
-        .footer-div {
-            background-color: rgb(42,42,42);
-            border-top: solid 2px #a20812;
-            width: 100%;
-        }
-
-        .fill-content {
-            flex: 1;
-            width: 100%;
-        }
-
         .copyright a {
             color: #FFFFFF;
-        }
-
-        /*版权标识*/
-        .copyright {
-            color: #FFFFFF;
-            text-align: center;
-            font-size: 1em;
-            background-color: rgba(88, 138, 198, 0.43);
-            margin-top: 1em;
-            box-shadow: 0px 0px 5px #661611 inset;
         }
 
         /*文字特效*/
@@ -83,88 +79,90 @@
 <%- include admin_header.ejs%>
 
 <!--主要内容-->
-<div class="container" id="total">
-    <!--判断请求内容-->
-    <% if (content == "about") { %>
-    <div class="row">
-        <div class="col-md-12 head">
-            <p><h1><%= title %></h1></p>
-        </div>
+<div class="total-border">
+    <div class="container" id="total">
+        <!--判断请求内容-->
+        <% if (content == "about") { %>
+        <div class="row">
+            <div class="col-md-12 head">
+                <p><h1><%= title %></h1></p>
+            </div>
 
-        <div class="col-md-12 content">
-            <p><h3 class="box1">服务条款</h3></p>
-            <ul>
-                <li>使用本站将被视为同意网站所有协议</li>
-                <li>带渔提供的是合法的网络视频,音乐,图片等内容</li>
-                <li>网站由个人开发,托管于腾讯云</li>
-            </ul>
+            <div class="col-md-12 content">
+                <p><h3 class="box1">服务条款</h3></p>
+                <ul>
+                    <li>使用本站将被视为同意网站所有协议</li>
+                    <li>GuideFishing提供的是合法的网络视频,音乐,图片等内容</li>
+                    <li>网站由个人开发,托管于腾讯免费云主机</li>
+                </ul>
+            </div>
+            <div class="col-md-12 content">
+                <p><h3 class="box1">帮助中心</h3></p>
+                <ul>
+                    <li>如果网站侵犯了您的个人权益请发邮件至: yangwei13@outlook.com 进行申诉</li>
+                    <li>如需反馈请发送邮件至:yangwei13@outlook.com</li>
+                </ul>
+            </div>
+            <div class="col-md-12 content">
+                <p><h3 class="box1">免责声明</h3></p>
+                <ul>
+                    <li>用户应该遵守相关的法律法规</li>
+                    <li>资源均来源于网络公开和个人用户上传,网站不负产权责任</li>
+                    <li>网站享有监督权,可以删除非法的资源</li>
+                </ul>
+            </div>
         </div>
-        <div class="col-md-12 content">
-            <p><h3 class="box1">帮助中心</h3></p>
-            <ul>
-                <li>如果网站侵犯了您的个人权益请发邮件至: yangwei13@outlook.com 进行申诉</li>
-                <li>如需反馈请发送邮件至:yangwei13@outlook.com</li>
-            </ul>
-        </div>
-        <div class="col-md-12 content">
-            <p><h3 class="box1">免责声明</h3></p>
-            <ul>
-                <li>用户应该遵守相关的法律法规</li>
-                <li>资源均来源于网络公开和个人用户上传,网站不负产权责任</li>
-                <li>网站享有监督权,可以删除非法的资源</li>
-            </ul>
-        </div>
-    </div>
-    <% } %>
+        <% } %>
 
-    <% if (content == "contact") { %>
-    <div class="row">
-        <div class="col-md-12 head">
-            <p><h1><%= title %></h1></p>
+        <% if (content == "contact") { %>
+        <div class="row">
+            <div class="col-md-12 head">
+                <p><h1><%= title %></h1></p>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 content">
-            <p><h3 class="box1">加入团队</h3></p>
-            <ul>
-                <li>期待您的加入!</li>
-                <li>联系QQ:1334239104</li>
-                <li>联系邮箱:yangwei13@outlook.com</li>
-            </ul>
+        <div class="row">
+            <div class="col-md-12 content">
+                <p><h3 class="box1">加入团队</h3></p>
+                <ul>
+                    <li>期待您的加入!</li>
+                    <li>联系QQ:1334239104</li>
+                    <li>联系邮箱:yangwei13@outlook.com</li>
+                </ul>
+            </div>
+            <div class="col-md-12 content">
+                <p><h3 class="box1">建议反馈</h3></p>
+                <ul>
+                    <li>反馈信息请包括反馈主题和反馈内容,必要的话请给出您的联系方式.</li>
+                    <li>反馈请至邮:yangwei13@outlook.com</li>
+                </ul>
+            </div>
         </div>
-        <div class="col-md-12 content">
-            <p><h3 class="box1">建议反馈</h3></p>
-            <ul>
-                <li>反馈信息请包括反馈主题和反馈内容,必要的话请给出您的联系方式.</li>
-                <li>反馈请至邮:yangwei13@outlook.com</li>
-            </ul>
-        </div>
-    </div>
-    <% } %>
+        <% } %>
 
-    <% if (content == "follow") { %>
-    <div class="row">
-        <div class="col-md-12 head">
-            <p><h1><%=  title %></h1></p>
+        <% if (content == "follow") { %>
+        <div class="row">
+            <div class="col-md-12 head">
+                <p><h1><%=  title %></h1></p>
+            </div>
         </div>
+        <div class="row">
+            <div class="col-md-12 content">
+                <p><h3 class="box1">Github</h3></p>
+                <ul>
+                    <li>我的主页: <a href="https://github.com/NoJsJa">https://github.com/NoJsJa</a></li>
+                    <li>GuideFishing项目主页: <a href="https://github.com/NoJsJa/node-GuideFishing">https://github.com/NoJsJa/node-Qwaii</a></li>
+                </ul>
+            </div>
+            <div class="col-md-12 content">
+                <p><h3 class="box1">新浪微博 & Twitter</h3></p>
+                <ul>
+                    <li>微博: @AuTuMn_愤怒的Node</li>
+                    <li>Twitter: @Johnyou29734209</li>
+                </ul>
+            </div>
+        </div>
+        <% } %>
     </div>
-    <div class="row">
-        <div class="col-md-12 content">
-            <p><h3 class="box1">Github</h3></p>
-            <ul>
-                <li>我的主页: <a href="https://github.com/NoJsJa">https://github.com/NoJsJa</a></li>
-                <li>GuideFishing项目主页: <a href="https://github.com/NoJsJa/node-GuideFishing">https://github.com/NoJsJa/node-Qwaii</a></li>
-            </ul>
-        </div>
-        <div class="col-md-12 content">
-            <p><h3 class="box1">新浪微博 & Twitter</h3></p>
-            <ul>
-                <li>微博: @AuTuMn_愤怒的Node</li>
-                <li>Twitter: @Johnyou29734209</li>
-            </ul>
-        </div>
-    </div>
-    <% } %>
 </div>
 
 <%- include admin_footer.ejs %>

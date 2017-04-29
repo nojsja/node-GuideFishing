@@ -18,6 +18,11 @@
  *  可编辑状态(用户不可见,非正式课程)和完成状态(用户可见, 正式发布的课程)
  * isBroadcast -- 普通的课程和直播课程(呈现形式不一样)
  * courseContent -- 课程内容(富文本格式)
+ * danmu -- 每个课程包含的弹幕内容
+ *  text -- 弹幕文字
+ *  color -- 弹幕颜色
+ *  user -- 发送者
+ *  date -- 发送日期
  * teacher -- 课程讲师
  * passworsd -- 讲师登录密码
  * date -- 发布日期
@@ -66,7 +71,12 @@ var courseSchema = new Schema({
         msg: String,
         url: String
     }],
-
+    danmu: [{
+        text: {type: String, required: true},
+        user: {type: String, required: true},
+        color: String,
+        date: String,
+    }],
     courseContent: String,
     teacher: String,
     password: String,

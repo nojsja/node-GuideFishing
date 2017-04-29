@@ -650,6 +650,46 @@ AdminInfoAction.updateExamineProgress = function () {
         // 审核结果modal弹窗
         var $examineText = $('<div class="examine-text">');
 
+        // href 对象
+        var Href = {
+
+            course: {
+                isExaming: function (courseType, courseName) {
+
+                    return ['/course/admin/edit/', courseType, '/',
+                        courseName].join('');
+                },
+                reject: function (courseType, courseName) {
+
+                    return ['/course/admin/edit/', courseType, '/',
+                        courseName].join('');
+                },
+                pass: function (courseType, courseName) {
+
+                    return ['/course/view/' ,
+                        courseType, '/', courseName].join('');
+                },
+            },
+
+            test: {
+                isExaming: function (testType, testTitle) {
+
+                    return ['/test/admin/edit/' ,
+                        testType, '/', testTitle].join('');
+                },
+                reject: function (testType, testTitle) {
+
+                    return ['/test/admin/edit/' ,
+                        testType, '/', testTitle].join('');
+                },
+                pass: function (testType, testTitle) {
+
+                    return ['/test/view/' ,
+                        testType, '/', testTitle].join('');
+                },
+            }
+        };
+
         // 更新页面
         for(var i = 0; i < examineProgress.length; i++){
 
@@ -660,11 +700,16 @@ AdminInfoAction.updateExamineProgress = function () {
                 var $progressItemType = $(' <span class="progress-item-type">');
                 var $progressItemTitle = $(' <a class="progress-item-title">');
 
+                var href = Href[ examineProgress[i].examineType ]
+                    [ examineProgress[i].status ] ( examineProgress[i].contentType, examineProgress[i].contentName );
+
                 // 审核状态
                 if(examineProgress[i].status == 'pass'){
                     $progressButton.prop('class', 'btn btn-success btn-sm');
 
+
                 }else if(examineProgress[i].status == 'reject'){
+
                     $progressButton.prop('class', 'btn btn-danger btn-sm');
                 }
 
@@ -681,8 +726,6 @@ AdminInfoAction.updateExamineProgress = function () {
                     });
                 });
 
-                var href = ['/', examineProgress[i].examineType,'/view/' ,
-                    examineProgress[i].contentType, '/', examineProgress[i].contentName].join('');
 
                 $progressItemType.text(examineProgress[i].examineType);
                 $progressItemTitle.text(examineProgress[i].contentName)
