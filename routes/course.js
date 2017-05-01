@@ -29,7 +29,19 @@ function course(app){
         res.render('course_index', {
             title: "课程主页",
             slogan: "启航",
-            other: "课程"
+            other: "课程",
+            courseType: "ALL"
+        });
+    });
+
+    // 获取课程主页并预先载入相关 类型的数据
+    app.get('/course/index/:courseType', function (req, res) {
+
+        res.render('course_index', {
+            title: "课程主页",
+            slogan: "启航",
+            other: "课程",
+            courseType: req.params.courseType
         });
     });
     
@@ -41,6 +53,42 @@ function course(app){
             // 转化为字符串类型
             courseTypeChina: EnToCn.getAllPattern("courseType")
         }) );
+    });
+
+    // 获取课程分类页面
+    app.get('/course/classification', function (req, res) {
+
+        res.render('course_classification',{
+            title: '所有课程分类'
+        });
+    });
+
+    // 获取所有课程分类信息
+    app.post('/course/classification', function ( req, res) {
+
+        Course.getClassification(function (err, classificationInfo) {
+
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err.toString()
+                }) );
+            }
+
+            var readUrl = locateFromRoot('/public/images/courseType/');
+            var visitUrl = '/images/courseType/';
+
+            ReadCourseImg(readUrl, visitUrl, function (imgArray) {
+
+                res.json( JSON.stringify({
+                    isError: false,
+                    classificationInfo: classificationInfo,
+                    courseTypeChina: EnToCn.getAllPattern("courseType"),
+                    courseTypeImage: imgArray
+                }) );
+            });
+
+        });
     });
 
     // 获取课程详情介绍页面

@@ -172,6 +172,41 @@ Course.prototype.save = function (callback) {
     });
 };
 
+/* 获取课程分类信息 */
+Course.getClassification = function (callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Course', courseSchema);
+
+    var query = Course.find();
+    query.exec(function (err, docs) {
+
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+
+        // 课程分类信息对象
+        var classificationInfo = {};
+
+        if(docs.length > 0){
+
+            for(let i = 0; i < docs.length; i++){
+
+                if(docs[i].courseType){
+                    if(classificationInfo[docs[i].courseType]){
+                        classificationInfo[docs[i].courseType] += 1;
+                    }else {
+                        classificationInfo[docs[i].courseType] = 1;
+                    }
+                }
+            }
+        }
+
+        callback(null, classificationInfo);
+    });
+};
+
 /* 检查数据是否存在,如果存在的话先删除数据 */
 Course.deleteIfExit = function (condition, callback) {
 

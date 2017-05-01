@@ -32,8 +32,10 @@
 
 <body>
 
-<!--admin header-->
+<!---------------header------------------>
 <%- include admin_header.ejs %>
+
+<!-------------课程载入和预览区域--------------->
 
 <!--上传窗口触发器-->
 <div class="self-trigger self-trigger-upload" triggerTarget="self-container-upload">
@@ -88,7 +90,6 @@
     </div>
 </div>
 
-
 <!--预览窗口触发器-->
 <div class="self-trigger self-trigger-preview" triggerTarget="self-container-preview">
     <span class="glyphicon glyphicon-eye-open"></span>
@@ -119,6 +120,7 @@
     </div>
 </div>
 
+<!-------------------课程正文编辑区域--------------------->
 
 <!--正文-->
 <div class="container" id="total">
@@ -147,11 +149,19 @@
     </div>
     <div class="row">
         <div class="col-md-10 col-md-offset-1 type">
-            <div class="type-item" type="jobFound">求职秘籍</div>
-            <div class="type-item" type="jobSkill">职场技能</div>
-            <div class="type-item" type="english">英语进阶</div>
-            <div class="type-item" type="software">软件技巧</div>
-            <div class="type-item" type="personal">个人提升</div>
+            <div>
+                <input type="text" id="typeTextChina" placeholder="类型中文...">
+                <input type="text" id="typeTextEnglish" placeholder="对应英文...">
+                <div class="btn btn-default btn-sm" id="courseTypeAdd" title="点击添加">+</div>
+            </div>
+            <!--标签列表-->
+            <div class="type-item-list">
+                <!--<div class="type-item" type="jobFound">求职秘籍</div>-->
+                <!--<div class="type-item" type="jobSkill">职场技能</div>-->
+                <!--<div class="type-item" type="english">英语进阶</div>-->
+                <!--<div class="type-item" type="software">软件技巧</div>-->
+                <!--<div class="type-item" type="personal">个人提升</div>-->
+            </div>
 
         </div>
     </div>
@@ -252,6 +262,8 @@
 
 </div>
 
+<!--------------------页面内脚本区域----------------------->
+
 <script type="text/javascript">
 
     if('<%= loadData %>' !== 'false'){
@@ -260,10 +272,13 @@
         var loadDataString = EditAction.SymbolDecode('<%= loadData %>');
 
         EditAction.loadData = JSON.parse(loadDataString);
+        EditAction.courseTypeChina = '<%= pattern %>';
 
     }
 
 </script>
+
+<!---------------------载入的外部html----------------------->
 
 <% include modalWindow%>
 <!--admin footer -->

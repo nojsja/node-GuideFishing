@@ -62,12 +62,12 @@ GuideFishing.pageEventBind = function () {
 
     // 跳转到课程页面
     $('#courseMore').click(function () {
-        window.location.href = '/course/index';
+        window.location.href = '/course/classification';
     });
 
     // 跳转到测评页面
     $('#testMore').click(function () {
-        window.location.href = '/test/index';
+        window.location.href = '/test/classification';
     });
     //  跳转到公司招聘页面
     $('#recruitmentMore').click(function () {

@@ -28,6 +28,7 @@ $(function () {
  * file -- origin 未转换前的文件, data -- 转换后即将上传的文件, type -- 文件类型
  * upload -- 文件上传相关
  * isAdmin -- 是否具有管理员权限
+ * isLogin -- 是否登录
  * reader -- 文件读取对象fileReader
  * record -- 录音对象,
  * status -- 录音状态
@@ -38,6 +39,7 @@ var BroadcastAction = {
     socket: {},
     courseName: "",
     isAdmin: false,
+    isLogin: false,
 
     message: {
         send: {
@@ -174,94 +176,97 @@ BroadcastAction.pageEventBind = function () {
         $('.finish-broadcast-div > span').click(BroadcastAction.finishBroadcast);
     }
 
-    // 获取音频事件初始化
-    BroadcastAction.getMediaDataInit();
+    // 判断用户是否登录
+    if(BroadcastAction.isLogin){
+        // 获取音频事件初始化
+        BroadcastAction.getMediaDataInit();
 
-    // 上传事件绑定
-    BroadcastAction.file.upload = {
+        // 上传事件绑定
+        BroadcastAction.file.upload = {
 
-        setProgress: function (value) {
-            // 更新页面进度条
-            $('.progress-bar').css('width', value);
-            return this;
-        },
-        hidden: function () {
-            if($('.progress').css('display') == 'block'){
-                $('.progress').fadeOut();
+            setProgress: function (value) {
+                // 更新页面进度条
+                $('.progress-bar').css('width', value);
+                return this;
+            },
+            hidden: function () {
+                if($('.progress').css('display') == 'block'){
+                    $('.progress').fadeOut();
+                }
+                return this;
+            },
+            show: function () {
+                if($('.progress').css('display')  != 'block'){
+                    $('.progress').fadeIn();
+                }
+                return this;
             }
-            return this;
-        },
-        show: function () {
-            if($('.progress').css('display')  != 'block'){
-                $('.progress').fadeIn();
-            }
-            return this;
-        }
-    };
+        };
 
-    // 用户发送消息
-    $('#messageSend').click(function () {
-        BroadcastAction.message.send.trigger('send');
-    });
-
-    // messageInput键盘事件绑定
-    $('#messageInput').on('keydown', function (e) {
-
-        // 事件代码Enter
-        if(e.which == 13){
+        // 用户发送消息
+        $('#messageSend').click(function () {
             BroadcastAction.message.send.trigger('send');
-        }
-    });
+        });
 
-    // 文件选中上传事件
-    $('#fileChoose').on('change', function () {
+        // messageInput键盘事件绑定
+        $('#messageInput').on('keydown', function (e) {
 
-        console.log('on change');
-        //判断浏览器是否支持FileReader接口
-        if(typeof FileReader == 'undefined'){
-            //使选择控件不可操作
-            $('#fileChoose').setAttribute("disabled","disabled");
-            return BroadcastAction.modalWindow('你的浏览器不支持读取本地文件!');
-        }
+            // 事件代码Enter
+            if(e.which == 13){
+                BroadcastAction.message.send.trigger('send');
+            }
+        });
 
-        // 获取文件
-        var file = document.getElementById('fileChoose').files[0];
+        // 文件选中上传事件
+        $('#fileChoose').on('change', function () {
 
-        if(file){
-            BroadcastAction.file.origin = file;
-            console.log(file.size + " + " + file.name);
-            BroadcastAction.file.reader = new FileReader();
-            // 注意这儿载入的是文件分片后的数据
-            // 这个需要服务器返回第一次返回后客户端确认信息
-            BroadcastAction.file.reader.onload = function (event) {
+            console.log('on change');
+            //判断浏览器是否支持FileReader接口
+            if(typeof FileReader == 'undefined'){
+                //使选择控件不可操作
+                $('#fileChoose').setAttribute("disabled","disabled");
+                return BroadcastAction.modalWindow('你的浏览器不支持读取本地文件!');
+            }
 
-                // 为2是读取成功
-                console.log("readyState: " + this.readyState);
+            // 获取文件
+            var file = document.getElementById('fileChoose').files[0];
 
-                var data = this.result || event.target.result;
-                console.log('reader onload.');
-                /* 通过内部的result对象取到读取后的数据 */
-                BroadcastAction.socket.emit('upload', {
+            if(file){
+                BroadcastAction.file.origin = file;
+                console.log(file.size + " + " + file.name);
+                BroadcastAction.file.reader = new FileReader();
+                // 注意这儿载入的是文件分片后的数据
+                // 这个需要服务器返回第一次返回后客户端确认信息
+                BroadcastAction.file.reader.onload = function (event) {
+
+                    // 为2是读取成功
+                    console.log("readyState: " + this.readyState);
+
+                    var data = this.result || event.target.result;
+                    console.log('reader onload.');
+                    /* 通过内部的result对象取到读取后的数据 */
+                    BroadcastAction.socket.emit('upload', {
+                        "Name": BroadcastAction.file.origin.name,
+                        "Segment": data
+                    });
+                };
+                console.log('start');
+                // 触发开始上传事件
+                // 等待服务器发回允许上传的回调信息后开始载入文件流式传输到服务器
+                BroadcastAction.socket.emit('start', {
                     "Name": BroadcastAction.file.origin.name,
-                    "Segment": data
+                    "Size": BroadcastAction.file.origin.size,
+                    "CourseName": BroadcastAction.courseName
                 });
-            };
-            console.log('start');
-            // 触发开始上传事件
-            // 等待服务器发回允许上传的回调信息后开始载入文件流式传输到服务器
-            BroadcastAction.socket.emit('start', {
-               "Name": BroadcastAction.file.origin.name,
-                "Size": BroadcastAction.file.origin.size,
-                "CourseName": BroadcastAction.courseName
-            });
-        }
-    });
-    
-    // 选择并上传文件到服务器, 服务器再广播到房间
-    $('#fileSend').click(function () {
+            }
+        });
 
-        $('#fileChoose').click();
-    });
+        // 选择并上传文件到服务器, 服务器再广播到房间
+        $('#fileSend').click(function () {
+
+            $('#fileChoose').click();
+        });
+    }
     
 };
 

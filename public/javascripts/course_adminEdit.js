@@ -6,8 +6,10 @@
 
 $(function () {
 
+    // 获取课程类型
+    EditAction.getCourseType();
     // 初始化编辑器
-    EditAction.ueditorInit();
+    // EditAction.ueditorInit();
     // 绑定页面事件
     EditAction.pageEventBind();
     // 声明观察者
@@ -48,6 +50,8 @@ var EditAction = {
 
     // 目前上传的组件
     currentType: "imgUpload",
+    // 中英文对照
+    courseTypeChina: "",
     // 是否需要预先载入课程数据编辑
     loadData: false,
     // 目前的预览类型
@@ -88,7 +92,8 @@ var EditAction = {
             teacher: "",
             password: "",
             price: "",
-            tags: []
+            tags: [],
+            courseTypeArray: []
         },
         // 观察者方法
         // 观察者列表, 注入方法和触发方法
@@ -253,6 +258,29 @@ EditAction.pageEventBind = function () {
         EditAction.uploadEventBind();
     });
 
+    // 课程类型输入事件绑定
+    nojsja["EventUtil"].addHandler($('#courseTypeAdd')[0], 'click', function () {
+
+        var typeTextChina = $('#typeTextChina').val().trim();
+        var typeTextEnglish = $('#typeTextEnglish').val().trim();
+
+        if(!typeTextChina || !typeTextEnglish){
+            return EditAction.modalWindow('请在左侧输入完整的信息');
+        }
+        if(! /[a-zA-Z_-]/.test(typeTextEnglish)){
+
+            return EditAction.modalWindow('请输入正确的英文标识符!');
+        }
+
+        EditAction.addCourseType({
+            courseType: {
+                english: typeTextEnglish,
+                china: typeTextChina
+            }
+
+        });
+    });
+
     // 标签输入事件绑定
     $('#tagAdd').click(function () {
 
@@ -393,6 +421,69 @@ EditAction.pageEventBind = function () {
     });
 
 };
+
+/* 获取课程类型 */
+EditAction.getCourseType = function () {
+
+    var url = '/course/courseType';
+    $.post(url, {}, function (JSONdata) {
+
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return EditAction.modalWindow('获取课程类型发生错误！' + JSONobject.error);
+        }
+        JSONobject.pattern = {
+            courseType: JSONobject.courseTypeChina
+        };
+
+        EditAction.updateCourseType(JSONobject);
+
+    }, "JSON");
+};
+
+/* 创建新的课程类型 */
+EditAction.addCourseType = function (courseType) {
+
+    var url = '/course/courseType/add';
+    $.post(url, courseType, function (JSONdata) {
+
+        var JSONobject = JSON.parse(JSONdata);
+        if(JSONobject.isError){
+            return EditAction.modalWindow('发生错误！' + JSONobject.error);
+        }
+        EditAction.updateCourseType(JSONobject);
+    }, "JSON");
+};
+
+/* 更新所有课程类型 */
+EditAction.updateCourseType = function (JSONobject){
+
+    console.log(JSONobject);
+    // 父元素
+    var $typeItemList = $('.type-item-list');
+    $typeItemList.children().remove();
+
+    var courseTypeChina = EditAction.courseTypeChina
+        = JSONobject.pattern["courseType"];
+
+    for(var courseType in courseTypeChina){
+
+        var $typeItem = $('<div class="type-item">');
+        $typeItem.attr('type', courseType)
+            .text(courseTypeChina[courseType]);
+
+        nojsja["EventUtil"].addHandler($typeItem[0], 'click', function () {
+            $('.type-item').prop('class', 'type-item');
+            $(this).prop('class', 'type-item type-item_click');
+            var type = $(this).attr('type');
+            EditAction.course.info.courseType = type;
+        });
+
+        // 添加到DOM上
+        $typeItemList.append($typeItem);
+    }
+};
+
 
 /* 导入课程数据 */
 EditAction.loadCourseData = function (JSONdata) {

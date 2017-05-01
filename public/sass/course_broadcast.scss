@@ -1,9 +1,10 @@
 @charset "UTF-8";
-
+@import "public";
 /* 课程直播 */
 
 body {
     font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: #3a3a3a;
 }
 
 html {
@@ -50,15 +51,15 @@ a {
 }
 
 .total {
-    margin-top: 1rem;
     margin-bottom: 5rem;
     height: auto;
-    min-height: 500px;
+    min-height: 400px;
 }
 
 .broadcast-room {
     text-align: center;
     font-size: 1.2rem;
+    background-color: $grey_light;
     padding: 5px;
     font-weight: bold;
     color: rgb(71, 139, 241);
@@ -72,7 +73,6 @@ a {
     padding: 2px;
     font-size: 1.2rem;
     border-bottom: dotted 1px grey;
-
     color: #98ccdf;
 }
 
@@ -193,10 +193,6 @@ a {
     padding: 0.2rem;
     width: 100%;
     height: auto;
-
-    -webkit-box-shadow: 0px 0px 10px #a2a5a2;
-    -moz-box-shadow:  0px 0px 10px #a2a5a2;
-    box-shadow:  0px 0px 10px #a2a5a2;
 }
 .send-wrapper-hidden {
     display: none;

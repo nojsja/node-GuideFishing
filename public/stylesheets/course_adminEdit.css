@@ -1,5 +1,40 @@
 @charset "UTF-8";
 /* 课程编辑页面 */
+/* 变量声明 */
+/* 宏 */
+@keyframes rotate {
+  0% {
+    -webkit-transform: translateY(0deg);
+    -moz-transform: translateY(0deg);
+    -ms-transform: translateY(0deg);
+    -o-transform: translateY(0deg);
+    transform: translateY(0deg); }
+  100% {
+    -webkit-transform: rotateY(360deg);
+    -moz-transform: rotateY(360deg);
+    -ms-transform: rotateY(360deg);
+    -o-transform: rotateY(360deg);
+    transform: rotateY(360deg); } }
+@keyframes rainBow {
+  0% {
+    color: #009c00;
+    border: solid 1px #009c00;
+    top: 0; }
+  25% {
+    color: #54b7bc;
+    border: solid 1px #54b7bc; }
+  50% {
+    color: #755cbc;
+    border: solid 1px #755cbc;
+    top: -2px; }
+  75% {
+    color: #d07233;
+    border: solid 1px #d07233; }
+  100% {
+    color: #009c00;
+    border: solid 1px #009c00;
+    top: 0; } }
+/* 函数 */
 body {
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif; }
 
@@ -9,22 +44,7 @@ html {
 a {
   color: #00B7FF; }
 
-.total-title {
-  text-align: center;
-  margin-top: .5rem;
-  margin-bottom: 1rem;
-  font-family: 黑体;
-  font-weight: bold;
-  font-size: 2.5rem;
-  text-shadow: 3px 3px 3px #737373;
-  color: #ffffff; }
-
-.type {
-  margin-bottom: 1em;
-  /*消除inline-box缝隙*/
-  font-size: 0; }
-
-/* 自定义上传和预览窗口 */
+/**********************自定义上传和预览窗口***********************/
 .self-container {
   padding: 1rem;
   display: none;
@@ -222,7 +242,20 @@ a {
   left: 1rem;
   top: 11rem; }
 
-/* 页面主体部分 */
+/******************正文主体编辑部分********************/
+.total-title {
+  text-align: center;
+  margin-top: .5rem;
+  margin-bottom: 1rem;
+  font-family: 黑体;
+  font-weight: bold;
+  font-size: 2.5rem;
+  text-shadow: 3px 3px 3px #737373;
+  color: #ffffff; }
+
+.type {
+  margin-bottom: 1em; }
+
 #total {
   background-color: #F3F3F3;
   border-radius: 5px;
@@ -230,6 +263,11 @@ a {
   margin-bottom: 2rem;
   margin-top: 2rem;
   padding: 1.3rem; }
+
+#typeTextChina,
+#typeTextEnglish {
+  width: 8rem;
+  font-size: 1.5rem; }
 
 /* 编辑标题 */
 .title {
@@ -240,9 +278,9 @@ a {
   color: #c5eedd;
   text-align: center;
   border: solid 1px white;
-  -moz-box-shadow: 5px 5px #8287a7;
-  -webkit-box-shadow: 5px 5px #8287a7;
-  box-shadow: 5px 5px #8287a7; }
+  -webkit-box-shadow: 5px 5px 0 #8287a7;
+  -moz-box-shadow: 5px 5px 0 #8287a7;
+  box-shadow: 5px 5px 0 #8287a7; }
 
 /* 组件阴影 */
 .shadow {
@@ -311,15 +349,6 @@ a {
   background-color: #547ed8;
   color: white; }
 
-.type > div:hover {
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  transition: all 0.3s;
-  background-color: #e1ebfd;
-  color: #668b96; }
-
 /*消除inline-block的间隙*/
 .tag-father {
   font-size: 0; }
@@ -356,7 +385,7 @@ a {
   word-spacing: 8px;
   letter-spacing: 1px; }
 
-/* footer页脚 */
+/**********************自定义上传和预览窗口**************************/
 .footer {
   margin-bottom: 5px;
   padding: 0.5rem;

@@ -2,6 +2,7 @@
  * Created by yangw on 2017/4/6.
  * 中英文转换映射对象
  */
+var Info = require('./Info');
 
 var EnToCn = (function () {
 
@@ -21,7 +22,14 @@ var EnToCn = (function () {
             "jobSkill": "职场技能",
             "software": "软件技巧",
             "english": "英语进阶",
-            "personal": "个人提升"
+            "personal": "个人提升",
+            "frontEnd": "前端",
+            "backEnd": "后台",
+            "tool": "工具",
+            "industry": "行业",
+            "mobile": "移动端",
+            "operation": "运维",
+            "security": "安全"
         },
 
         admin: {
@@ -35,6 +43,44 @@ var EnToCn = (function () {
         }
     };
 
+    // 从数据库读取数据初始化
+    function initPattern(callback) {
+        Info.getAllPattern(function (err, _pattern) {
+
+            if(err){
+                return callback(err);
+            }
+
+            callback(null, _pattern);
+        });
+    }
+    initPattern(function (err, _pattern) {
+        if(err){
+            return console.log(err);
+        }
+        // 更新pattern
+        pattern = _pattern;
+    });
+    
+    // 存储一条数据到数据库
+    function updatePattern(info, callback) {
+
+        var newInfo = new Info(info);
+        newInfo.save(function (err, isPass) {
+
+            if(err){
+                return callback(err);
+            }
+            initPattern(function (err, _pattern) {
+
+                if(err){
+                    return callback(err);
+                }
+                callback(null, _pattern);;
+            })
+        });
+    }
+
     // 获取某个映射
     function getPattern(name, type) {
 
@@ -43,15 +89,22 @@ var EnToCn = (function () {
     }
 
     // 设置某个映射
-    function setPattern(name, type, value) {
+    function setPattern(name, type, value, callback) {
 
-        // 没有这个属性
-        if(!pattern[type][name]){
-            pattern[type] = {};
-            pattern[type][name] = value;
-        }
+        updatePattern({
+            contentType: type,
+            pattern: {
+                english: name,
+                china: value
+            }
 
-        pattern[type][name] = value;
+        }, function (err, _pattern) {
+
+            if(err){
+                return callback(err);
+            }
+            callback(null, _pattern);
+        });
     };
 
     // 获取整个映射

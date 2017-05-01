@@ -1,0 +1,119 @@
+@charset "UTF-8";
+/* 变量声明 */
+/* 宏 */
+@keyframes rotate {
+  0% {
+    -webkit-transform: translateY(0deg);
+    -moz-transform: translateY(0deg);
+    -ms-transform: translateY(0deg);
+    -o-transform: translateY(0deg);
+    transform: translateY(0deg); }
+  100% {
+    -webkit-transform: rotateY(360deg);
+    -moz-transform: rotateY(360deg);
+    -ms-transform: rotateY(360deg);
+    -o-transform: rotateY(360deg);
+    transform: rotateY(360deg); } }
+@keyframes rainBow {
+  0% {
+    color: #009c00;
+    border: solid 1px #009c00;
+    top: 0; }
+  25% {
+    color: #54b7bc;
+    border: solid 1px #54b7bc; }
+  50% {
+    color: #755cbc;
+    border: solid 1px #755cbc;
+    top: -2px; }
+  75% {
+    color: #d07233;
+    border: solid 1px #d07233; }
+  100% {
+    color: #009c00;
+    border: solid 1px #009c00;
+    top: 0; } }
+/* 函数 */
+body {
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif; }
+
+html {
+  font-size: 16px; }
+
+/*------------------------课程分类选项----------------------------*/
+/* 外层包裹 */
+.classification-container {
+  padding: 5px; }
+
+/* 一个分类选项 */
+.classification-item {
+  position: relative;
+  background-color: #f1f1f1;
+  border: solid 1px white;
+  height: 3rem;
+  font-size: 0;
+  margin: 1rem 0 1rem; }
+
+.classification-item:active,
+.classification-item:hover {
+  -webkit-transition: all 0.3s linear;
+  -moz-transition: all 0.3s linear;
+  -ms-transition: all 0.3s linear;
+  -o-transition: all 0.3s linear;
+  transition: all 0.3s linear;
+  -webkit-box-shadow: 0 0 5px #668b96;
+  -moz-box-shadow: 0 0 5px #668b96;
+  box-shadow: 0 0 5px #668b96; }
+
+/* 图片 */
+.classification-item-image {
+  vertical-align: top;
+  display: inline-block;
+  text-align: center;
+  width: 2rem;
+  height: 3rem;
+  margin: 0 0.5rem 0; }
+
+.classification-item-image > img {
+  border-radius: 5px;
+  width: 2rem;
+  height: 2rem;
+  margin-top: 0.5rem;
+  border: solid 1px #4c74ee; }
+
+/* 标题 */
+.classification-item-title {
+  vertical-align: top;
+  font-size: 1rem;
+  color: #4c74ee;
+  font-weight: bold;
+  line-height: 3rem;
+  display: inline-block; }
+
+.classification-item-title > span {
+  border: solid 1px #4c74ee;
+  border-radius: 3px;
+  padding: 3px; }
+
+/* 数量 */
+.classification-item-number {
+  vertical-align: top;
+  font-size: 1rem;
+  line-height: 3rem;
+  display: inline-block;
+  margin-left: 1rem;
+  min-width: 2rem;
+  color: #737373;
+  text-align: center; }
+
+/* 指向箭头 */
+.classification-item-pointer {
+  position: absolute;
+  vertical-align: top;
+  right: 1rem;
+  top: 0;
+  color: #737373;
+  line-height: 3rem;
+  font-size: 1rem; }
+
+/*# sourceMappingURL=test_classification.css.map */

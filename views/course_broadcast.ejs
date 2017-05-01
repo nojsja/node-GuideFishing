@@ -20,10 +20,6 @@
     <script type="text/javascript" src="/javascripts/lib/recorderWorker.js"></script>
 
     <script type="text/javascript" src="/javascripts/course_broadcast.js"></script>
-    <script type="text/javascript">
-        // 用户身份认证
-        BroadcastAction.isAdmin = '<%= admin %>';
-    </script>
 
 </head>
 
@@ -59,7 +55,10 @@
     </div>
 </div>
 
-<!--发送消息区域-->
+<% if(isLogin){ %>
+
+<!--------------------发送消息区域--------------------->
+
 <div class="send-wrapper">
 
     <div class="message-div">
@@ -96,7 +95,20 @@
 
 </div>
 
+<% } %>
+
 <!--模态弹窗-->
 <%- include modalWindow.ejs %>
 
+<!----------------页内脚本------------------>
+<script type="text/javascript">
+    BroadcastAction.isLogin = '<%= isLogin %>' == 'true' ? true : false;
+
+    // 用户身份认证
+    BroadcastAction.isAdmin = '<%= admin %>' == 'true' ? true : false;
+
+</script>
+
 </body>
+
+</html>

@@ -12,7 +12,7 @@ $(function () {
     // 更新课程类型
     CourseAction.updateCourseType();
     //加载指定数量的测试题目列表
-    CourseAction.readCourseList({ courseType: "ALL" });
+    CourseAction.readCourseList({ courseType: CourseAction.courseType });
     // 更新热门内容
     CourseAction.updateHot();
     // 滑动图片初始化
@@ -124,6 +124,7 @@ CourseAction.buildSlideView = function () {
 CourseAction.readCourseList = function (condition) {
 
     var url = "/course/readCourseList";
+    console.log(condition);
     //请求服务器
     $.post(url, condition, function (JSONdata) {
         //更新页面

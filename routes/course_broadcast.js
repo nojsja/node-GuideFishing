@@ -23,6 +23,7 @@ function course_broadcast(app) {
             admin: false,
             slogan: "带渔",
             account: req.session.nickName || "游客",
+            isLogin: req.session.nickName !== (null || undefined) ? true : false,
             other: "讨论组"
         });
     });

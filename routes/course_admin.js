@@ -15,6 +15,8 @@ var getDate = require('../models/tools/GetDate');
 var CourseBroadcastData = require('../models/CourseBroadcastData');
 // 权限验证中间件
 var permissionCheck = require('../models/permissionCheck').permissionCheck;
+// 中英文切换
+var EntoCn = require('../models/EnToCn');
 
 function course_admin(app) {
     
@@ -39,7 +41,8 @@ function course_admin(app) {
 
         res.render('course_adminEdit', {
             title: "课程编辑",
-            loadData: false
+            loadData: false,
+            pattern: EntoCn.getAllPattern('courseType')
         });
     });
 
@@ -58,6 +61,37 @@ function course_admin(app) {
         res.render('course_adminEdit', {
             title: "课程编辑",
             loadData: loadData,
+            pattern: EntoCn.getAllPattern('courseType')
+        });
+    });
+
+    // 添加课程类型和对应中文
+    app.post('/course/courseType/add', function (req, res) {
+
+        var english = req.body.courseType.english;
+        var china = req.body.courseType.china;
+        var contentType = 'courseType';
+
+        if(!english || !china){
+            return res.json( JSON.stringify({
+                isError: true,
+                error: new Error("信息不完整！").toString()
+            }) );
+        }
+
+        // 添加类型信息
+        EntoCn.setPattern(english, contentType, china, function (err, pattern) {
+
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err.toString()
+                }) )
+            }
+            res.json(JSON.stringify({
+                isError: false,
+                pattern: pattern
+            }));
         });
     });
     
