@@ -1,6 +1,25 @@
 @charset "UTF-8";
 /* 变量声明 */
 /* 宏 */
+@keyframes breath {
+  0% {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    transform: scale(1); }
+  50% {
+    -webkit-transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    -o-transform: scale(1.2);
+    transform: scale(1.2); }
+  100% {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    transform: scale(1); } }
 @keyframes rotate {
   0% {
     -webkit-transform: translateY(0deg);
@@ -17,22 +36,30 @@
 @keyframes rainBow {
   0% {
     color: #009c00;
-    border: solid 1px #009c00;
-    top: 0; }
+    border: solid 1px #009c00; }
   25% {
     color: #54b7bc;
     border: solid 1px #54b7bc; }
   50% {
     color: #755cbc;
-    border: solid 1px #755cbc;
-    top: -2px; }
+    border: solid 1px #755cbc; }
   75% {
     color: #d07233;
     border: solid 1px #d07233; }
   100% {
     color: #009c00;
-    border: solid 1px #009c00;
-    top: 0; } }
+    border: solid 1px #009c00; } }
+@keyframes rainBowFont {
+  0% {
+    color: #009c00; }
+  25% {
+    color: #54b7bc; }
+  50% {
+    color: #755cbc; }
+  75% {
+    color: #d07233; }
+  100% {
+    color: #009c00; } }
 /* 函数 */
 
 /*# sourceMappingURL=public.css.map */

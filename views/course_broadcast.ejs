@@ -18,7 +18,7 @@
     <!--处理音频流-->
     <script type="text/javascript" src="/javascripts/lib/recorder.js"></script>
     <script type="text/javascript" src="/javascripts/lib/recorderWorker.js"></script>
-
+    <script type="text/javascript" src="/javascripts/lib/mine/nojsja.js"></script>
     <script type="text/javascript" src="/javascripts/course_broadcast.js"></script>
 
 </head>
@@ -38,12 +38,35 @@
     <div><i class="icon-arrow-left">返回</i></div>
 </div>
 
-<% if(admin) {%>
+<% if(teacher) {%>
 <!--结束直播按钮-->
 <div class="finish-broadcast-div">
     <span>结束</span>
 </div>
 <% } %>
+
+<!--个人收到的消息-->
+<div class="self-message-div">
+
+    <div class="self-message-item">
+        <!--消息头-->
+        <div class="self-message-head">
+            <!--发送日期-->
+            <div class="message-head-date">
+
+            </div>
+            <!--发送人-->
+            <div class="message-head-from">
+
+            </div>
+        </div>
+        <!--消息内容-->
+        <div class="self-message-body">
+            <span>发送的消息</span>
+        </div>
+
+    </div>
+</div>
 
 <!--消息主体部分-->
 <div class="container total" id="total">
@@ -78,6 +101,17 @@
             <!--录音/停止录音-->
             <i class="icon-volume-up" id="recordButton"></i>
         </div>
+
+        <!--聊天室成员-->
+        <div class="chat-user-list">
+            <i class="icon-group"></i>
+        </div>
+
+        <!--私人消息-->
+        <div class="chat-self-message">
+            <i class="icon-comment"></i>
+        </div>
+
         <!--发送媒体类型文件-->
         <div class="file-send-div">
             <span class="glyphicon glyphicon-folder-open" id="fileSend"></span>
@@ -104,8 +138,8 @@
 <script type="text/javascript">
     BroadcastAction.isLogin = '<%= isLogin %>' == 'true' ? true : false;
 
-    // 用户身份认证
-    BroadcastAction.isAdmin = '<%= admin %>' == 'true' ? true : false;
+    // 教师身份认证
+    BroadcastAction.isAdmin = '<%= teacher %>' !== 'false' ? true : false;
 
 </script>
 

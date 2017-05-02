@@ -62,9 +62,11 @@ function courseBroadcastAction(io){
             console.log('客户端连接发生错误: ' + e);
         }
 
-        // 用户姓名
+        // 用户姓名、私人消息和管理员标志
+        // selfMessage 格式{from, date, isAdmin, text}
         var user = {
             name: '',
+            selfMessage: [],
             isAdmin: false
         };
 
@@ -81,7 +83,7 @@ function courseBroadcastAction(io){
                 watcherRemove: function (type, fn) { }
             };
 
-            // 初始化观察者并开启监听
+            // 初始化观察者模式，开启消息监听
             ObserverInit(CourseOrigin[roomId]);
 
             // 在全局变量中保存当前直播课程的信息
@@ -118,6 +120,8 @@ function courseBroadcastAction(io){
         socket.on('join', join);
         // 监听来自客户端的消息
         socket.on('message', message);
+        // 监听客户端获取聊天室成员的消息
+        socket.on('updateChatmates', updateChatmates);
         // 客户端录音上传
         socket.on('record',record);
         // 文件开始上传信号
@@ -150,6 +154,7 @@ function courseBroadcastAction(io){
             }
 
             // 将用户加入房间
+            // 这儿存入字符串的原因是防止用户重复
             RoomUser[roomId].push( JSON.stringify(user) );
             // 创建socket房间
             socket.join(roomId);
@@ -204,6 +209,17 @@ function courseBroadcastAction(io){
             // 给自己发送相同的消息
             msgInfo.from = "我";
             socket.emit('newMessage', msgInfo);
+        }
+
+        /* 更新聊天室成员列表 */
+        function updateChatmates() {
+
+            console.log('updateChatmates');
+            // 向发起请求的客户端发送信息
+            socket.emit( 'updateChatmates', {
+                chatmatesArray: RoomUser[roomId],
+                isAdmin: socket.isAdmin
+            });
         }
 
         /* 音频数据二进制存储 */

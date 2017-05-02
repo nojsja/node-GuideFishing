@@ -1,6 +1,25 @@
 @charset "UTF-8";
 /* 变量声明 */
 /* 宏 */
+@keyframes breath {
+  0% {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    transform: scale(1); }
+  50% {
+    -webkit-transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    -o-transform: scale(1.2);
+    transform: scale(1.2); }
+  100% {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    transform: scale(1); } }
 @keyframes rotate {
   0% {
     -webkit-transform: translateY(0deg);
@@ -17,22 +36,30 @@
 @keyframes rainBow {
   0% {
     color: #009c00;
-    border: solid 1px #009c00;
-    top: 0; }
+    border: solid 1px #009c00; }
   25% {
     color: #54b7bc;
     border: solid 1px #54b7bc; }
   50% {
     color: #755cbc;
-    border: solid 1px #755cbc;
-    top: -2px; }
+    border: solid 1px #755cbc; }
   75% {
     color: #d07233;
     border: solid 1px #d07233; }
   100% {
     color: #009c00;
-    border: solid 1px #009c00;
-    top: 0; } }
+    border: solid 1px #009c00; } }
+@keyframes rainBowFont {
+  0% {
+    color: #009c00; }
+  25% {
+    color: #54b7bc; }
+  50% {
+    color: #755cbc; }
+  75% {
+    color: #d07233; }
+  100% {
+    color: #009c00; } }
 /* 函数 */
 /* 课程直播 */
 body {
@@ -91,6 +118,81 @@ a {
   -moz-box-shadow: inset 0 0 4px #607d8d;
   box-shadow: inset 0 0 4px #607d8d; }
 
+/****** 私聊信息 ******* */
+/* 私人信息列表 */
+/* 私人信息包裹 */
+/* 信息头 */
+/* 日期 */
+/* 发信人 */
+/* 信息体 */
+/****** 聊天室成员******* */
+/* 聊天室成员列表 */
+.chatmates-list-div {
+  min-height: 10rem;
+  max-height: 15rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 5px;
+  font-size: 1.2rem; }
+
+/* 一个聊天室成员 */
+.chatmates-item {
+  background-color: #f1f1f1;
+  margin: 2px 0 2px; }
+
+.chatmates-item:hover,
+.chatmates-item:active {
+  -webkit-transition: all 0.3s linear;
+  -moz-transition: all 0.3s linear;
+  -ms-transition: all 0.3s linear;
+  -o-transition: all 0.3s linear;
+  transition: all 0.3s linear;
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  -o-transform: scale(1.1);
+  transform: scale(1.1);
+  -webkit-box-shadow: 0 0 3px #737373;
+  -moz-box-shadow: 0 0 3px #737373;
+  box-shadow: 0 0 3px #737373; }
+
+/* 头像标致 */
+.chatmates-item-icon {
+  margin: 0 5px 0;
+  display: inline-block;
+  color: #4c74ee; }
+
+/* 管理员头像标致 */
+.chatmates-admin {
+  color: #fe9746; }
+
+/* 昵称显示 */
+.chatmates-item-nickName {
+  font-size: 1rem;
+  margin: 0 5px 0;
+  display: inline-block;
+  color: #1b6b9c;
+  border: solid 1px #1b6b9c;
+  border-radius: 5px;
+  background-color: white; }
+
+.chatmates-item-nickName > span {
+  padding-left: 2px;
+  padding-right: 2px; }
+
+/* 发送@消息给成员 */
+.chatmates-item-alt {
+  margin: 0 5px 0;
+  color: #637db5;
+  display: inline-block; }
+
+/* 管理员禁言选项 */
+.chatmates-item-ban {
+  margin: 0 10px 0;
+  color: #d91b09;
+  display: inline-block; }
+
+/******* 聊天室信息列表 ********/
 /* 用户名 */
 #name {
   padding: 2px;
@@ -108,18 +210,41 @@ a {
   font-size: 0;
   margin-top: 5px; }
 
+/* 聊天室成员列表 */
+.chat-user-list {
+  width: 20%;
+  display: inline-block;
+  font-size: 1.5rem;
+  color: whitesmoke;
+  text-align: center; }
+
+/* 获取私人信息按钮 */
+.chat-self-message {
+  width: 20%;
+  display: inline-block;
+  font-size: 1.5rem;
+  color: whitesmoke;
+  text-align: center; }
+
+/* 有消息显示 */
+.chat-self-message-rainbow {
+  -webkit-animation: breath 1s infinite linear;
+  -o-animation: breath 1s infinite linear;
+  animation: breath 1s infinite linear; }
+
 /* 文件发送 */
 .file-send-div {
-  width: 50%;
+  width: 30%;
   display: inline-block;
   font-size: 1.5rem;
   text-align: right;
+  color: #f5b652;
   padding-right: 10px; }
 
 /* 录音 */
 .record-div {
   text-shadow: 1px 1px 1px #2e3f44;
-  width: 50%;
+  width: 30%;
   display: inline-block;
   color: #478bf1;
   font-size: 1.5rem;
@@ -134,9 +259,9 @@ a {
 .message-list-item {
   margin-top: 1rem;
   padding: 5px;
-  color: #577280;
-  border-top: solid 1px #c2c2c2;
-  background-color: #F3F3F3; }
+  color: #ffffff;
+  background-color: #565656;
+  border: solid 2px #000000; }
 
 /* 系统文本消息 */
 /* 用户文本消息 */
