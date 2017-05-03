@@ -53,6 +53,7 @@ function courseBroadcastAction(io){
             // 解码中文字符
             // 确定当前直播间和直播课程名(相同)
             roomId = decodeURIComponent(roomId);
+            roomId = decodeURI(roomId);
             courseName = roomId;
             console.log('roomId: ' + roomId);
 
@@ -66,8 +67,10 @@ function courseBroadcastAction(io){
         // selfMessage 格式{from, date, isAdmin, text}
         var user = {
             name: '',
+            ban: false,
             selfMessage: [],
-            isAdmin: false
+            isAdmin: false,
+            socket: socket
         };
 
         // 初始化当前课程数据,包括观察者和媒体数据以及数据索引编号
@@ -120,6 +123,12 @@ function courseBroadcastAction(io){
         socket.on('join', join);
         // 监听来自客户端的消息
         socket.on('message', message);
+        // 接收客户端的发私信@消息请求
+        socket.on('sendSelfMessage', sendSelfMessage);
+        // 向客户端返回自己的私信信息
+        socket.on('getSelfMessage', getSelfMessage);
+        // 管理员发送的解禁和禁言指令
+        socket.on('banMessage', banMessage);
         // 监听客户端获取聊天室成员的消息
         socket.on('updateChatmates', updateChatmates);
         // 客户端录音上传
@@ -155,7 +164,8 @@ function courseBroadcastAction(io){
 
             // 将用户加入房间
             // 这儿存入字符串的原因是防止用户重复
-            RoomUser[roomId].push( JSON.stringify(user) );
+            RoomUser[roomId].push( user );
+
             // 创建socket房间
             socket.join(roomId);
             // 触发系统消息
@@ -179,8 +189,15 @@ function courseBroadcastAction(io){
             console.log('message');
             console.log('isAdmin: ' + socket.isAdmin);
             // 验证如果用户不在房间则不发消息
-            if(RoomUser[roomId].indexOf( JSON.stringify(user) ) < 0){
+            if(RoomUser[roomId].indexOf( user ) < 0){
                 return false;
+            }
+
+            // 禁言检查
+            if(user.ban){
+                return socket.emit('warning', {
+                    message: '你已经被管理员禁言了！'
+                });
             }
 
             var msgInfo = {
@@ -211,13 +228,105 @@ function courseBroadcastAction(io){
             socket.emit('newMessage', msgInfo);
         }
 
+        /* 发送私信@消息
+        * {to, text}
+        * */
+        function sendSelfMessage(info) {
+
+            var flag = false;
+
+            for(let i = 0; i < RoomUser[roomId].length; i++){
+
+                console.log((RoomUser[roomId][i])["name"] === info.to);
+                if( (RoomUser[roomId][i])["name"] === info.to ){
+
+                    flag = true;
+                    RoomUser[roomId][i].selfMessage.push({
+                        text: info.text,
+                        from: user.name,
+                        isAdmin: user.isAdmin,
+                        date: getDate()
+                    });
+                    console.log('sendSelfMessage');
+                    RoomUser[roomId][i].socket.emit('selfMessage', {
+                       selfMessage: RoomUser[roomId][i].selfMessage
+                    });
+
+                    break;
+                }
+            }
+
+            if(!flag){
+
+                socket.emit('warning', {
+                    message: '对方可能已经离线，发送私信消息失败！'
+                });
+            }
+
+        }
+
+        /* 接收私信@信息
+        * {test, from, isAdmin, date}
+        * */
+        function getSelfMessage() {
+
+            // 从数组中读取数据，然后将数据在user_room中同步更新，同时清空数中的私信
+            if(RoomUser[roomId].indexOf( user ) < 0){
+
+                console.log('RoomUser中没有找到用户！');
+                return socket.emit('warning', {
+                    message: '用户查找出错！'
+                });
+            }
+
+            socket.emit('selfMessage', {
+                selfMessage: user.selfMessage
+            });
+        }
+
+        /* 管理员禁言和解禁 */
+        function banMessage(info) {
+
+            for(let i = 0; i < RoomUser[roomId].length; i++){
+
+                if(RoomUser[roomId][i].name == info.user){
+                    RoomUser[roomId][i].ban = info.ban;
+                    if(info.ban){
+                        RoomUser[roomId][i].socket.emit('warning', {
+                            message: '你已经被管理员禁言了！'
+                        });
+                    }else {
+                        RoomUser[roomId][i].socket.emit('warning', {
+                            message: '你的禁言状态已经被解除！'
+                        });
+                    }
+                    break;
+                }
+            }
+        }
+
         /* 更新聊天室成员列表 */
         function updateChatmates() {
 
             console.log('updateChatmates');
+            var chatmatesArray = [];
+            // 此处直接引用数组会出现循环引用的堆栈溢出错误，需要剔除socket
+            for(let i = 0; i < RoomUser[roomId].length; i++){
+                 let chatmates = {};
+                 for(let attr in RoomUser[roomId][i]){
+
+                     if(attr !== 'socket'){
+                         chatmates[attr] = (RoomUser[roomId][i])[attr];
+                     }
+                 }
+                 chatmatesArray.push(chatmates);
+            }
+
+            console.log(chatmatesArray);
+
             // 向发起请求的客户端发送信息
             socket.emit( 'updateChatmates', {
-                chatmatesArray: RoomUser[roomId],
+                chatmatesArray: chatmatesArray,
                 isAdmin: socket.isAdmin
             });
         }
@@ -277,6 +386,14 @@ function courseBroadcastAction(io){
 
                 console.log('[build dir]:' + Files.record.prePath);
                 fs.mkdirSync(Files.record.prePath);
+
+            }else {
+
+                console.log(Files.record.savePath);
+                if( fs.existsSync(Files.record.savePath) ){
+                    console.log('record exists.');
+                    fs.unlinkSync(Files.record.savePath);
+                }
             }
 
             // 以追加方式打开磁盘文件用于上传准备工作
@@ -725,7 +842,7 @@ function courseBroadcastAction(io){
                 if(err){
                     console.log('leave room error!');
                 }else {
-                    var index = (RoomUser[roomId] || []).indexOf( JSON.stringify(user) );
+                    var index = (RoomUser[roomId] || []).indexOf( user );
                     if(index !== -1){
                         // 将当前用户从房间中删除
                         RoomUser[roomId].splice(index, 1);

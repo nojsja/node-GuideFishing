@@ -44,6 +44,11 @@ var BroadcastAction = {
     message: {
         send: {
             value: {},
+            // 私人消息对象
+            selfMessage: {
+                text: '',
+                to: ''
+            },
             watcherList: [],
             listen: function () {},
             trigger: function () {}
@@ -124,15 +129,17 @@ BroadcastAction.socketInit = function () {
     // 私人消息（私信）
     BroadcastAction.socket.on('selfMessage', function (data) {
 
-        // 格式化接收到的消息
-        var info = {
-            text: data.text,
-            from: data.from,
-            date: data.date,
-            isAdmin: data.isAdmin
-        };
+        BroadcastAction.message.received.trigger('selfMessage', {
+            selfMessage: data.selfMessage
+        });
+    });
 
-        BroadcastAction.message.received.trigger('selfMessage', info);
+    // 系统错误信息和警告
+    BroadcastAction.socket.on('warning', function (data) {
+
+        BroadcastAction.message.received.trigger('warning', {
+            message: data.message
+        });
     });
 
     // 更新聊天室用户列表的消息
@@ -144,7 +151,6 @@ BroadcastAction.socketInit = function () {
             isAdmin: data.isAdmin
         };
 
-        console.log(info);
         BroadcastAction.message.received.trigger('updateChatmates', info);
     });
 
@@ -215,6 +221,13 @@ BroadcastAction.pageEventBind = function () {
 
             // 发送请求更新请求
             BroadcastAction.socket.emit('updateChatmates');
+        });
+
+        // 查看私人消息
+        nojsja["EventUtil"].addHandler($('.chat-self-message')[0], 'click', function () {
+
+            // 更新个人消息
+            BroadcastAction.updateSelfMessage();
         });
 
         // 上传事件绑定
@@ -370,8 +383,10 @@ BroadcastAction.watcherActive = function () {
 
     //--- 发送消息 ---//
 
-    // 发送消息
+    // 发送全体消息
     BroadcastAction.message.send.listen('send', send);
+    // 发送私人消息
+    BroadcastAction.message.send.listen('selfMessage', selfMessage);
 
     // 向服务器发送消息函数,事件类型定义为send
     function send() {
@@ -388,12 +403,23 @@ BroadcastAction.watcherActive = function () {
         BroadcastAction.socket.send(message);
     }
 
+    // 发送私信消息
+    function sendSelfMessage(info) {
+
+        BroadcastAction.socket.emit('sendSelfMessage', {
+            to: info.args.to,
+            text: info.args.text
+        });
+    }
+
     //--- 接收消息 ---//
 
     // 接收系统消息
     BroadcastAction.message.received.listen('systemMessage', receiveSystemMsg);
     // 接收用户消息
     BroadcastAction.message.received.listen('newMessage', receiveNewMsg);
+    // 系统警告信息和提示
+    BroadcastAction.message.received.listen('warning', warning);
     // 接受私人消息
     BroadcastAction.message.received.listen('selfMessage', selfMessage);
     // 接收更新聊天室用户列表的消息
@@ -490,6 +516,12 @@ BroadcastAction.watcherActive = function () {
         // 滚到页面底部
         var div = document.getElementById('messageList');
         div.scrollTop = div.scrollHeight;
+    }
+
+    // 系统警告信息和提示
+    function warning(info) {
+        // confirm(info.args.message);
+        nojsja["ModalWindow"].show(info.args.message);
     }
 
     // 接收用户新消息
@@ -791,14 +823,89 @@ BroadcastAction.newMessageUpdate = function (info) {
 
 };
 
-/* 更新私人消息 */
+/* 更新私人消息
+
+* DOM结构
+* <!--个人收到的消息-->
+ <div class="self-message-div">
+
+ <div class="self-message-item">
+ <!--消息头-->
+ <div class="self-message-head">
+ <!--发送日期-->
+ <div class="message-head-date">
+ 00:12
+ </div>
+ <!--发送人-->
+ <div class="message-head-from">
+ Johnson
+ </div>
+ </div>
+ <!--消息内容-->
+ <div class="self-message-body">
+ <div>发送的消息</div>
+ </div>
+ </div>
+
+ </div>
+*
+* */
 BroadcastAction.updateSelfMessage = function () {
+
+    // selfMessage 格式{from, date, isAdmin, text}
 
     // 取消颜色提醒
     $('.chat-self-message').prop('class', 'chat-self-message');
     // 更新DOM
     var selfMessageArray = BroadcastAction.message.received.selfMessage;
 
+    // 父组件
+    var $selfMessageDiv = $('<div class="self-message-div">');
+    var selfMessage;
+
+    for(var i = 0; i < selfMessageArray.length; i++){
+
+        (function (i) {
+
+            selfMessage = selfMessageArray[i];
+            // 一个消息
+            var $selfMessageItem = $('<div class="self-message-item">');
+
+            // 消息头
+            var $selfMessageHead = $('<div class="self-message-head">');
+            // 发送日期
+            var $messageHeadDate = $('<div class="message-head-date">');
+            $messageHeadDate.text(selfMessage.date);
+            // 发送人
+            var $messageHeadFrom = $('<div class="message-head-from">');
+            $messageHeadFrom.text(selfMessage.from);
+
+            $selfMessageHead
+                .append($messageHeadDate)
+                .append($messageHeadFrom);
+
+            // 消息体
+            var $selfMessageBody = $('<div class="self-message-body">');
+            $selfMessageBody.append(
+                $('<div>').text(selfMessage.text)
+            );
+
+            // 添加DOM
+            $selfMessageItem
+                .append($selfMessageHead)
+                .append($selfMessageBody);
+
+            $selfMessageDiv.append($selfMessageItem);
+
+        })(i);
+    }
+
+    // 模态弹出
+    nojsja["ModalWindow"].define($selfMessageDiv[0]);
+    nojsja["ModalWindow"].show('私信', {
+        scroll: true,
+        selfDefineKeep: true
+    });
 };
 
 
@@ -838,12 +945,11 @@ BroadcastAction.updateChatmatesList = function (info) {
     // 父组件
     var $chatmatesList = $('<div class="chatmates-list-div">');
 
-    console.log(chatmatesArray);
     for(var i = 0; i < chatmatesArray.length; i++){
 
         (function (i) {
 
-            var chatmates = JSON.parse(chatmatesArray[i]);
+            var chatmates = (chatmatesArray[i]);
             // 外层包裹
             var $chatmatesItem = $('<div class="chatmates-item">');
 
@@ -872,6 +978,10 @@ BroadcastAction.updateChatmatesList = function (info) {
                 var message = prompt('@ ' + chatmates.name);
                 if(message !== null && message.trim() !== ""){
                     // 发送消息
+                    BroadcastAction.socket.emit('sendSelfMessage', {
+                        to: chatmates.name,
+                        text: message
+                    });
                 }
             });
 
@@ -889,6 +999,29 @@ BroadcastAction.updateChatmatesList = function (info) {
                 $chatmatesItemBan.append(
                     $('<i class="icon-ban-circle">')
                 );
+                $chatmatesItemBan.attr('ban', 'false');
+                nojsja['EventUtil'].addHandler($chatmatesItemBan[0], 'click', function () {
+
+                    var banStatus = $(this).attr('ban');
+                    if(banStatus == 'true'){
+                        $(this).attr('ban', 'false');
+                        $(this).prop('class', 'chatmates-item-ban');
+                        // 解禁
+                        BroadcastAction.socket.emit('banMessage', {
+                            ban: false,
+                            user: chatmates.name
+                        });
+                    }else {
+                        $(this).attr('ban', 'true');
+                        $(this).prop('class', 'chatmates-item-ban unban');
+                        // 禁言
+                        BroadcastAction.socket.emit('banMessage', {
+                            ban: true,
+                            user:chatmates.name
+                        });
+                    }
+                });
+                // 禁言用户
                 $chatmatesItem.append($chatmatesItemBan);
             }
 
@@ -901,7 +1034,7 @@ BroadcastAction.updateChatmatesList = function (info) {
     // 模态弹出
     nojsja["ModalWindow"].define($chatmatesList[0]);
     nojsja["ModalWindow"].show('所有成员', {
-        scroll: true,
+        scroll: false,
         selfDefineKeep: true
     });
 

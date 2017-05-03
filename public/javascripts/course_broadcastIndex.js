@@ -190,7 +190,7 @@ bcIndexAction.updatePage = function (JSONdata) {
             //添加超链接
             var url = preAddressUser + broadcast.courseName;
             $broadcastContainer.click(function () {
-                window.location.href = url;
+                window.location.href = encodeURI(url);
             });
             $contentTitle.prop('href', url);
             $contentTitle.text(broadcast.courseName);
