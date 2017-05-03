@@ -14,7 +14,19 @@ function index(app) {
         res.render('test_index', {
             title: '评测系统主页',
             slogan: '带渔',
-            other: '测评'
+            other: '测评',
+            testType: "ALL"
+        });
+    });
+
+    // 获取测评主页并预先载入相关 类型的数据
+    app.get('/test/index/:testType', function (req, res) {
+
+        res.render('test_index', {
+            title: "课程主页",
+            slogan: "启航",
+            other: "课程",
+            testType: req.params.testType
         });
     });
 

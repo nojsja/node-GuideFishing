@@ -59,7 +59,7 @@ var EnToCn = (function () {
             return console.log(err);
         }
         // 更新pattern
-        pattern = _pattern;
+        pattern.courseType = _pattern.courseType;
     });
     
     // 存储一条数据到数据库

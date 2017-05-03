@@ -98,6 +98,10 @@ CourseAction.updateCourseType = function () {
 
             $typeItemList.append($type);
         }
+        $typeItemList.append(
+            $('<div class="type-item">').text('全部')
+                .prop('id', 'ALL')
+        );
 
         //指定类型的课程
         $('.type-item').click(function () {

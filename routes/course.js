@@ -375,7 +375,7 @@ function course(app){
 
         console.log("筛选条件: " + JSON.stringify(condition));
 
-        Course.readList(condition, function (err, testArray) {
+        Course.readList(condition, function (err, courseArray) {
             if(err) {
                 console.log('readCourseList error.');
                 return res.json(JSON.stringify({
@@ -384,7 +384,7 @@ function course(app){
             }
             console.log('readCourseList success.');
             res.json(JSON.stringify({
-                courseArray: testArray,
+                courseArray: courseArray,
                 typeImgUrl: typeImgUrl
             }));
         });

@@ -38,7 +38,7 @@ $(function () {
     // 读取测评类型
     TestIndexAction.updateTestType();
     //加载指定数量的测试题目列表
-    TestIndexAction.readTestList({ testType: "ALL" });
+    TestIndexAction.readTestList({ testType: TestIndexAction.testType });
     // 读取热门的评测
     TestIndexAction.updateHot();
     // 初始化按钮
@@ -110,6 +110,11 @@ TestIndexAction.updateTestType = function () {
 
             $typeItemList.append($type);
         }
+        $typeItemList.append(
+          $('<div class="type-item">')
+              .text('所有')
+              .prop('id', 'ALL')
+        );
 
         //指定类型的课程
         $('.type-item').click(function () {
