@@ -7,12 +7,16 @@
 /* 初始化函数 */
 $(function () {
 
+    CourseAction.userAgent["browser"] = nojsja["Tool"].GetBrowserType();
     // 页面事件绑定
     CourseAction.pageEventBind();
     // 更新课程类型
     CourseAction.updateCourseType();
     //加载指定数量的测试题目列表
-    CourseAction.readCourseList({ courseType: CourseAction.courseType });
+    CourseAction.readCourseList({
+        courseType: CourseAction.courseType,
+        limit: CourseAction.pageLimit
+    });
     // 更新热门内容
     CourseAction.updateHot();
     // 滑动图片初始化
@@ -23,6 +27,12 @@ $(function () {
 
 /*** 页面全局变量 ***/
 var CourseAction = {
+    // 浏览器信息
+    userAgent: {
+        scrollTop: 0,
+        scrollHeight: 0,
+        clientHeight: 0
+    },
     //heder是否降下
     headerDown: false,
     //检测页面滚动
@@ -32,7 +42,7 @@ var CourseAction = {
     //页面加载起点
     pageStart: 0,
     //页面加载条数
-    pageLimit: 20,
+    pageLimit: 2,
     //加载的测试类型
     courseType: "ALL",
     //是否清除页面已存数据
@@ -66,14 +76,17 @@ CourseAction.pageEventBind = function () {
     $('#top').click(CourseAction.goTop);
     $('#bottom').click(CourseAction.goBottom);
     //高度检测
-    /*windowHeightCheck();*/
+
     //滑动检测函数
-    // $(window).scroll(function () {
-    //     //每隔500毫秒检测一次
-    //    nojsja.FnDelay(CourseAction.scrollCheck, 500);
-    // });
+    $(window).scroll(function () {
+
+        nojsja.FnDelay(function () {
+
+           CourseAction.scrollCheck(CourseAction.readMore);
+        }, 200);
+    });
     //加载更多数据
-    $('#loadMore').click(CourseAction.readMore);
+    // $('#loadMore').click(CourseAction.readMore);
 };
 
 /* 获取课程类型更新页面 */
@@ -141,7 +154,8 @@ CourseAction.readMore = function () {
 
     CourseAction.readCourseList({
         courseType: CourseAction.courseType,
-        skip: CourseAction.pageStart
+        skip: CourseAction.pageStart,
+        limit: CourseAction.pageLimit
     }, function (JSONdata) {
         //更新页面
         CourseAction.updatePage(JSONdata);
@@ -167,7 +181,9 @@ CourseAction.updatePage = function (JSONdata) {
     }
     //没有数据提示用户
     if(parsedData.courseArray.length === 0){
-        return CourseAction.modalWindow('抱歉,没有更多数据!');
+        return $('.loading-info').text('----- 加载完毕 ----');
+    }else {
+        $('.loading-info').text('正在加载...');
     }
     //遍历对象数组构造DOM对象
     for(var courseIndex in parsedData.courseArray) {
@@ -309,34 +325,36 @@ CourseAction.goBottom = function goBottom() {
 };
 
 /* 滚动侦测 */
-CourseAction.scrollCheck = function () {
+CourseAction.scrollCheck = function (callback) {
 
-    //可见高度
-    var clientHeight = $(window).height();
-    //总高度,包括不可见高度
-    var totalHeight = $(document).height();
-    //可滚动高度,只有不可见高度
-    var scrollHeight = $(window).scrollTop();
+    // if(nojsja['FnLocker'].check(callback)){
+    //     console.log('locker stil exists.');
+    //     return;
+    // }
+    console.log('scrolling');
+    nojsja
+        .GetDocumentHeight[CourseAction.userAgent.browser](CourseAction.userAgent, 'clientHeight');
 
-    //文档总长度比较短
-    if(clientHeight >= (totalHeight * 1) / 2){
-        return;
+    nojsja
+        .GetDocumentHeight[CourseAction.userAgent.browser](CourseAction.userAgent, 'scrollTop');
+
+    nojsja
+        .GetDocumentHeight[CourseAction.userAgent.browser](CourseAction.userAgent, 'scrollHeight');
+
+    if( CourseAction.userAgent.clientHeight +
+        CourseAction.userAgent.scrollTop ==
+        CourseAction.userAgent.scrollHeight ){
+
+        console.log('on the bottom.');
+        // nojsja['FnLocker'].lock(callback);
+
+        // callback(function () {
+        //     console.log('unlock');
+        //     nojsja['FnLocker'].unlock(callback);
+        // });
+        callback();
     }
 
-    //当滑动到1/2页面处的时候就显示跳转按钮
-    if(clientHeight + scrollHeight >= (totalHeight * 1) / 2){
-        CourseAction.scrollOver = true;
-        if(CourseAction.lastScrollOver !== CourseAction.scrollOver){
-            $('.page-anchor').fadeIn();
-        }
-        CourseAction.lastScrollOver = CourseAction.scrollOver;
-    }else {
-        CourseAction.scrollOver = false;
-        if(CourseAction.lastScrollOver !== CourseAction.scrollOver){
-            $('.page-anchor').fadeOut();
-        }
-        CourseAction.lastScrollOver = CourseAction.scrollOver;
-    }
 };
 
 /* 窗口各种高度检测函数 */

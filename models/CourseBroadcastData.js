@@ -164,9 +164,9 @@ CourseBroadcastData.readList = function (docCondition, callback) {
     for(var con in docCondition) {
 
         if(con == "limit") {
-            number = docCondition[con];
+            number = parseInt(docCondition[con]);
         }else if(con == "skip") {
-            skipNum = docCondition[con];
+            skipNum = parseInt(docCondition[con]);
         }else {
             //复制属性
             condition[con] = docCondition[con];

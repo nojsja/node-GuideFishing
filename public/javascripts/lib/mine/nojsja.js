@@ -243,6 +243,8 @@
     nojsja["ModalWindow"] = (function () {
         // 初始化标志
         var isInit = false;
+        // 激活标致
+        var isActive = false;
         var modal, modalContent, acceptButton, contentP,
             selfDefineDiv, closeButton, showTimer, hiddenTimer;
 
@@ -272,6 +274,16 @@
         // 模态窗口弹出
         function modalShow(text, condition) {
 
+            if(isActive){
+                modalHidden();
+                return setTimeout(function () {
+                    modalShow(text, condition);
+                }, 1000);
+            }
+
+
+            // 激活
+            isActive = true;
             // 初始化检测
             if(!isInit){
                 modalInit();
@@ -338,6 +350,8 @@
         // 模态窗口隐藏
         function modalHidden() {
 
+            // 激活标志
+            isActive = false;
             // 初始化检测
             if(!isInit){
                 modalInit();
@@ -852,6 +866,43 @@
             return s;
         }
 
+        // 识别浏览器
+        function GetBrowserType(){
+
+            var userAgent = navigator.userAgent;
+            // 取得浏览器的userAgent字符串
+            var isOpera = userAgent.indexOf("Opera") > -1;
+            // 判断是否Opera浏览器
+            if (isOpera) {
+                return "Opera"
+            };
+            // 判断是否Firefox浏览器
+            if (userAgent.indexOf("Firefox") > -1) {
+                return "FireFox";
+            }
+            // 识别谷歌浏览器
+            if (userAgent.indexOf("Chrome") > -1){
+                return "Chrome";
+            }
+            // 判断是否Safari浏览器
+            if (userAgent.indexOf("Safari") > -1) {
+                return "Safari";
+            }
+            // 判断是否IE浏览器
+            if (
+                (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera) ||
+                (!!window.ActiveXObject || "ActiveXObject" in window)
+            ) {
+                return "IE";
+            };
+            // 新版IE浏览器Edge
+            if (userAgent.indexOf("Edge") > -1) {
+                return "Edge";
+            }
+
+            return "Unknown";
+        }
+
         // 返回调用接口
         return {
             GetDate: GetDate,
@@ -862,7 +913,183 @@
             HTMLDecode: HTMLDecode,
             SymbolDecode: SymbolDecode,
             StringToBoolean: StringToBoolean,
-            GetRandomNum: GetRandomNum
+            GetRandomNum: GetRandomNum,
+            GetBrowserType: GetBrowserType
+        };
+    })();
+
+    nojsja['GetDocumentHeight'] = {
+
+        "FireFox": function (target, type) {
+
+            if(target && type) {
+
+                if (type == 'clientHeight')
+                    return target[type] = document.documentElement.clientHeight;
+
+                if (type == 'scrollTop')
+                    return target[type] = document.documentElement.scrollTop;
+
+                if (type == 'scrollHeight') {
+                    return target[type] = document.documentElement.scrollHeight;
+                }
+            }else {
+                return {
+                    clientHeight: document.documentElement.clientHeight,
+                    scrollTop: document.documentElement.scrollTop,
+                    scrollHeight: document.documentElement.scrollHeight
+                };
+            }
+        },
+
+        "Opera": function (target, type) {
+
+            if(target && type) {
+
+                if (type == 'clientHeight')
+                    return target[type] = document.documentElement.clientHeight;
+
+                if (type == 'scrollTop')
+                    return target[type] = document.body.scrollTop;
+
+                if (type == 'scrollHeight') {
+                    return target[type] = document.documentElement.scrollHeight;
+                }
+            }else {
+                return {
+                    clientHeight: document.documentElement.clientHeight,
+                    scrollTop: document.body.scrollTop,
+                    scrollHeight: document.documentElement.scrollHeight
+                };
+            }
+        },
+
+        "Chrome": function (target, type) {
+
+            if(target && type) {
+
+                if (type == 'clientHeight')
+                    return target[type] = document.documentElement.clientHeight;
+
+                if (type == 'scrollTop')
+                    return target[type] = document.body.scrollTop;
+
+                if (type == 'scrollHeight') {
+                    return target[type] = document.documentElement.scrollHeight;
+                }
+            }else {
+                return {
+                    clientHeight: document.documentElement.clientHeight,
+                    scrollTop: document.body.scrollTop,
+                    scrollHeight: document.documentElement.scrollHeight
+                };
+            }
+        },
+
+        "Edge": function (target, type) {
+
+            if(target && type) {
+
+                if (type == 'clientHeight')
+                    return target[type] = document.documentElement.clientHeight;
+
+                if (type == 'scrollTop')
+                    return target[type] = document.body.scrollTop;
+
+                if (type == 'scrollHeight') {
+                    return target[type] = document.documentElement.scrollHeight;
+                }
+            }else {
+                return {
+                    clientHeight: document.documentElement.clientHeight,
+                    scrollTop: document.body.scrollTop,
+                    scrollHeight: document.documentElement.scrollHeight
+                };
+            }
+        },
+
+        "IE": function (target, type) {
+
+            if(target && type) {
+
+                if (type == 'clientHeight')
+                    return target[type] = document.documentElement.clientHeight;
+
+                if (type == 'scrollTop')
+                    return target[type] = document.documentElement.scrollTop;
+
+                if (type == 'scrollHeight') {
+                    return target[type] = document.documentElement.scrollHeight;
+                }
+            }else {
+                return {
+                    clientHeight: document.documentElement.clientHeight,
+                    scrollTop: document.documentElement.scrollTop,
+                    scrollHeight: document.documentElement.scrollHeight
+                };
+            }
+        },
+
+        "Unknown": function (target, type) {
+
+            if(target && type) {
+
+                if (type == 'clientHeight')
+                    return target[type] = document.documentElement.clientHeight;
+
+                if (type == 'scrollTop')
+                    return target[type] = document.body.scrollTop;
+
+                if (type == 'scrollHeight') {
+                    return target[type] = document.documentElement.scrollHeight;
+                }
+            }else {
+                return {
+                    clientHeight: document.documentElement.clientHeight,
+                    scrollTop: document.body.scrollTop,
+                    scrollHeight: document.documentElement.scrollHeight
+                };
+            }
+        }
+    };
+
+    /* js函数锁的简单实现 */
+    nojsja["FnLocker"] = (function () {
+
+        var lockerFnList = [];
+
+        // 上锁
+        function lock(fn) {
+
+            if (lockerFnList.indexOf(fn) > -1){
+                return false;
+            }
+            lockerFnList.push(fn);
+            return true;
+        }
+
+        // 检查是否上锁
+        function check(fn) {
+
+            if(lockerFnList.indexOf(fn) >= 0){
+                return true;
+            }
+            return false;
+        }
+
+        // 解除锁定
+        function unlock(fn) {
+
+            if(lockerFnList.indexOf(fn) == -1){
+                return false;
+            }
+            lockerFnList.splice(lockerFnList.indexOf(fn), 1);
+        }
+
+        return {
+            lock: lock,
+            check: check,
+            unlock: unlock
         };
     })();
 

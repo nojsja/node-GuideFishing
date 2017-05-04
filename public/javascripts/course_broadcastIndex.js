@@ -12,7 +12,7 @@ $(function () {
     // 读取直播类型中英文
     bcIndexAction.updateBroadcastType();
     //加载指定数量的测试题目列表
-    bcIndexAction.readBroadcastList();
+    bcIndexAction.readBroadcastList({});
 });
 
 /*** 页面全局变量 ***/

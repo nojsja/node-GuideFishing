@@ -12,11 +12,16 @@ $(function () {
     // 更新课程类型
     GuideFishing.updateCourseType();
     // 更新讨论组信息
-    GuideFishing.updateBroadcast();
+    GuideFishing.updateBroadcast({
+        limit: 2
+    });
     // 更新招聘信息
     GuideFishing.updateRecruitment();
     //加载指定数量的测试题目列表
-    GuideFishing.readCourseList({ courseType: "ALL" });
+    GuideFishing.readCourseList({
+        courseType: "ALL",
+        limit: GuideFishing.pageLimit
+    });
     // 更新热门内容
     GuideFishing.updateCourseHot();
     GuideFishing.updateTestHot();

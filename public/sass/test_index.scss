@@ -1,4 +1,5 @@
 @charset "UTF-8";
+@import "public";
 
 body {
     font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -243,6 +244,7 @@ a {
 /* 数据加载loading信息 */
 .loading-info {
     text-align: center;
+    color: $grey_dark;
     margin-bottom: 1rem;
 }
 
