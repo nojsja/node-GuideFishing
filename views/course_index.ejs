@@ -61,8 +61,15 @@
 
 <!--数据加载loading信息-->
 <div class="loading-info">
-    <input id="loadMore" type="button" class="btn btn-success" value="加载更多...">
+    正在加载...
+    <!--<input id="loadMore" type="button" class="btn btn-success" value="加载更多...">-->
 </div>
+
+<!--页内脚本-->
+<script type="text/javascript">
+
+    CourseAction.courseType = '<%= courseType %>';
+</script>
 
 <!--底部导航-->
 <%- include footer.ejs%>

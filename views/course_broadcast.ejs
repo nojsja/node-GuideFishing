@@ -18,12 +18,8 @@
     <!--处理音频流-->
     <script type="text/javascript" src="/javascripts/lib/recorder.js"></script>
     <script type="text/javascript" src="/javascripts/lib/recorderWorker.js"></script>
-
+    <script type="text/javascript" src="/javascripts/lib/mine/nojsja.js"></script>
     <script type="text/javascript" src="/javascripts/course_broadcast.js"></script>
-    <script type="text/javascript">
-        // 用户身份认证
-        BroadcastAction.isAdmin = '<%= admin %>';
-    </script>
 
 </head>
 
@@ -42,7 +38,7 @@
     <div><i class="icon-arrow-left">返回</i></div>
 </div>
 
-<% if(admin) {%>
+<% if(teacher) {%>
 <!--结束直播按钮-->
 <div class="finish-broadcast-div">
     <span>结束</span>
@@ -59,7 +55,10 @@
     </div>
 </div>
 
-<!--发送消息区域-->
+<% if(isLogin){ %>
+
+<!--------------------发送消息区域--------------------->
+
 <div class="send-wrapper">
 
     <div class="message-div">
@@ -79,6 +78,17 @@
             <!--录音/停止录音-->
             <i class="icon-volume-up" id="recordButton"></i>
         </div>
+
+        <!--聊天室成员-->
+        <div class="chat-user-list">
+            <i class="icon-group"></i>
+        </div>
+
+        <!--私人消息-->
+        <div class="chat-self-message">
+            <i class="icon-comment"></i>
+        </div>
+
         <!--发送媒体类型文件-->
         <div class="file-send-div">
             <span class="glyphicon glyphicon-folder-open" id="fileSend"></span>
@@ -96,7 +106,20 @@
 
 </div>
 
+<% } %>
+
 <!--模态弹窗-->
 <%- include modalWindow.ejs %>
 
+<!----------------页内脚本------------------>
+<script type="text/javascript">
+    BroadcastAction.isLogin = '<%= isLogin %>' == 'true' ? true : false;
+
+    // 教师身份认证
+    BroadcastAction.isAdmin = '<%= teacher %>' !== 'false' ? true : false;
+
+</script>
+
 </body>
+
+</html>

@@ -57,8 +57,11 @@
 
   <!--数据加载loading信息-->
   <div class="loading-info">
-      <input type="button" class="btn btn-success" value="加载更多..."></input>
+      正在加载...
   </div>
+  <!--<div class="loading-info">-->
+      <!--<input type="button" class="btn btn-success" value="加载更多..."></input>-->
+  <!--</div>-->
 
   <!--返回顶部按钮-->
   <%- include hoverButton.ejs%>
@@ -66,6 +69,12 @@
   <%- include footer.ejs%>
   <!--模态弹窗-->
   <%- include modalWindow.ejs%>
+
+  <!--页内脚本-->
+  <script type="text/javascript">
+
+      TestIndexAction.testType = '<%= testType %>';
+  </script>
 
   </body>
 </html>

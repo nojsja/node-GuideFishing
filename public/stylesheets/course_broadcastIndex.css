@@ -228,6 +228,7 @@ a {
 /* 数据加载loading信息 */
 .loading-info {
   text-align: center;
+  color: #737373;
   margin-bottom: 1rem; }
 
 .milky {

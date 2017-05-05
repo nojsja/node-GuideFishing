@@ -1,0 +1,91 @@
+@charset "UTF-8";
+
+@import 'public';
+
+body {
+    font: $bodyFont
+}
+
+html {
+    font-size: $rootFontSize
+}
+
+/*------------------------课程分类选项----------------------------*/
+
+/* 外层包裹 */
+.classification-container {
+    padding: 5px;
+}
+
+/* 一个分类选项 */
+.classification-item {
+    position: relative;
+    background-color: $grey_light;
+    border: solid 1px white;
+    height: 3rem;
+    font-size: 0;
+    margin: 1rem 0 1rem;
+}
+.classification-item:active,
+.classification-item:hover {
+
+    @include transition();
+    @include boxShadowRound(5px, $blueGrey);
+}
+
+/* 图片 */
+.classification-item-image {
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+    width: 2rem;
+    height: 3rem;
+    margin: 0 0.5rem 0;
+}
+.classification-item-image > img {
+    border-radius: 5px;
+    width: 2rem;
+    height: 2rem;
+    margin-top: 0.5rem;
+    border: solid 1px $blue;
+}
+
+/* 标题 */
+.classification-item-title {
+    vertical-align: top;
+    font-size: 1rem;
+    color: $blue;
+    font-weight: bold;
+    line-height: 3rem;
+    display: inline-block;
+}
+
+.classification-item-title > span {
+    border: solid 1px $blue;
+    border-radius: 3px;
+    padding: 3px;
+}
+
+/* 数量 */
+.classification-item-number {
+    vertical-align: top;
+    font-size: 1rem;
+    line-height: 3rem;
+    display: inline-block;
+    margin-left: 1rem;
+    min-width: 2rem;
+    color: $grey_dark;
+    text-align: center;
+}
+
+/* 指向箭头 */
+.classification-item-pointer {
+
+    position: absolute;
+    vertical-align: top;
+    right: 1rem;
+    top: 0;
+    color: $grey_dark;
+    line-height: 3rem;
+    font-size: 1rem;
+}

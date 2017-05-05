@@ -1,7 +1,8 @@
 @charset "UTF-8";
+@import "public";
 
 body {
-    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font: $bodyFont;
 }
 
 html {
@@ -9,7 +10,7 @@ html {
 }
 
 a {
-    color: #00B7FF;
+    color: $blue_dark;
 }
 
 .main-container {
@@ -79,9 +80,8 @@ a {
     border-top: 0em;
     color: #7094a2;
     background-color: #f0f0f0;
-    -webkit-box-shadow:  0 5px 5px #7094a2;
-    -moz-box-shadow:  0 5px 5px #7094a2;
-    box-shadow:  0 0 5px #7094a2;
+
+    @include boxShadowRound(5px, #7094a2);
 }
 
 .hot-container {
@@ -95,7 +95,6 @@ a {
     background-color: white;
     margin: 0 auto;
 }
-
 
 .hot-item-list > li {
     border-bottom: solid 2px #efefef;
@@ -135,11 +134,8 @@ a {
 .type-item:hover {
     background-color: #426dee;
     font-weight: bold;
-    -webkit-transition: background-color 0.3s linear;
-    -moz-transition: background-color 0.3s linear;
-    -ms-transition: background-color 0.3s linear;
-    -o-transition: background-color 0.3s linear;
-    transition: background-color 0.3s linear;
+
+    @include transition(background-color, 0.3s, linear);
 }
 
 /* 提示标题 */
@@ -147,17 +143,14 @@ a {
     height: 2rem;
     position: relative;
     text-align: left;
-    background-color: #cdcdcd;
+    background-color: $grey_navy_light;
     padding-left: 1rem;
     color: #ffffff;
     font-size: 1.3rem;
-    text-shadow: 2px 2px 2px #000;
-    margin: 1rem 0 1rem;
+    text-shadow: 1px 1px 1px #000;
+    margin: 0.5rem 0 0.5rem;
 
-    -webkit-box-shadow:  3px 3px 3px #86b9c5;
-    -moz-box-shadow:  3px 3px 3px #86b9c5;
-    box-shadow:  0px 0px 3px #86b9c5;
-    border: solid 1px white;
+    border-top: solid 1px $grey_dark_light;
 }
 
 .mark-title > span {
@@ -171,13 +164,13 @@ a {
     line-height: 2rem;
     display: inline-block;
     position: absolute;
-    color: #5f8ef4;
+    color: $blue;
     font-size: 1rem;
     text-shadow: 0px 0px 0px #000;
     right: 1rem;
 }
 #courseMore:hover {
-    color: #547ed8;
+    color: $blue_dark;
 }
 
 /* 主体部分 */
@@ -226,7 +219,7 @@ a {
     height: 6rem;
     margin-top: 0;
     text-overflow: ellipsis;
-    color: #41545f;
+    color: $grey_dark;
     width: 70%;
     padding: 5px;
     overflow: hidden;
@@ -284,7 +277,7 @@ a {
     margin-top: 5px;
     color: white;
     margin-bottom: 0;
-    color: #668693;
+    color: $grey_dark_light;
 }
 
 .content-item-date > span {
@@ -332,25 +325,15 @@ a {
     background: url("/images/testType/communication.jpg") no-repeat;
     background-size: cover;
 
-    -webkit-box-shadow:  0 0 0 0;
-    -moz-box-shadow:  0 0 0 0;
-    box-shadow:  0 0 0 0;
+    @include boxShadowRoundSide(0, 0);
 
-    transition:All 0.3s ease-in-out;
-    -webkit-transition:All 0.3s ease-in-out;
-    -moz-transition:All 0.3s ease-in-out;
-    -o-transition:All 0.3s ease-in-out;
+    @include transition(ALL, 0.3s, ease-in-out);
 }
 
 .company-item:hover {
 
     border: solid 1px #df742d;
-
-    -webkit-transform: scale(1.1);
-    -moz-transform: scale(1.1);
-    -ms-transform: scale(1.1);
-    -o-transform: scale(1.1);
-    transform: scale(1.1);
+    @include transform(scale(1.1));
 }
 
 .company-title {
@@ -374,18 +357,6 @@ a {
     color: #577380;
     padding: 2px;
 }
-
-/*文字特效*/
-.box1 {
-    text-shadow:
-            0 0 0 rgb(188,178,188),1px 0 0 rgb(173,163,173),
-            2px 0 0 rgb(157,147,157),3px 0 0 rgb(142,132,142),
-            4px 0 0 rgb(126,116,126),5px 0 0 rgb(111,101,111),
-            6px 0 0 rgb(95,85,95), 7px 0 0 rgb(79,69,79),
-            8px 0 7px rgba(0,0,0,0.35),8px 0 1px rgba(0,0,0,0.5),
-            0 0 7px rgba(0,0,0,.2);
-}
-
 
 /* 移动适配 */
 @media screen and (max-width: 400px){

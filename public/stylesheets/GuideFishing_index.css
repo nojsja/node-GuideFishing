@@ -6,7 +6,7 @@ html {
   font-size: 16px; }
 
 a {
-  color: #00B7FF; }
+  color: #637db5; }
 
 .main-container {
   margin-top: 0;
@@ -59,8 +59,8 @@ a {
   border-top: 0em;
   color: #7094a2;
   background-color: #f0f0f0;
-  -webkit-box-shadow: 0 5px 5px #7094a2;
-  -moz-box-shadow: 0 5px 5px #7094a2;
+  -webkit-box-shadow: 0 0 5px #7094a2;
+  -moz-box-shadow: 0 0 5px #7094a2;
   box-shadow: 0 0 5px #7094a2; }
 
 .hot-container {
@@ -117,16 +117,13 @@ a {
   height: 2rem;
   position: relative;
   text-align: left;
-  background-color: #cdcdcd;
+  background-color: #dfdfdf;
   padding-left: 1rem;
   color: #ffffff;
   font-size: 1.3rem;
-  text-shadow: 2px 2px 2px #000;
-  margin: 1rem 0 1rem;
-  -webkit-box-shadow: 3px 3px 3px #86b9c5;
-  -moz-box-shadow: 3px 3px 3px #86b9c5;
-  box-shadow: 0px 0px 3px #86b9c5;
-  border: solid 1px white; }
+  text-shadow: 1px 1px 1px #000;
+  margin: 0.5rem 0 0.5rem;
+  border-top: solid 1px #aaaaaa; }
 
 .mark-title > span {
   line-height: 2rem; }
@@ -138,13 +135,13 @@ a {
   line-height: 2rem;
   display: inline-block;
   position: absolute;
-  color: #5f8ef4;
+  color: #4c74ee;
   font-size: 1rem;
   text-shadow: 0px 0px 0px #000;
   right: 1rem; }
 
 #courseMore:hover {
-  color: #547ed8; }
+  color: #637db5; }
 
 /* 主体部分 */
 #totalCourse {
@@ -186,7 +183,7 @@ a {
   height: 6rem;
   margin-top: 0;
   text-overflow: ellipsis;
-  color: #41545f;
+  color: #737373;
   width: 70%;
   padding: 5px;
   overflow: hidden;
@@ -238,7 +235,7 @@ a {
   margin-top: 5px;
   color: white;
   margin-bottom: 0;
-  color: #668693; }
+  color: #aaaaaa; }
 
 .content-item-date > span {
   font-size: 1rem; }
@@ -281,10 +278,11 @@ a {
   -webkit-box-shadow: 0 0 0 0;
   -moz-box-shadow: 0 0 0 0;
   box-shadow: 0 0 0 0;
-  transition: All 0.3s ease-in-out;
-  -webkit-transition: All 0.3s ease-in-out;
-  -moz-transition: All 0.3s ease-in-out;
-  -o-transition: All 0.3s ease-in-out; }
+  -webkit-transition: ALL 0.3s ease-in-out;
+  -moz-transition: ALL 0.3s ease-in-out;
+  -ms-transition: ALL 0.3s ease-in-out;
+  -o-transition: ALL 0.3s ease-in-out;
+  transition: ALL 0.3s ease-in-out; }
 
 .company-item:hover {
   border: solid 1px #df742d;
@@ -311,10 +309,6 @@ a {
 .teacher {
   color: #577380;
   padding: 2px; }
-
-/*文字特效*/
-.box1 {
-  text-shadow: 0 0 0 #bcb2bc, 1px 0 0 #ada3ad, 2px 0 0 #9d939d, 3px 0 0 #8e848e, 4px 0 0 #7e747e, 5px 0 0 #6f656f, 6px 0 0 #5f555f, 7px 0 0 #4f454f, 8px 0 7px rgba(0, 0, 0, 0.35), 8px 0 1px rgba(0, 0, 0, 0.5), 0 0 7px rgba(0, 0, 0, 0.2); }
 
 /* 移动适配 */
 @media screen and (max-width: 400px) {

@@ -8,6 +8,8 @@
 /* 初始化函数 */
 $(function () {
 
+    TestIndexAction.userAgent["browser"] = nojsja["Tool"].GetBrowserType();
+
     $('#testTypeChoose, #testTypeChoose2').click(function () {
         TestIndexAction.headerDown = !TestIndexAction.headerDown;
         $('.type-item').slideToggle();
@@ -27,18 +29,22 @@ $(function () {
     //顶部和底部跳转
     $('#top').click(TestIndexAction.goTop);
     $('#bottom').click(TestIndexAction.goBottom);
-    //高度检测
-    /*windowHeightCheck();*/
     //滑动检测函数
-    // $(window).scroll(function () {
-    //     nojsja.FnDelay(TestIndexAction.scrollCheck, 500);
-    // });
+    $(window).scroll(function () {
+
+        nojsja.FnDelay(function () {
+            TestIndexAction.scrollCheck(TestIndexAction.readMore);
+        }, 200);
+    });
     //加载更多数据
-    $('.loading-info').click(TestIndexAction.readMore);
+    // $('.loading-info').click();
     // 读取测评类型
     TestIndexAction.updateTestType();
     //加载指定数量的测试题目列表
-    TestIndexAction.readTestList({ testType: "ALL" });
+    TestIndexAction.readTestList({
+        testType: TestIndexAction.testType,
+        limit: TestIndexAction.pageLimit
+    });
     // 读取热门的评测
     TestIndexAction.updateHot();
     // 初始化按钮
@@ -53,6 +59,12 @@ $(function () {
 
 /*** 页面全局变量 ***/
 var TestIndexAction = {
+    // 浏览器信息
+    userAgent: {
+        scrollTop: 0,
+        scrollHeight: 0,
+        clientHeight: 0
+    },
     //heder是否降下
     headerDown: false,
     //检测页面滚动
@@ -62,7 +74,7 @@ var TestIndexAction = {
     //页面加载起点
     pageStart: 0,
     //页面加载条数
-    pageLimit: 15,
+    pageLimit: 2 ,
     //加载的测试类型
     testType: "ALL",
     //是否清除页面已存数据
@@ -110,6 +122,11 @@ TestIndexAction.updateTestType = function () {
 
             $typeItemList.append($type);
         }
+        $typeItemList.append(
+          $('<div class="type-item">')
+              .text('所有')
+              .prop('id', 'ALL')
+        );
 
         //指定类型的课程
         $('.type-item').click(function () {
@@ -136,7 +153,10 @@ TestIndexAction.readMore = function () {
     TestIndexAction.readTestList({
         testType: TestIndexAction.testType,
         skip: TestIndexAction.pageStart
+
     }, function (JSONdata) {
+
+        console.log('lockerCallback');
         //更新页面
         TestIndexAction.updatePage(JSONdata);
     });
@@ -153,6 +173,7 @@ TestIndexAction.updatePage = function (JSONdata) {
     if(parsedData.error){
         return this.modalWindow("服务器发生错误: " + parsedData.error);
     }
+
     //清除缓存数据
     if(TestIndexAction.isClear) {
         $('#total').children().remove();
@@ -161,7 +182,9 @@ TestIndexAction.updatePage = function (JSONdata) {
     }
     //没有数据提示用户
     if(parsedData.testArray.length === 0){
-        this.modalWindow('抱歉,没有更多数据!');
+        return $('.loading-info').text('----- 加载完毕 ----');
+    }else {
+        $('.loading-info').text('正在加载...');
     }
     //遍历对象数组构造DOM对象
     for(var testIndex in parsedData.testArray) {
@@ -230,15 +253,15 @@ TestIndexAction.testTypeDefine = function () {
     var testType = $(this).prop('id');
     //重置分页数据
     TestIndexAction.pageStart = 0;
-    TestIndexAction.pageLimit = 15;
+    TestIndexAction.pageLimit = 2;
     TestIndexAction.testType = testType;
     TestIndexAction.isClear = true;
 
     //读取指定类型的列表
     TestIndexAction.readTestList({
         testType: TestIndexAction.testType,
-        pageStart: TestIndexAction.pageStart,
-        pageLimit: TestIndexAction.pageLimit
+        skip: TestIndexAction.pageStart,
+        limit: TestIndexAction.pageLimit
     }, function (err, JSONdata) {
         if(err){
             return this.modalWindow("发生错误: " + err);
@@ -303,32 +326,41 @@ TestIndexAction.goBottom = function goBottom() {
 };
 
 /* 滚动侦测 */
-TestIndexAction.scrollCheck = function () {
+TestIndexAction.scrollCheck = function (callback) {
 
-    //可见高度
-    var clientHeight = $(window).height();
-    //总高度,包括不可见高度
-    var totalHeight = $(document).height();
-    //可滚动高度,只有不可见高度
-    var scrollHeight = $(window).scrollTop();
+    // if(nojsja['FnLocker'].check(callback)){
+    //     console.log('locker stil exists.');
+    //     return;
+    // }
+    console.log('scrolling');
+    nojsja
+        .GetDocumentHeight[TestIndexAction.userAgent.browser](TestIndexAction.userAgent, 'clientHeight');
 
-    //文档总长度比较短
-    if(clientHeight >= (totalHeight * 1) / 2){
-        return;
+    nojsja
+        .GetDocumentHeight[TestIndexAction.userAgent.browser](TestIndexAction.userAgent, 'scrollTop');
+
+    nojsja
+        .GetDocumentHeight[TestIndexAction.userAgent.browser](TestIndexAction.userAgent, 'scrollHeight');
+
+    console.log(
+        TestIndexAction.userAgent.browser,
+        TestIndexAction.userAgent.clientHeight,
+        TestIndexAction.userAgent.scrollTop,
+        TestIndexAction.userAgent.scrollHeight
+    );
+
+    if( TestIndexAction.userAgent.clientHeight +
+        TestIndexAction.userAgent.scrollTop ==
+        TestIndexAction.userAgent.scrollHeight ){
+
+        console.log('on the bottom.');
+        // nojsja['FnLocker'].lock(callback);
+
+        // callback(function () {
+        //     console.log('unlock');
+        //     nojsja['FnLocker'].unlock(callback);
+        // });
+        callback();
     }
 
-    //当滑动到1/2页面处的时候就显示跳转按钮
-    if(clientHeight + scrollHeight >= (totalHeight * 1) / 2){
-        TestIndexAction.scrollOver = true;
-        if(TestIndexAction.lastScrollOver !== TestIndexAction.scrollOver){
-            $('.page-anchor').fadeIn();
-        }
-        TestIndexAction.lastScrollOver = TestIndexAction.scrollOver;
-    }else {
-        TestIndexAction.scrollOver = false;
-        if(TestIndexAction.lastScrollOver !== TestIndexAction.scrollOver){
-            $('.page-anchor').fadeOut();
-        }
-        TestIndexAction.lastScrollOver = TestIndexAction.scrollOver;
-    }
 };

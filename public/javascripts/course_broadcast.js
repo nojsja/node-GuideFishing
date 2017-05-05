@@ -28,6 +28,7 @@ $(function () {
  * file -- origin 未转换前的文件, data -- 转换后即将上传的文件, type -- 文件类型
  * upload -- 文件上传相关
  * isAdmin -- 是否具有管理员权限
+ * isLogin -- 是否登录
  * reader -- 文件读取对象fileReader
  * record -- 录音对象,
  * status -- 录音状态
@@ -38,16 +39,24 @@ var BroadcastAction = {
     socket: {},
     courseName: "",
     isAdmin: false,
+    isLogin: false,
 
     message: {
         send: {
             value: {},
+            // 私人消息对象
+            selfMessage: {
+                text: '',
+                to: ''
+            },
             watcherList: [],
             listen: function () {},
             trigger: function () {}
         },
         received: {
             value: {},
+            // 私人消息列表
+            selfMessage: [],
             watcherList: [],
             listen: function () {},
             trigger: function () {}
@@ -117,6 +126,34 @@ BroadcastAction.socketInit = function () {
         BroadcastAction.message.received.trigger('newMessage', info);
     });
 
+    // 私人消息（私信）
+    BroadcastAction.socket.on('selfMessage', function (data) {
+
+        BroadcastAction.message.received.trigger('selfMessage', {
+            selfMessage: data.selfMessage
+        });
+    });
+
+    // 系统错误信息和警告
+    BroadcastAction.socket.on('warning', function (data) {
+
+        BroadcastAction.message.received.trigger('warning', {
+            message: data.message
+        });
+    });
+
+    // 更新聊天室用户列表的消息
+    BroadcastAction.socket.on('updateChatmates', function (data) {
+
+        // 格式化数据
+        var info = {
+            chatmatesArray: data.chatmatesArray,
+            isAdmin: data.isAdmin
+        };
+
+        BroadcastAction.message.received.trigger('updateChatmates', info);
+    });
+
     // 服务器请求上传更多数据
     BroadcastAction.socket.on('moreData', function (data) {
 
@@ -174,94 +211,111 @@ BroadcastAction.pageEventBind = function () {
         $('.finish-broadcast-div > span').click(BroadcastAction.finishBroadcast);
     }
 
-    // 获取音频事件初始化
-    BroadcastAction.getMediaDataInit();
+    // 判断用户是否登录
+    if(BroadcastAction.isLogin){
+        // 获取音频事件初始化
+        BroadcastAction.getMediaDataInit();
 
-    // 上传事件绑定
-    BroadcastAction.file.upload = {
+        // 展开聊天室成员窗口
+        nojsja["EventUtil"].addHandler($('.chat-user-list')[0], 'click', function () {
 
-        setProgress: function (value) {
-            // 更新页面进度条
-            $('.progress-bar').css('width', value);
-            return this;
-        },
-        hidden: function () {
-            if($('.progress').css('display') == 'block'){
-                $('.progress').fadeOut();
+            // 发送请求更新请求
+            BroadcastAction.socket.emit('updateChatmates');
+        });
+
+        // 查看私人消息
+        nojsja["EventUtil"].addHandler($('.chat-self-message')[0], 'click', function () {
+
+            // 更新个人消息
+            BroadcastAction.updateSelfMessage();
+        });
+
+        // 上传事件绑定
+        BroadcastAction.file.upload = {
+
+            setProgress: function (value) {
+                // 更新页面进度条
+                $('.progress-bar').css('width', value);
+                return this;
+            },
+            hidden: function () {
+                if($('.progress').css('display') == 'block'){
+                    $('.progress').fadeOut();
+                }
+                return this;
+            },
+            show: function () {
+                if($('.progress').css('display')  != 'block'){
+                    $('.progress').fadeIn();
+                }
+                return this;
             }
-            return this;
-        },
-        show: function () {
-            if($('.progress').css('display')  != 'block'){
-                $('.progress').fadeIn();
-            }
-            return this;
-        }
-    };
+        };
 
-    // 用户发送消息
-    $('#messageSend').click(function () {
-        BroadcastAction.message.send.trigger('send');
-    });
-
-    // messageInput键盘事件绑定
-    $('#messageInput').on('keydown', function (e) {
-
-        // 事件代码Enter
-        if(e.which == 13){
+        // 用户发送消息
+        $('#messageSend').click(function () {
             BroadcastAction.message.send.trigger('send');
-        }
-    });
+        });
 
-    // 文件选中上传事件
-    $('#fileChoose').on('change', function () {
+        // messageInput键盘事件绑定
+        $('#messageInput').on('keydown', function (e) {
 
-        console.log('on change');
-        //判断浏览器是否支持FileReader接口
-        if(typeof FileReader == 'undefined'){
-            //使选择控件不可操作
-            $('#fileChoose').setAttribute("disabled","disabled");
-            return BroadcastAction.modalWindow('你的浏览器不支持读取本地文件!');
-        }
+            // 事件代码Enter
+            if(e.which == 13){
+                BroadcastAction.message.send.trigger('send');
+            }
+        });
 
-        // 获取文件
-        var file = document.getElementById('fileChoose').files[0];
+        // 文件选中上传事件
+        $('#fileChoose').on('change', function () {
 
-        if(file){
-            BroadcastAction.file.origin = file;
-            console.log(file.size + " + " + file.name);
-            BroadcastAction.file.reader = new FileReader();
-            // 注意这儿载入的是文件分片后的数据
-            // 这个需要服务器返回第一次返回后客户端确认信息
-            BroadcastAction.file.reader.onload = function (event) {
+            console.log('on change');
+            //判断浏览器是否支持FileReader接口
+            if(typeof FileReader == 'undefined'){
+                //使选择控件不可操作
+                $('#fileChoose').setAttribute("disabled","disabled");
+                return BroadcastAction.modalWindow('你的浏览器不支持读取本地文件!');
+            }
 
-                // 为2是读取成功
-                console.log("readyState: " + this.readyState);
+            // 获取文件
+            var file = document.getElementById('fileChoose').files[0];
 
-                var data = this.result || event.target.result;
-                console.log('reader onload.');
-                /* 通过内部的result对象取到读取后的数据 */
-                BroadcastAction.socket.emit('upload', {
+            if(file){
+                BroadcastAction.file.origin = file;
+                console.log(file.size + " + " + file.name);
+                BroadcastAction.file.reader = new FileReader();
+                // 注意这儿载入的是文件分片后的数据
+                // 这个需要服务器返回第一次返回后客户端确认信息
+                BroadcastAction.file.reader.onload = function (event) {
+
+                    // 为2是读取成功
+                    console.log("readyState: " + this.readyState);
+
+                    var data = this.result || event.target.result;
+                    console.log('reader onload.');
+                    /* 通过内部的result对象取到读取后的数据 */
+                    BroadcastAction.socket.emit('upload', {
+                        "Name": BroadcastAction.file.origin.name,
+                        "Segment": data
+                    });
+                };
+                console.log('start');
+                // 触发开始上传事件
+                // 等待服务器发回允许上传的回调信息后开始载入文件流式传输到服务器
+                BroadcastAction.socket.emit('start', {
                     "Name": BroadcastAction.file.origin.name,
-                    "Segment": data
+                    "Size": BroadcastAction.file.origin.size,
+                    "CourseName": BroadcastAction.courseName
                 });
-            };
-            console.log('start');
-            // 触发开始上传事件
-            // 等待服务器发回允许上传的回调信息后开始载入文件流式传输到服务器
-            BroadcastAction.socket.emit('start', {
-               "Name": BroadcastAction.file.origin.name,
-                "Size": BroadcastAction.file.origin.size,
-                "CourseName": BroadcastAction.courseName
-            });
-        }
-    });
-    
-    // 选择并上传文件到服务器, 服务器再广播到房间
-    $('#fileSend').click(function () {
+            }
+        });
 
-        $('#fileChoose').click();
-    });
+        // 选择并上传文件到服务器, 服务器再广播到房间
+        $('#fileSend').click(function () {
+
+            $('#fileChoose').click();
+        });
+    }
     
 };
 
@@ -329,8 +383,10 @@ BroadcastAction.watcherActive = function () {
 
     //--- 发送消息 ---//
 
-    // 发送消息
+    // 发送全体消息
     BroadcastAction.message.send.listen('send', send);
+    // 发送私人消息
+    BroadcastAction.message.send.listen('selfMessage', selfMessage);
 
     // 向服务器发送消息函数,事件类型定义为send
     function send() {
@@ -347,12 +403,27 @@ BroadcastAction.watcherActive = function () {
         BroadcastAction.socket.send(message);
     }
 
+    // 发送私信消息
+    function sendSelfMessage(info) {
+
+        BroadcastAction.socket.emit('sendSelfMessage', {
+            to: info.args.to,
+            text: info.args.text
+        });
+    }
+
     //--- 接收消息 ---//
 
     // 接收系统消息
     BroadcastAction.message.received.listen('systemMessage', receiveSystemMsg);
     // 接收用户消息
     BroadcastAction.message.received.listen('newMessage', receiveNewMsg);
+    // 系统警告信息和提示
+    BroadcastAction.message.received.listen('warning', warning);
+    // 接受私人消息
+    BroadcastAction.message.received.listen('selfMessage', selfMessage);
+    // 接收更新聊天室用户列表的消息
+    BroadcastAction.message.received.listen('updateChatmates', updateChatmates);
     // 接收上传开始上传文件的信息
     BroadcastAction.message.received.listen('moreData', startUpload);
     // 文件上传完成
@@ -447,13 +518,38 @@ BroadcastAction.watcherActive = function () {
         div.scrollTop = div.scrollHeight;
     }
 
+    // 系统警告信息和提示
+    function warning(info) {
+        // confirm(info.args.message);
+        nojsja["ModalWindow"].show(info.args.message);
+    }
+
     // 接收用户新消息
     function receiveNewMsg(info) {
 
         // 执行DOM更新
         BroadcastAction.newMessageUpdate(info.args);
     }
-    
+
+    // 接收私人消息
+    function selfMessage(info) {
+
+        // 本地数据更新
+        BroadcastAction.message.received.selfMessage = info.args.selfMessage;
+        // 颜色提醒
+        $('.chat-self-message').prop('class', 'chat-self-message chat-self-message-rainbow');
+    }
+
+    // 更新聊天室列表
+    function updateChatmates(info) {
+
+        // 调用外部函数
+        BroadcastAction.updateChatmatesList({
+            chatmatesArray: info.args.chatmatesArray,
+            isAdmin: info.args.isAdmin
+        });
+    }
+
     /** 直播状态检查
      * broadcastIng -- 正在直播
      * broadcastDone -- 直播完成等待发布
@@ -727,6 +823,223 @@ BroadcastAction.newMessageUpdate = function (info) {
 
 };
 
+/* 更新私人消息
+
+* DOM结构
+* <!--个人收到的消息-->
+ <div class="self-message-div">
+
+ <div class="self-message-item">
+ <!--消息头-->
+ <div class="self-message-head">
+ <!--发送日期-->
+ <div class="message-head-date">
+ 00:12
+ </div>
+ <!--发送人-->
+ <div class="message-head-from">
+ Johnson
+ </div>
+ </div>
+ <!--消息内容-->
+ <div class="self-message-body">
+ <div>发送的消息</div>
+ </div>
+ </div>
+
+ </div>
+*
+* */
+BroadcastAction.updateSelfMessage = function () {
+
+    // selfMessage 格式{from, date, isAdmin, text}
+
+    // 取消颜色提醒
+    $('.chat-self-message').prop('class', 'chat-self-message');
+    // 更新DOM
+    var selfMessageArray = BroadcastAction.message.received.selfMessage;
+
+    // 父组件
+    var $selfMessageDiv = $('<div class="self-message-div">');
+    var selfMessage;
+
+    for(var i = 0; i < selfMessageArray.length; i++){
+
+        (function (i) {
+
+            selfMessage = selfMessageArray[i];
+            // 一个消息
+            var $selfMessageItem = $('<div class="self-message-item">');
+
+            // 消息头
+            var $selfMessageHead = $('<div class="self-message-head">');
+            // 发送日期
+            var $messageHeadDate = $('<div class="message-head-date">');
+            $messageHeadDate.text(selfMessage.date);
+            // 发送人
+            var $messageHeadFrom = $('<div class="message-head-from">');
+            $messageHeadFrom.text(selfMessage.from);
+
+            $selfMessageHead
+                .append($messageHeadDate)
+                .append($messageHeadFrom);
+
+            // 消息体
+            var $selfMessageBody = $('<div class="self-message-body">');
+            $selfMessageBody.append(
+                $('<div>').text(selfMessage.text)
+            );
+
+            // 添加DOM
+            $selfMessageItem
+                .append($selfMessageHead)
+                .append($selfMessageBody);
+
+            $selfMessageDiv.append($selfMessageItem);
+
+        })(i);
+    }
+
+    // 模态弹出
+    nojsja["ModalWindow"].define($selfMessageDiv[0]);
+    nojsja["ModalWindow"].show('私信', {
+        scroll: true,
+        selfDefineKeep: true
+    });
+};
+
+
+
+/* 展示所有聊天室用户
+ *
+  * DOM构造
+ <div class="chatmates-list-div">
+ <!--一个成员-->
+ <div class="chatmates-item">
+ <!--管理员识别标致-->
+ <div class="chatmates-item-icon chatmates-admin">
+ <i class="icon-user"></i>
+ </div>
+ <!--昵称-->
+ <div class="chatmates-item-nickName">
+ <span>Johnson</span>
+ </div>
+ <!--@聊天室成员-->
+ <div class="chatmates-item-alt">
+ <i class="icon-comment-alt"></i>
+ </div>
+ <!--管理员禁言用户-->
+ <div class="chatmates-item-ban">
+ <i class="icon-ban-circle"></i>
+ </div>
+ </div>
+
+ </div>*/
+BroadcastAction.updateChatmatesList = function (info) {
+
+    // 返回的数据
+    var chatmatesArray =  info.chatmatesArray;
+    // 管理员标志
+    var isAdmin = info.isAdmin;
+
+    // 父组件
+    var $chatmatesList = $('<div class="chatmates-list-div">');
+
+    for(var i = 0; i < chatmatesArray.length; i++){
+
+        (function (i) {
+
+            var chatmates = (chatmatesArray[i]);
+            // 外层包裹
+            var $chatmatesItem = $('<div class="chatmates-item">');
+
+            // 管理员和用户标识
+            var $chatmatesItemIcon;
+            if(chatmates.isAdmin){
+                $chatmatesItemIcon = $('<div class="chatmates-item-icon chatmates-admin">');
+            }else {
+                $chatmatesItemIcon = $('<div class="chatmates-item-icon">');
+            }
+            $chatmatesItemIcon.append($('<i class="icon-user"></i>'));
+
+            // 昵称显示
+            var $chatmatesItemName = $('<div class="chatmates-item-nickName">');
+            $chatmatesItemName.append(
+                $('<span>').text(chatmates.name)
+            );
+
+            // @成员
+            var $chatmatesItemAlt = $('<div class="chatmates-item-alt">');
+            $chatmatesItemAlt.append(
+                $('<i class="icon-comment-alt">')
+            );
+            nojsja["EventUtil"].addHandler($chatmatesItemAlt[0], 'click', function () {
+
+                var message = prompt('@ ' + chatmates.name);
+                if(message !== null && message.trim() !== ""){
+                    // 发送消息
+                    BroadcastAction.socket.emit('sendSelfMessage', {
+                        to: chatmates.name,
+                        text: message
+                    });
+                }
+            });
+
+            // 添加DOM
+            $chatmatesItem
+                .append($chatmatesItemIcon)
+                .append($chatmatesItemIcon)
+                .append($chatmatesItemName)
+                .append($chatmatesItemAlt);
+
+            if(isAdmin){
+
+                // 权限管理
+                var $chatmatesItemBan = $('<div class="chatmates-item-ban">');
+                $chatmatesItemBan.append(
+                    $('<i class="icon-ban-circle">')
+                );
+                $chatmatesItemBan.attr('ban', 'false');
+                nojsja['EventUtil'].addHandler($chatmatesItemBan[0], 'click', function () {
+
+                    var banStatus = $(this).attr('ban');
+                    if(banStatus == 'true'){
+                        $(this).attr('ban', 'false');
+                        $(this).prop('class', 'chatmates-item-ban');
+                        // 解禁
+                        BroadcastAction.socket.emit('banMessage', {
+                            ban: false,
+                            user: chatmates.name
+                        });
+                    }else {
+                        $(this).attr('ban', 'true');
+                        $(this).prop('class', 'chatmates-item-ban unban');
+                        // 禁言
+                        BroadcastAction.socket.emit('banMessage', {
+                            ban: true,
+                            user:chatmates.name
+                        });
+                    }
+                });
+                // 禁言用户
+                $chatmatesItem.append($chatmatesItemBan);
+            }
+
+            $chatmatesList.append($chatmatesItem);
+
+        })(i);
+
+    }
+
+    // 模态弹出
+    nojsja["ModalWindow"].define($chatmatesList[0]);
+    nojsja["ModalWindow"].show('所有成员', {
+        scroll: false,
+        selfDefineKeep: true
+    });
+
+};
+
 /* 获取浏览器媒体数据 */
 BroadcastAction.getMediaDataInit = function (type) {
 
@@ -771,7 +1084,7 @@ BroadcastAction.getMediaDataInit = function (type) {
     };
 
     // 获取媒体数据接口
-    navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia ||
+    navigator.GetUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia ||
     navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
     // 开始录音
@@ -782,7 +1095,7 @@ BroadcastAction.getMediaDataInit = function (type) {
         }
 
         // 开始获取媒体数据
-        navigator.getUserMedia(Record.mediaConstraints, startUserMedia, noStream);
+        navigator.GetUserMedia(Record.mediaConstraints, startUserMedia, noStream);
 
         function startUserMedia(stream) {
 
@@ -806,14 +1119,14 @@ BroadcastAction.getMediaDataInit = function (type) {
         // 获取失败
         function noStream(err) {
 
+            nojsja["ModalWindow"].show('你的浏览器可能不支持发送语音!可以尝试使用FireFox浏览器...');
             if(err.PERMISSION_DENIED) {
-                BroadcastAction.modalWindow('用户拒绝了浏览器请求媒体的权限');
+                console.log('用户拒绝了浏览器请求媒体的权限');
             } else if(err.NOT_SUPPORTED_ERROR) {
-                BroadcastAction.modalWindow('constraint中指定的媒体类型不被支持');
+                console.log('constraint中指定的媒体类型不被支持');
             } else if(err.MANDATORY_UNSATISFIED_ERROR) {
-                BroadcastAction.modalWindow('指定的媒体类型未接收到媒体流');
+                console.log('指定的媒体类型未接收到媒体流');
             }
-            console.log( '调用麦克风权限发生错误: ' + err);
         }
     }
     
@@ -884,7 +1197,7 @@ BroadcastAction.getDate = function () {
 /* 模态弹窗 */
 BroadcastAction.modalWindow = function(text) {
 
-    ModalWindow.show(text);
+    nojsja["ModalWindow"].show(text);
 };
 
 

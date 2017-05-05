@@ -1,4 +1,5 @@
 @charset "UTF-8";
+@import "public";
 
 body {
     font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -243,16 +244,6 @@ a {
 /* 数据加载loading信息 */
 .loading-info {
     text-align: center;
+    color: $grey_dark;
     margin-bottom: 1rem;
-}
-
-/*文字特效*/
-.box1 {
-    text-shadow:
-            0 0 0 rgb(188,178,188),1px 0 0 rgb(173,163,173),
-            2px 0 0 rgb(157,147,157),3px 0 0 rgb(142,132,142),
-            4px 0 0 rgb(126,116,126),5px 0 0 rgb(111,101,111),
-            6px 0 0 rgb(95,85,95), 7px 0 0 rgb(79,69,79),
-            8px 0 7px rgba(0,0,0,0.35),8px 0 1px rgba(0,0,0,0.5),
-            0 0 7px rgba(0,0,0,.2);
 }

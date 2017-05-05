@@ -210,10 +210,7 @@ a {
 /* 数据加载loading信息 */
 .loading-info {
   text-align: center;
+  color: #737373;
   margin-bottom: 1rem; }
-
-/*文字特效*/
-.box1 {
-  text-shadow: 0 0 0 #bcb2bc, 1px 0 0 #ada3ad, 2px 0 0 #9d939d, 3px 0 0 #8e848e, 4px 0 0 #7e747e, 5px 0 0 #6f656f, 6px 0 0 #5f555f, 7px 0 0 #4f454f, 8px 0 7px rgba(0, 0, 0, 0.35), 8px 0 1px rgba(0, 0, 0, 0.5), 0 0 7px rgba(0, 0, 0, 0.2); }
 
 /*# sourceMappingURL=test_index.css.map */

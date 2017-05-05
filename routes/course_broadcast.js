@@ -20,9 +20,10 @@ function course_broadcast(app) {
         res.render('course_broadcast', {
             title: "讨论组",
             broadcastRoom: req.params.id,
-            admin: false,
             slogan: "带渔",
-            account: req.session.nickName || "游客",
+            account: req.session.teacher || req.session.nickName || "游客",
+            isLogin: ( req.session.teacher !== (null || undefined) ) || ( req.session.nickName !== (null || undefined) ) ? true : false,
+            teacher: req.session.teacher || false,
             other: "讨论组"
         });
     });
@@ -42,7 +43,7 @@ function course_broadcast(app) {
             res.render('course_broadcastAdmin', {
                 title: "登录验证",
                 broadcastRoom: room,
-                slogan: "带渔",
+                slogan: "启航",
                 other: "登录"
             });
         }else {
@@ -52,10 +53,12 @@ function course_broadcast(app) {
             res.render('course_broadcast', {
                 title: "讨论组",
                 broadcastRoom: room,
-                admin: true,
-                account: "管理员",
-                slogan: "带渔",
-                other: "讨论组"
+                teacher: true,
+                slogan: "启航",
+                other: "讨论组",
+                account: req.session.teacher || req.session.nickName || "游客",
+                isLogin: ( req.session.teacher !== (null || undefined) ) || ( req.session.nickName !== (null || undefined) ) ? true : false,
+                teacher: req.session.teacher || false,
             });
         }
     });
@@ -176,6 +179,7 @@ function course_broadcast(app) {
             courseName: room,
             teacher: account,
             password: password
+
         }, function (err, isPass) {
             console.log(err + isPass);
             if(err){
@@ -185,8 +189,8 @@ function course_broadcast(app) {
                 }) );
             }
             if(isPass){
-                // 管理员账户
-                req.session.adminAccount = account;
+                // 登录教师信息
+                req.session.teacher = account;
                 res.json( JSON.stringify({
                     isError: false,
                     isPass: true,
@@ -200,13 +204,6 @@ function course_broadcast(app) {
                 }) );
             }
         });
-
-    });
-
-    
-    // 获取课程直播数据
-    app.post('/course/broadcast', function (req, res) {
-
 
     });
 }

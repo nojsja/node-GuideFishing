@@ -18,6 +18,8 @@ var scoreFactory = require('../models/ScoreFactory.js');
 var AllTest = require('../models/AllTest.js');
 /* 权限检查 */
 var permissionCheck = require('../models/permissionCheck').permissionCheck;
+/* 中英转换 */
+var EnToCn = require('../models/EnToCn');
 /* 读取磁盘图片数据形成地址 */
 var ReadTestImg = require('../models/ReadTypeImg');
 /* 获取根目录 */
@@ -111,6 +113,42 @@ function test(app) {
                    res.render('test_detail', responseTest);
                }
            });
+        });
+    });
+
+    // 获取课程分类页面
+    app.get('/test/classification', function (req, res) {
+
+        res.render('test_classification',{
+            title: '所有测评分类'
+        });
+    });
+
+    // 获取所有课程分类信息
+    app.post('/test/classification', function ( req, res) {
+
+        AllTest.getClassification(function (err, classificationInfo) {
+
+            if(err){
+                return res.json( JSON.stringify({
+                    isError: true,
+                    error: err.toString()
+                }) );
+            }
+
+            var readUrl = locateFromRoot('/public/images/testType/');
+            var visitUrl = '/images/testType/';
+
+            ReadTestImg(readUrl, visitUrl, function (imgArray) {
+
+                res.json( JSON.stringify({
+                    isError: false,
+                    classificationInfo: classificationInfo,
+                    testTypeChina: EnToCn.getAllPattern("testType"),
+                    testTypeImage: imgArray
+                }) );
+            });
+
         });
     });
 

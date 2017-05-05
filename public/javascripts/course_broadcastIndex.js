@@ -7,16 +7,24 @@
 /* 初始化函数 */
 $(function () {
 
+    // 获取浏览器客户端信息
+    bcIndexAction.userAgent["browser"] = nojsja["Tool"].GetBrowserType();
     // 页面事件绑定
     bcIndexAction.pageEventBind();
     // 读取直播类型中英文
     bcIndexAction.updateBroadcastType();
     //加载指定数量的测试题目列表
-    bcIndexAction.readBroadcastList();
+    bcIndexAction.readBroadcastList({});
 });
 
 /*** 页面全局变量 ***/
 var bcIndexAction = {
+    // 浏览器信息
+    userAgent: {
+        scrollTop: 0,
+        scrollHeight: 0,
+        clientHeight: 0
+    },
     //heder是否降下
     headerDown: false,
     //检测页面滚动
@@ -46,9 +54,13 @@ bcIndexAction.pageEventBind = function () {
     //高度检测
     /*windowHeightCheck();*/
     //滑动检测函数
-    $(window).scroll(bcIndexAction.scrollCheck);
-    //加载更多数据
-    $('#readMore').click(bcIndexAction.readMore);
+    //滑动检测函数
+    $(window).scroll(function () {
+
+        nojsja.FnDelay(function () {
+            bcIndexAction.scrollCheck(bcIndexAction.readMore);
+        }, 200);
+    });
     // 绑定搜索动画
     $('#broadcastSearchButton').click(function () {
 
@@ -139,7 +151,7 @@ bcIndexAction.updateBroadcastType = function () {
 
         var JSONobject = JSON.parse(JSONdata);
         if(JSONobject.isError){
-            return TestIndexAction.modalWindow('[error]: ' + JSONobject.error);
+            return bcIndexAction.modalWindow('[error]: ' + JSONobject.error);
         }
 
         bcIndexAction.broadcastTypeChina = JSONobject.courseTypeChina;
@@ -169,7 +181,9 @@ bcIndexAction.updatePage = function (JSONdata) {
     }
     //没有数据提示用户
     if(parsedData.broadcastArray.length === 0){
-        return this.modalWindow('抱歉,没有更多数据!');
+        return $('.loading-info').text('----- 加载完毕 ----');
+    }else {
+        $('.loading-info').text('正在加载...');
     }
     // 做DOM缓存
     bcIndexAction.broadcastArray = parsedData.broadcastArray;
@@ -190,7 +204,7 @@ bcIndexAction.updatePage = function (JSONdata) {
             //添加超链接
             var url = preAddressUser + broadcast.courseName;
             $broadcastContainer.click(function () {
-                window.location.href = url;
+                window.location.href = encodeURI(url);
             });
             $contentTitle.prop('href', url);
             $contentTitle.text(broadcast.courseName);
@@ -263,33 +277,34 @@ bcIndexAction.goBottom = function goBottom() {
 };
 
 /* 滚动侦测 */
-bcIndexAction.scrollCheck = function () {
+bcIndexAction.scrollCheck = function (callback) {
 
-    //可见高度
-    var clientHeight = $(window).height();
-    //总高度,包括不可见高度
-    var totalHeight = $(document).height();
-    //可滚动高度,只有不可见高度
-    var scrollHeight = $(window).scrollTop();
+    // if(nojsja['FnLocker'].check(callback)){
+    //     console.log('locker stil exists.');
+    //     return;
+    // }
+    console.log('scrolling');
+    nojsja
+        .GetDocumentHeight[bcIndexAction.userAgent.browser](bcIndexAction.userAgent, 'clientHeight');
 
-    //文档总长度比较短
-    if(clientHeight >= (totalHeight * 1) / 2){
-        return;
-    }
+    nojsja
+        .GetDocumentHeight[bcIndexAction.userAgent.browser](bcIndexAction.userAgent, 'scrollTop');
 
-    //当滑动到1/2页面处的时候就显示跳转按钮
-    if(clientHeight + scrollHeight >= (totalHeight * 1) / 2){
-        bcIndexAction.scrollOver = true;
-        if(bcIndexAction.lastScrollOver !== bcIndexAction.scrollOver){
-            $('.page-anchor').fadeIn();
-        }
-        bcIndexAction.lastScrollOver = bcIndexAction.scrollOver;
-    }else {
-        bcIndexAction.scrollOver = false;
-        if(bcIndexAction.lastScrollOver !== bcIndexAction.scrollOver){
-            $('.page-anchor').fadeOut();
-        }
-        bcIndexAction.lastScrollOver = bcIndexAction.scrollOver;
+    nojsja
+        .GetDocumentHeight[bcIndexAction.userAgent.browser](bcIndexAction.userAgent, 'scrollHeight');
+
+    if( bcIndexAction.userAgent.clientHeight +
+        bcIndexAction.userAgent.scrollTop ==
+        bcIndexAction.userAgent.scrollHeight ){
+
+        console.log('on the bottom.');
+        // nojsja['FnLocker'].lock(callback);
+
+        // callback(function () {
+        //     console.log('unlock');
+        //     nojsja['FnLocker'].unlock(callback);
+        // });
+        callback();
     }
 };
 

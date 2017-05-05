@@ -154,7 +154,6 @@ Course.prototype.save = function (callback) {
                     return defer.promise;
                 })
                 .done(function (info) {
-
                     console.log('course save done.');
                     if(info.isError){
                         return callback(info.err);
@@ -169,6 +168,41 @@ Course.prototype.save = function (callback) {
             });
 
         });
+    });
+};
+
+/* 获取课程分类信息 */
+Course.getClassification = function (callback) {
+
+    var db = mongoose.connection;
+    var Course = mongoose.model('Course', courseSchema);
+
+    var query = Course.find();
+    query.exec(function (err, docs) {
+
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+
+        // 课程分类信息对象
+        var classificationInfo = {};
+
+        if(docs.length > 0){
+
+            for(let i = 0; i < docs.length; i++){
+
+                if(docs[i].courseType && !docs[i].isBroadcast){
+                    if(classificationInfo[docs[i].courseType]){
+                        classificationInfo[docs[i].courseType] += 1;
+                    }else {
+                        classificationInfo[docs[i].courseType] = 1;
+                    }
+                }
+            }
+        }
+
+        callback(null, classificationInfo);
     });
 };
 
@@ -437,7 +471,8 @@ Course.readList = function (docCondition, callback) {
     // 需要读取的文档的查询条件
     // 获取正式发布的课程
     var condition = {
-        isReady: true
+        isReady: true,
+        isBroadcast: false
     };
     /* 读取条目数量 */
     var number = 20;
@@ -466,7 +501,7 @@ Course.readList = function (docCondition, callback) {
             skipNum = docCondition[con];
         }else if(con == "select"){
             select = docCondition[con];
-        }else if(con == "testTypeArray"){
+        }else if(con == "courseTypeArray"){
             courseTypeArray = docCondition[con];
         } else {
             //复制属性

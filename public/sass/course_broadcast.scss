@@ -1,9 +1,10 @@
 @charset "UTF-8";
-
+@import "public";
 /* 课程直播 */
 
 body {
     font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: #3a3a3a;
 }
 
 html {
@@ -50,15 +51,15 @@ a {
 }
 
 .total {
-    margin-top: 1rem;
     margin-bottom: 5rem;
     height: auto;
-    min-height: 500px;
+    min-height: 400px;
 }
 
 .broadcast-room {
     text-align: center;
     font-size: 1.2rem;
+    background-color: $grey_light;
     padding: 5px;
     font-weight: bold;
     color: rgb(71, 139, 241);
@@ -67,12 +68,148 @@ a {
     box-shadow: inset 0 0 4px #607d8d;
 }
 
+/****** 私聊信息 ******* */
+
+/* 私人信息列表 */
+.self-message-div {
+    margin: 2px 0 2px;
+    min-height: 10rem;
+    max-height: 12rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 5px;
+}
+
+/* 私人信息包裹 */
+.self-message-item {
+    background-color: $grey_light;
+    margin: 2px 0 2px;
+    padding: 5px;
+}
+
+/* 信息头 */
+.self-message-head {
+
+}
+
+/* 日期 */
+.message-head-date {
+    display: inline-block;
+    font-size: 1rem;
+    color: $grey_dark;
+    border-radius: 5px;
+    margin: 0 5px 0;
+}
+
+/* 发信人 */
+.message-head-from {
+    display: inline-block;
+    font-size: 1rem;
+    color: $blue_navy;
+    border-radius: 5px;
+    margin: 0 5px 0;
+}
+
+/* 信息体 */
+.self-message-body {
+
+}
+.self-message-body > div {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background-color: white;
+    color: $blue_dark;
+}
+
+
+/****** 聊天室成员******* */
+
+/* 聊天室成员列表 */
+.chatmates-list-div {
+    min-height: 10rem;
+    max-height: 15rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 5px;
+    font-size: 1.2rem;
+}
+
+/* 一个聊天室成员 */
+.chatmates-item {
+    background-color: $grey_light;
+    margin: 2px 0 2px;
+}
+
+.chatmates-item:hover,
+.chatmates-item:active {
+    @include transition();
+    @include transform(scale(1.1));
+    @include boxShadowRound( 3px, $grey_dark);
+}
+
+/* 头像标致 */
+.chatmates-item-icon {
+    margin: 0 5px 0;
+    display: inline-block;
+    vertical-align: bottom;
+    color: $blue;
+}
+
+/* 管理员头像标致 */
+.chatmates-admin {
+    color: $orange_light;
+}
+
+/* 昵称显示 */
+.chatmates-item-nickName {
+    font-size: 1rem;
+    margin: 0 5px 0;
+    max-width: 8rem;
+    display: inline-block;
+    vertical-align: bottom;
+    overflow: hidden;
+    color: $blue_navy;
+    border: solid 1px $grey_dark_light;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.chatmates-item-nickName > span {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+/* 发送@消息给成员 */
+.chatmates-item-alt {
+    vertical-align: bottom;
+    margin: 0 5px 0;
+    color: $blue_dark;
+    display: inline-block;
+}
+
+.chatmates-item-alt > span {
+
+}
+
+/* 管理员禁言选项 */
+.chatmates-item-ban {
+    vertical-align: bottom;
+    margin: 0 10px 0;
+    color: $red;
+    display: inline-block;
+}
+
+.unban {
+    color: $green;
+}
+
+/******* 聊天室信息列表 ********/
+
 /* 用户名 */
 #name {
     padding: 2px;
     font-size: 1.2rem;
     border-bottom: dotted 1px grey;
-
     color: #98ccdf;
 }
 
@@ -88,19 +225,47 @@ a {
     margin-top: 5px;
 }
 
+/* 聊天室成员列表 */
+.chat-user-list {
+    text-shadow: 1px 1px 1px #000000;
+    width: 20%;
+    display: inline-block;
+    font-size: 1.5rem;
+    color: whitesmoke;
+    text-align: center;
+}
+
+/* 获取私人信息按钮 */
+.chat-self-message {
+    text-shadow: 1px 1px 1px #000000;
+    width: 20%;
+    display: inline-block;
+    font-size: 1.5rem;
+    color: whitesmoke;
+    text-align: center;
+}
+
+/* 有消息显示 */
+.chat-self-message-rainbow {
+    @include breathAnimation(1s);
+    color: $green_light;
+}
+
 /* 文件发送 */
 .file-send-div {
-    width: 50%;
+    text-shadow: 1px 1px 1px #000000;
+    width: 30%;
     display: inline-block;
     font-size: 1.5rem;
     text-align: right;
+    color: #f5b652;
     padding-right: 10px;
 }
 
 /* 录音 */
 .record-div {
-    text-shadow: 1px 1px 1px #2e3f44;
-    width: 50%;
+    text-shadow: 1px 1px 1px #000000;
+    width: 30%;
     display: inline-block;
     color: #478bf1;
     font-size: 1.5rem;
@@ -117,9 +282,10 @@ a {
 .message-list-item {
     margin-top: 1rem;
     padding: 5px;
-    color: #577280;
-    border-top: solid 1px #c2c2c2;
-    background-color: #F3F3F3;
+    color: #ffffff;
+    background-color: #565656;
+    border: solid 2px #000000;
+
 }
 
 /* 系统文本消息 */
@@ -158,21 +324,21 @@ a {
 /* 音频自定义 */
 .audio-define {
     position: relative;
-    border: solid 1px blue;
+    border: solid 1px $blue;
     border-radius: 7px;
     width: 50%;
     padding: 5px;
     margin: 0.5rem;
-    color: #1c6897;
+    color: $blue;
 
-    -webkit-box-shadow: inset 0 0 5px white;
-    -moz-box-shadow: inset 0 0 5px white;
-    box-shadow: inset 0 0 5px white;
+    -webkit-box-shadow: inset 0 0 1px white;
+    -moz-box-shadow: inset 0 0 1px white;
+    box-shadow: inset 0 0 1px white;
 }
 
 /* audio已读 */
 .audio-define-read {
-    border: solid 2px #878787;
+    border: solid 1px $grey_dark_light;
 }
 
 .audio-duration {
@@ -193,10 +359,6 @@ a {
     padding: 0.2rem;
     width: 100%;
     height: auto;
-
-    -webkit-box-shadow: 0px 0px 10px #a2a5a2;
-    -moz-box-shadow:  0px 0px 10px #a2a5a2;
-    box-shadow:  0px 0px 10px #a2a5a2;
 }
 .send-wrapper-hidden {
     display: none;

@@ -147,13 +147,49 @@ AllTest.prototype.save = function (callback) {
 
 };
 
+/* 获取课程分类信息 */
+AllTest.getClassification = function (callback) {
+
+    var db = mongoose.connection;
+    var Model = mongoose.model('Test', testSchema);
+
+    var query = Model.find();
+    query.exec(function (err, docs) {
+
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+
+        // 课程分类信息对象
+        var classificationInfo = {};
+
+        if(docs.length > 0){
+
+            for(let i = 0; i < docs.length; i++){
+
+                if(docs[i].testType){
+                    if(classificationInfo[docs[i].testType]){
+                        classificationInfo[docs[i].testType] += 1;
+                    }else {
+                        classificationInfo[docs[i].testType] = 1;
+                    }
+                }
+            }
+        }
+
+        callback(null, classificationInfo);
+    });
+};
+
+
 /* 检查数据是否存在,如果存在的话先删除数据 */
 AllTest.deleteIfExit = function (condition, callback) {
 
     var db = mongoose.connection;
-    var Course = mongoose.model('Test', testSchema);
+    var Model = mongoose.model('Test', testSchema);
 
-    var query = Course.findOne();
+    var query = Model.findOne();
     query.where(condition);
 
     // 执行搜索删除
@@ -688,6 +724,8 @@ AllTest.danmuRead = function (con, callback) {
     });
 
 };
+
+
 
 
 module.exports = AllTest;

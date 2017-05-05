@@ -1,4 +1,5 @@
 @charset "UTF-8";
+@import "public";
 
 /* 查看所有直播聊天室页面 */
 
@@ -269,6 +270,7 @@ a {
 /* 数据加载loading信息 */
 .loading-info {
     text-align: center;
+    color: $grey_dark;
     margin-bottom: 1rem;
 }
 

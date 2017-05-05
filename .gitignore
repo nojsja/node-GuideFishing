@@ -1,9 +1,11 @@
 /.idea/
-/node_modules/
-/.sass-cache/
-/public/audios/courses/
+/node_modules/*
+/.sass-cache/*
+/public/audios/courses/*
 !/public/audios/courses/audio.txt
-/public/images/courses/
+
+/public/images/courses/*
 !/public/images/courses/image.txt
-/public/videos/courses/
+
+/public/videos/courses/*
 !/public/videos/courses/video.txt
