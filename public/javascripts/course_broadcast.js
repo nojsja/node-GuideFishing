@@ -1084,7 +1084,7 @@ BroadcastAction.getMediaDataInit = function (type) {
     };
 
     // 获取媒体数据接口
-    navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia ||
+    navigator.GetUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia ||
     navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
     // 开始录音
@@ -1095,7 +1095,7 @@ BroadcastAction.getMediaDataInit = function (type) {
         }
 
         // 开始获取媒体数据
-        navigator.getUserMedia(Record.mediaConstraints, startUserMedia, noStream);
+        navigator.GetUserMedia(Record.mediaConstraints, startUserMedia, noStream);
 
         function startUserMedia(stream) {
 
@@ -1119,14 +1119,14 @@ BroadcastAction.getMediaDataInit = function (type) {
         // 获取失败
         function noStream(err) {
 
+            nojsja["ModalWindow"].show('你的浏览器可能不支持发送语音!可以尝试使用FireFox浏览器...');
             if(err.PERMISSION_DENIED) {
-                BroadcastAction.modalWindow('用户拒绝了浏览器请求媒体的权限');
+                console.log('用户拒绝了浏览器请求媒体的权限');
             } else if(err.NOT_SUPPORTED_ERROR) {
-                BroadcastAction.modalWindow('constraint中指定的媒体类型不被支持');
+                console.log('constraint中指定的媒体类型不被支持');
             } else if(err.MANDATORY_UNSATISFIED_ERROR) {
-                BroadcastAction.modalWindow('指定的媒体类型未接收到媒体流');
+                console.log('指定的媒体类型未接收到媒体流');
             }
-            console.log( '调用麦克风权限发生错误: ' + err);
         }
     }
     

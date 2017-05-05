@@ -154,7 +154,6 @@ Course.prototype.save = function (callback) {
                     return defer.promise;
                 })
                 .done(function (info) {
-
                     console.log('course save done.');
                     if(info.isError){
                         return callback(info.err);

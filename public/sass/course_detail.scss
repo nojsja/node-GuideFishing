@@ -27,9 +27,8 @@ a {
     min-height: 2rem;
     height: auto;
     background-color: $grey;
+    border-bottom: solid 1px $grey_dark_light;
     font-size: 0;
-
-    @include boxShadowRound(8px, $grey_dark);
 }
 
 .header-label {
@@ -38,7 +37,6 @@ a {
     text-align: center;
     font-size: 1.5rem;
     color: $blue;
-    text-shadow: 2px 2px 0 white;
     line-height: 1.5rem;
 }
 
@@ -50,11 +48,11 @@ a {
 .return-home {
     position: absolute;
     right: 10px;
-    color: $green;
+    color: $grey_dark_light;
     font-size: 1.5rem;
 }
 .return-home:active {
-    color: $green_dark;
+    color: $green_light;
 }
 
 /* 评测介绍主体部分 */

@@ -1,8 +1,9 @@
 @charset "UTF-8";
 
-/* 变量声明 */
+// 变量声明 //
 $bodyFont: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
 $rootFontSize: 16px;
+$green_light: #2de275;
 $green: #24a955;
 $green_dark: #219d4f;
 $red:  #d91b09;
@@ -15,6 +16,7 @@ $blue_dark: #637db5;
 $black_light: #3b3d3b;
 $grey_light: #f1f1f1;
 $grey: #eaeaea;
+$grey_navy_light: #dfdfdf;
 $grey_opacity_half: rgba(234, 234, 234, 0.5);
 $grey_dark: #737373;
 $grey_dark_light: #aaaaaa;
@@ -22,7 +24,7 @@ $textShadowColor: #2e3f44;
 $boxShadowColor: #4b666e;
 $blueGrey: #668b96;
 
-/* 宏 */
+// 宏 //
 
 // 环绕阴影
 @mixin boxShadowRound ($value:5px, $color: $boxShadowColor){
@@ -93,41 +95,45 @@ $blueGrey: #668b96;
     -webkit-animation: breath $time $status linear;
     -o-animation: breath $time $status linear;
     animation: breath $time $status linear;
+
+    @keyframes breath {
+        0% {
+            @include transform(scale(1.0));
+        }
+        50% {
+            @include transform(scale(1.2));
+        }
+        100% {
+            @include transform(scale(1.0));
+        }
+    }
 }
-@keyframes breath {
-    0% {
-        @include transform(scale(1.0));
-    }
-    50% {
-        @include transform(scale(1.2));
-    }
-    100% {
-        @include transform(scale(1.0));
-    }
-}
+
 
 // 自旋转动画
 @mixin rotateAnimation($time: 4s, $status: infinite){
     -webkit-animation: rotate $time $status linear;
     -o-animation: rotate $time $status linear;
     animation: rotate $time $status linear;
-}
-@keyframes rotate {
-    0% {
-        -webkit-transform: translateY(0deg);
-        -moz-transform: translateY(0deg);
-        -ms-transform: translateY(0deg);
-        -o-transform: translateY(0deg);
-        transform: translateY(0deg);
+
+    @keyframes rotate {
+        0% {
+            -webkit-transform: translateY(0deg);
+            -moz-transform: translateY(0deg);
+            -ms-transform: translateY(0deg);
+            -o-transform: translateY(0deg);
+            transform: translateY(0deg);
+        }
+        100% {
+            -webkit-transform: rotateY(360deg);
+            -moz-transform: rotateY(360deg);
+            -ms-transform: rotateY(360deg);
+            -o-transform: rotateY(360deg);
+            transform: rotateY(360deg);
+        }
     }
-    100% {
-        -webkit-transform: rotateY(360deg);
-        -moz-transform: rotateY(360deg);
-        -ms-transform: rotateY(360deg);
-        -o-transform: rotateY(360deg);
-        transform: rotateY(360deg);
-    }
 }
+
 
 // 彩色动画
 @mixin rainBow ($reverse:normal, $border:true){
@@ -151,46 +157,46 @@ $blueGrey: #668b96;
             @include animation(rainBow, 2s, linear, 0s, infinite, normal, forwards);
         }
     }
-}
 
-@keyframes rainBow {
-    0% {
-        color: #009c00;
-        border: solid 1px #009c00;
+    @keyframes rainBow {
+        0% {
+            color: #009c00;
+            border: solid 1px #009c00;
+        }
+        25% {
+            color: #54b7bc;
+            border: solid 1px #54b7bc;
+        }
+        50% {
+            color: #755cbc;
+            border: solid 1px #755cbc;
+        }
+        75% {
+            color: #d07233;
+            border: solid 1px #d07233;
+        }
+        100% {
+            color: #009c00;
+            border: solid 1px #009c00;
+        }
     }
-    25% {
-        color: #54b7bc;
-        border: solid 1px #54b7bc;
-    }
-    50% {
-        color: #755cbc;
-        border: solid 1px #755cbc;
-    }
-    75% {
-        color: #d07233;
-        border: solid 1px #d07233;
-    }
-    100% {
-        color: #009c00;
-        border: solid 1px #009c00;
-    }
-}
 
-@keyframes rainBowFont {
-    0% {
-        color: #009c00;
-    }
-    25% {
-        color: #54b7bc;
-    }
-    50% {
-        color: #755cbc;
-    }
-    75% {
-        color: #d07233;
-    }
-    100% {
-        color: #009c00;
+    @keyframes rainBowFont {
+        0% {
+            color: #009c00;
+        }
+        25% {
+            color: #54b7bc;
+        }
+        50% {
+            color: #755cbc;
+        }
+        75% {
+            color: #d07233;
+        }
+        100% {
+            color: #009c00;
+        }
     }
 }
 
@@ -209,9 +215,34 @@ $blueGrey: #668b96;
     0 0 7px rgba(0,0,0,.2);
 }
 
+// 行内断字
+@mixin wordBreak($breakOption: normal){
 
+    @if $breakOption == break-all {
+        -ms-word-wrap: break-word;
+        word-wrap:break-word;
+        -ms-word-break: $breakOption;
+        word-break: $breakOption;
+    }
+    @else {
 
-/* 函数 */
+        @if $breakOption == keep-all {
+            -ms-word-wrap: normal;
+            word-wrap: normal;
+            -ms-word-break: $breakOption;
+            word-break: $breakOption;
+        }
+        @else {
+            -ms-word-wrap: normal;
+            word-wrap: normal;
+            -ms-word-break: normal;
+            word-break: normal;
+        }
+    }
+
+}
+
+// 函数 //
 @function double($v){
 
     @return $v * 2;

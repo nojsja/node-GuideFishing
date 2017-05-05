@@ -1,66 +1,4 @@
 @charset "UTF-8";
-/* 变量声明 */
-/* 宏 */
-@keyframes breath {
-  0% {
-    -webkit-transform: scale(1);
-    -moz-transform: scale(1);
-    -ms-transform: scale(1);
-    -o-transform: scale(1);
-    transform: scale(1); }
-  50% {
-    -webkit-transform: scale(1.2);
-    -moz-transform: scale(1.2);
-    -ms-transform: scale(1.2);
-    -o-transform: scale(1.2);
-    transform: scale(1.2); }
-  100% {
-    -webkit-transform: scale(1);
-    -moz-transform: scale(1);
-    -ms-transform: scale(1);
-    -o-transform: scale(1);
-    transform: scale(1); } }
-@keyframes rotate {
-  0% {
-    -webkit-transform: translateY(0deg);
-    -moz-transform: translateY(0deg);
-    -ms-transform: translateY(0deg);
-    -o-transform: translateY(0deg);
-    transform: translateY(0deg); }
-  100% {
-    -webkit-transform: rotateY(360deg);
-    -moz-transform: rotateY(360deg);
-    -ms-transform: rotateY(360deg);
-    -o-transform: rotateY(360deg);
-    transform: rotateY(360deg); } }
-@keyframes rainBow {
-  0% {
-    color: #009c00;
-    border: solid 1px #009c00; }
-  25% {
-    color: #54b7bc;
-    border: solid 1px #54b7bc; }
-  50% {
-    color: #755cbc;
-    border: solid 1px #755cbc; }
-  75% {
-    color: #d07233;
-    border: solid 1px #d07233; }
-  100% {
-    color: #009c00;
-    border: solid 1px #009c00; } }
-@keyframes rainBowFont {
-  0% {
-    color: #009c00; }
-  25% {
-    color: #54b7bc; }
-  50% {
-    color: #755cbc; }
-  75% {
-    color: #d07233; }
-  100% {
-    color: #009c00; } }
-/* 函数 */
 body {
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif; }
 
@@ -121,8 +59,8 @@ a {
   border-top: 0em;
   color: #7094a2;
   background-color: #f0f0f0;
-  -webkit-box-shadow: 0 5px 5px #7094a2;
-  -moz-box-shadow: 0 5px 5px #7094a2;
+  -webkit-box-shadow: 0 0 5px #7094a2;
+  -moz-box-shadow: 0 0 5px #7094a2;
   box-shadow: 0 0 5px #7094a2; }
 
 .hot-container {
@@ -179,16 +117,13 @@ a {
   height: 2rem;
   position: relative;
   text-align: left;
-  background-color: #cdcdcd;
+  background-color: #dfdfdf;
   padding-left: 1rem;
   color: #ffffff;
   font-size: 1.3rem;
-  text-shadow: 2px 2px 2px #000;
-  margin: 1rem 0 1rem;
-  -webkit-box-shadow: 3px 3px 3px #86b9c5;
-  -moz-box-shadow: 3px 3px 3px #86b9c5;
-  box-shadow: 0px 0px 3px #86b9c5;
-  border: solid 1px white; }
+  text-shadow: 1px 1px 1px #000;
+  margin: 0.5rem 0 0.5rem;
+  border-top: solid 1px #aaaaaa; }
 
 .mark-title > span {
   line-height: 2rem; }
@@ -343,10 +278,11 @@ a {
   -webkit-box-shadow: 0 0 0 0;
   -moz-box-shadow: 0 0 0 0;
   box-shadow: 0 0 0 0;
-  transition: All 0.3s ease-in-out;
-  -webkit-transition: All 0.3s ease-in-out;
-  -moz-transition: All 0.3s ease-in-out;
-  -o-transition: All 0.3s ease-in-out; }
+  -webkit-transition: ALL 0.3s ease-in-out;
+  -moz-transition: ALL 0.3s ease-in-out;
+  -ms-transition: ALL 0.3s ease-in-out;
+  -o-transition: ALL 0.3s ease-in-out;
+  transition: ALL 0.3s ease-in-out; }
 
 .company-item:hover {
   border: solid 1px #df742d;
@@ -373,10 +309,6 @@ a {
 .teacher {
   color: #577380;
   padding: 2px; }
-
-/*文字特效*/
-.box1 {
-  text-shadow: 0 0 0 #bcb2bc, 1px 0 0 #ada3ad, 2px 0 0 #9d939d, 3px 0 0 #8e848e, 4px 0 0 #7e747e, 5px 0 0 #6f656f, 6px 0 0 #5f555f, 7px 0 0 #4f454f, 8px 0 7px rgba(0, 0, 0, 0.35), 8px 0 1px rgba(0, 0, 0, 0.5), 0 0 7px rgba(0, 0, 0, 0.2); }
 
 /* 移动适配 */
 @media screen and (max-width: 400px) {

@@ -248,6 +248,7 @@ a {
 /* 有消息显示 */
 .chat-self-message-rainbow {
     @include breathAnimation(1s);
+    color: $green_light;
 }
 
 /* 文件发送 */

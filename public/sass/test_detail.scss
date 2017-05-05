@@ -17,6 +17,7 @@ a {
 
 /*首部 header*/
 .header {
+    position: fixed;
     z-index: 100;
     top: 0;
     padding: 5px;
@@ -36,7 +37,6 @@ a {
     color: white;
     text-shadow: 0px 0px 10px #456d9c;
     line-height: 1.5rem;
-    font-weight: bold;
 }
 
 .header-label span {
@@ -55,6 +55,7 @@ a {
     min-height: 10rem;
     height: auto;
     margin-bottom: 0.5rem;
+    margin-top: 2rem;
     background-color: #648393;
 }
 
