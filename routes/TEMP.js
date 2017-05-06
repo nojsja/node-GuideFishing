@@ -45,6 +45,27 @@ function TEMP(app) {
     app.get('/admin/updateHot', function (req, res) {
         MongoSchedule();
     });
+
+    // 浏览器console数据
+    app.post('/mconsole', function (req, res) {
+
+        console.log('-----------------MCONSOLE_START----------------');
+
+        function objLog(obj) {
+            if(typeof obj == 'string'){
+                return console.log(obj);
+            }
+            for(var attr in obj){
+                console.log(attr + ": " + obj[attr]);
+            }
+
+        }
+        objLog(req.body.data);
+
+        console.log('-----------------MCONSOLE_END-----------------');
+
+        res.send('ok');
+    });
 }
 
 module.exports = TEMP;

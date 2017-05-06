@@ -315,6 +315,8 @@ BroadcastAction.pageEventBind = function () {
 
             $('#fileChoose').click();
         });
+    }else {
+        BroadcastAction.modalWindow('登录后才能使用完整的聊天功能!');
     }
     
 };
@@ -398,7 +400,7 @@ BroadcastAction.watcherActive = function () {
             return BroadcastAction.modalWindow('请输入要发送的消息!');
         }
         // 置空消息
-        // $('#messageInput').val('');
+        $('#messageInput').val('');
         // 发送
         BroadcastAction.socket.send(message);
     }
@@ -436,7 +438,6 @@ BroadcastAction.watcherActive = function () {
     BroadcastAction.message.received.listen('finish', finish);
 
     //--- 接收消息 ---//
-
 
     // 上传完成
     function uploadDone() {
@@ -499,7 +500,7 @@ BroadcastAction.watcherActive = function () {
         var msg = info.args.message;
         var messageType = info.messageType;
 
-        var date = BroadcastAction.getDate();
+        var date = nojsja['Tool'].GetTime();
 
         // 添加DOM
         var $messageList = $('.message-list');
@@ -642,9 +643,9 @@ BroadcastAction.newMessageUpdate = function (info) {
         msg = info.message || info.msg,
         path = info.url,
         messageType = info.messageType,
-        isAdmin = BroadcastAction.stringToBoolean(info.isAdmin);
+        isAdmin = nojsja['Tool'].StringToBoolean(info.isAdmin);
 
-    var date = info.date || BroadcastAction.getDate();
+    var date = info.date || nojsja['Tool'].GetTime();
 
     // 选择方法
     var update = {
@@ -1172,65 +1173,10 @@ BroadcastAction.getMediaDataInit = function (type) {
 
 };
 
-/* Boolean字符串转换函数 */
-BroadcastAction.stringToBoolean = function (string) {
-
-    if(string == "true" && typeof (string) == 'string'){
-        return (string = true);
-    }
-    if(string === true && typeof (string) == 'boolean'){
-        return (string = true);
-    }
-    return (string = false);
-};
-
-/* 得到现在的日期 */
-BroadcastAction.getDate = function () {
-
-    var date = new Date();
-    var dateArray = [];
-    dateArray.push(date.getHours(), ":", date.getMinutes(), ":", date.getSeconds());
-
-    return dateArray.join('');
-};
-
 /* 模态弹窗 */
 BroadcastAction.modalWindow = function(text) {
 
     nojsja["ModalWindow"].show(text);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
