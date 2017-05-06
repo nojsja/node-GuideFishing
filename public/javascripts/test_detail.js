@@ -194,7 +194,7 @@ DetailAction.sendDanmu = function (danmuInfo, callback) {
         callback();
         var JSONobject = JSON.parse(JSONdata);
         if(JSONobject.isError){
-            return nojsja["ModalWindow"].show('加载弹幕错误: ' + JSONobject.error);
+            return nojsja["ModalWindow"].show('发送弹幕错误: ' + JSONobject.error);
         }
 
     }, "JSON");

@@ -9,7 +9,7 @@ $(function () {
     // 获取课程类型
     EditAction.getCourseType();
     // 初始化编辑器
-    // EditAction.ueditorInit();
+    EditAction.ueditorInit();
     // 绑定页面事件
     EditAction.pageEventBind();
     // 声明观察者

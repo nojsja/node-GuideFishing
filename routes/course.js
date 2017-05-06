@@ -332,11 +332,21 @@ function course(app){
             }
             // 非基本类型的数据发往客户端需要JSON格式化,解析的时候再解析成对象来操作
 
-            for(var attr in totalCondition.select){
-                totalCondition.select[attr] = data[attr];
+            if(data){
+                for(var attr in totalCondition.select){
+                    totalCondition.select[attr] = data[attr];
+                }
+
+                res.json( JSON.stringify(totalCondition.select) );
+            }else {
+                res.render('error', {
+                    message: "Not Found :(",
+                    error: {
+                        status: '404'
+                    }
+                });
             }
 
-            res.json( JSON.stringify(totalCondition.select) );
         });
     });
 

@@ -113,10 +113,9 @@
                 }else{
                     url += "?randnum=" + Math.random();
                 }
-                //打开服务器连接
-                open(method, url, true);
-                if(method == "POST"){
-                    objXMLHttp.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+                objXMLHttp.open(method, url, true);
+                if(method == ("POST")){
+                    objXMLHttp.setRequestHeader('Content-type', 'application/json; charset=utf-8');
                     objXMLHttp.send(data);
                     /*//设置超时2.5分钟
                      setTimeout(function(){
@@ -126,7 +125,7 @@
                      }
                      }, "121000");*/
                 }
-                if(method == "GET"){
+                if(method == ("GET")){
                     objXMLHttp.send(null);
                 }
 
@@ -870,8 +869,9 @@
         function GetBrowserType(){
 
             var userAgent = navigator.userAgent;
+            mconsole.log(userAgent);
             // 取得浏览器的userAgent字符串
-            var isOpera = userAgent.indexOf("Opera") > -1;
+            var isOpera = userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1;
             // 判断是否Opera浏览器
             if (isOpera) {
                 return "Opera"
@@ -933,11 +933,15 @@
                 if (type == 'scrollHeight') {
                     return target[type] = document.documentElement.scrollHeight;
                 }
+                if (type == 'offsetHeight') {
+                    return target[type] = document.body.offsetHeight;
+                }
             }else {
                 return {
                     clientHeight: document.documentElement.clientHeight,
                     scrollTop: document.documentElement.scrollTop,
-                    scrollHeight: document.documentElement.scrollHeight
+                    scrollHeight: document.documentElement.scrollHeight,
+                    offsetHeight: document.body.offsetHeight
                 };
             }
         },
@@ -955,12 +959,16 @@
                 if (type == 'scrollHeight') {
                     return target[type] = document.documentElement.scrollHeight;
                 }
+                if (type == 'offsetHeight') {
+                    return target[type] = document.body.offsetHeight;
+                }
             }else {
                 return {
                     clientHeight: document.documentElement.clientHeight,
                     scrollTop: document.body.scrollTop,
-                    scrollHeight: document.documentElement.scrollHeight
-                };
+                    scrollHeight: document.documentElement.scrollHeight,
+                    offsetHeight: document.body.offsetHeight
+            };
             }
         },
 
@@ -977,11 +985,15 @@
                 if (type == 'scrollHeight') {
                     return target[type] = document.documentElement.scrollHeight;
                 }
+                if(type == 'offsetHeight') {
+                    return target[type] = document.body.offsetHeight;
+                }
             }else {
                 return {
                     clientHeight: document.documentElement.clientHeight,
                     scrollTop: document.body.scrollTop,
-                    scrollHeight: document.documentElement.scrollHeight
+                    scrollHeight: document.documentElement.scrollHeight,
+                    offsetHeight: document.body.offsetHeight
                 };
             }
         },
@@ -999,11 +1011,15 @@
                 if (type == 'scrollHeight') {
                     return target[type] = document.documentElement.scrollHeight;
                 }
+                if(type == 'offsetHeight') {
+                    return target[type] = document.body.offsetHeight;
+                }
             }else {
                 return {
                     clientHeight: document.documentElement.clientHeight,
                     scrollTop: document.body.scrollTop,
-                    scrollHeight: document.documentElement.scrollHeight
+                    scrollHeight: document.documentElement.scrollHeight,
+                    offsetHeight: document.body.offsetHeight
                 };
             }
         },
@@ -1021,11 +1037,41 @@
                 if (type == 'scrollHeight') {
                     return target[type] = document.documentElement.scrollHeight;
                 }
+                if(type == 'offsetHeight') {
+                    return target[type] = document.body.offsetHeight;
+                }
             }else {
                 return {
                     clientHeight: document.documentElement.clientHeight,
                     scrollTop: document.documentElement.scrollTop,
-                    scrollHeight: document.documentElement.scrollHeight
+                    scrollHeight: document.documentElement.scrollHeight,
+                    offsetHeight: document.body.offsetHeight
+                };
+            }
+        },
+
+        "Safari": function () {
+
+            if(target && type) {
+
+                if (type == 'clientHeight')
+                    return target[type] = document.documentElement.clientHeight;
+
+                if (type == 'scrollTop')
+                    return target[type] = document.body.scrollTop;
+
+                if (type == 'scrollHeight') {
+                    return target[type] = document.documentElement.scrollHeight;
+                }
+                if(type == 'offsetHeight') {
+                    return target[type] = document.body.offsetHeight;
+                }
+            }else {
+                return {
+                    clientHeight: document.documentElement.clientHeight,
+                    scrollTop: document.body.scrollTop,
+                    scrollHeight: document.documentElement.scrollHeight,
+                    offsetHeight: document.body.offsetHeight
                 };
             }
         },
@@ -1043,11 +1089,15 @@
                 if (type == 'scrollHeight') {
                     return target[type] = document.documentElement.scrollHeight;
                 }
+                if(type == 'offsetHeight') {
+                    return target[type] = document.body.offsetHeight;
+                }
             }else {
                 return {
                     clientHeight: document.documentElement.clientHeight,
                     scrollTop: document.body.scrollTop,
-                    scrollHeight: document.documentElement.scrollHeight
+                    scrollHeight: document.documentElement.scrollHeight,
+                    offsetHeight: document.body.offsetHeight
                 };
             }
         }
@@ -1557,6 +1607,22 @@
                 element['on' + type] = null;
             }
         },
+    };
+
+    /* 发送移动端浏览器调试信息到后台 */
+    window['mconsole'] = nojsja['mconsole'] = {
+        log: function (data){
+
+            nojsja["AjaxPool"].sendRequest('POST', '/mconsole', JSON.stringify({
+                data: data
+            }), function (xmlHttpObject) {
+
+                if(xmlHttpObject.responseText){
+                    console.log(xmlHttpObject.responseText);
+                }
+                xmlHttpObject.readyState = 0;
+            });
+        }
     };
 
 

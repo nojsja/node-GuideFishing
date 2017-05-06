@@ -49,10 +49,6 @@ $(function () {
     TestIndexAction.updateHot();
     // 初始化按钮
     nojsja.HoverButton.init();
-    //指定类型的测试题目
-    $('.type-item').click(function () {
-        TestIndexAction.testTypeDefine.call(this, arguments);
-    });
     // 轮播图片初始化
     TestIndexAction.bulidSlideView();
 });
@@ -74,7 +70,7 @@ var TestIndexAction = {
     //页面加载起点
     pageStart: 0,
     //页面加载条数
-    pageLimit: 2 ,
+    pageLimit: 2,
     //加载的测试类型
     testType: "ALL",
     //是否清除页面已存数据
@@ -332,7 +328,6 @@ TestIndexAction.scrollCheck = function (callback) {
     //     console.log('locker stil exists.');
     //     return;
     // }
-    console.log('scrolling');
     nojsja
         .GetDocumentHeight[TestIndexAction.userAgent.browser](TestIndexAction.userAgent, 'clientHeight');
 
@@ -342,18 +337,21 @@ TestIndexAction.scrollCheck = function (callback) {
     nojsja
         .GetDocumentHeight[TestIndexAction.userAgent.browser](TestIndexAction.userAgent, 'scrollHeight');
 
-    console.log(
-        TestIndexAction.userAgent.browser,
-        TestIndexAction.userAgent.clientHeight,
-        TestIndexAction.userAgent.scrollTop,
-        TestIndexAction.userAgent.scrollHeight
-    );
+    nojsja.GetDocumentHeight[TestIndexAction.userAgent.browser](TestIndexAction.userAgent, 'offsetHeight');
 
-    if( TestIndexAction.userAgent.clientHeight +
-        TestIndexAction.userAgent.scrollTop ==
-        TestIndexAction.userAgent.scrollHeight ){
+    // console.log({
+    //     Browser: TestIndexAction.userAgent.browser,
+    //     ClientHeight: TestIndexAction.userAgent.clientHeight,
+    //     ScrollTop: TestIndexAction.userAgent.scrollTop,
+    //     ScrollHeight: TestIndexAction.userAgent.scrollHeight,
+    //     OffsetHeight: TestIndexAction.userAgent.offsetHeight,
+    // });
 
-        console.log('on the bottom.');
+    if( (TestIndexAction.userAgent.clientHeight +
+        TestIndexAction.userAgent.scrollTop >=
+        (TestIndexAction.userAgent.offsetHeight || TestIndexAction.userAgent.scrollHeight) ) ){
+
+        // mconsole.log('on the bottom.');
         // nojsja['FnLocker'].lock(callback);
 
         // callback(function () {

@@ -331,7 +331,6 @@ CourseAction.scrollCheck = function (callback) {
     //     console.log('locker stil exists.');
     //     return;
     // }
-    console.log('scrolling');
     nojsja
         .GetDocumentHeight[CourseAction.userAgent.browser](CourseAction.userAgent, 'clientHeight');
 
@@ -341,11 +340,21 @@ CourseAction.scrollCheck = function (callback) {
     nojsja
         .GetDocumentHeight[CourseAction.userAgent.browser](CourseAction.userAgent, 'scrollHeight');
 
-    if( CourseAction.userAgent.clientHeight +
-        CourseAction.userAgent.scrollTop ==
-        CourseAction.userAgent.scrollHeight ){
+    nojsja.GetDocumentHeight[CourseAction.userAgent.browser](CourseAction.userAgent, 'offsetHeight');
 
-        console.log('on the bottom.');
+    // console.log({
+    //     Browser: CourseAction.userAgent.browser,
+    //     ClientHeight: CourseAction.userAgent.clientHeight,
+    //     ScrollTop: CourseAction.userAgent.scrollTop,
+    //     ScrollHeight: CourseAction.userAgent.scrollHeight,
+    //     OffsetHeight: CourseAction.userAgent.offsetHeight,
+    // });
+
+    if( (CourseAction.userAgent.clientHeight +
+        CourseAction.userAgent.scrollTop >=
+        (CourseAction.userAgent.offsetHeight || CourseAction.userAgent.scrollHeight) ) ){
+
+        // mconsole.log('on the bottom.');
         // nojsja['FnLocker'].lock(callback);
 
         // callback(function () {
