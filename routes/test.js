@@ -91,28 +91,40 @@ function test(app) {
                return res.render('test_detail', responseTest);
            }
 
-           /* 检查购买情况 */
-           User.purchaseCheck({
-               account: account,
-               data: {
-                   itemName: testTitle,
-                   itemType: testType
-               }
-           }, function (err, pass) {
-
-               if(err){
-                   responseTest.isError = true;
-                   responseTest.error = err;
-                   return res.render('test_detail', responseTest);
-               }else {
-                   if(pass){
-                       responseTest.isPurchased = true;
-                   }else {
-                       responseTest.isPurchased = false;
+           if(doc){
+               /* 检查购买情况 */
+               User.purchaseCheck({
+                   account: account,
+                   data: {
+                       itemName: testTitle,
+                       itemType: testType
                    }
-                   res.render('test_detail', responseTest);
+               }, function (err, pass) {
+
+                   if(err){
+                       responseTest.isError = true;
+                       responseTest.error = err;
+                       return res.render('test_detail', responseTest);
+                   }else {
+                       if(pass){
+                           responseTest.isPurchased = true;
+                       }else {
+                           responseTest.isPurchased = false;
+                       }
+                       res.render('test_detail', responseTest);
+                   }
+               });
+           }else {
+
+               var info = {
+                   message: "没有查询到相关测评信息！",
+                   error: {
+                       status: "500"
+                   }
                }
-           });
+               res.render('error', info);
+           }
+
         });
     });
 
