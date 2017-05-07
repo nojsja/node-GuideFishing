@@ -413,6 +413,12 @@
                 nextIndex: 0,
                 // 滚动方向
                 direction: 'left',
+                touch: {
+                    pageStartX: 0,
+                    pageStartY: 0,
+                    pageEndX: 0,
+                    pageEndY: 0
+                },
                 // 需要滚动的宽度
                 imageWidth: 0,
                 imageHeight: 0,
@@ -429,6 +435,54 @@
             var slideItemList = document.getElementById('slideItemList');
             var slideText = document.getElementById('slideText');
             var pointList = document.getElementById('pointList');
+
+            // 移动端滑动事件绑定 -- 判断手指是左边滑动还是右边滑动
+            nojsja['EventUtil'].addHandler(slideItemList, 'touchstart', function (event) {
+
+                nojsja["FnDelay"](function (_event) {
+
+                    var event = _event || window.event;
+                    // 阻止浏览器默认的事件
+                    event.preventDefault();
+
+                    slideInfo.touch.pageStartX = event.changedTouches[0].pageX;
+                    slideInfo.touch.pageStartY = event.changedTouches[0].pageY;
+
+                }, 100, false, event);
+            });
+            nojsja['EventUtil'].addHandler(slideItemList, 'touchmove', function (event) {
+
+                nojsja["FnDelay"](function (_event) {
+
+                    var event = _event || window.event;
+                    // 阻止浏览器默认的事件
+                    event.preventDefault();
+
+                    slideInfo.touch.pageEndX = event.changedTouches[0].pageX;
+                    slideInfo.touch.pageEndY = event.changedTouches[0].pageY;
+
+                    // 向右滑动
+                    if(
+                        Math.abs(slideInfo.touch.pageEndX - slideInfo.touch.pageStartX) >
+                        Math.abs(slideInfo.touch.pageEndY - slideInfo.touch.pageEndY) &&
+                        (slideInfo.touch.pageEndX - slideInfo.touch.pageStartX > 0)
+                    ){
+                        slideAction('right');
+                    }
+
+                    // 向左滑动
+                    if(
+                        Math.abs(slideInfo.touch.pageEndX - slideInfo.touch.pageStartX) >
+                        Math.abs(slideInfo.touch.pageEndY - slideInfo.touch.pageEndY) &&
+                        (slideInfo.touch.pageEndX - slideInfo.touch.pageStartX < 0)
+                    ){
+                        slideAction('left');
+                    }
+
+                }, 200, false, event);
+
+            });
+
             for(var i = 0; i < slideInfo.imageArray.length;  i++){
                 (function (i) {
                     // 创建图片DOM
@@ -647,6 +701,7 @@
                 }, 200, false, event);
 
             });
+
             for(var i = 0; i < slideInfo.imageArray.length;  i++){
                 (function (i) {
                     // 创建图片DOM
