@@ -76,54 +76,54 @@ function test(app) {
                return res.render('error', {
                    message: "读取出错！",
                    error: {
-                       status: 404,
+                       status: 500,
                        stack: err.stack
                    }
                });
            }
 
-           responseTest.abstract = doc.abstract;
-           responseTest.date = doc.date;
-           responseTest.frequency  = doc.frequency;
-           responseTest.testTags = doc.testTags;
+           if(!doc){
+
+               var info = {
+                   message: "没有查询到相关测评信息！",
+                   error: {
+                       status: "404"
+                   }
+               }
+               return res.render('error', info);
+           }
+
+            responseTest.abstract = doc.abstract;
+            responseTest.date = doc.date;
+            responseTest.frequency  = doc.frequency;
+            responseTest.testTags = doc.testTags;
 
            if(!account){
                return res.render('test_detail', responseTest);
            }
 
-           if(doc){
-               /* 检查购买情况 */
-               User.purchaseCheck({
-                   account: account,
-                   data: {
-                       itemName: testTitle,
-                       itemType: testType
-                   }
-               }, function (err, pass) {
+            /* 检查购买情况 */
+            User.purchaseCheck({
+                account: account,
+                data: {
+                    itemName: testTitle,
+                    itemType: testType
+                }
+            }, function (err, pass) {
 
-                   if(err){
-                       responseTest.isError = true;
-                       responseTest.error = err;
-                       return res.render('test_detail', responseTest);
-                   }else {
-                       if(pass){
-                           responseTest.isPurchased = true;
-                       }else {
-                           responseTest.isPurchased = false;
-                       }
-                       res.render('test_detail', responseTest);
-                   }
-               });
-           }else {
-
-               var info = {
-                   message: "没有查询到相关测评信息！",
-                   error: {
-                       status: "500"
-                   }
-               }
-               res.render('error', info);
-           }
+                if(err){
+                    responseTest.isError = true;
+                    responseTest.error = err;
+                    return res.render('test_detail', responseTest);
+                }else {
+                    if(pass){
+                        responseTest.isPurchased = true;
+                    }else {
+                        responseTest.isPurchased = false;
+                    }
+                    res.render('test_detail', responseTest);
+                }
+            });
 
         });
     });

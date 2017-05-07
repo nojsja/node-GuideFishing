@@ -103,8 +103,7 @@ a {
 .item-number {
   text-align: center;
   color: white;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 0 10px black; }
+  margin-bottom: 0.5rem; }
 
 /* 题目选项 */
 .item-choises {
@@ -162,9 +161,8 @@ a {
   height: auto;
   margin-bottom: 1rem;
   padding: 0.5rem;
-  background-color: #d2d6d1;
-  color: white;
-  text-shadow: 0 0 10px #b40000; }
+  background-color: #eaeaea;
+  color: #4c74ee; }
 
 /* 相关课程推荐 */
 .course-recommendation-div {
@@ -220,9 +218,5 @@ a {
   margin: 0.5rem;
   padding: 0.5rem;
   border: solid 2px white; }
-
-/*文字特效*/
-.box1 {
-  text-shadow: 0 0 0 #bcb2bc, 1px 0 0 #ada3ad, 2px 0 0 #9d939d, 3px 0 0 #8e848e, 4px 0 0 #7e747e, 5px 0 0 #6f656f, 6px 0 0 #5f555f, 7px 0 0 #4f454f, 8px 0 7px rgba(0, 0, 0, 0.35), 8px 0 1px rgba(0, 0, 0, 0.5), 0 0 7px rgba(0, 0, 0, 0.2); }
 
 /*# sourceMappingURL=test_view.css.map */

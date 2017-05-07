@@ -578,6 +578,12 @@
                 nextIndex: 0,
                 // 滚动方向
                 direction: 'left',
+                touch: {
+                    pageStartX: 0,
+                    pageStartY: 0,
+                    pageEndX: 0,
+                    pageEndY: 0
+                },
                 // 需要滚动的宽度
                 imageWidth: 0,
                 imageHeight: 0,
@@ -595,6 +601,52 @@
             var slideText = document.getElementById('slideText');
             var pointList = document.getElementById('pointList');
 
+            // 移动端滑动事件绑定 -- 判断手指是左边滑动还是右边滑动
+            nojsja['EventUtil'].addHandler(slideItemList, 'touchstart', function (event) {
+
+                nojsja["FnDelay"](function (_event) {
+
+                    var event = _event || window.event;
+                    // 阻止浏览器默认的事件
+                    event.preventDefault();
+
+                    slideInfo.touch.pageStartX = event.changedTouches[0].pageX;
+                    slideInfo.touch.pageStartY = event.changedTouches[0].pageY;
+
+                }, 100, false, event);
+            });
+            nojsja['EventUtil'].addHandler(slideItemList, 'touchmove', function (event) {
+
+                nojsja["FnDelay"](function (_event) {
+
+                    var event = _event || window.event;
+                    // 阻止浏览器默认的事件
+                    event.preventDefault();
+
+                    slideInfo.touch.pageEndX = event.changedTouches[0].pageX;
+                    slideInfo.touch.pageEndY = event.changedTouches[0].pageY;
+
+                    // 向右滑动
+                    if(
+                        Math.abs(slideInfo.touch.pageEndX - slideInfo.touch.pageStartX) >
+                        Math.abs(slideInfo.touch.pageEndY - slideInfo.touch.pageEndY) &&
+                        (slideInfo.touch.pageEndX - slideInfo.touch.pageStartX > 0)
+                    ){
+                        slideAction('right');
+                    }
+
+                    // 向左滑动
+                    if(
+                        Math.abs(slideInfo.touch.pageEndX - slideInfo.touch.pageStartX) >
+                        Math.abs(slideInfo.touch.pageEndY - slideInfo.touch.pageEndY) &&
+                        (slideInfo.touch.pageEndX - slideInfo.touch.pageStartX < 0)
+                    ){
+                        slideAction('left');
+                    }
+
+                }, 200, false, event);
+
+            });
             for(var i = 0; i < slideInfo.imageArray.length;  i++){
                 (function (i) {
                     // 创建图片DOM
@@ -777,11 +829,11 @@
             var fnObject = {};
 
             // 三个参数分别是被调用函数，设置的延迟时间，是否需要立即调用
-            return function(fn, delayTime, IsImediate){
+            return function(fn, delayTime, IsImediate, arges){
 
                 // 立即调用
                 if(!delayTime || IsImediate){
-                    return fn();
+                    return fn(arges);
                 }
                 // 判断函数是否已经在调用中
                 if(fnObject[fn]){
@@ -789,7 +841,7 @@
                 }else {
                     // 定时器
                     var timer = setTimeout(function(){
-                        fn();
+                        fn(arges);
                         //清除定时器
                         clearTimeout(timer);
                         delete(fnObject[fn]);
@@ -1165,11 +1217,11 @@
         var fnObject = {};
 
         // 三个参数分别是被调用函数，设置的延迟时间，是否需要立即调用
-        return function(fn, delayTime, IsImediate){
+        return function(fn, delayTime, IsImediate, args){
 
             // 立即调用
             if(!delayTime || IsImediate){
-                return fn();
+                return fn(args);
             }
             // 判断函数是否已经在调用中
             if(fnObject[fn]){
@@ -1177,7 +1229,7 @@
             }else {
                 // 定时器
                 var timer = setTimeout(function(){
-                    fn();
+                    fn(args);
                     //清除定时器
                     clearTimeout(timer);
                     delete(fnObject[fn]);
@@ -1584,7 +1636,7 @@
     /* 兼容各个浏览器的事件处理程序 */
     nojsja["EventUtil"] = {
 
-        addHandler: function (element, type, handler) {
+        addHandler: function (element, type, handler, arges) {
             if(element.addEventListener){
                 element.addEventListener(type, handler, false);
 
@@ -1596,7 +1648,7 @@
             }
         },
 
-        removeHandler: function (element, type, handler) {
+        removeHandler: function (element, type, handler, arges) {
             if(element.removeEventListener){
                 element.removeEventListener(type, handler, false);
 
