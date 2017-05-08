@@ -14,6 +14,7 @@ $(function () {
             loginAction.rememberPsw = false;
         }
     });
+
     $('.choose-div-button').click(function() {
 
         $('.choose-div-button').prop('class', 'choose-div-button');

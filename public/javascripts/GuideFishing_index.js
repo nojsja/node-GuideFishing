@@ -143,7 +143,11 @@ GuideFishing.buildSlideView = function () {
         if(jsonObject.isError){
             return GuideFishing.modalWindow(jsonObject.error);
         }
-        nojsja["SlideViewCss3"].init(jsonObject.slideImageArray);
+        // 滑动组件1
+        var slideDivID = $('#slideDiv').prop('id');
+        // 实例化一个组件
+        var slideView1 = new nojsja['SlideViewCss3'](slideDivID, jsonObject.slideImageArray);
+        slideView1.build();
     });
 };
 

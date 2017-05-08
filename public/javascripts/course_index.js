@@ -133,7 +133,13 @@ CourseAction.buildSlideView = function () {
         if(jsonObject.isError){
             return CourseAction.modalWindow(jsonObject.error);
         }
-        nojsja.SlideView.init(jsonObject.slideImageArray);
+
+        // 滑动组件1
+        var slideViewWrapperID = $('#slideViewWrapper1').prop('id');
+        // 实例化一个组件
+        var slideView1 = new nojsja['SlideViewCss3'](slideViewWrapperID, jsonObject.slideImageArray);
+        slideView1.build();
+
     });
 };
 
@@ -141,7 +147,6 @@ CourseAction.buildSlideView = function () {
 CourseAction.readCourseList = function (condition) {
 
     var url = "/course/readCourseList";
-    console.log(condition);
     //请求服务器
     $.post(url, condition, function (JSONdata) {
         //更新页面
@@ -150,13 +155,16 @@ CourseAction.readCourseList = function (condition) {
 };
 
 /* 加载更多数量的测评文章 */
-CourseAction.readMore = function () {
+CourseAction.readMore = function (callback) {
 
-    CourseAction.readCourseList({
+    var url = "/course/readCourseList";
+    //请求服务器
+    $.post(url, {
         courseType: CourseAction.courseType,
         skip: CourseAction.pageStart,
         limit: CourseAction.pageLimit
     }, function (JSONdata) {
+        callback();
         //更新页面
         CourseAction.updatePage(JSONdata);
     });
@@ -185,6 +193,9 @@ CourseAction.updatePage = function (JSONdata) {
     }else {
         $('.loading-info').text('正在加载...');
     }
+
+    // 创建一个虚拟的文档碎片
+    var docufragment = document.createDocumentFragment();
     //遍历对象数组构造DOM对象
     for(var courseIndex in parsedData.courseArray) {
         //增加游标控制页面读取的起始位置
@@ -237,13 +248,14 @@ CourseAction.updatePage = function (JSONdata) {
             $courseContainer.append($contentLeft)
                 .append($contentRight)
                 .append($date)
-                .css('display', 'none');
-            //添加到页面上去
-            $('#total').append($courseContainer);
-            //以淡入淡出效果出现
-            $courseContainer.fadeIn();
+            //添加到虚拟节点上去
+            docufragment.appendChild($courseContainer[0]);
         })();
     }
+
+    // 修改DOM
+    $('#total')[0].appendChild(docufragment);
+
 };
 
 /* 自定义课程类型 */
@@ -327,10 +339,10 @@ CourseAction.goBottom = function goBottom() {
 /* 滚动侦测 */
 CourseAction.scrollCheck = function (callback) {
 
-    // if(nojsja['FnLocker'].check(callback)){
-    //     console.log('locker stil exists.');
-    //     return;
-    // }
+    if(nojsja['FnLocker'].check(callback)){
+        return;
+    }
+
     nojsja
         .GetDocumentHeight[CourseAction.userAgent.browser](CourseAction.userAgent, 'clientHeight');
 
@@ -354,14 +366,11 @@ CourseAction.scrollCheck = function (callback) {
         CourseAction.userAgent.scrollTop >=
         (CourseAction.userAgent.offsetHeight || CourseAction.userAgent.scrollHeight) ) ){
 
-        // mconsole.log('on the bottom.');
-        // nojsja['FnLocker'].lock(callback);
+        nojsja['FnLocker'].lock(callback);
 
-        // callback(function () {
-        //     console.log('unlock');
-        //     nojsja['FnLocker'].unlock(callback);
-        // });
-        callback();
+        callback(function () {
+            nojsja['FnLocker'].unlock(callback);
+        });
     }
 
 };
