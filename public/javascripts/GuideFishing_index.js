@@ -7,6 +7,9 @@
 /* 初始化函数 */
 $(function () {
 
+    // 初始化观察者
+    GuideFishing.sideNav.sideNavContainer = document.querySelector('.side-nav-container');
+    nojsja['ObserverPattern'].init(GuideFishing.sideNav.sideNavContainer);
     // 页面事件绑定
     GuideFishing.pageEventBind();
     // 更新课程类型
@@ -27,43 +30,77 @@ $(function () {
     GuideFishing.updateTestHot();
     // 滑动图片初始化
     GuideFishing.buildSlideView();
-    // 悬浮按钮初始化
-    njj.HoverButton.init();
 });
 
-/*** 页面全局变量 ***/
+/**
+ * [GuideFishing 页面全局变量]
+ * */
 var GuideFishing = {
-    //heder是否降下
-    headerDown: false,
-    //检测页面滚动
-    scrollOver: false,
-    //检测上次页面滚动的状态
-    lastScrollOver: false,
-    //页面加载起点
-    pageStart: 0,
-    //页面加载条数
-    pageLimit: 4,
-    //加载的测试类型
-    courseType: "ALL",
-    //是否清除页面已存数据
-    isClear: false,
-    // 中英文对应
-    courseTypeChina: {}
+    headerDown: false,      //heder是否降下
+    scrollOver: false,      //检测页面滚动
+    sideNav: {      // 页边导航页事件对象
+        isActive: false,        // 是否正在激活
+        sideNavContainer: null,     // 缓存的DOM对象
+        touch: {        // 移动端触摸数据
+            pageStartX: 0,
+            pageStartY: 0,
+            pageEndX: 0,
+            pageEndY: 0
+        },
+        /**
+         * [touchMoveCheck 触摸滑动检测]
+         * @param {String} pageEndX [停止坐标X]
+         * @param {String} pageEndY [停止坐标Y]
+         * */
+        touchMoveCheck: function (pageEndX, pageEndY) {
+            this.touch.pageEndX = pageEndX;
+            this.touch.pageEndY = pageEndY;
+            // 向右滑动
+            if(Math.abs(pageEndX - this.touch.pageStartX) >
+                Math.abs(pageEndY - this.touch.pageStartY) &&
+                (pageEndX - this.touch.pageStartX > 0) ){
+
+                if(!this.isActive){
+                    return;
+                }
+                this.sideNavAction['right']();
+            }
+            // 向左滑动
+            if(Math.abs(pageEndX - this.touch.pageStartX) >
+                Math.abs(pageEndY - this.touch.pageStartY) &&
+                (pageEndX - this.touch.pageStartX < 0) ){
+
+                if(this.isActive){
+                    return;
+                }
+                this.sideNavAction['left']();
+            }
+        },
+        /**
+         * [clickCheck 点击检测]
+         * */
+        clickCheck: function () {
+            if(this.isActive){
+                this.sideNavAction['right']();
+            }else {
+                this.sideNavAction['left']();
+            }
+        },
+        /**
+         * [sideNavAction 滑动动作]
+         * */
+        sideNavAction: null,
+    },
+    lastScrollOver: false,      //检测上次页面滚动的状态
+    pageStart: 0,       //页面加载起点
+    pageLimit: 4,       //页面加载条数
+    courseType: "ALL",      //加载的测试类型
+    isClear: false,     //是否清除页面已存数据
+    courseTypeChina: {}     // 中英文对应
 };
 
 /* 页面主要事件绑定 */
 GuideFishing.pageEventBind = function () {
-
-    // 选择课程类型
-    /*$('#courseTypeChoose, #courseTypeChoose2').click(function () {
-        GuideFishing.headerDown = !GuideFishing.headerDown;
-        $('.type-item').slideToggle();
-        if(GuideFishing.headerDown) {
-            $('.header-label > i').prop('class', 'icon-angle-up');
-        }else {
-            $('.header-label > i').prop('class', 'icon-angle-down');
-        }
-    });*/
 
     // 跳转到课程页面
     $('#courseMore').click(function () {
@@ -92,16 +129,101 @@ GuideFishing.pageEventBind = function () {
     //顶部和底部跳转
     $('#top').click(GuideFishing.goTop);
     $('#bottom').click(GuideFishing.goBottom);
-    //高度检测
-    /*windowHeightCheck();*/
-    //滑动检测函数
-    // $(window).scroll(function () {
-    //     //每隔500毫秒检测一次
-    //    nojsja.FnDelay(GuideFishing.scrollCheck, 500);
-    // });
-    //加载更多数据
-    // $('#loadMore').click(GuideFishing.readMore);
+
+    // 右边菜单滑动事件
+    nojsja['EventUtil'].addHandler($('.nav-trigger')[0], 'click', function () {
+        GuideFishing.sideNav.clickCheck();
+    });
+
+    // 开始触摸
+    var touchStart = function (event) {
+        // 函数去抖
+        nojsja["FnDelay"](function (_event) {
+
+            var event = nojsja['EventUtil'].getEvent(_event);
+            // 阻止浏览器默认的事件
+            nojsja['EventUtil'].preventDefault(event);
+            // 当前事件手指的坐标
+            GuideFishing.sideNav.touch.pageStartX = event.changedTouches[0].pageX;
+            GuideFishing.sideNav.touch.pageStartY = event.changedTouches[0].pageY;
+
+        }, 100, false, event);
+    };
+    // 触摸
+    var touchMove = function (event) {
+
+        // 函数去抖
+        nojsja["FnDelay"](function (_event) {
+
+            var event = nojsja['EventUtil'].getEvent(_event);
+            // 阻止浏览器默认的事件
+            nojsja['EventUtil'].preventDefault(event);
+
+            GuideFishing.sideNav.touchMoveCheck(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+
+        }, 200, false, event);
+    };
+    // 移动端开始触摸事件
+    nojsja['EventUtil'].addHandler($('.nav-trigger')[0], 'touchstart', touchStart);
+    nojsja['EventUtil'].addHandler(GuideFishing.sideNav.sideNavContainer, 'touchstart', touchStart);
+    // 移动端触摸移动事件
+    nojsja['EventUtil'].addHandler($('.nav-trigger')[0], 'touchmove', touchMove);
+    nojsja['EventUtil'].addHandler(GuideFishing.sideNav.sideNavContainer, 'touchmove', touchMove);
+
+    /* 页边导航滑动事件 */
+    GuideFishing.sideNav.sideNavAction = (function(){
+
+        // 初始化标致
+        var init = false;
+        // 请求个人数据
+        if(!init){
+            var url = '/userInfo';
+            $.post(url, {}, function (JSONdata) {
+
+                var JSONobject = JSON.parse(JSONdata);
+                console.log(JSONobject);
+                if(JSONobject.isError){
+                    return;
+                }
+                // 个人信息
+                var selfInfo = JSONobject.selfInfo;
+                $('.content-info-nickName > span').text(selfInfo.nickName);
+                $('.content-info-account').text('Email: ' + selfInfo.account);
+                $('.content-info-password').text('Key: ' + selfInfo.password);
+                $('.content-info-admin').text('Admin: ' + selfInfo.root);
+
+                init = !init;
+
+            }, "JSON");
+        }
+
+        var sideNavContainer = GuideFishing.sideNav.sideNavContainer;
+        sideNavContainer.listen(function () {
+            $(this).css('width', '75%');
+            $('.nav-content-div').css('display', 'block');
+            $('.nav-trigger > i').prop('class', 'icon-arrow-right')
+            GuideFishing.sideNav.isActive = !GuideFishing.sideNav.isActive;
+        }, 'show');
+        sideNavContainer.listen(function () {
+            $('.nav-content-div').css('display', 'none');
+            $(this).css('width', '0');
+            $('.nav-trigger > i').prop('class', 'icon-arrow-left')
+            GuideFishing.sideNav.isActive = !GuideFishing.sideNav.isActive;
+        }, 'hidden');
+
+        var _sideNavAction = {
+            left: function () {
+                sideNavContainer.trigger('show');
+            },
+            right: function () {
+                sideNavContainer.trigger('hidden');
+            }
+        };
+
+        return _sideNavAction;
+    })();
 };
+
 
 /* 获取课程类型更新页面 */
 GuideFishing.updateCourseType = function () {

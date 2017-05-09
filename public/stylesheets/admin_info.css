@@ -141,7 +141,7 @@ input.admin-add-detail {
   text-align: center; }
 
 td.edit-td:hover {
-  background-color: #4c74ee;
+  background-color: rgba(76, 116, 238, 0.92);
   color: white; }
 
 td.delete-td:hover {
@@ -211,7 +211,7 @@ td.delete-td:hover {
   margin: 0 1rem 0;
   padding: 5px;
   font-weight: bold;
-  color: #4c74ee; }
+  color: rgba(76, 116, 238, 0.92); }
 
 /*审查进度*/
 .examine-progress-list {
@@ -247,12 +247,12 @@ td.delete-td:hover {
   margin: 0 1rem 0;
   padding: 5px;
   font-weight: bold;
-  color: #4c74ee; }
+  color: rgba(76, 116, 238, 0.92); }
 
 .examine-text {
   width: 90%;
   margin: auto;
-  color: #4c74ee;
+  color: rgba(76, 116, 238, 0.92);
   background-color: #f1f1f1;
   padding: 5px; }
 

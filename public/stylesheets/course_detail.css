@@ -28,7 +28,7 @@ a {
   width: 100%;
   text-align: center;
   font-size: 1.5rem;
-  color: #4c74ee;
+  color: rgba(76, 116, 238, 0.92);
   line-height: 1.5rem; }
 
 .header-label span {
@@ -49,7 +49,7 @@ a {
   min-height: 8rem;
   padding-top: 5px;
   height: auto;
-  background-color: #4c74ee;
+  background-color: rgba(76, 116, 238, 0.92);
   width: 90%;
   margin: 3rem auto 0.5rem; }
 

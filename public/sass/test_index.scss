@@ -11,7 +11,7 @@ html {
 }
 
 a {
-    color: #00B7FF;
+    color: $blue_dark ;
 }
 
 /* 布局DIV */
@@ -234,7 +234,7 @@ a {
     margin-top: 5px;
     color: white;
     margin-bottom: 0;
-    color: #668693;
+    color: $grey_dark_light;
 }
 
 .content-item-date > span {
