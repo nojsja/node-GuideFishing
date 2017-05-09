@@ -30,10 +30,8 @@ a:hover {
   padding: 4px;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  background-color: #1b6b9c;
-  border-left: solid 2px #e57a4a;
-  border-right: solid 2px #e57a4a;
-  color: #d9e6d9; }
+  border: solid 1px #737373;
+  color: #737373; }
 
 /* 获取所有在招职位 */
 .get-recruitments {
@@ -103,7 +101,7 @@ a:hover {
 
 /* 职位介绍 */
 .recruitment-item {
-  border: dotted 1px grey;
+  border: solid 1px white;
   padding: 5px;
   margin-top: 2rem;
   margin-bottom: 1rem;
@@ -113,8 +111,8 @@ a:hover {
   position: absolute;
   top: 0.1rem;
   right: 0.1rem;
-  font-size: 1.5rem;
-  color: #e57a4a; }
+  font-size: 1.2rem;
+  color: #668b99; }
 
 /* 标题 */
 .item-title {
@@ -124,12 +122,12 @@ a:hover {
   width: 6rem;
   height: 2rem;
   line-height: 2rem;
-  background-color: #668b99;
-  color: #efefef;
+  border: solid 1px #668b99;
+  color: #668b99;
   font-weight: bold;
-  -webkit-box-shadow: 4px 4px 0 #7c7c7c;
-  -moz-box-shadow: 4px 4px 0 #7c7c7c;
-  box-shadow: 4px 4px 0 #7c7c7c; }
+  -webkit-box-shadow: 3px 3px 0 rgba(124, 124, 124, 0.7);
+  -moz-box-shadow: 3px 3px 0 rgba(124, 124, 124, 0.7);
+  box-shadow: 3px 3px 0 rgba(124, 124, 124, 0.7); }
 
 .item-job,
 .item-duty,
@@ -145,7 +143,7 @@ a:hover {
 .item-skill:hover,
 .item-treatment:hover,
 .item-other:hover {
-  border-left: solid 4px #e57a4a; }
+  border-left: solid 2px #e57a4a; }
 
 /* 动画绑定 */
 .translate {

@@ -1,5 +1,4 @@
 @charset "UTF-8";
-
 @import 'public';
 
 body {
@@ -36,10 +35,8 @@ a:hover {
     padding: 4px;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    background-color: #1b6b9c;
-    border-left: solid 2px #e57a4a;
-    border-right: solid 2px #e57a4a;
-    color: #d9e6d9;
+    border: solid 1px $grey_dark;
+    color: $grey_dark;
 }
 
 /* 获取所有在招职位 */
@@ -119,7 +116,7 @@ a:hover {
 
 /* 职位介绍 */
 .recruitment-item {
-    border: dotted 1px grey;
+    border: solid 1px white;
     padding: 5px;
     margin-top: 2rem;
     margin-bottom: 1rem;
@@ -130,8 +127,8 @@ a:hover {
     position: absolute;
     top: 0.1rem;
     right: 0.1rem;
-    font-size: 1.5rem;
-    color: #e57a4a;
+    font-size: 1.2rem;
+    color: #668b99;
 }
 
 /* 标题 */
@@ -142,11 +139,11 @@ a:hover {
     width: 6rem;
     height: 2rem;
     line-height: 2rem;
-    background-color: #668b99;
-    color: #efefef;
+    border: solid 1px #668b99;
+    color: #668b99;
     font-weight: bold;
 
-    @include boxShadowSide(4px, #7c7c7c);
+    @include boxShadowSide(3px, rgba(124, 124, 124, 0.70));
 }
 
 .item-job,
@@ -164,7 +161,7 @@ a:hover {
 .item-skill:hover,
 .item-treatment:hover,
 .item-other:hover {
-    border-left: solid 4px #e57a4a;
+    border-left: solid 2px #e57a4a;
 }
 
 /* 动画绑定 */
