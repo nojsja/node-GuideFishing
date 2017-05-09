@@ -698,7 +698,7 @@
     })();
 
     /**
-     * [SlideViewCss3  图片轮播组件css3版本]
+     * [SlideViewCss3  图片轮播组件新特性版本]
      * @return {Function}
      * */
     nojsja["SlideViewCss3"] = (function () {
@@ -857,6 +857,21 @@
                 that.slideAction('right');
             });
 
+            /**
+             * 新的动画API 类似定时器
+             * */
+             var requestAnimationFrame = window.requestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.msRequestAnimationFrame;
+
+             var cancelAnimationFrame = window.cancelAnimationFrame ||
+                window.mozCancelAnimationFrame ||
+                window.oCancelAnimationFrame ||
+                window.webkitCancelAnimationFrame ||
+                window.msCancelAnimationFrame;
+
             // 6s自动轮播
             // 循环滚动方法
             function slideRoll() {
@@ -950,7 +965,8 @@
                         that.slideInfo.status = false;
                         that.slideInfo.X_left = 0;
 
-                        clearInterval(that.slideTimer);
+                    }else {
+                        requestAnimationFrame(arguments.callee);
                     }
                 }
 
@@ -978,22 +994,15 @@
                         that.slideInfo.status = false;
                         that.slideInfo.X_left = 0;
 
-                        clearInterval(that.slideTimer);
+                    }else {
+                        requestAnimationFrame(arguments.callee);
                     }
                 }
 
                 if(direction == 'left'){
-
-                    that.slideTimer = setInterval(function () {
-                        // 两个像素点
-                        slideLeft();
-                    }, that.slideInfo.stepDuration);
+                    requestAnimationFrame(slideLeft);
                 }else {
-
-                    that.slideTimer = setInterval(function () {
-                        // 两个像素点
-                        slideRight();
-                    }, that.slideInfo.stepDuration);
+                    requestAnimationFrame(slideRight);
                 }
             }
         };
@@ -1719,12 +1728,28 @@
         };
     })();
 
-    /* 轻量化弹幕池 */
+    /**
+     * [DanmuPoll 轻量化弹幕池]
+     * @return {Object}
+     *  */
     nojsja["DanmuPool"] = (function () {
 
-        // 内部弹幕池
-        var _pool = [];
-        var attrArray = ['color', 'text', 'date', 'user'];
+        var _pool = [];     // 存储弹幕对象
+        var attrArray = ['color', 'text', 'date', 'user'];      // 弹幕属性
+        /**
+         * 新的动画API 类似定时器
+         * */
+        var requestAnimationFrame = window.requestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.oRequestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.msRequestAnimationFrame;
+
+        var cancelAnimationFrame = window.cancelAnimationFrame ||
+            window.mozCancelAnimationFrame ||
+            window.oCancelAnimationFrame ||
+            window.webkitCancelAnimationFrame ||
+            window.msCancelAnimationFrame;
 
         // 弹幕构造函数
         function danmu() {
@@ -1782,20 +1807,23 @@
                     // 循环移动
                     function _move() {
 
-                        setPositionX(--bodyWidth);
+                        setPositionX(bodyWidth = bodyWidth - 1);
                         // 触碰边界后检测
-                        if(bodyWidth + that.width == 0){
+                        if(bodyWidth + that.width <= 0){
 
                             if(that.width !== 0){
-                                free();
-                                return clearInterval(that.timer);
+                                return free();
+                                // return clearInterval(that.timer);
                             }
-
                             that.width = $danmuDiv[0].offsetWidth;
+                            requestAnimationFrame(arguments.callee);
 
+                        }else {
+                            requestAnimationFrame(arguments.callee);
                         }
                     }
-                    that.timer = setInterval(_move, 15);
+                    // that.timer = setInterval(_move, 15);
+                    requestAnimationFrame(_move);
 
                 };
                 // 释放
@@ -1811,6 +1839,7 @@
                 return {
                     move: move
                 }
+
             })(that);
         }
 
