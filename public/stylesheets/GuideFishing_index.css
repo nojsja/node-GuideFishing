@@ -237,7 +237,8 @@ a {
 
 /*讨论组的区别色*/
 .content-item-broadcast {
-  background-color: #bdddf8 !important; }
+  background-color: #eaeaea !important;
+  color: white; }
 
 .content-item:hover {
   -webkit-box-shadow: inset 0 0 1px black;

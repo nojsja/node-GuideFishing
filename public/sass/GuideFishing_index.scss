@@ -270,7 +270,8 @@ a {
 
 /*讨论组的区别色*/
 .content-item-broadcast {
-    background-color: #bdddf8 !important;
+    background-color: $grey !important;
+    color: white;
 }
 
 .content-item:hover {
