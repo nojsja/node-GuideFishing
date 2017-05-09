@@ -1,8 +1,7 @@
 @charset "UTF-8";
 /* 课程详情页面 */
 body {
-  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color: #f8ffff; }
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif; }
 
 html {
   font-size: 16px; }
@@ -28,7 +27,7 @@ a {
   width: 100%;
   text-align: center;
   font-size: 1.5rem;
-  color: #4c74ee;
+  color: rgba(76, 116, 238, 0.92);
   line-height: 1.5rem; }
 
 .header-label span {
@@ -38,20 +37,17 @@ a {
 .return-home {
   position: absolute;
   right: 10px;
-  color: #aaaaaa;
+  color: #637db5;
   font-size: 1.5rem; }
-
-.return-home:active {
-  color: #2de275; }
 
 /* 评测介绍主体部分 */
 .detail-head {
   min-height: 8rem;
   padding-top: 5px;
   height: auto;
-  background-color: #4c74ee;
-  width: 90%;
-  margin: 3rem auto 0.5rem; }
+  background-color: rgba(76, 116, 238, 0.92);
+  width: 100%;
+  margin: 2rem auto 0.5rem; }
 
 .detail-head-img {
   border: solid 1px white;
@@ -73,7 +69,7 @@ a {
   text-align: center;
   color: #f1f1f1;
   font-size: 1.3rem;
-  text-shadow: 2px 2px 1px #737373; }
+  text-shadow: 2px 2px 1px #3b3d3b; }
 
 .detail-head-other {
   text-align: center; }
@@ -82,8 +78,8 @@ a {
 .other-date {
   height: 1.5rem;
   line-height: 1.5rem;
-  color: #737373;
-  background-color: #3b3d3b;
+  color: white;
+  background-color: #aaaaaa;
   text-align: center;
   width: 100%; }
 

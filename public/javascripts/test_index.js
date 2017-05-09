@@ -91,7 +91,11 @@ TestIndexAction.bulidSlideView = function () {
         if(data.isError){
             return TestIndexAction.modalWindow('发生错误：' + data.error);
         }
-        nojsja.SlideView.init(data.slideImageArray);
+        // 滑动组件1
+        var slideDivID = $('#slideDiv').prop('id');
+        // 实例化一个组件
+        var slideView1 = new nojsja['SlideViewCss3'](slideDivID, data.slideImageArray);
+        slideView1.build();
 
     });
 };
@@ -144,18 +148,21 @@ TestIndexAction.readTestList = function (condition) {
 };
 
 /* 加载更多数量的测评文章 */
-TestIndexAction.readMore = function () {
+TestIndexAction.readMore = function (callback) {
 
-    TestIndexAction.readTestList({
+    var url = "/test/readList";
+    //请求服务器
+    $.post(url, {
         testType: TestIndexAction.testType,
         skip: TestIndexAction.pageStart
 
     }, function (JSONdata) {
 
-        console.log('lockerCallback');
+        callback();
         //更新页面
         TestIndexAction.updatePage(JSONdata);
-    });
+
+    }, "JSON");
 };
 
 /* 更新主页事件 */
@@ -182,6 +189,9 @@ TestIndexAction.updatePage = function (JSONdata) {
     }else {
         $('.loading-info').text('正在加载...');
     }
+
+    // 创建一个虚拟的文档碎片
+    var docufragment = document.createDocumentFragment();
     //遍历对象数组构造DOM对象
     for(var testIndex in parsedData.testArray) {
         //增加游标控制页面读取的起始位置
@@ -233,13 +243,13 @@ TestIndexAction.updatePage = function (JSONdata) {
             $testContainer.append($contentLeft)
                 .append($contentRight)
                 .append($date)
-                .css('display', 'none');
-            //添加到页面上去
-            $('#total').append($testContainer);
-            //以淡入淡出效果出现
-            $testContainer.fadeIn();
+            //添加到虚拟节点上去
+            docufragment.appendChild($testContainer[0]);
         })();
     }
+
+    // 修改DOM
+    $('#total')[0].appendChild(docufragment);
 };
 
 /* 自定义评测类型 */
@@ -324,10 +334,10 @@ TestIndexAction.goBottom = function goBottom() {
 /* 滚动侦测 */
 TestIndexAction.scrollCheck = function (callback) {
 
-    // if(nojsja['FnLocker'].check(callback)){
-    //     console.log('locker stil exists.');
-    //     return;
-    // }
+    // 上一次的callback任然未结束
+    if(nojsja['FnLocker'].check(callback)){
+        return;
+    }
     nojsja
         .GetDocumentHeight[TestIndexAction.userAgent.browser](TestIndexAction.userAgent, 'clientHeight');
 
@@ -351,14 +361,12 @@ TestIndexAction.scrollCheck = function (callback) {
         TestIndexAction.userAgent.scrollTop >=
         (TestIndexAction.userAgent.offsetHeight || TestIndexAction.userAgent.scrollHeight) ) ){
 
-        // mconsole.log('on the bottom.');
-        // nojsja['FnLocker'].lock(callback);
+        // 锁住函数
+        nojsja['FnLocker'].lock(callback);
 
-        // callback(function () {
-        //     console.log('unlock');
-        //     nojsja['FnLocker'].unlock(callback);
-        // });
-        callback();
+        callback(function () {
+            nojsja['FnLocker'].unlock(callback);
+        });
     }
 
 };

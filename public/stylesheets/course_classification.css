@@ -44,19 +44,19 @@ html {
   width: 2rem;
   height: 2rem;
   margin-top: 0.5rem;
-  border: solid 1px #4c74ee; }
+  border: solid 1px rgba(76, 116, 238, 0.92); }
 
 /* 标题 */
 .classification-item-title {
   vertical-align: top;
   font-size: 1rem;
-  color: #4c74ee;
+  color: rgba(76, 116, 238, 0.92);
   font-weight: bold;
   line-height: 3rem;
   display: inline-block; }
 
 .classification-item-title > span {
-  border: solid 1px #4c74ee;
+  border: solid 1px rgba(76, 116, 238, 0.92);
   border-radius: 3px;
   padding: 3px; }
 

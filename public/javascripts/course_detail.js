@@ -339,8 +339,8 @@ DetailAction.loadDanmu = function (danmuArray) {
 
         index ++;
         if(index < danmuArray.length){
-            setTimeout(danm, 500);
+            setTimeout(danm, 1000);
         }
     }
-    setTimeout(danm, 500);
+    setTimeout(danm, 1000);
 };

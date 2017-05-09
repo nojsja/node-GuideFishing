@@ -6,7 +6,6 @@
 
 body {
     font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-    background-color: #f8ffff;
 }
 
 html {
@@ -48,11 +47,8 @@ a {
 .return-home {
     position: absolute;
     right: 10px;
-    color: $grey_dark_light;
+    color: $blue_dark;
     font-size: 1.5rem;
-}
-.return-home:active {
-    color: $green_light;
 }
 
 /* 评测介绍主体部分 */
@@ -61,8 +57,8 @@ a {
     padding-top: 5px;
     height: auto;
     background-color: $blue;
-    width: 90%;
-    margin: 3rem auto 0.5rem;
+    width: 100%;
+    margin: 2rem auto 0.5rem;
 }
 
 .detail-head-img {
@@ -86,7 +82,7 @@ a {
     text-align: center;
     color: $grey_light;
     font-size: 1.3rem;
-    text-shadow: 2px 2px 1px $grey_dark;
+    text-shadow: 2px 2px 1px $black_light;
 }
 
 .detail-head-other {
@@ -97,8 +93,8 @@ a {
 .other-date {
     height: 1.5rem;
     line-height: 1.5rem;
-    color: $grey_dark;
-    background-color: $black_light;
+    color: white;
+    background-color: $grey_dark_light;
     text-align: center;
     width: 100%;
 }

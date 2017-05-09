@@ -132,7 +132,7 @@ a {
   margin: 0 5px 0;
   display: inline-block;
   vertical-align: bottom;
-  color: #4c74ee; }
+  color: rgba(76, 116, 238, 0.92); }
 
 /* 管理员头像标致 */
 .chatmates-admin {
@@ -292,12 +292,12 @@ a {
 /* 音频自定义 */
 .audio-define {
   position: relative;
-  border: solid 1px #4c74ee;
+  border: solid 1px rgba(76, 116, 238, 0.92);
   border-radius: 7px;
   width: 50%;
   padding: 5px;
   margin: 0.5rem;
-  color: #4c74ee;
+  color: rgba(76, 116, 238, 0.92);
   -webkit-box-shadow: inset 0 0 1px white;
   -moz-box-shadow: inset 0 0 1px white;
   box-shadow: inset 0 0 1px white; }

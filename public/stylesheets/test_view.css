@@ -1,7 +1,7 @@
 @charset "UTF-8";
 body {
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background: #577280; }
+  background: #3b3d3b; }
 
 html {
   font-size: 16px; }
@@ -29,8 +29,7 @@ a {
   font-size: 1.5rem;
   color: white;
   text-shadow: 0px 0px 10px #456d9c;
-  line-height: 1.5rem;
-  font-weight: bold; }
+  line-height: 1.5rem; }
 
 .header-label span {
   text-shadow: 0 0 0; }
@@ -38,32 +37,8 @@ a {
 .return-home {
   position: absolute;
   right: 1rem;
-  color: #8bcaed;
+  color: white;
   font-size: 1.5rem; }
-
-/* footer */
-.footer {
-  margin-bottom: 5px;
-  padding: 0.5rem;
-  text-align: center;
-  min-height: 2rem;
-  bottom: 0;
-  border-top: solid 1px #6095d8;
-  background-color: white; }
-
-.footer-img {
-  display: inline-block;
-  background: url("/images/icons/Ciitec.jpg") no-repeat;
-  background-size: cover;
-  width: 5rem;
-  height: 2rem;
-  margin: 0 auto; }
-
-.footer-text {
-  display: inline-block;
-  text-align: center;
-  font-size: 1.5rem;
-  color: #3b3d3b; }
 
 /* 答题框 */
 .total {
@@ -103,8 +78,7 @@ a {
 .item-number {
   text-align: center;
   color: white;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 0 10px black; }
+  margin-bottom: 0.5rem; }
 
 /* 题目选项 */
 .item-choises {
@@ -162,9 +136,8 @@ a {
   height: auto;
   margin-bottom: 1rem;
   padding: 0.5rem;
-  background-color: #d2d6d1;
-  color: white;
-  text-shadow: 0 0 10px #b40000; }
+  background-color: #eaeaea;
+  color: rgba(76, 116, 238, 0.92); }
 
 /* 相关课程推荐 */
 .course-recommendation-div {
@@ -220,9 +193,5 @@ a {
   margin: 0.5rem;
   padding: 0.5rem;
   border: solid 2px white; }
-
-/*文字特效*/
-.box1 {
-  text-shadow: 0 0 0 #bcb2bc, 1px 0 0 #ada3ad, 2px 0 0 #9d939d, 3px 0 0 #8e848e, 4px 0 0 #7e747e, 5px 0 0 #6f656f, 6px 0 0 #5f555f, 7px 0 0 #4f454f, 8px 0 7px rgba(0, 0, 0, 0.35), 8px 0 1px rgba(0, 0, 0, 0.5), 0 0 7px rgba(0, 0, 0, 0.2); }
 
 /*# sourceMappingURL=test_view.css.map */
