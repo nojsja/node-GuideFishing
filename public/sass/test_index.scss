@@ -12,6 +12,10 @@ html {
 
 a {
     color: $blue_dark ;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: none;
 }
 
 /* 布局DIV */

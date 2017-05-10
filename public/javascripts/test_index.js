@@ -94,7 +94,7 @@ TestIndexAction.bulidSlideView = function () {
         // 滑动组件1
         var slideDivID = $('#slideDiv').prop('id');
         // 实例化一个组件
-        var slideView1 = new nojsja['SlideViewCss3'](slideDivID, data.slideImageArray);
+        var slideView1 = new nojsja['SlideViewFrame'](slideDivID, data.slideImageArray);
         slideView1.build();
 
     });

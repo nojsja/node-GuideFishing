@@ -6,10 +6,14 @@ html {
   font-size: 16px; }
 
 a {
-  color: #637db5; }
+  color: #637db5;
+  text-decoration: none; }
+
+a:hover {
+  text-decoration: none; }
 
 .main-container {
-  margin-top: 0;
+  margin: 0 auto 0;
   padding-top: 1rem;
   width: 60%;
   background-color: #F3F3F3; }
@@ -175,16 +179,16 @@ a {
 .nav-content-links i {
   margin: 0 1rem 0; }
 
-.content-links-index,
-.content-links-test,
-.content-links-course,
-.content-links-recruitment,
-.content-links-broadcast {
+.content-links-info {
   overflow: hidden;
   font-size: 1.1rem;
   padding: 5px;
   border: solid 1px #f1f1f1;
   color: #3b3d3b; }
+
+.content-links-info:hover {
+  background-color: #3b3d3b;
+  color: white; }
 
 /* 评测类型 */
 .type-item {

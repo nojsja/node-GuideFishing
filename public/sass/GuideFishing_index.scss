@@ -11,10 +11,14 @@ html {
 
 a {
     color: $blue_dark;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: none;
 }
 
 .main-container {
-    margin-top: 0;
+    margin: 0 auto 0;
     padding-top: 1rem;
     width: 60%;
     background-color: #F3F3F3;
@@ -187,11 +191,7 @@ a {
 .nav-content-links i {
     margin: 0 1rem 0;
 }
-.content-links-index,
-.content-links-test,
-.content-links-course,
-.content-links-recruitment,
-.content-links-broadcast{
+.content-links-info {
     overflow: hidden;
     font-size: 1.1rem;
     padding: 5px;
@@ -199,6 +199,10 @@ a {
     color: $black_light;
 }
 
+.content-links-info:hover {
+    background-color: $black_light;
+    color: white;
+}
 
 
 /* 评测类型 */

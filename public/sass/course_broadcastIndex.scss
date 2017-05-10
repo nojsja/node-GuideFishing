@@ -67,7 +67,19 @@ a {
     height: 100%;
     background-color: rgba(255, 255, 255, 0.90);
 
-    @include transition();
+    @include animation(searchPop, 0.3s, ease-out, 0s, 1);
+}
+
+/* 搜索弹出层动画 */
+@keyframes searchPop {
+    0% {
+        background-color: rgb(255, 255, 255);
+        @include transform(translateY(5rem));
+    }
+    100% {
+        background-color: rgba(255, 255, 255, 0.90);
+        @include transform(translateY(0));
+    }
 }
 
 .broadcast-search-cancel {
@@ -142,29 +154,6 @@ a {
     -ms-transition: background-color 0.3s linear;
     -o-transition: background-color 0.3s linear;
     transition: background-color 0.3s linear;
-}
-
-/* 不同颜色的shadow */
-.shadow-blue {
-    -webkit-box-shadow:  0px 0px 5px #081263;
-    -moz-box-shadow:  0px 0px 5px #081263;
-    box-shadow:  0px 0px 5px #081263;
-}
-.shadow-pink {
-    -webkit-box-shadow:  0px 0px 5px pink;
-    -moz-box-shadow:  0px 0px 5px pink;
-    box-shadow:  0px 0px 5px pink;
-}
-.shadow-grey {
-    -webkit-box-shadow:  0px 0px 5px grey;
-    -moz-box-shadow:  0px 0px 5px grey;
-    box-shadow:  0px 0px 5px grey;
-}
-
-.shadow-green {
-    -webkit-box-shadow:  0px 0px 5px #148036;
-    -moz-box-shadow:  0px 0px 5px #148036;
-    box-shadow:  0px 0px 5px #148036;
 }
 
 /* 评测条目 */
