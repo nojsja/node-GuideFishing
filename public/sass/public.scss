@@ -111,7 +111,7 @@ $blueGrey: #668b96;
 
 
 // 自旋转动画
-@mixin rotateAnimation($time: 4s, $status: infinite){
+@mixin rotateAnimation($time: 4s, $status: infinite, $deg: 360deg){
     -webkit-animation: rotate $time $status linear;
     -o-animation: rotate $time $status linear;
     animation: rotate $time $status linear;
@@ -125,11 +125,11 @@ $blueGrey: #668b96;
             transform: translateY(0deg);
         }
         100% {
-            -webkit-transform: rotateY(360deg);
-            -moz-transform: rotateY(360deg);
-            -ms-transform: rotateY(360deg);
-            -o-transform: rotateY(360deg);
-            transform: rotateY(360deg);
+            -webkit-transform: rotateY($deg);
+            -moz-transform: rotateY($deg);
+            -ms-transform: rotateY($deg);
+            -o-transform: rotateY($deg);
+            transform: rotateY($deg);
         }
     }
 }

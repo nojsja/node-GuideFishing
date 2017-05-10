@@ -95,8 +95,9 @@ a {
   position: fixed;
   right: 0;
   top: 0;
-  width: 0;
+  width: 75%;
   border-left: solid 1px black;
+  margin-right: -75%;
   height: 100%;
   z-index: 1000;
   -webkit-transition: all 0.2s linear;
@@ -122,6 +123,23 @@ a {
   -o-transform: translateY(-1rem);
   transform: translateY(-1rem); }
 
+.nav-trigger-rotate {
+  -webkit-animation: rotate 1s 1 linear;
+  -o-animation: rotate 1s 1 linear;
+  animation: rotate 1s 1 linear; }
+@keyframes rotate {
+  0% {
+    -webkit-transform: translateY(0deg);
+    -moz-transform: translateY(0deg);
+    -ms-transform: translateY(0deg);
+    -o-transform: translateY(0deg);
+    transform: translateY(0deg); }
+  100% {
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -ms-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg);
+    transform: rotateY(180deg); } }
 .nav-content-div {
   overflow: hidden; }
 
@@ -129,6 +147,9 @@ a {
   background-color: #3b3d3b;
   box-sizing: border-box;
   color: white; }
+
+.nav-content-info > div:last-child {
+  border: 0; }
 
 .content-info-nickName {
   overflow: hidden;
@@ -142,9 +163,10 @@ a {
 .content-info-password,
 .content-info-admin {
   overflow: hidden;
-  border-bottom: solid 1px white;
-  padding: 5px;
-  margin-left: 0; }
+  border-bottom: dotted 1px black;
+  width: 90%;
+  margin: auto;
+  padding: 5px; }
 
 .nav-content-links {
   margin-top: 1rem;

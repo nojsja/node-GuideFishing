@@ -12,12 +12,13 @@ html {
 }
 
 a {
-    color: #497ae4;
+    color: $black_light;
 }
 
 #total {
-    margin-bottom: 1rem;
     min-height: 20rem;
+    border-top: solid 1px #838383;
+    margin: 1rem 0 1rem;
 }
 
 #upAndDown {
@@ -40,63 +41,75 @@ a {
     margin-top: 1rem;
 }
 
-.broadcast-search-text {
+.broadcast-search-trigger {
+    display: inline-block;
+    width: 3rem;
+    text-align: center;
     font-size: 1rem;
+    color: black;
+    border-radius: 10px;
+    border: solid 1px black;
+}
+.broadcast-search-trigger:hover,
+.broadcast-search-trigger:active {
+    background-color: black;
+    color: white;
+}
+
+/* 搜索弹出层 */
+.broadcast-search-wrapper {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.90);
+
+    @include transition();
+}
+
+.broadcast-search-cancel {
     display: inline-block;
     vertical-align: top;
-    width: 1rem;
-    height: 1.5rem;
-    border-radius: 2px 0 0 2px;
+    overflow: hidden;
+    color: black;
+    width: 15%;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 2rem;
+    height: 2rem;
+    margin-top: 1.5rem;
 }
-/* 动画 */
-.broadcast-search-animation {
-    -webkit-animation: searchInputSwitch;
-    -o-animation: searchInputSwitch;
-    animation: searchInputSwitch;
 
-    -webkit-animation-duration: 1s;
-    -moz-animation-duration: 1s;
-    -o-animation-duration: 1s;
-    animation-duration: 1s;
-
-    -webkit-animation-fill-mode: forwards;
-    -moz-animation-fill-mode: forwards;
-    -o-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
-
-    -webkit-animation-timing-function: ease-in-out;
-    -moz-animation-timing-function: ease-in-out;
-    -o-animation-timing-function: ease-in-out;
-    animation-timing-function: ease-in-out;
+.broadcast-search-text {
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    display: inline-block;
+    width: 70%;
+    font-size: 1rem;
+    height: 2rem;
 }
 
 .broadcast-search-button {
     display: inline-block;
+    width: 15%;
     vertical-align: top;
-    background-color: #00a800;
     overflow: hidden;
-    color: white;
-    font-size: 0.8rem;
+    color: black;
+    text-align: center;
+    font-size: 1rem;
+    height: 2rem;
     border-radius: 2px;
-    line-height: 1.5rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    line-height: 2rem;
+    margin-top: 1.5rem;
 
     border-radius: 0 2px 2px 0;
 }
 
-@keyframes searchInputSwitch {
-    0% {
-        width: 1rem;
-    }
+.broadcast-search-wrapper > i {
 
-    100% {
-        width: 10rem;
-    }
-}
-
-.broadcast-search-button:hover {
-    background-color: #008e00;
 }
 
 .jump > span {
@@ -158,15 +171,18 @@ a {
 .content-item {
     position: relative;
     padding: 0.5rem;
-    background-color: #e8ece9;
-    margin-top: 1rem;
-    border: solid 2px #ffffff;
+    background-color: white;
+    margin-top: 2rem;
+    color: black;
+    border: solid 1px black;
     margin-bottom: 1rem;
     font-size: 0;
+
+    @include boxShadowRoundSide(2px, #444444);
 }
 
 .teacher {
-    color: #577380;
+    color: #4b4b4b;
     padding: 2px;
 }
 
@@ -205,14 +221,12 @@ a {
     width: 3.5rem;
     height: 3.5rem;
     margin: 5px auto 0;
-    border: solid 2px #979797;
 }
 
 .type-text {
     text-align: center;
     font-size: 1rem;
-    text-shadow: 2px 2px 2px #395980;
-    color: #f3f3f3;
+    color: black;
 }
 
 .content-item:hover {
@@ -220,7 +234,7 @@ a {
     -moz-box-shadow:  0px 0px 0px #ffffff;
     box-shadow:  0px 0px 0px #ffffff;
 
-    border: solid 2px #c8cbc8;
+    border: solid 2px black;
     box-sizing: border-box;
 
     -webkit-transition: border 0.4s;
@@ -233,7 +247,7 @@ a {
 /* 评测标题 */
 .content-item-title {
     font-size: 1.1rem;
-    border-bottom: solid 1px #bcbfbc;
+    border-bottom: solid 1px #4b4b4b;
     word-spacing: 1px;
     letter-spacing: 2px;
 }
@@ -249,7 +263,7 @@ a {
 
 /* 评测时间 */
 .content-item-date {
-    color: #808080;
+    color: #4b4b4b;
     margin-bottom: 0;
 }
 

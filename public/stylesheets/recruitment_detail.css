@@ -1,7 +1,7 @@
 @charset "UTF-8";
 body {
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color: #eaeaea; }
+  background-color: #f1f1f1; }
 
 html {
   font-size: 16px; }
@@ -16,9 +16,7 @@ a:hover {
 .total {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
-  -webkit-box-shadow: 0 0 10px #676767;
-  -moz-box-shadow: 0 0 10px #676767;
-  box-shadow: 0 0 10px #676767; }
+  border: solid 1px #5c5c5c; }
 
 /* 公司简介 */
 .company {
@@ -30,7 +28,6 @@ a:hover {
   padding: 4px;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  border: solid 1px #737373;
   color: #737373; }
 
 /* 获取所有在招职位 */
@@ -70,12 +67,14 @@ a:hover {
   background-color: #eaeaea;
   border-radius: 10px;
   padding: 5px;
-  -webkit-box-shadow: 0 0 10px #d1dbee;
-  -moz-box-shadow: 0 0 10px #d1dbee;
-  box-shadow: 0 0 10px #d1dbee; }
+  -webkit-box-shadow: 0 0 2px #d1dbee;
+  -moz-box-shadow: 0 0 2px #d1dbee;
+  box-shadow: 0 0 2px #d1dbee; }
 
 .introduction-position {
-  color: #e57a4a;
+  background-color: #e57a4a;
+  color: white;
+  padding: 3px;
   margin-top: 1rem;
   font-weight: bold; }
 
@@ -95,9 +94,12 @@ a:hover {
   width: 100%;
   height: auto;
   margin: 0 auto;
-  -webkit-box-shadow: 0 0 5px #207fbb;
-  -moz-box-shadow: 0 0 5px #207fbb;
-  box-shadow: 0 0 5px #207fbb; }
+  -webkit-box-shadow: 0 0 2px black;
+  -moz-box-shadow: 0 0 2px black;
+  box-shadow: 0 0 2px black; }
+
+#recruitmentList {
+  background-color: white; }
 
 /* 职位介绍 */
 .recruitment-item {

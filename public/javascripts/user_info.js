@@ -110,8 +110,8 @@ infoAction.updateInfo = function (JSONdata) {
                 purchasedArray[index].itemName].join('') );
 
         $purchasedItem
-            .append($purchasedItemTitle)
-            .append($purchasedItemType);
+            .append($purchasedItemTitle);
+            // .append($purchasedItemType);
 
         $purchasedItemList.append($purchasedItem);
     }

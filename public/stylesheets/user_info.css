@@ -1,7 +1,7 @@
 @charset "UTF-8";
 body {
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color: #f8ffff; }
+  background-color: #2f2f2f; }
 
 html {
   font-size: 16px; }
@@ -12,15 +12,7 @@ header {
 
 /* 注销 */
 .signout {
-  position: fixed;
-  top: 3rem;
-  text-align: center;
-  right: 0;
-  padding: 2px;
-  width: 4rem;
-  background-color: rgba(245, 128, 48, 0.6);
-  border: solid 1px white;
-  color: white; }
+  background-color: rgba(245, 128, 48, 0.6); }
 
 .signout:hover {
   background-color: rgba(245, 128, 48, 0.9);
@@ -35,26 +27,17 @@ header {
   height: auto; }
 
 .header-tab {
-  /*position: relative;*/
-  /*top: -1rem;*/
   font-size: 0;
   width: 90%;
-  margin: auto;
   border: solid 1px white;
   border-radius: 2px;
-  background-color: rgba(87, 115, 128, 0.86);
-  -webkit-transform: translateY(-1rem);
-  -moz-transform: translateY(-1rem);
-  -ms-transform: translateY(-1rem);
-  -o-transform: translateY(-1rem);
-  transform: translateY(-1rem);
+  background-color: #555855;
+  margin: 1rem auto 0;
   -webkit-box-shadow: 0 0 5px #577380;
   -moz-box-shadow: 0 0 5px #577380;
   box-shadow: 0 0 5px #577380; }
 
 .tab-title {
-  border-left: solid 1px #98ccdf;
-  border-right: solid 1px #98ccdf;
   font-size: 1rem;
   color: white;
   display: inline-block;
@@ -65,11 +48,9 @@ header {
   text-align: center; }
 
 .tab-click {
-  border-left: solid 1px #98ccdf;
-  border-right: solid 1px #98ccdf;
-  background-color: #98ccdf;
+  background-color: white;
   font-size: 1rem;
-  color: white;
+  color: #2f2f2f;
   display: inline-block;
   min-width: 4rem;
   width: auto;
@@ -84,13 +65,20 @@ header {
 
 /* 个人资料 */
 .tab-content-info {
-  background-color: rgba(152, 204, 223, 0.86);
   min-height: 10rem;
   padding: 5px; }
 
 .info-item {
   padding: 5px;
-  border-bottom: solid 1px white;
+  background-color: #454845;
+  -webkit-box-shadow: 0 0 5px black;
+  -moz-box-shadow: 0 0 5px black;
+  box-shadow: 0 0 5px black; }
+
+.info-item:nth-last-child(2n) {
+  border-bottom: solid 1px #2f2f2f; }
+
+.info-item:nth-child(2n+1) {
   margin-top: 0.5rem; }
 
 .info-item:last-child {
@@ -102,7 +90,7 @@ header {
   color: #e2e2e2;
   padding: 2px;
   border-radius: 5px;
-  background-color: #588ac6; }
+  border: solid 1px #2f2f2f; }
 
 .info-item-content {
   margin-left: 5px;
@@ -112,7 +100,6 @@ header {
 
 /* 已购项目 */
 .tab-content-purchased {
-  background-color: rgba(224, 224, 224, 0.86);
   min-height: 10rem;
   display: none; }
 
@@ -123,12 +110,12 @@ header {
   display: block; }
 
 .purchased-item-list {
-  border: solid 1px white; }
+  color: white; }
 
 .purchased-item {
   font-size: 0;
   padding: 5px;
-  border-bottom: solid 1px white; }
+  border-bottom: solid 1px #565656; }
 
 .purchased-item:last-child {
   border: 0; }

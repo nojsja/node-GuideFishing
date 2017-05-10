@@ -19,18 +19,16 @@
 <%- include GuideFishing_header.ejs%>
 <header>
     <!--背景图片-->
-    <div class="header-img">
-        <img src="/images/selfInfo/flower_mini.jpg">
-    </div>
+    <!--<div class="header-img">-->
+        <!--<img src="/images/selfInfo/flower_mini.jpg">-->
+    <!--</div>-->
     <!--注销账户-->
-    <div class="signout">
-        <span>注销</span>
-    </div>
     <!--tab切换-->
     <div class="header-tab">
         <!--包含个人资料和已购项目-->
         <div class="tab-title tab-click" id="tabMain" target="selfInfoDiv">资料</div>
         <div class="tab-title" id="tabPurchased" target="purchasedItemDiv">已购</div>
+        <div class="tab-title signout" id="signOut">注销</div>
     </div>
 </header>
 
@@ -63,8 +61,6 @@
     </div>
 </div>
 
-<!--页脚和模态弹窗-->
-<%- include footer.ejs %>
 <%- include modalWindow.ejs %>
 <%- include hoverButton.ejs %>
 </body>

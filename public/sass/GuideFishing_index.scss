@@ -121,8 +121,9 @@ a {
     position: fixed;
     right: 0;
     top: 0;
-    width: 0;
+    width: 75%;
     border-left: solid 1px black;
+    margin-right: -75%;
     height: 100%;
     z-index: 1000;
     @include transition(all, 0.2s);
@@ -143,6 +144,10 @@ a {
     @include transform(translateY(-1rem));
 }
 
+.nav-trigger-rotate {
+    @include rotateAnimation(1s, 1, 180deg);
+}
+
 .nav-content-div {
     overflow: hidden;
 }
@@ -152,6 +157,10 @@ a {
     box-sizing: border-box;
     color: white;
 }
+.nav-content-info > div:last-child {
+    border: 0;
+}
+
 .content-info-nickName {
     overflow: hidden;
     padding: 5px;
@@ -165,9 +174,10 @@ a {
 .content-info-password,
 .content-info-admin {
     overflow: hidden;
-    border-bottom: solid 1px white;
+    border-bottom: dotted 1px black;
+    width: 90%;
+    margin: auto;
     padding: 5px;
-    margin-left: 0;
 }
 
 .nav-content-links {

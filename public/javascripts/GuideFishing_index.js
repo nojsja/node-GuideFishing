@@ -199,14 +199,12 @@ GuideFishing.pageEventBind = function () {
 
         var sideNavContainer = GuideFishing.sideNav.sideNavContainer;
         sideNavContainer.listen(function () {
-            $(this).css('width', '75%');
-            $('.nav-content-div').css('display', 'block');
+            $(this).css('margin-right', '0%');
             $('.nav-trigger > i').prop('class', 'icon-arrow-right')
             GuideFishing.sideNav.isActive = !GuideFishing.sideNav.isActive;
         }, 'show');
         sideNavContainer.listen(function () {
-            $('.nav-content-div').css('display', 'none');
-            $(this).css('width', '0');
+            $(this).css('margin-right', '-75%');
             $('.nav-trigger > i').prop('class', 'icon-arrow-left')
             GuideFishing.sideNav.isActive = !GuideFishing.sideNav.isActive;
         }, 'hidden');
