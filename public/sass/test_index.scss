@@ -11,7 +11,7 @@ html {
 }
 
 a {
-    color: $blue_dark ;
+    color: $black;
     text-decoration: none;
 }
 a:hover {
@@ -35,22 +35,112 @@ a:hover {
     width: 100%;
     height: auto;
     font-size: 0;
-    background-color: rgba(88, 138, 198, 0.86);
-    border-bottom: solid 1px #74c2b9;
+    color: $black;
+    background-color: rgba(255, 255, 255, 0.90);
+    border-bottom: solid 1px $black;
 }
 
 .return-home {
     position: absolute;
     right: 1rem;
     line-height: 2.5rem;
-    color: #ffffff;
+    color: $black_light;
     font-size: 1.5rem;
 }
 
 /* 测评类型选择 */
-#testTypeChoose{
+#testTypeChoose2,
+#testTypeChoose {
     font-size: 1.3rem;
-    color: white;
+    color: $black;
+}
+
+/* 铺满全屏的评测类型列表 */
+.all-test-type {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(243, 243, 243, 0.95);
+    @include animation(testTypeShow, 0.3s, ease-out, 0s, 1);
+}
+@keyframes testTypeShow {
+    0% {
+        @include transform(translateY(-100%));
+    }
+    100% {
+        @include transform(translateY(0));
+    }
+}
+
+.test-type-item {
+    width: 33.3%;
+    display: inline-block;
+    height: auto;
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 0.5rem;
+}
+.test-type > img {
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    margin: auto;
+    display: block;
+}
+.test-type-text {
+    color: $black;
+    font-size: 1rem;
+}
+
+.test-type {
+    padding: 1rem 0 1rem;
+    color: $black;
+    background-color: white;
+    -webkit-box-shadow:  0 2px 2px $grey_dark;
+    -moz-box-shadow:  0 2px 2px $grey_dark;
+    box-shadow:  0 2px 2px $grey_dark;
+}
+.test-type:hover,
+.test-type:active {
+    @include boxShadowRound(0, black);
+}
+
+/* 隐藏 */
+.test-type-hidden {
+    position: fixed;
+    width:100%;
+    bottom: 0;
+    background-color: white;
+    padding: 5px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-bottom: solid 1px $black;
+}
+
+/* 评测类型 */
+.type-item {
+    float: left;
+    display: none;
+    text-align: center;
+    font-size: 1rem;
+    color: $black;
+    border: solid 1px $black;
+    border-radius: 5px;
+    padding: 5px;
+    width: 25%;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+.type-item:hover {
+    background-color: #426dee;
+    font-weight: bold;
+    @include transition(background-color, 0.3s)
 }
 
 .header-label > span {
@@ -109,7 +199,7 @@ a:hover {
 
 /* 具体的一个热门题目 */
 .hot-item {
-    color: #648491;
+    color: $black;
     margin-bottom: 0.5rem;
     letter-spacing: 1px;
     word-spacing: 1px;
@@ -119,29 +209,13 @@ a:hover {
     text-decoration: underline;
 }
 
-/* 评测类型 */
-.type-item {
-    float: left;
-    display: none;
-    text-align: center;
-    font-size: 1rem;
-    color: #ffffff;
-    border: solid 1px #ffffff;
-    border-radius: 5px;
-    padding: 5px;
-    width: 25%;
-    box-sizing: border-box;
-    background-color: #8bcaed;
-}
-
-.type-item:hover {
-    background-color: #426dee;
-    font-weight: bold;
-    -webkit-transition: background-color 0.3s linear;
-    -moz-transition: background-color 0.3s linear;
-    -ms-transition: background-color 0.3s linear;
-    -o-transition: background-color 0.3s linear;
-    transition: background-color 0.3s linear;
+.total-title {
+    margin: 1rem auto 0.5rem;
+    padding-left: 1rem;
+    font-size: 1.2rem;
+    background-color: white;
+    color: $black;
+    @include boxShadowRound(3px, $black_light);
 }
 
 /* 主体部分 */
@@ -153,10 +227,16 @@ a:hover {
 .content-item {
     position: relative;
     padding: 0.6rem;
-    margin-top: 1rem;
+    padding-bottom: 0;
+    margin-top: 0.5rem;
     background-color: #ffffff;
-    margin-bottom: 1.5rem;
     font-size: 0;
+    border-left: solid 2px $blue;
+}
+.content-item:hover {
+    -webkit-box-shadow: inset 0 0 1px black;
+    -moz-box-shadow: inset 0 0 5px black;
+    box-shadow: inset 0 0 2px black;
 }
 
 /* 图钉 */
@@ -178,7 +258,7 @@ a:hover {
     width: 70%;
     padding: 5px;
     overflow: hidden;
-    background-color: #fff0db;
+    background-color: white;
 }
 
 .content-item-right {
@@ -188,7 +268,7 @@ a:hover {
     width: 30%;
     vertical-align: top;
     border-left: solid 4px white;
-    background-color: #e1e5e2;
+    background-color: white;
 }
 
 /* 类型信息 */
@@ -197,27 +277,22 @@ a:hover {
     width: 3.5rem;
     height: 3.5rem;
     margin: 5px auto 0;
-    border-radius: 50%;
+    border-radius: 10px;
 }
 
 .type-text {
     text-align: center;
     font-size: 1rem;
-    text-shadow: 2px 2px 2px #395980;
-    color: white;
-}
-
-.content-item:hover {
-    -webkit-box-shadow: inset 0 0 1px black;
-    -moz-box-shadow: inset 0 0 5px black;
-    box-shadow: inset 0 0 2px black;
+    color: $black_light;
+    text-shadow: 0px 0px 1px #000;
 }
 
 /* 评测标题 */
 .content-item-title {
-    font-size: 1rem;
+    font-size: 1.1rem;
     word-spacing: 1px;
     letter-spacing: 2px;
+    border-bottom: solid 1px $grey;
     text-decoration: none;
 }
 .content-item-title:hover {
@@ -235,13 +310,16 @@ a:hover {
 
 /* 评测时间 */
 .content-item-date {
+    border-top: solid 2px $grey;
     margin-top: 5px;
     color: white;
+    padding: 1px;
+    text-align: center;
     margin-bottom: 0;
-    color: $grey_dark_light;
+    color: $grey_dark;
 }
 
-.content-item-date > span {
+.content-item-date > i {
     font-size: 1rem;
 }
 
@@ -249,5 +327,5 @@ a:hover {
 .loading-info {
     text-align: center;
     color: $grey_dark;
-    margin-bottom: 1rem;
+    margin: 1rem auto 1rem;
 }
