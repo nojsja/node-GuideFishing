@@ -25,19 +25,34 @@
 <div>
 
     <fieldset class="fieldset-selfinfo">
-        <legend>个人资料</legend>
+        <legend>
+            <span>个人资料</span>
+            <i class="icon-flag"></i>
+        </legend>
         <!--个人信息-->
         <div class="selfinfo-wrapper">
             <!--昵称-->
-            <div class="selfinfo-title">账户昵称</div>
+            <div class="selfinfo-title">
+                <i class="icon-user"></i>
+                <span>账户昵称</span>
+            </div>
             <div class="selfinfo-detail"><%= nickName %></div>
-            <div class="selfinfo-title">账户邮箱</div>
+            <div class="selfinfo-title">
+                <i class="icon-envelope-alt"></i>
+                <span>账户邮箱</span>
+            </div>
             <!--账户-->
             <div class="selfinfo-detail"><%= account %></div>
-            <div class="selfinfo-title">账户级别</div>
+            <div class="selfinfo-title">
+                <i class="icon-key"></i>
+                <span>账户级别</span>
+            </div>
             <!--级别-->
             <div class="selfinfo-detail"><%= rank %></div>
-            <div class="selfinfo-title">审查类型</div>
+            <div class="selfinfo-title">
+                <i class="icon-pencil"></i>
+                <span>审查类型</span>
+            </div>
             <!--审查类型-->
             <div class="selfinfo-detail"><%= examineType %></div>
         </div>
@@ -48,14 +63,17 @@
     <% if (rank == 0) { %>
 
     <fieldset class="fieldset-selfinfo" id="permissionFieldset">
-        <legend>权限管理</legend>
+        <legend>
+            <span>权限管理</span>
+            <i class="icon-flag"></i>
+        </legend>
         <!--权限管理-->
         <div class="manage-wrapper">
             <!--搜索-->
             <div class="manage-search">
                 <input type="text" id="accountText" placeholder="输入账户名...">
-                <input type="button" class="btn btn-success btn-sm" value="账户搜索" id="searchAccount" target="accountText">
-                <input type="button" class="btn btn-default btn-sm" value="账户新建" id="addAdmin">
+                <input type="button" class="btn btn-default btn-sm" value="搜索" id="searchAccount" target="accountText">
+                <input type="button" class="btn btn-default btn-sm" value="新建" id="addAdmin">
             </div>
 
             <!--temp-->
@@ -103,15 +121,18 @@
                     </div>-->
                 </div>
                 <div class="manage-search-div">
-                    <input type="button" class="btn btn-default btn-sm" value="清除条件" id="searchCondtionClear">
-                    <input type="button" class="btn btn-default btn-sm" value="筛选查找" id="searchCondtion">
+                    <input type="button" class="btn btn-success btn-sm" value="重置" id="searchCondtionClear">
+                    <input type="button" class="btn btn-success btn-sm" value="筛选" id="searchCondtion">
                 </div>
 
             </div>
 
             <!--查询结果-->
             <div class="manage-result">
-                <div class="mark-title">筛选结果</div>
+                <div class="mark-title">
+                    <i class="icon-search"></i>
+                    <span>所有账户</span>
+                </div>
                 <table class="" id="adminTable">
                     <tr class="admin-table-head">
                         <th>账户名</th>
@@ -145,11 +166,14 @@
     <% if(rank !== 0) { %>
     <!--内容审核-->
     <fieldset class="fieldset-selfinfo" id="examineFieldset">
-        <legend>内容审核</legend>
+        <legend>
+            <span>内容审核</span>
+            <i class="icon-flag"></i>
+        </legend>
 
         <div class="examine-wrapper">
 
-            <div class="mark-title">审核内容</div>
+            <div class="mark-title">待审核内容</div>
             <!--待审核内容-->
             <div class="examine-content-list">
 
@@ -160,7 +184,7 @@
 
             </div>
 
-            <div class="mark-title">审核进度</div>
+            <div class="mark-title">已提交审核</div>
             <!--已提交审核审查进度-->
             <div class="examine-progress-list">
 

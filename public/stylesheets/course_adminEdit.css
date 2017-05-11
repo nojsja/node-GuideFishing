@@ -1,7 +1,8 @@
 @charset "UTF-8";
 /* 课程编辑页面 */
 body {
-  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif; }
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #f1f1f1 !important; }
 
 html {
   font-size: 16px; }
@@ -18,11 +19,9 @@ a {
   min-height: 400px;
   max-height: 800px;
   overflow-y: auto;
+  border-radius: 5px;
   height: auto;
-  color: #FFFFFF;
-  -webkit-box-shadow: 0 0 10px #1c6897;
-  -moz-box-shadow: 0 0 10px #1c6897;
-  box-shadow: 0 0 10px #1c6897; }
+  border: solid 1px #3b3d3b; }
 
 #uploadImgProgress,
 #uploadVideoProgress,
@@ -39,24 +38,22 @@ a {
 /* 标题 */
 .upload-title {
   margin: 1rem;
-  color: white;
   font-weight: bold;
-  font-size: 1.5rem;
-  text-shadow: 3px 3px 3px #000000; }
+  font-size: 1.5rem; }
 
 /* 上传编辑区域 */
 .self-container-upload {
   top: 8rem;
   left: 3rem;
   z-index: 1000;
-  background-color: rgba(72, 102, 162, 0.9); }
+  background-color: rgba(255, 255, 255, 0.8); }
 
 /* 视频,图片和音频预览区域 */
 .self-container-preview {
   top: 8rem;
   right: 3rem;
   z-index: 1002;
-  background-color: rgba(209, 209, 209, 0.9); }
+  background-color: rgba(255, 255, 255, 0.9); }
 
 /* 导入课程 */
 .self-container-load {
@@ -65,13 +62,12 @@ a {
   min-height: 200px;
   height: auto;
   z-index: 1001;
-  background-color: rgba(58, 62, 128, 0.9); }
+  background-color: rgba(243, 243, 243, 0.9); }
 
 /* 预览选择 */
 .preview-type-div {
-  position: absolute;
-  bottom: 1rem;
-  left: 0; }
+  position: fixed;
+  margin-left: 0; }
 
 /* 选项以及它的交互效果 */
 .preview-type {
@@ -79,14 +75,14 @@ a {
   width: 5rem;
   margin-top: 5px;
   margin-bottom: 5px;
-  border: solid 1px white;
+  border: solid 1px #3b3d3b;
   padding: 5px;
-  background-color: rgba(71, 139, 241, 0.6);
+  background-color: rgba(255, 255, 255, 0.85);
   z-index: 100; }
 
 .preview-type:hover {
-  background-color: rgba(255, 255, 255, 0.61);
-  color: #3f4b81;
+  background-color: rgba(36, 36, 36, 0.85);
+  color: white;
   -webkit-transition: all 0.3s;
   -moz-transition: all 0.3s;
   -ms-transition: all 0.3s;
@@ -95,28 +91,25 @@ a {
 
 /* 点击后 */
 .preview-type_click {
-  background-color: rgba(255, 255, 255, 0.61);
-  color: #3f4b81; }
+  background-color: #3b3d3b;
+  color: white; }
 
 /* 预览数据列表 */
 /* 预览图片 */
 .list-item-image {
   text-align: center;
-  padding: 5px;
   float: left;
   width: 50%;
+  overflow: hidden;
   height: 200px;
-  border: solid 1px white;
+  border: solid 2px #3b3d3b;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  -webkit-box-shadow: inset 0 0 10px #1c6897;
-  -moz-box-shadow: inset 0 0 10px  #1c6897;
-  box-shadow: inset 0 0 10px  #1c6897; }
+  box-sizing: border-box; }
 
 /* 点击效果 */
 .list-item-image_click {
-  background-color: #b87434; }
+  background-color: rgba(76, 116, 238, 0.92); }
 
 .list-item-image > img {
   height: auto;
@@ -180,16 +173,21 @@ a {
 .self-trigger {
   border-radius: 50%;
   text-align: center;
-  background-color: #1c6897;
+  background-color: #3b3d3b;
   color: #FFFFFF;
   font-size: 2rem;
   line-height: 3rem;
   position: fixed;
   width: 3rem;
-  height: 3rem; }
+  height: 3rem;
+  -webkit-transition: all 0.3s linear;
+  -moz-transition: all 0.3s linear;
+  -ms-transition: all 0.3s linear;
+  -o-transition: all 0.3s linear;
+  transition: all 0.3s linear; }
 
 .self-trigger:hover {
-  color: #1c6897;
+  color: #3b3d3b;
   background-color: #FFFFFF; }
 
 /* 上传区域触发 */
@@ -213,18 +211,15 @@ a {
   margin-top: .5rem;
   margin-bottom: 1rem;
   font-family: 黑体;
-  font-weight: bold;
   font-size: 2.5rem;
-  text-shadow: 3px 3px 3px #737373;
-  color: #ffffff; }
+  color: #3b3d3b; }
 
 .type {
   margin-bottom: 1em; }
 
 #total {
-  background-color: #F3F3F3;
+  background-color: white;
   border-radius: 5px;
-  border: solid 1px #577280;
   margin-bottom: 2rem;
   margin-top: 2rem;
   padding: 1.3rem; }
@@ -239,13 +234,13 @@ a {
   margin-bottom: 1.5rem;
   margin-top: 2rem;
   font-size: 2rem;
-  background-color: #2488c3;
-  color: #c5eedd;
+  border: solid 1px #3b3d3b;
+  background-color: #eaeaea;
+  color: #535353;
   text-align: center;
-  border: solid 1px white;
-  -webkit-box-shadow: 5px 5px 0 #8287a7;
-  -moz-box-shadow: 5px 5px 0 #8287a7;
-  box-shadow: 5px 5px 0 #8287a7; }
+  -webkit-box-shadow: 0 3px 3px #3b3d3b;
+  -moz-box-shadow: 0 3px 3px #3b3d3b;
+  box-shadow: 0 3px 3px #3b3d3b; }
 
 /* 组件阴影 */
 .shadow {
@@ -268,7 +263,7 @@ a {
   font-size: 0;
   margin-top: 5px;
   height: 4.5rem;
-  background-color: #dadada; }
+  background-color: #eaeaea; }
 
 .tag-list-item {
   font-size: 1.5rem;
@@ -300,19 +295,21 @@ a {
   box-sizing: border-box;
   padding: 0.5rem;
   font-family: 华文中宋;
-  color: #1c6897;
-  border: solid 1px #1c6897;
+  color: #2f2f2f;
+  border: solid 1px #2f2f2f;
   border-radius: 10px;
   text-align: center;
-  box-shadow: 0px 0px 10px #ffffff inset;
-  -moz-box-shadow: 0px 0px 10px #ffffff inset;
-  -o-box-shadow: 0px 0px 10px #ffffff inset;
-  -webkit-box-shadow: 0px 0px 10px #ffffff inset; }
+  -webkit-transition: all 0.3s linear;
+  -moz-transition: all 0.3s linear;
+  -ms-transition: all 0.3s linear;
+  -o-transition: all 0.3s linear;
+  transition: all 0.3s linear; }
 
 /* 点击效果 */
 .type-item_click {
-  background-color: #547ed8;
-  color: white; }
+  -webkit-box-shadow: 0 3px 3px #2f2f2f;
+  -moz-box-shadow: 0 3px 3px #2f2f2f;
+  box-shadow: 0 3px 3px #2f2f2f; }
 
 /*消除inline-block的间隙*/
 .tag-father {
