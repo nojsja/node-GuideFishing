@@ -12,6 +12,13 @@ $(function () {
     // 页面事件绑定
     // 登录按钮绑定
     $('#login').click(AdminLogin.loginCheck);
+    $(window).on('keydown', function (event) {
+
+        // 事件代码Enter
+        if(event.which == 13){
+            AdminLogin.loginCheck();
+        }
+    })
 });
 
 
