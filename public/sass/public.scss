@@ -16,6 +16,7 @@ $blue_dark: #637db5;
 $black: #2f2f2f;
 $black_dark_light: #3b3d3b;
 $black_light: #3b3d3b;
+$grey_yellow: #efefef;
 $grey_light: #f1f1f1;
 $grey: #eaeaea;
 $grey_navy_light: #dfdfdf;
@@ -42,6 +43,20 @@ $blueGrey: #668b96;
     -webkit-box-shadow:  $value $value 0 $color;
     -moz-box-shadow:  $value $value 0 $color;
     box-shadow:  $value $value 0 $color;
+}
+
+// 向下偏移环绕阴影
+@mixin boxShadowRoundSide_bottom ($value: 5px, $color: $black_light){
+    -webkit-box-shadow:  0 $value $value $color;
+    -moz-box-shadow:  0 $value $value $color;
+    box-shadow:  0 $value $value $color;
+}
+
+// 向右偏移环绕阴影
+@mixin boxShadowRoundSide_right ($value: 5px, $color: $black_light) {
+    -webkit-box-shadow:  $value 0 $value $color;
+    -moz-box-shadow:  $value 0 $value $color;
+    box-shadow:  $value 0 $value $color;
 }
 
 // 环绕偏移阴影

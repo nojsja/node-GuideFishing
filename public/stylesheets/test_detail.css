@@ -19,16 +19,20 @@ a {
   min-height: 1.5rem;
   height: auto;
   font-size: 0;
-  background-color: #588ac6;
-  border-bottom: solid 1px white; }
+  background-color: white;
+  color: #2f2f2f;
+  border-bottom: solid 1px #2f2f2f;
+  border-top: solid 1px #2f2f2f;
+  -webkit-box-shadow: 0 0 5px white;
+  -moz-box-shadow: 0 0 5px white;
+  box-shadow: 0 0 5px white; }
 
 .header-label {
   position: relative;
   width: 100%;
   text-align: center;
   font-size: 1.5rem;
-  color: white;
-  text-shadow: 0px 0px 10px #456d9c;
+  color: #2f2f2f;
   line-height: 1.5rem; }
 
 .header-label span {
@@ -37,7 +41,7 @@ a {
 .return-home {
   position: absolute;
   right: 1rem;
-  color: #8bcaed;
+  color: #3b3d3b;
   font-size: 1.5rem; }
 
 /* 评测介绍主体部分 */
@@ -102,18 +106,21 @@ a {
   height: auto;
   min-height: 10rem;
   margin: 0.5rem auto 2rem;
-  background: #3b3d3b; }
+  background: #3b3d3b;
+  border: solid 1px white;
+  -webkit-box-shadow: 0 4px 4px #3b3d3b;
+  -moz-box-shadow: 0 4px 4px #3b3d3b;
+  box-shadow: 0 4px 4px #3b3d3b; }
 
 .detail-body-abstract {
   padding: 0.5rem; }
 
 .abstract {
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   word-spacing: 1px;
   letter-spacing: 1px;
   min-height: 8rem;
-  font-weight: bold;
   color: #f0f0f0; }
 
 /* 开始按钮 */

@@ -360,7 +360,7 @@ GuideFishing.updatePage = function (JSONdata) {
 
             //显示的日期
             var $date = $('<p class="content-item-date">');
-            var $dateIcon = $('<span class="glyphicon glyphicon-time">');
+            var $dateIcon = $('<i class="icon-time">');
             $date.append($dateIcon.text(course.date));
 
             //组合所有DOM
@@ -586,7 +586,7 @@ GuideFishing.updateBroadcastPage = function (JSONdata) {
 
             //显示的日期
             var $date = $('<p class="content-item-date">');
-            var $dateIcon = $('<span class="glyphicon glyphicon-time">');
+            var $dateIcon = $('<i class="icon-time">');
             $date.append($dateIcon.text(broadcast.date));
 
             //组合所有DOM

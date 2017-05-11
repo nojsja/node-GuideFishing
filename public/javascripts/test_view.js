@@ -326,7 +326,7 @@ TestViewAction.getRecommendation = function () {
 
                 var $recommendationItem = $('<div class="recommendation-item">');
                 var $indexSpan = $('<span>');
-                $indexSpan.text(index++);
+                $indexSpan.text(index++ + '.');
 
                 var $itemTitle = $('<a class="recommendation-item-title">');
                 $itemTitle.prop('href', ['/course/detail/', tagContent.contentType, '/', tagContent.contentName].join(''));

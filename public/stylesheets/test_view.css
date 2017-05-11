@@ -19,16 +19,20 @@ a {
   min-height: 1.5rem;
   height: auto;
   font-size: 0;
-  background-color: #588ac6;
-  border-bottom: solid 1px white; }
+  background-color: white;
+  color: #2f2f2f;
+  border-bottom: solid 1px #2f2f2f;
+  border-top: solid 1px #2f2f2f;
+  -webkit-box-shadow: 0 0 5px white;
+  -moz-box-shadow: 0 0 5px white;
+  box-shadow: 0 0 5px white; }
 
 .header-label {
   position: relative;
   width: 100%;
   text-align: center;
   font-size: 1.5rem;
-  color: white;
-  text-shadow: 0px 0px 10px #456d9c;
+  color: #2f2f2f;
   line-height: 1.5rem; }
 
 .header-label span {
@@ -37,7 +41,7 @@ a {
 .return-home {
   position: absolute;
   right: 1rem;
-  color: white;
+  color: #3b3d3b;
   font-size: 1.5rem; }
 
 /* 答题框 */
@@ -143,9 +147,9 @@ a {
 .course-recommendation-div {
   display: none;
   padding: 0.5rem;
-  border: solid 1px #dcdcdc;
-  background-color: rgba(185, 185, 185, 0.51);
-  min-height: 5rem; }
+  border: solid 1px grey;
+  min-height: 5rem;
+  background-color: #2f2f2f; }
 
 .course-recommendation-div-show {
   display: block; }
@@ -155,13 +159,13 @@ a {
   color: #dcdcdc; }
 
 .recommendation-list {
-  background-color: #e9e9e9;
+  background-color: #3b3d3b;
   padding: 0.5rem;
   margin-top: 0.5rem; }
 
 .recommendation-item {
   font-size: 0;
-  border-bottom: solid 1px white;
+  border-bottom: solid 1px black;
   margin-top: 0.5rem; }
 
 .recommendation-item > span:nth-child(1) {
@@ -183,7 +187,7 @@ a {
   border: solid 1px #dc8e3e; }
 
 .recommendation-item-title {
-  color: #56737f;
+  color: #aaaaaa;
   padding: 3px;
   margin-left: 0.5rem;
   font-size: 1rem; }
