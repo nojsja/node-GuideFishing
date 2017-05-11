@@ -1,5 +1,5 @@
 ## node-GuideFishing
->[GuideFishing(带渔apk)](www.johnson77.cn/download/apk/启航Learn.apk)  -- a project powered by nodejs and mongodb
+>[GuideFishing(带渔apk)](http://www.johnson77.cn/download/apk/启航Learn.apk)  -- a project powered by nodejs and mongodb
 
 __The project is made up of three main module:__  
 ### 1. psychological-test module(心理测评)  
