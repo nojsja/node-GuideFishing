@@ -1,4 +1,5 @@
 @charset "UTF-8";
+@import "public";
 
 body {
     /*font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;*/
@@ -35,7 +36,7 @@ a {
 
 /* 课程首部 */
 .course-head {
-    background-color: #3f51b5;
+    background-color: $black_light;
 }
 
 /* 课程名 */
@@ -48,6 +49,9 @@ a {
     background: #475bcb;
     background: -webkit-linear-gradient(to bottom, #3f51b5, #475bcb);
     background:linear-gradient(to bottom, #3f51b5, #475bcb);
+
+    background: $black_light;
+    border-bottom: solid 1px black;
 }
 
 /* 课程内容 */
@@ -94,16 +98,16 @@ a {
     display: inline-block;
     margin-left: 0.5rem;
     padding: 2px;
-    border: solid 1px #ffffff;
+    border: solid 1px $grey_dark;
     border-radius: 5px;
-    background-color: #78a1b0;
-    color: white;
+    background-color: $black;
+    color: $grey_dark;
     font-size: 0.9rem;
-    text-shadow: 1px 1px 0 #2a3083;
+    text-shadow: 1px 1px 0 black;
 }
 #teacher,#date{
     display: inline-block;
-    color: #ffffff;
+    color: $grey_dark_light;
     padding: 5px;
     font-size: 1rem;
 }
@@ -188,22 +192,23 @@ a {
     padding: 0.5rem;
     border: solid 1px grey;
     min-height: 5rem;
+    background-color: $black;
 }
 
 .recommendation-title {
     text-align: center;
-    color: #577581;
+    color: white;
 }
 
 .recommendation-list {
-    background-color: #e9e9e9;
+    background-color: $black_light;
     padding: 0.5rem;
     margin-top: 0.5rem;
 }
 
 .recommendation-item {
     font-size: 0;
-    border-bottom: solid 1px white;
+    border-bottom: solid 1px black;
     margin-top: 0.5rem;
 }
 .recommendation-item > span:nth-child(1){
@@ -227,7 +232,7 @@ a {
 }
 
 .recommendation-item-title {
-    color: #56737f;
+    color: $grey_dark_light;
     padding: 3px;
     margin-left: 0.5rem;
     font-size: 1rem;

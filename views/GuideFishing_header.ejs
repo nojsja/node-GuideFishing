@@ -5,9 +5,13 @@
         #head {
             font-size: 0;
             height: 3rem;
-            background: #7ca2b6;
-            background: -webkit-linear-gradient(to bottom, #4f6774, #7ca2b6);
-            background: linear-gradient(to bottom, #4f6774, #7ca2b6);
+            /*background: #7ca2b6;*/
+            /*background: -webkit-linear-gradient(to bottom, #4f6774, #7ca2b6);*/
+            /*background: linear-gradient(to bottom, #4f6774, #7ca2b6);*/
+            background: #323232;
+            background: -webkit-linear-gradient(to bottom, #323232, #4e4e4e);
+            background: linear-gradient(to bottom, #323232, #4e4e4e);
+
             box-sizing: border-box;
             border-bottom: solid 1px white;
         }
@@ -65,22 +69,12 @@
             text-align: center;
             color: aliceblue;
             border-bottom: solid 1px white;
-
-            -webkit-box-shadow:  3px 3px 3px #666666;
-            -moz-box-shadow:  3px 3px 3px #666666;
-            box-shadow:  3px 3px 3px #666666;
-        }
-
-        .slogan-div ul li a:active, .slogan-div ul li a:hover {
-            -webkit-box-shadow: 0px 0px 0px #666666;
-            -moz-box-shadow: 0px 0px 0px #666666;
-            box-shadow:  0px 0px 0px #666666;
         }
 
         .slogan-div ul {
             margin: 0;
             padding: 0;
-            background-color: #6e94a2;
+            background-color: #4e4e4e;
             text-align: left;
             position: relative;
             z-index: 1002;
@@ -144,7 +138,7 @@
         /* 展播文字动画 */
         @keyframes slideTextTop {
             0% {
-                color: #909090;
+                color: transparent;
                 -webkit-transform: translateY(-2rem);
                 -moz-transform: translateY(-2rem);
                 -ms-transform: translateY(-2rem);
@@ -161,13 +155,17 @@
                 color: #FFFFFF;
             }
 
+            75% {
+                color: transparent;
+            }
+
             100% {
                 -webkit-transform: translateY(-2rem);
                 -moz-transform: translateY(-2rem);
                 -ms-transform: translateY(-2rem);
                 -o-transform: translateY(-2rem);
                 transform: translateY(-2rem);
-                color: #909090
+                color: transparent;
             }
         }
         @keyframes slideTextBottom {
@@ -177,7 +175,7 @@
                 -ms-transform: translateY(2rem);
                 -o-transform: translateY(2rem);
                 transform: translateY(2rem);
-                color: #909090;
+                color: transparent;
             }
 
             50% {
@@ -189,13 +187,17 @@
                 color: #FFFFFF;
             }
 
+            75% {
+                color: transparent;
+            }
+
             100% {
                 -webkit-transform: translateY(2rem);
                 -moz-transform: translateY(2rem);
                 -ms-transform: translateY(2rem);
                 -o-transform: translateY(2rem);
                 transform: translateY(2rem);
-                color: #909090;
+                color: transparent;
             }
         }
 
@@ -206,7 +208,7 @@
 <header id="head">
     <div class="container">
         <!--公司标志-->
-        <a href="/recruitment/index">
+        <a href="https://github.com/NoJsJa">
             <div class="company-div"></div>
         </a>
         <!--口号-->

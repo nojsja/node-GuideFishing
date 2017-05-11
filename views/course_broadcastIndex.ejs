@@ -22,8 +22,14 @@
 
 <!--讨论组搜索-->
 <div class="broadcast-search-div">
-    <input type="text" id="broadcastSearchText" class="broadcast-search-text" placeholder="输入课程名搜索..">
-    <span class="broadcast-search-button" id="broadcastSearchButton">搜索</span>
+    <span class="broadcast-search-trigger">搜索</span>
+    <!--弹出层-->
+    <div class="broadcast-search-wrapper">
+        <!--返回弹出层-->
+        <span class="broadcast-search-cancel"><i class="icon-arrow-left"></i></span>
+        <input type="text" class="broadcast-search-text" placeholder="输入课程名搜索..">
+        <span class="broadcast-search-button"><i class="icon-search"></i></span>
+    </div>
 </div>
 
 <!--内容展示主要区域-->

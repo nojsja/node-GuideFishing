@@ -395,6 +395,7 @@ function course(app){
             console.log('readCourseList success.');
             res.json(JSON.stringify({
                 courseArray: courseArray,
+                courseTypeChina: EnToCn.getAllPattern("courseType"),
                 typeImgUrl: typeImgUrl
             }));
         });

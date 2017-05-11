@@ -25,8 +25,11 @@ a {
     min-height: 1.5rem;
     height: auto;
     font-size: 0;
-    background-color: #588ac6;
-    border-bottom: solid 1px white;
+    background-color: white;
+    color: $black;
+    border-bottom: solid 1px $black;
+    border-top: solid 1px $black;
+    @include boxShadowRound(5px, white);
 }
 
 .header-label {
@@ -34,8 +37,7 @@ a {
     width: 100%;
     text-align: center;
     font-size: 1.5rem;
-    color: white;
-    text-shadow: 0px 0px 10px #456d9c;
+    color: $black;
     line-height: 1.5rem;
 }
 
@@ -46,7 +48,7 @@ a {
 .return-home {
     position: absolute;
     right: 1rem;
-    color: #8bcaed;
+    color: $black_light;
     font-size: 1.5rem;
 }
 
@@ -121,8 +123,9 @@ a {
     height: auto;
     min-height: 10rem;
     margin: 0.5rem auto 2rem;
-    //background: #7aa0b4;
     background: #3b3d3b;
+    border: solid 1px white;
+    @include boxShadowRoundSide_bottom(4px, $black_light);
 }
 
 .detail-body-abstract {
@@ -131,11 +134,10 @@ a {
 
 .abstract {
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     word-spacing: 1px;
     letter-spacing: 1px;
     min-height: 8rem;
-    font-weight: bold;
     color: #f0f0f0;
 }
 

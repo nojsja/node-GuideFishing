@@ -28,20 +28,26 @@
         <i class="icon-angle-down" id="courseTypeChoose2"></i>
         <a href="/index"><span class="glyphicon glyphicon-home return-home"></span></a>
     </div>
-    <div class="type-item-list">
-        <!--评测类型-->
-        <!--<div class="type-item" id="jobFound">求职秘籍</div>
-        <div class="type-item" id="software">软件技巧</div>
-        <div class="type-item" id="jobSkill">职场技能</div>
-        <div class="type-item" id="english">英语进阶</div>
-        <div class="type-item" id="personal">个人提升</div>-->
+
+    <!--全局的评测列表-->
+    <div class="all-course-type">
+        <!--<div class="course-type-item">-->
+        <!--<div class="course-type">-->
+        <!--<img src="/images/testType/emotion.jpg">-->
+        <!--<span class="course-type-text">情感</span>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--隐藏列表-->
+        <!--<div class="course-type-hidden">-->
+            <!--<i class="icon-double-angle-up"></i>-->
+        <!--</div>-->
     </div>
 
 </header>
 <!--滑动视图-->
-<!--<div id="slideViewWrapper1">-->
-    <!--include slideView.ejs-->
-<!--</div>-->
+<div class="slide-div" id="slideDiv">
+    <%- include slideView.ejs %>
+</div>
 
 <!--热门课程列表-->
 <div class="hot-container">
@@ -55,7 +61,11 @@
 </div>
 
 <!--内容展示主要区域-->
-<div id="total" class="container">
+<div class="total-title">
+    <i class="icon-reorder"></i>
+    <span>课程</span>
+</div>
+<div id="total">
 
 </div>
 

@@ -11,7 +11,11 @@ html {
 }
 
 a {
-    color: $blue_dark;
+    color: $black;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: none;
 }
 
 /* 布局DIV */
@@ -20,14 +24,14 @@ a {
 }
 
 .slide-div {
-    margin-top: 2rem;
+    margin-top: 3.5rem;
 }
 
 .return-home {
     position: absolute;
     right: 1rem;
     line-height: 2.5rem;
-    color: #ffffff;
+    color: $black_light;
     font-size: 1.5rem;
 }
 
@@ -39,8 +43,9 @@ a {
     width: 100%;
     height: auto;
     font-size: 0;
-    background-color: rgba(88, 138, 198, 0.86);
-    border-bottom: solid 1px #74c2b9;
+    color: $black;
+    background-color: rgba(255, 255, 255, 0.90);
+    border-bottom: solid 1px $black;
 }
 
 .header:hover {
@@ -65,9 +70,77 @@ a {
 }
 
 /* 课程类型选择 */
-#courseTypeChoose{
+#courseTypeChoose,
+#courseTypeChoose2{
     font-size: 1.3rem;
-    color: white;
+    color: $black;
+}
+
+/* 铺满全屏的评测类型列表 */
+.all-course-type {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(243, 243, 243, 0.95);
+    @include animation(courseTypeShow, 0.3s, ease-out, 0s, 1);
+}
+@keyframes courseTypeShow {
+    0% {
+        @include transform(translateY(-100%));
+    }
+    100% {
+        @include transform(translateY(0));
+    }
+}
+
+.course-type-item {
+    width: 33.3%;
+    display: inline-block;
+    height: auto;
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 0.5rem;
+}
+.course-type > img {
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    margin: auto;
+    display: block;
+}
+.course-type-text {
+    color: $black;
+    font-size: 1rem;
+}
+
+.course-type {
+    padding: 1rem 0 1rem;
+    color: $black;
+    background-color: white;
+    -webkit-box-shadow:  0 2px 2px $grey_dark;
+    -moz-box-shadow:  0 2px 2px $grey_dark;
+    box-shadow:  0 2px 2px $grey_dark;
+}
+.course-type:hover,
+.course-type:active {
+    @include boxShadowRound(0, black);
+}
+
+/* 隐藏 */
+.course-type-hidden {
+    position: fixed;
+    width:100%;
+    bottom: 0;
+    background-color: white;
+    padding: 5px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-bottom: solid 1px $black;
 }
 
 .header-label > span {
@@ -88,7 +161,7 @@ a {
 }
 
 .hot-container {
-    margin-top: 3.5rem;
+    margin-top: 1rem;
 }
 
 .hot-item-list {
@@ -100,7 +173,7 @@ a {
 }
 
 .hot-item-list > li {
-    border-bottom: solid 2px #efefef;
+    border-bottom: solid 1px #efefef;
     list-style: none;
     margin-left: 5px;
     color: #79b0cf;
@@ -144,6 +217,15 @@ a {
     transition: background-color 0.3s linear;
 }
 
+.total-title {
+    margin: 1rem auto 0.5rem;
+    padding-left: 1rem;
+    font-size: 1.2rem;
+    background-color: white;
+    color: $black;
+    @include boxShadowRound(3px, $black_light);
+}
+
 /* 主体部分 */
 #total {
     margin-top: 1.5rem;
@@ -153,10 +235,11 @@ a {
 .content-item {
     position: relative;
     padding: 0.6rem;
-    margin-top: 1rem;
+    padding-bottom: 0;
+    margin-top: 0.5rem;
     background-color: #ffffff;
-    margin-bottom: 1.5rem;
     font-size: 0;
+    border-left: solid 2px $blue;
 }
 
 .content-item:hover {
@@ -184,7 +267,7 @@ a {
     width: 70%;
     padding: 5px;
     overflow: hidden;
-    background-color: #fff0db;
+    background-color: white;
 }
 
 .content-item-right {
@@ -194,7 +277,7 @@ a {
     width: 30%;
     vertical-align: top;
     border-left: solid 4px white;
-    background-color: #e1e5e2;
+    background-color: white;
 }
 
 /* 类型信息 */
@@ -203,21 +286,22 @@ a {
     width: 3.5rem;
     height: 3.5rem;
     margin: 5px auto 0;
-    border-radius: 50%;
+    border-radius: 10px;
 }
 
 .type-text {
     text-align: center;
     font-size: 1rem;
-    text-shadow: 2px 2px 2px #395980;
-    color: white;
+    color: $black_light;
+    text-shadow: 0px 0px 1px #000;
 }
 
 /* 评测标题 */
 .content-item-title {
-    font-size: 1rem;
+    font-size: 1.1rem;
     word-spacing: 1px;
     letter-spacing: 2px;
+    border-bottom: solid 1px $grey;
     text-decoration: none;
 }
 .content-item-title:hover {
@@ -226,7 +310,7 @@ a {
 
 /* 评测描述 */
 .content-item-abstract {
-    font-size: 1rem;
+    font-size: .9rem;
     word-spacing: 1px;
     letter-spacing: 1px;
     margin-top: 0.5rem;
@@ -235,10 +319,14 @@ a {
 
 /* 评测时间 */
 .content-item-date {
+    border-top: solid 2px $grey;
     margin-top: 5px;
     color: white;
+    padding: 1px;
+    font-size: 1rem;
+    text-align: center;
     margin-bottom: 0;
-    color: $grey_dark_light;
+    color: $grey_dark;
 }
 
 .content-item-date > span {
@@ -259,16 +347,5 @@ a {
 .loading-info {
     text-align: center;
     color: $grey_dark;
-    margin-bottom: 1rem;
-}
-
-/*文字特效*/
-.box1 {
-    text-shadow:
-            0 0 0 rgb(188,178,188),1px 0 0 rgb(173,163,173),
-            2px 0 0 rgb(157,147,157),3px 0 0 rgb(142,132,142),
-            4px 0 0 rgb(126,116,126),5px 0 0 rgb(111,101,111),
-            6px 0 0 rgb(95,85,95), 7px 0 0 rgb(79,69,79),
-            8px 0 7px rgba(0,0,0,0.35),8px 0 1px rgba(0,0,0,0.5),
-            0 0 7px rgba(0,0,0,.2);
+    margin: 1rem auto 1rem;
 }

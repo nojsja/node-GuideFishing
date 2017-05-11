@@ -62,9 +62,9 @@ bcIndexAction.pageEventBind = function () {
         }, 200);
     });
     // 绑定搜索动画
-    $('#broadcastSearchButton').click(function () {
+    $('.broadcast-search-trigger').click(function () {
 
-        bcIndexAction.broadcastSearch.spreadCheck();
+        bcIndexAction.broadcastSearch.show();
     });
 
     // 初始化
@@ -80,31 +80,30 @@ bcIndexAction.broadcastSearchInit = function () {
         var isSpread = false;
         // 查询地址
         var url = "/course/broadcast/readOne";
-        // 输入框
-        var $searchText = $('#broadcastSearchText');
+        // 输入文字
+        var $searchText = $('.broadcast-search-text');
+        // 组件
+        var $searchWrapper = $('.broadcast-search-wrapper');
+        // 取消搜索
+        var $searchCancel = $('.broadcast-search-cancel');
+        // 进行搜索
+        var $searchButton = $('.broadcast-search-button');
         var searchValue = null;
 
+        // 事件绑定
+        $searchCancel.click(searchHidden);
+        $searchButton.click(searchCheck);
+
         // 输入框状态检查
-        function spreadCheck() {
+        function searchCheck() {
 
-            if(!isSpread){
-                $searchText.prop('class', 'broadcast-search-text broadcast-search-animation');
-                isSpread = true;
-            }else {
-
-                if(searchValue === $searchText.val().trim()){
-                    return;
-                }
-                searchValue = $searchText.val().trim();
-                if(!searchValue || searchValue == ''){
-                    return bcIndexAction.modalWindow("请输入查询参数!");
-                }
-                sendRequest();
+            if(searchValue === $searchText.val().trim()){
+                return;
             }
-        }
-
-        // 发起搜索请求
-        function sendRequest() {
+            searchValue = $searchText.val().trim();
+            if(!searchValue || searchValue == ''){
+                return confirm("请输入查询参数!");
+            }
 
             $.post(url, {
                 courseName: searchValue
@@ -114,11 +113,22 @@ bcIndexAction.broadcastSearchInit = function () {
                 bcIndexAction.isClear = true;
                 // 更新DOM
                 bcIndexAction.updatePage(JSONdata);
+                searchHidden();
             }, "JSON");
         }
 
+        // 搜索面板显示
+        function searchShow() {
+            $searchWrapper.css('display', 'block');
+        }
+        // 搜索面板隐藏
+        function searchHidden() {
+            $searchWrapper.css('display', 'none');
+        }
+
+        // 返回调用接口
         return {
-            spreadCheck: spreadCheck
+            show: searchShow
         };
 
     })();

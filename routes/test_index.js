@@ -88,6 +88,7 @@ function index(app) {
            console.log('readList success.');
             res.json(JSON.stringify({
                 testArray: testArray,
+                testTypeChina: EnToCn.getAllPattern('testType'),
                 typeImgUrl: typeImgUrl
             }));
         });

@@ -10,8 +10,7 @@ $(function () {
     CourseAction.userAgent["browser"] = nojsja["Tool"].GetBrowserType();
     // 页面事件绑定
     CourseAction.pageEventBind();
-    // 更新课程类型
-    CourseAction.updateCourseType();
+
     //加载指定数量的测试题目列表
     CourseAction.readCourseList({
         courseType: CourseAction.courseType,
@@ -20,9 +19,10 @@ $(function () {
     // 更新热门内容
     CourseAction.updateHot();
     // 滑动图片初始化
-    // CourseAction.buildSlideView();
+    CourseAction.buildSlideView();
     // 悬浮按钮初始化
     njj.HoverButton.init();
+    CourseAction.courseTypeInit();
 });
 
 /*** 页面全局变量 ***/
@@ -48,7 +48,8 @@ var CourseAction = {
     //是否清除页面已存数据
     isClear: false,
     // 中英文对应
-    courseTypeChina: {}
+    courseTypeChina: {},
+    typeImgUrl: {}
 };
 
 
@@ -57,13 +58,8 @@ CourseAction.pageEventBind = function () {
 
     // 选择课程类型
     $('#courseTypeChoose, #courseTypeChoose2').click(function () {
-        CourseAction.headerDown = !CourseAction.headerDown;
-        $('.type-item').slideToggle();
-        if(CourseAction.headerDown) {
-            $('.header-label > i').prop('class', 'icon-angle-up');
-        }else {
-            $('.header-label > i').prop('class', 'icon-angle-down');
-        }
+
+        CourseAction.typeAction.show();
     });
 
     // 检查登录账户信息
@@ -90,38 +86,90 @@ CourseAction.pageEventBind = function () {
 };
 
 /* 获取课程类型更新页面 */
-CourseAction.updateCourseType = function () {
+CourseAction.courseTypeInit = function () {
 
-    var url = "/course/courseType";
-    $.post(url, {}, function (JSONdata) {
+    // 测评类型选择事件
+    CourseAction.typeAction = (function () {
 
-        var JSONobject = JSON.parse(JSONdata);
-        if(JSONobject.isError){
-            return CourseAction.modalWindow('[error]: ' + JSONobject.error);
+        // 初始化标志
+        var isInit = false;
+        var $allCourseType = $('.all-course-type');
+        // 初始化
+        var init = function () {
+
+            var url = "/course/courseType";
+            $.post(url, {}, function (JSONdata) {
+
+                var JSONobject = JSON.parse(JSONdata);
+                if(JSONobject.isError){
+                    return CourseAction.modalWindow('[error]: ' + JSONobject.error);
+                }
+
+                // 类型列表
+                var $courseItemList = $('.all-course-type');
+                console.log(JSONobject.courseTypeChina);
+                CourseAction.courseTypeChina = JSONobject.courseTypeChina;
+
+                for(var type in CourseAction.courseTypeChina){
+
+                    var $courseTypeItem = $('<div class="course-type-item">');
+                    var $courseType = $('<div class="course-type">');
+                    $courseType.prop('id', type);
+
+                    var $courseTypeImg = $('<img>');
+                    $courseTypeImg.prop('src', CourseAction.typeImgUrl[type]);
+
+                    var $courseTypeText = $('<span class="course-type-text">');
+                    $courseTypeText.text(CourseAction.courseTypeChina[type]);
+
+                    $courseTypeItem.append(
+                        $courseType.append($courseTypeImg)
+                            .append($courseTypeText)
+                    );
+
+                    $courseItemList.append($courseTypeItem);
+                }
+                var $typeHidden = $('<div class="course-type-hidden">');
+                $typeHidden.append($('<i class="icon-double-angle-up">'));
+                $typeHidden.click(hidden);
+
+                $courseItemList.append($typeHidden);
+
+                //指定类型的课程
+                $('.course-type').click(function () {
+                    hidden();
+                    CourseAction.courseTypeDefine.call(this, arguments);
+                });
+
+                isInit = true;
+
+            }, "JSON");
+        };
+
+        // 显示
+        function show() {
+            nojsja['ScrollHandler'].disableScroll();
+            if(!isInit){
+                init();
+            }
+            $allCourseType.css('display', 'block');
         }
 
-        // 类型列表
-        var $typeItemList = $('.type-item-list');
-        CourseAction.courseTypeChina = JSONobject.courseTypeChina;
-
-        for(var type in CourseAction.courseTypeChina){
-            var $type = $('<div class="type-item">');
-            $type.text(CourseAction.courseTypeChina[type])
-                .prop('id', type);
-
-            $typeItemList.append($type);
+        // 隐藏
+        function hidden() {
+            nojsja['ScrollHandler'].enableScroll();
+            if(!isInit){
+                init();
+            }
+            $allCourseType.css('display', 'none');
         }
-        $typeItemList.append(
-            $('<div class="type-item">').text('全部')
-                .prop('id', 'ALL')
-        );
 
-        //指定类型的课程
-        $('.type-item').click(function () {
-            CourseAction.courseTypeDefine.call(this, arguments);
-        });
-
-    }, "JSON");
+        // 返回调用接口
+        return {
+            show: show,
+            hidden: hidden
+        }
+    })();
 };
 
 /* 创建滑动视图 */
@@ -135,9 +183,9 @@ CourseAction.buildSlideView = function () {
         }
 
         // 滑动组件1
-        var slideViewWrapperID = $('#slideViewWrapper1').prop('id');
+        var slideViewWrapperID = $('#slideDiv').prop('id');
         // 实例化一个组件
-        var slideView1 = new nojsja['SlideViewCss3'](slideViewWrapperID, jsonObject.slideImageArray);
+        var slideView1 = new nojsja['SlideViewFrame'](slideViewWrapperID, jsonObject.slideImageArray);
         slideView1.build();
 
     });
@@ -176,7 +224,8 @@ CourseAction.updatePage = function (JSONdata) {
     //转换成JSON对象
     var parsedData = JSON.parse(JSONdata);
     //测评类型的图片url数组
-    var typeImgUrl = parsedData.typeImgUrl;
+    CourseAction.typeImgUrl = parsedData.typeImgUrl;
+    var courseTypeChina = parsedData.courseTypeChina;
 
     if(parsedData.error){
         return this.modalWindow("服务器发生错误: " + parsedData.error);
@@ -229,19 +278,19 @@ CourseAction.updatePage = function (JSONdata) {
             var $contentRight = $('<div class="content-item-right">');
             //内容类型相关的图片
             var $typeImg = $('<div></div>');
-            var imgUrl = typeImgUrl[course.courseType];
+            var imgUrl = CourseAction.typeImgUrl[course.courseType];
             $typeImg.prop('class', 'type-img').css({
                 'background': ["url(", imgUrl, ")", " no-repeat"].join(''),
                 'background-size': 'cover'
             });
             //该测评所属的类型
             var $courseType = $('<p class="type-text">');
-            $courseType.text(CourseAction.courseTypeChina[course.courseType]);
+            $courseType.text(courseTypeChina[course.courseType]);
             $contentRight.append($typeImg).append($courseType);
 
             //显示的日期
             var $date = $('<p class="content-item-date">');
-            var $dateIcon = $('<span class="glyphicon glyphicon-time">');
+            var $dateIcon = $('<i class="icon-time">');
             $date.append($dateIcon.text(course.date));
 
             //组合所有DOM

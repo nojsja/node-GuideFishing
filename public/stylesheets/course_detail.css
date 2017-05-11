@@ -18,8 +18,8 @@ a {
   width: 100%;
   min-height: 2rem;
   height: auto;
-  background-color: #eaeaea;
-  border-bottom: solid 1px #aaaaaa;
+  background-color: white;
+  border-bottom: solid 1px black;
   font-size: 0; }
 
 .header-label {
@@ -27,7 +27,7 @@ a {
   width: 100%;
   text-align: center;
   font-size: 1.5rem;
-  color: rgba(76, 116, 238, 0.92);
+  color: #3b3d3b;
   line-height: 1.5rem; }
 
 .header-label span {
@@ -37,7 +37,7 @@ a {
 .return-home {
   position: absolute;
   right: 10px;
-  color: #637db5;
+  color: #3b3d3b;
   font-size: 1.5rem; }
 
 /* 评测介绍主体部分 */

@@ -393,7 +393,7 @@
     })();
 
     /**
-     * [SlideView  图片轮播组件]
+     * [SlideView  图片轮播组件 使用定时器的版本]
      * @return {Function}
      * */
     nojsja["SlideView"] = (function () {
@@ -698,10 +698,10 @@
     })();
 
     /**
-     * [SlideViewCss3  图片轮播组件新特性版本]
+     * [SlideViewCss3  图片轮播组件 requestAnimationFrame新特性版本]
      * @return {Function}
      * */
-    nojsja["SlideViewCss3"] = (function () {
+    nojsja["SlideViewFrame"] = (function () {
 
         /**
          * [SlideView 构造函数]
@@ -1003,6 +1003,318 @@
                     requestAnimationFrame(slideLeft);
                 }else {
                     requestAnimationFrame(slideRight);
+                }
+            }
+        };
+
+        // 返回一个构造函数
+        return SlideView;
+    })();
+
+    /**
+     * [SlideViewCss3  图片轮播组件 Css3版本]
+     * @return {Function}
+     * */
+    nojsja["SlideViewCss3"] = (function () {
+
+        /**
+         * [SlideView 构造函数]
+         * @param {String} docWrapper [滑动组件的父对象ID，用于定位组件]
+         * @param {[{imageUrl, text}]} imageArray [用于构造组件的图片和与之对应的文字数据]
+         * */
+        var SlideView = function (domWrapperID, imageArray) {
+
+            var that = this;
+            this.domWrapperID = domWrapperID;
+            this.slideInfo  = null     /** @type {Object} [滑动组件数据和方法] */
+            this.slideTimer = null;     /** @type {Object} [滑动定时器] */
+            this.autoTimer = null      /** @type {Object} [自动滑动定时器] */
+            this.slideItemList = null;      /** @type {DomObject} [承载图片列表的dom元素] */
+            this.slideText = null;      /** @type {DOmObject} [每张图片配套的文字] */
+            this.pointList = null;      /** @type {DomObject} [承载小点的dom元素] */
+            this.slideAction = null;        /** @type {Function} [图片循环滑动的事件]*/
+
+            this.slideInfo  = {     /** @type {Object} [滑动组件数据和方法] */
+            imageArray: [],
+                nowIndex: 0,        // 当前显示的图片位于imageArray的编号
+                nowSlide: null,     // 当前滚动的部件
+                nextIndex: 0,       // 下一张需要显示的图片位于imageArray的编号
+                nextSlide: null,        // 下一个滚动的部件
+                direction: 'left',      // 滚动方向
+                stepWidth: 5,       // 步进值 5px
+                stepDuration: 25,       // 步进间隔 25ms
+                X_left: 0,      // 滑动初始位置
+                targetPos: null,        // 滚动的目标位置
+                imageWidth: 0,      // 需要滚动的宽度[定值]
+                offsetWidth: 0,     // 需要滚动的宽度[变量]
+                imageHeight: 0,     // 滚动的高度
+                status: false,      // 是否正在滚动
+                touch: {        // 移动端触摸数据
+                    pageStartX: 0,      // 起始x坐标
+                    pageStartY: 0,      // 起始y坐标
+                    pageEndX: 0,        // 终点x坐标
+                    pageEndY: 0     // 终点y坐标
+                },
+
+                // 触摸事件 判断手指是左边滑动还是右边滑动
+                touchMoveCheck: function (pageEndX, pageEndY) {
+
+                    this.touch.pageEndX = pageEndX;
+                    this.touch.pageEndY = pageEndY;
+                    // 向右滑动
+                    if(Math.abs(pageEndX - this.touch.pageStartX) >
+                        Math.abs(pageEndY - this.touch.pageStartY) &&
+                        (pageEndX - this.touch.pageStartX > 0) ){
+
+                        that.slideAction('right');
+                    }
+                    // 向左滑动
+                    if(Math.abs(pageEndX - this.touch.pageStartX) >
+                        Math.abs(pageEndY - this.touch.pageStartY) &&
+                        (pageEndX - this.touch.pageStartX < 0) ){
+
+                        that.slideAction('left');
+                    }
+                }
+            };
+
+            this.slideInfo.imageWidth = document.querySelector('#' + domWrapperID + ' #slideWrapper').offsetWidth;
+            this.slideInfo.imageHeight = document.querySelector('#' + domWrapperID + ' #slideWrapper').offsetHeight;
+            this.slideInfo.imageArray = imageArray;
+
+            // dom选择
+            this.slideItemList = document.querySelector('#' + domWrapperID + ' #slideItemList');
+            this.slideText = document.querySelector('#' + domWrapperID + ' #slideText');
+            this.pointList = document.querySelector('#' + domWrapperID + ' #pointList');
+
+            // 注意分离事件处理程序和应用逻辑 //
+
+            // 移动端滑动事件绑定
+            nojsja['EventUtil'].addHandler(this.slideItemList, 'touchstart', function (event) {
+
+                // 函数去抖
+                nojsja["FnDelay"](function (_event) {
+
+                    var event = nojsja['EventUtil'].getEvent(_event);
+                    // 阻止浏览器默认的事件
+                    nojsja['EventUtil'].preventDefault(event);
+                    // 当前事件手指的坐标
+                    that.slideInfo.touch.pageStartX = event.changedTouches[0].pageX;
+                    that.slideInfo.touch.pageStartY = event.changedTouches[0].pageY;
+
+                }, 100, false, event);
+            });
+            nojsja['EventUtil'].addHandler(this.slideItemList, 'touchmove', function (event) {
+
+                // 函数去抖
+                nojsja["FnDelay"](function (_event) {
+
+                    var event = nojsja['EventUtil'].getEvent(_event);
+                    // 阻止浏览器默认的事件
+                    nojsja['EventUtil'].preventDefault(event);
+
+                    that.slideInfo.touchMoveCheck(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
+
+                }, 200, false, event);
+
+            });
+        };
+
+        /**
+         * [build  对象方法用于创建滑动视图]
+         * */
+        SlideView.prototype.build = function () {
+
+            var that = this;
+            // 添加图片
+            for(var i = 0; i < this.slideInfo.imageArray.length;  i++){
+                (function (i) {
+                    // 创建图片DOM
+                    var slideItem  = document.createElement('div');
+                    slideItem.setAttribute('class', 'slide-item');
+                    slideItem.setAttribute('id', 'slide' + i);
+
+                    var slideImage = document.createElement('img');
+                    slideImage.setAttribute('src', that.slideInfo.imageArray[i].imageUrl);
+
+                    // 事件绑定
+                    nojsja['EventUtil'].addHandler(slideItem, 'mouseover', function () {
+                        that.slideText.innerText  = that.slideInfo.imageArray[i].text;
+                        that.slideText.style.display = 'block';
+                    });
+                    nojsja['EventUtil'].addHandler(slideItem, 'mouseout', function () {
+                        that.slideText.style.display = 'none';
+                    });
+
+                    // 添加图片DOM
+                    slideItem.appendChild(slideImage);
+                    that.slideItemList.appendChild(slideItem);
+
+                    // 创建滚动小点
+                    var point = document.createElement('div');
+                    point.setAttribute('id', 'point' + i);
+                    point.setAttribute('class', 'slide-point');
+                    if(i == 0){
+                        point.style['background-color'] = '#4e6672';
+                    }
+                    // 添加小白点DOM
+                    that.pointList.appendChild(point);
+                })(i);
+            }
+            // 绑定滚动触发事件
+            var triggerLeft = document.querySelector('#' + that.domWrapperID + ' #triggerLeft');
+            var triggerRight = document.querySelector('#' + that.domWrapperID + ' #triggerRight');
+            nojsja['EventUtil'].addHandler(triggerLeft, 'click', function () {
+                that.slideAction('left');
+            });
+            nojsja['EventUtil'].addHandler(triggerRight, 'click', function () {
+                that.slideAction('right');
+            });
+
+            /**
+             * 新的动画API 类似定时器
+             * */
+            // var requestAnimationFrame = window.requestAnimationFrame ||
+            //     window.mozRequestAnimationFrame ||
+            //     window.oRequestAnimationFrame ||
+            //     window.webkitRequestAnimationFrame ||
+            //     window.msRequestAnimationFrame;
+            //
+            // var cancelAnimationFrame = window.cancelAnimationFrame ||
+            //     window.mozCancelAnimationFrame ||
+            //     window.oCancelAnimationFrame ||
+            //     window.webkitCancelAnimationFrame ||
+            //     window.msCancelAnimationFrame;
+
+            // 6s自动轮播
+            // 循环滚动方法
+            function slideRoll() {
+                // 正在轮播
+                if(that.slideInfo.status){
+                    return;
+                }
+                that.slideAction('right');
+            }
+            // 绑定自动轮播事件
+            that.autoTimer = setInterval(slideRoll, 10000);
+            nojsja['EventUtil'].addHandler(this.slideItemList, 'mouseover', function () {
+                clearInterval(that.autoTimer);
+            });
+            nojsja['EventUtil'].addHandler(this.slideItemList, 'touchstart', function () {
+                clearInterval(that.autoTimer);
+            });
+            nojsja['EventUtil'].addHandler(this.slideItemList, 'touchend', function () {
+                that.autoTimer = setInterval(slideRoll, 10000);
+            });
+            nojsja['EventUtil'].addHandler(this.slideItemList, 'mouseout', function () {
+                that.autoTimer = setInterval(slideRoll, 10000);
+            });
+            // 窗口大小变化时触发的函数
+            window.onresize = function () {
+                this.slideInfo.imageWidth = document.querySelector('#' + that.domWrapperID + ' #slideWrapper').offsetWidth;
+                this.slideInfo.imageHeight = document.querySelector('#' + that.domWrapperID + ' #slideWrapper').offsetHeight;
+            }
+
+            /**
+             * [slideAction 滚动事件]
+             * @param {String} direction [指示滚动方向]
+             * */
+            that.slideAction = function(direction) {
+
+                // 动画触发的时候不能点击
+                if(that.slideInfo.status){
+                    return;
+                }
+                // direction滚动方向
+                if(direction == 'left'){
+
+                    that.slideInfo.nextIndex =
+                        (that.slideInfo.nowIndex == that.slideInfo.imageArray.length - 1) ? 0 : (that.slideInfo.nowIndex + 1);
+                }else {
+
+                    that.slideInfo.nextIndex =
+                        (that.slideInfo.nowIndex == 0) ? that.slideInfo.imageArray.length - 1 : (that.slideInfo.nowIndex - 1);
+                }
+
+
+                // 除了nowIndex和nextIndex之外的所有元素隐藏
+                // 后面的图片在第一张图片后一字排开
+                for(var i = 0; i < that.slideInfo.imageArray.length; i++){
+
+                    (function (i) {
+                        that.slideInfo.imageArray[i].offsetHeight = i * that.slideInfo.imageHeight;
+                    })(i);
+                }
+
+                // 当前滚动部件
+                that.slideInfo.nowSlide = document.querySelector('#' + that.domWrapperID +' #slide' + that.slideInfo.nowIndex);
+                that.slideInfo.nextSlide = document.querySelector('#' + that.domWrapperID +' #slide' + that.slideInfo.nextIndex);
+                // 在一定时间内移动X坐标
+                // 目标位置
+                that.slideInfo.targetPos = direction == 'left' ?
+                    Number(that.slideInfo.nowSlide.style.left.substr(0, that.slideInfo.nowSlide.style.left.length - 2)) - that.slideInfo.imageWidth :
+                    Number(that.slideInfo.nowSlide.style.left.substr(0, that.slideInfo.nowSlide.style.left.length - 2)) + that.slideInfo.imageWidth;
+
+
+                /**
+                 * [slideLeft 一次调用]
+                 * */
+                function slideLeft() {
+                    that.slideInfo.status = true;
+
+                    // 当前slide控制
+                    that.slideInfo.nowSlide.style['margin-right'] = that.slideInfo.imageWidth + 'px';
+                    // 高度控制
+                    that.slideInfo.nextSlide.style.top = -that.slideInfo.imageArray[that.slideInfo.nextIndex].offsetHeight + 'px';
+                    // nextslide控制
+                    // that.slideInfo.nextSlide.style['margin-left'] = -that.slideInfo.imageWidth + 'px';
+
+                    setTimeout(function() {
+                        // point 动作
+                        document.querySelector('#' + that.domWrapperID + ' #point' + that.slideInfo.nowIndex).style['background-color'] = '#FFFFFF'
+                        // 滚动完成  改变当前滑动组件和下一个滑动组件的索引[关键算法]
+                        that.slideInfo.nowIndex = that.slideInfo.nextIndex;
+                        document.querySelector('#' + that.domWrapperID + ' #point' + that.slideInfo.nowIndex).style['background-color'] = '#4e6672'
+                        that.slideInfo.status = false;
+                        that.slideInfo.X_left = 0;
+
+                    }, 1000);
+                }
+
+                /**
+                 * [slideRight 一次调用]
+                 * */
+                function slideRight() {
+
+                    that.slideInfo.status = true;
+
+                    // 当前slide控制
+                    that.slideInfo.nowSlide.style['margin-right'] = -that.slideInfo.imageWidth + 'px';
+                    // nextslide控制
+                    that.slideInfo.nextSlide.style['margin-right'] = -that.slideInfo.imageWidth * 2 + 'px';
+                    // 高度控制
+                    that.slideInfo.nextSlide.style.top = -that.slideInfo.imageArray[that.slideInfo.nextIndex].offsetHeight + 'px';
+
+                    setTimeout(function (){
+
+                        // point 动作
+                        document.querySelector('#' + that.domWrapperID + ' #point' + that.slideInfo.nowIndex).style['background-color'] = '#FFFFFF'
+                        // 滚动完成
+                        that.slideInfo.nowIndex = that.slideInfo.nextIndex;
+                        document.querySelector('#' + that.domWrapperID + ' #point' + that.slideInfo.nowIndex).style['background-color'] = '#4e6672'
+
+                        that.slideInfo.status = false;
+                        that.slideInfo.X_left = 0;
+
+                    }, 1000);
+                }
+
+                if(direction == 'left'){
+
+                    slideLeft();
+                }else {
+
+                    slideRight();
                 }
             }
         };

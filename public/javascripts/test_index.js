@@ -11,13 +11,9 @@ $(function () {
     TestIndexAction.userAgent["browser"] = nojsja["Tool"].GetBrowserType();
 
     $('#testTypeChoose, #testTypeChoose2').click(function () {
-        TestIndexAction.headerDown = !TestIndexAction.headerDown;
-        $('.type-item').slideToggle();
-        if(TestIndexAction.headerDown) {
-            $('.header-label > i').prop('class', 'icon-angle-up');
-        }else {
-            $('.header-label > i').prop('class', 'icon-angle-down');
-        }
+
+        TestIndexAction.typeAction.show();
+
     });
 
     // 检查登录账户信息
@@ -36,10 +32,9 @@ $(function () {
             TestIndexAction.scrollCheck(TestIndexAction.readMore);
         }, 200);
     });
-    //加载更多数据
-    // $('.loading-info').click();
+
     // 读取测评类型
-    TestIndexAction.updateTestType();
+    TestIndexAction.testTypeInit();
     //加载指定数量的测试题目列表
     TestIndexAction.readTestList({
         testType: TestIndexAction.testType,
@@ -76,7 +71,9 @@ var TestIndexAction = {
     //是否清除页面已存数据
     isClear: false,
     // 测评类型中文
-    testTypeChina: {}
+    testTypeChina: {},
+    // 类型图片信息
+    typeImgUrl: {}
 };
 
 /* 轮播图片初始化 */
@@ -94,46 +91,96 @@ TestIndexAction.bulidSlideView = function () {
         // 滑动组件1
         var slideDivID = $('#slideDiv').prop('id');
         // 实例化一个组件
-        var slideView1 = new nojsja['SlideViewCss3'](slideDivID, data.slideImageArray);
+        var slideView1 = new nojsja['SlideViewFrame'](slideDivID, data.slideImageArray);
         slideView1.build();
 
     });
 };
 
 /* 获取课程类型更新页面 */
-TestIndexAction.updateTestType = function () {
+TestIndexAction.testTypeInit = function () {
 
-    var url = "/test/testType";
-    $.post(url, {}, function (JSONdata) {
+    // 测评类型选择事件
+    TestIndexAction.typeAction = (function () {
 
-        var JSONobject = JSON.parse(JSONdata);
-        if(JSONobject.isError){
-            return TestIndexAction.modalWindow('[error]: ' + JSONobject.error);
+        // 初始化标志
+        var isInit = false;
+        var $allTestType = $('.all-test-type');
+        // 初始化
+        var init = function () {
+
+            var url = "/test/testType";
+            $.post(url, {}, function (JSONdata) {
+
+                var JSONobject = JSON.parse(JSONdata);
+                if(JSONobject.isError){
+                    return TestIndexAction.modalWindow('[error]: ' + JSONobject.error);
+                }
+
+                // 类型列表
+                var $typeItemList = $('.all-test-type');
+                TestIndexAction.testTypeChina = JSONobject.testTypeChina;
+
+                for(var type in TestIndexAction.testTypeChina){
+
+                    var $testTypeItem = $('<div class="test-type-item">');
+                    var $testType = $('<div class="test-type">');
+                    $testType.prop('id', type);
+
+                    var $testTypeImg = $('<img>');
+                    $testTypeImg.prop('src', TestIndexAction.typeImgUrl[type]);
+
+                    var $testTypeText = $('<span class="test-type-text">');
+                    $testTypeText.text(TestIndexAction.testTypeChina[type]);
+
+                    $testTypeItem.append(
+                        $testType.append($testTypeImg)
+                            .append($testTypeText)
+                    );
+
+                    $typeItemList.append($testTypeItem);
+                }
+                var $typeHidden = $('<div class="test-type-hidden">');
+                $typeHidden.append($('<i class="icon-double-angle-up">'));
+                $typeHidden.click(hidden);
+
+                $typeItemList.append($typeHidden);
+
+                //指定类型的课程
+                $('.test-type').click(function () {
+                    hidden();
+                    TestIndexAction.testTypeDefine.call(this, arguments);
+                });
+
+                isInit = true;
+
+            }, "JSON");
+        };
+
+        // 显示
+        function show() {
+            nojsja['ScrollHandler'].disableScroll();
+            if(!isInit){
+                init();
+            }
+            $allTestType.css('display', 'block');
         }
 
-        // 类型列表
-        var $typeItemList = $('.type-item-list');
-        TestIndexAction.testTypeChina = JSONobject.testTypeChina;
-
-        for(var type in TestIndexAction.testTypeChina){
-            var $type = $('<div class="type-item">');
-            $type.text(TestIndexAction.testTypeChina[type])
-                .prop('id', type);
-
-            $typeItemList.append($type);
+        // 隐藏
+        function hidden() {
+            nojsja['ScrollHandler'].enableScroll();
+            if(!isInit){
+                init();
+            }
+            $allTestType.css('display', 'none');
         }
-        $typeItemList.append(
-          $('<div class="type-item">')
-              .text('所有')
-              .prop('id', 'ALL')
-        );
 
-        //指定类型的课程
-        $('.type-item').click(function () {
-            TestIndexAction.testTypeDefine.call(this, arguments);
-        });
-
-    }, "JSON");
+        // 返回调用接口
+        return {
+            show: show,
+            hidden: hidden
+        }
+    })();
 };
 
 /* 读取测试列表 */
@@ -171,7 +218,8 @@ TestIndexAction.updatePage = function (JSONdata) {
     //转换成JSON对象
     var parsedData = JSON.parse(JSONdata);
     //测评类型的图片url数组
-    var typeImgUrl = parsedData.typeImgUrl;
+    TestIndexAction.typeImgUrl = parsedData.typeImgUrl;
+    var testTypeChina = parsedData.testTypeChina;
 
     if(parsedData.error){
         return this.modalWindow("服务器发生错误: " + parsedData.error);
@@ -224,19 +272,19 @@ TestIndexAction.updatePage = function (JSONdata) {
             var $contentRight = $('<div class="content-item-right">');
             //内容类型相关的图片
             var $typeImg = $('<div></div>');
-            var imgUrl = typeImgUrl[test.testType];
+            var imgUrl = TestIndexAction.typeImgUrl[test.testType];
             $typeImg.prop('class', 'type-img').css({
                 'background': ["url(", imgUrl, ")", " no-repeat"].join(''),
                 'background-size': 'cover'
             });
             //该测评所属的类型
             var $testType = $('<p class="type-text">');
-            $testType.text(TestIndexAction.testTypeChina[test.testType]);
+            $testType.text(testTypeChina[test.testType]);
             $contentRight.append($typeImg).append($testType);
 
             //显示的日期
             var $date = $('<p class="content-item-date">');
-            var $dateIcon = $('<span class="glyphicon glyphicon-time">');
+            var $dateIcon = $('<i class="icon-time">');
             $date.append($dateIcon.text(test.date));
 
             //组合所有DOM

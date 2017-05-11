@@ -199,14 +199,12 @@ GuideFishing.pageEventBind = function () {
 
         var sideNavContainer = GuideFishing.sideNav.sideNavContainer;
         sideNavContainer.listen(function () {
-            $(this).css('width', '75%');
-            $('.nav-content-div').css('display', 'block');
+            $(this).css('margin-right', '0%');
             $('.nav-trigger > i').prop('class', 'icon-arrow-right')
             GuideFishing.sideNav.isActive = !GuideFishing.sideNav.isActive;
         }, 'show');
         sideNavContainer.listen(function () {
-            $('.nav-content-div').css('display', 'none');
-            $(this).css('width', '0');
+            $(this).css('margin-right', '-75%');
             $('.nav-trigger > i').prop('class', 'icon-arrow-left')
             GuideFishing.sideNav.isActive = !GuideFishing.sideNav.isActive;
         }, 'hidden');
@@ -268,7 +266,7 @@ GuideFishing.buildSlideView = function () {
         // 滑动组件1
         var slideDivID = $('#slideDiv').prop('id');
         // 实例化一个组件
-        var slideView1 = new nojsja['SlideViewCss3'](slideDivID, jsonObject.slideImageArray);
+        var slideView1 = new nojsja['SlideViewFrame'](slideDivID, jsonObject.slideImageArray);
         slideView1.build();
     });
 };
@@ -362,7 +360,7 @@ GuideFishing.updatePage = function (JSONdata) {
 
             //显示的日期
             var $date = $('<p class="content-item-date">');
-            var $dateIcon = $('<span class="glyphicon glyphicon-time">');
+            var $dateIcon = $('<i class="icon-time">');
             $date.append($dateIcon.text(course.date));
 
             //组合所有DOM
@@ -588,7 +586,7 @@ GuideFishing.updateBroadcastPage = function (JSONdata) {
 
             //显示的日期
             var $date = $('<p class="content-item-date">');
-            var $dateIcon = $('<span class="glyphicon glyphicon-time">');
+            var $dateIcon = $('<i class="icon-time">');
             $date.append($dateIcon.text(broadcast.date));
 
             //组合所有DOM
