@@ -467,7 +467,10 @@ GuideFishing.updateTestHot = function () {
 GuideFishing.updateRecruitment = function () {
 
     var url = '/recruitment/index';
-    $.post(url, { action: 'getCompanyList'}, function (JSONdata) {
+    $.post(url, {
+        action: 'getCompanyList',
+        limit: 3
+    }, function (JSONdata) {
 
         // 更新页面
         var JSONobject = JSON.parse(JSONdata);
@@ -488,17 +491,21 @@ GuideFishing.updateRecruitment = function () {
                 window.location.href =  "/recruitment/" + company;
             });
             var $companyItem = $('<div class="company-item">');
+            var $companyImage = $('<img src="/images/testType/communication.jpg">');
             var $shadow = $('<div class="shadow">');
-            var $p = $('<p class="company-title">');
-            $p.text(company);
+            var $a = $('<a class="company-title">');
+            $a.attr('href', '/recruitment/' + company)
+                .text(company);
 
-            $companyItem.append($shadow)
-                .append($p)
+            $companyItem
+                .append($shadow)
+                .append($companyImage)
+                .append($a)
                 .appendTo($companyBorder);
 
             $('#totalRecruitment').append($companyBorder);
-
         }
+
     }, "JSON");
 };
 

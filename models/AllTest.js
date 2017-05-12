@@ -359,6 +359,7 @@ AllTest.readList = function (docCondition, callback) {
             testTitle: 1,
             testType: 1,
             abstract: 1,
+            teacher: 1,
             date: 1
         };
 

@@ -94,8 +94,54 @@ CourseAction.courseTypeInit = function () {
         // 初始化标志
         var isInit = false;
         var $allCourseType = $('.all-course-type');
+        // 触摸事件对象
+        var touchEvent = {
+            position: {
+                pageStartX: 0,      // 触摸开始的X坐标
+                pageStartY: 0,      // 触摸开始的Y坐标
+                pageEndX: 0,        // 触摸结束的X坐标
+                pageEndY: 0        // 触摸结束的Y坐标
+            },
+            moveCheck: function () {
+                // 上滑
+                if( Math.abs(this.position.pageEndY - this.position.pageStartY) >
+                   Math.abs(this.position.pageEndX - this.position.pageStartX) ){
+
+                    if(this.position.pageEndY - this.position.pageStartY < 0){
+                         hidden();
+                    }
+                }
+            }
+        };
+
         // 初始化
         var init = function () {
+
+            // 绑定上滑动取消事件
+            nojsja["EventUtil"].addHandler($allCourseType[0], 'touchstart', function (event) {
+                nojsja["FnDelay"](function (event) {
+                    var _event = nojsja['EventUtil'].getEvent(event);
+                    // 阻止浏览器默认的事件
+                    nojsja['EventUtil'].preventDefault(_event);
+                    // 当前事件手指的坐标
+                    touchEvent.position.pageStartX = _event.changedTouches[0].pageX;
+                    touchEvent.position.pageStartY = _event.changedTouches[0].pageY;
+
+                }, 100, false, event);
+            });
+            nojsja["EventUtil"].addHandler($allCourseType[0], 'touchmove', function (event) {
+                nojsja["FnDelay"](function (event) {
+
+                    var _event = nojsja['EventUtil'].getEvent(event);
+                    // 阻止浏览器默认的事件
+                    nojsja['EventUtil'].preventDefault(_event);
+                    // 当前事件手指的坐标
+                    touchEvent.position.pageEndX = _event.changedTouches[0].pageX;
+                    touchEvent.position.pageEndY = _event.changedTouches[0].pageY;
+                    // 位置检查
+                    touchEvent.moveCheck();
+                }, 200, false, event);
+            });
 
             var url = "/course/courseType";
             $.post(url, {}, function (JSONdata) {

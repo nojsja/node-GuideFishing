@@ -88,12 +88,15 @@ RecruitIndexAction.updateCompanyPage = function (JSONdata) {
            window.location.href =  "/recruitment/" + company;
         });
         var $companyItem = $('<div class="company-item">');
+        var $companyImage = $('<img src="/images/testType/communication.jpg">');
         var $shadow = $('<div class="shadow">');
         var $a = $('<a class="company-title">');
         $a.attr('href', '/recruitment/' + company)
             .text(company);
 
-        $companyItem.append($shadow)
+        $companyItem
+            .append($shadow)
+            .append($companyImage)
             .append($a)
             .appendTo($companyBorder);
 
