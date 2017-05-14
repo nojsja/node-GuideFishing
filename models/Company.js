@@ -30,12 +30,15 @@ Company.prototype.save = function (callback) {
 };
 
 /* 得到所有公司列表 */
-Company.getList = function (callback) {
+Company.getList = function (condition, callback) {
 
     var db = mongoose.connection;
     var Companys = mongoose.model('Companys', companySchema);
 
     var query = Companys.find();
+    if(condition.limit){
+        query.limit(parseInt(condition.limit));
+    }
     query.where({});
     query.select({
         company: 1

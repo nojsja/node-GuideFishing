@@ -17,7 +17,7 @@
 
 // 招聘对象
 var RECRUITMENT = {
-    company: '成都惠洋投资顾问有限公司',
+    company: '成都子瑜投资顾问有限公司',
     introduction: '成都汇阳投资顾问有限公司成立于2001年，' +
     '是中国证监会批准的专业证券投资咨询机构，' +
     '主要从事企业财务管理顾问、项目投资策划、' +
@@ -97,6 +97,11 @@ function recruitment(app) {
 
         // 执行的请求动作
         var action = req.body.action || 'getCompanyList';
+        // 筛选条件
+        var condition = {};
+        if(req.body.limit){
+            condition.limit = req.body.limit;
+        }
         if(actionArray[action]){
             actionArray[action]();
         }else {
@@ -108,11 +113,11 @@ function recruitment(app) {
         // action 方法
         function getCompanyList() {
 
-            Company.getList(function (err, companys) {
+            Company.getList(condition, function (err, companys) {
 
                 if(err){
                     return res.json(JSON.stringify({
-                        error: err
+                        error: err.toString()
                     }));
                 }
                 return res.json(JSON.stringify({

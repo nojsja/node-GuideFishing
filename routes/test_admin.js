@@ -132,6 +132,7 @@ function admin(app) {
                 abstract: req.body.abstract,
                 testTitle: req.body.testTitle,
                 frequency: 0,
+                teacher: req.session.admin.nickName,
                 testTags: req.body.testTags,
                 scoreValue: req.body.scoreValue,
                 testGroup: req.body.testGroup

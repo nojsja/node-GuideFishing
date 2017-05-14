@@ -37,6 +37,7 @@
 *  pass -- 是否检查通过（类型为true则正式发表）
 *  adminAccount -- 检查者管理员账户
 *  date -- 检查通过的日期
+*  teacher -- 发布测评的人
 */
 
 var mongoose = require('mongoose');
@@ -46,6 +47,7 @@ var testSchema = new Schema({
 
     testType: {type: String, required: true},
     testTags: [{type: String}],
+    teacher: {type: String, required: true},
     date: String,
     testGroup: [{
         scoreDefine: Boolean,

@@ -1,6 +1,7 @@
 @charset "UTF-8";
 body {
-  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif; }
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #efefef; }
 
 html {
   font-size: 16px; }
@@ -13,11 +14,12 @@ html {
 /* 一个分类选项 */
 .classification-item {
   position: relative;
-  background-color: #f1f1f1;
-  border: solid 1px white;
+  background-color: white;
   height: 3rem;
-  font-size: 0;
-  margin: 1rem 0 1rem; }
+  font-size: 0; }
+
+.classification-item:not(last-child) {
+  border-bottom: solid 1px #efefef; }
 
 .classification-item:active,
 .classification-item:hover {
@@ -43,8 +45,7 @@ html {
   border-radius: 5px;
   width: 2rem;
   height: 2rem;
-  margin-top: 0.5rem;
-  border: solid 1px rgba(76, 116, 238, 0.92); }
+  margin-top: 0.5rem; }
 
 /* 标题 */
 .classification-item-title {
