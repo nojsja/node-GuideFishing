@@ -1,2 +1,2 @@
-cd D:/github/node-GuideFishing
+cd ~/github/node-GuideFishing
 sass --watch public/sass:public/stylesheets
