@@ -1,4 +1,8 @@
 @charset "UTF-8";
+input[type=text] {
+  background-color: white !important;
+  color: #2f2f2f !important; }
+
 body {
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
   color: #f1f1f1 !important; }
@@ -7,7 +11,7 @@ html {
   font-size: 16px; }
 
 a {
-  color: #00B7FF; }
+  color: rgba(0, 183, 255, 0.33); }
 
 /* 个人信息 */
 .fieldset-selfinfo {
@@ -23,7 +27,7 @@ fieldset legend {
   border: solid 2px white;
   color: white;
   text-shadow: 2px 2px 2px black;
-  background-color: #2f2f2f;
+  background-color: #3B4D6D;
   -webkit-box-shadow: 0 0 5px #668b96;
   -moz-box-shadow: 0 0 5px #668b96;
   box-shadow: 0 0 5px #668b96; }
@@ -44,10 +48,11 @@ fieldset legend {
 .selfinfo-detail {
   border-bottom: solid 1px black;
   padding: 5px;
-  color: #00B7FF; }
+  color: #6ed1ff; }
 
 /* 权限管理区 */
 .manage-wrapper {
+  background-color: #3b3d3b;
   -webkit-box-shadow: 0 5px 5px #737373;
   -moz-box-shadow: 0 5px 5px #737373;
   box-shadow: 0 5px 5px #737373; }

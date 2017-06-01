@@ -240,7 +240,7 @@ a:hover {
 
     background-color: white;
     color: $black;
-    @include boxShadowRound(2px, $black_light);
+    @include boxShadowRound(3px, $blue);
 
 }
 
@@ -282,18 +282,17 @@ a:hover {
     background-color: #ffffff;
     margin-bottom: 1rem;
     font-size: 0;
+    border-top: solid 1px #a4a3a5;
+}
+
+.content-item:hover,
+.content-item:active {
+    border-top: solid 1px $blue;
 }
 
 /*讨论组的区别色*/
 .content-item-broadcast {
-    border-left: solid 1px $grey_dark !important;
     color: white;
-}
-
-.content-item:hover {
-    -webkit-box-shadow: inset 0 0 1px black;
-    -moz-box-shadow: inset 0 0 5px black;
-    box-shadow: inset 0 0 2px black;
 }
 
 /* 图钉 */
@@ -315,7 +314,6 @@ a:hover {
     width: 70%;
     padding: 5px;
     overflow: hidden;
-    border-left: solid 1px $blue_dark;
     background-color: #fff0db;
 }
 

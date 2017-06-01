@@ -2,6 +2,10 @@
 // 引入公用样式
 @import "public";
 
+input[type=text] {
+    background-color: white !important;
+    color: $black !important;
+}
 
 body {
     font: $bodyFont;
@@ -30,8 +34,7 @@ fieldset legend {
     border: solid 2px white;
     color: white;
     text-shadow: 2px 2px 2px black;
-    //background-color: $grey;
-    background-color: $black;
+    background-color: #3B4D6D;
     @include boxShadowRound(5px, $blueGrey);
 }
 
@@ -53,11 +56,12 @@ fieldset legend {
 .selfinfo-detail {
     border-bottom: solid 1px black;
     padding: 5px;
-    color: $blue_light;
+    color: #6ed1ff;
 }
 
 /* 权限管理区 */
 .manage-wrapper {
+    background-color: $black_light;
     @include boxShadowRoundSide_bottom(5px, $grey_dark);
 }
 

@@ -292,6 +292,7 @@ TestIndexAction.updatePage = function (JSONdata) {
         TestIndexAction.pageStart += 1;
         (function () {
             var test = parsedData.testArray[testIndex];
+            console.log(test);
             //最外层container
             var $testContainer = $('<div class="content-item">');
             //图钉图标
