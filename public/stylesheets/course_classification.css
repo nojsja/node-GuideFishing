@@ -28,9 +28,9 @@ html {
   -ms-transition: all 0.3s linear;
   -o-transition: all 0.3s linear;
   transition: all 0.3s linear;
-  -webkit-box-shadow: 0 0 5px #668b96;
-  -moz-box-shadow: 0 0 5px #668b96;
-  box-shadow: 0 0 5px #668b96; }
+  -webkit-box-shadow: 0 0 5px #3f3f3f;
+  -moz-box-shadow: 0 0 5px #3f3f3f;
+  box-shadow: 0 0 5px #3f3f3f; }
 
 /* 图片 */
 .classification-item-image {
