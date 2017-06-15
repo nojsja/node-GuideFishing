@@ -7,7 +7,7 @@ html {
   font-size: 16px; }
 
 a {
-  color: #00B7FF; }
+  color: rgba(0, 183, 255, 0.33); }
 
 /* 首部 header */
 .header {
@@ -78,8 +78,9 @@ a {
 .other-date {
   height: 1.5rem;
   line-height: 1.5rem;
-  color: white;
-  background-color: #aaaaaa;
+  color: #aaaaaa;
+  border: solid 1px #2f2f2f;
+  border-top: solid 0px #2f2f2f;
   text-align: center;
   width: 100%; }
 
@@ -88,11 +89,14 @@ a {
   height: auto;
   min-height: 10rem;
   margin: 0.5rem auto 2rem;
-  background-color: #aaaaaa; }
+  background-color: rgba(0, 0, 0, 0.5);
+  border: solid 1px #2f2f2f; }
 
 .detail-body-abstract {
   width: 90%;
   margin: auto;
+  border-left: solid 1px #2f2f2f;
+  border-right: solid 1px #2f2f2f;
   background-color: #f1f1f1; }
 
 .abstract {
@@ -101,8 +105,7 @@ a {
   word-spacing: 1px;
   letter-spacing: 1px;
   min-height: 10rem;
-  font-weight: bold;
-  color: #737373; }
+  color: #2f2f2f; }
 
 /* 开始按钮 */
 #startDiv {
