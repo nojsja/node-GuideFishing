@@ -1,4 +1,4 @@
 cd ~/github/node-GuideFishing
-node ./bin/GuideFishing
+#node ./bin/GuideFishing
 #pm2 start
-#pm2 start GuideFishing.json
+pm2 start GuideFishing.json

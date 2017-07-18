@@ -10,8 +10,8 @@
       "instances": "1",
       //"exec_mode": "cluster",
       "exec_mode": "fork",
-//      "watch": ["models", "routes", "GuideFishing.json", "gulpfile.js", "MongoConfig.js"],
-      "watch": true,
+      //"watch": ["models", "routes", "GuideFishing.json", "gulpfile.js", "MongoConfig.js"],
+      "watch": false,
       "ignore_watch" : ["public", "document", ".idea", "db_scripts", "node_modules"],
 
       "error_file": "./logs/error/error.txt",
