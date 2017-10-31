@@ -9,7 +9,7 @@ module.exports = {
 
     cookieSecret: 'GuideFishing',
     db: 'GuideFishing',
-    host: '47.91.233.156',
+    host: '45.77.56.221',
     port: 27017,
     user: "zykc",
     password: "normal",
@@ -20,5 +20,5 @@ module.exports = {
         },
         promiseLibrary: bluebird
     },
-    connectionString: "mongodb://47.91.233.156:27017/GuideFishing"
+    connectionString: "mongodb://45.77.56.221:27017/GuideFishing"
 };
